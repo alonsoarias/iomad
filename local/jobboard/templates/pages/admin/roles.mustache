@@ -1,8 +1,7 @@
 {{!
     @template local_jobboard/pages/admin_roles
 
-    Role management page template.
-    Uses jb-* CSS classes for consistent styling.
+    Role management page template - Clean design with jb-* pattern.
 
     Context variables:
     * pagetitle - Page title string
@@ -14,103 +13,92 @@
     * dashboardurl - URL to dashboard
     * committeeurl - URL to committee management
     * settingsurl - URL to plugin settings
-
-    Example context (json):
-    {
-        "pagetitle": "Manage Roles",
-        "selectedrole": null
-    }
 }}
-<div class="jb-admin-roles" data-region="jobboard-admin-roles">
-    {{! Page Header }}
-    <header class="jb-page-header d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fs-3 mb-0">
-            <i class="fa fa-user-tag text-primary me-2" aria-hidden="true"></i>
-            {{#str}}manageroles, local_jobboard{{/str}}
+<div class="jb-roles" id="jobboard-roles">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-roles-header">
+        <div class="jb-roles-header__nav">
+            <a href="{{dashboardurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+        <h1 class="jb-roles-header__title">
+            <i class="fa fa-user-tag"></i> {{#str}}manageroles, local_jobboard{{/str}}
         </h1>
-        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
-            <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-            {{#str}}dashboard, local_jobboard{{/str}}
-        </a>
-    </header>
+    </div>
 
-    {{! Statistics Cards }}
-    <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-users fa-2x text-info mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{totalusers}}</div>
-                    <div class="small text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
-                </div>
+    {{! ================================================================ }}
+    {{! STATISTICS SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-stats">
+        <div class="jb-stat jb-stat--info">
+            <i class="fa fa-users"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{totalusers}}</span>
+                <span class="jb-stat__label">{{#str}}totalassignedusers, local_jobboard{{/str}}</span>
             </div>
         </div>
         {{#pluginroles}}
-        <div class="col-lg-3 col-md-6 mb-3">
-            <a href="{{manageurl}}" class="text-decoration-none">
-                <div class="card shadow-sm h-100 jb-hover-lift">
-                    <div class="card-body text-center py-3">
-                        <i class="fa fa-{{icon}} fa-2x text-{{color}} mb-2" aria-hidden="true"></i>
-                        <div class="fs-3 fw-bold text-dark">{{usercount}}</div>
-                        <div class="small text-muted">{{name}}</div>
-                    </div>
-                </div>
-            </a>
-        </div>
+        <a href="{{manageurl}}" class="jb-stat jb-stat--{{color}}">
+            <i class="fa fa-{{icon}}"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{usercount}}</span>
+                <span class="jb-stat__label">{{name}}</span>
+            </div>
+        </a>
         {{/pluginroles}}
-    </section>
+    </div>
 
+    {{! ================================================================ }}
+    {{! ROLE SELECTION VIEW (No role selected) }}
+    {{! ================================================================ }}
     {{^selectedrole}}
-    {{! Role Selection View }}
-    <section aria-labelledby="roles-heading">
-        <h4 class="mb-3" id="roles-heading">
-            <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
-            {{#str}}selectroletoassign, local_jobboard{{/str}}
-        </h4>
+    <section class="jb-section">
+        <div class="jb-section-header">
+            <h2 class="jb-section-header__title">
+                <i class="fa fa-user-tag"></i> {{#str}}selectroletoassign, local_jobboard{{/str}}
+            </h2>
+        </div>
 
-        <div class="row">
+        <div class="jb-grid jb-grid--3">
             {{#pluginroles}}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        {{! Role Header }}
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="fa fa-{{icon}} fa-2x text-{{color}} me-3" aria-hidden="true"></i>
-                            <div>
-                                <h5 class="mb-0">{{name}}</h5>
-                                <small class="text-muted">{{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}</small>
-                            </div>
-                        </div>
+            <div class="jb-card jb-action-card jb-action-card--{{color}}">
+                <div class="jb-action-card__header">
+                    <div class="jb-action-card__icon jb-action-card__icon--{{color}}">
+                        <i class="fa fa-{{icon}}"></i>
+                    </div>
+                    <span class="jb-badge jb-badge--{{color}}">
+                        {{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}
+                    </span>
+                </div>
+                <div class="jb-action-card__body">
+                    <h3 class="jb-action-card__title">{{name}}</h3>
+                    <p class="jb-action-card__desc">{{description}}</p>
 
-                        {{! Description }}
-                        <p class="text-muted small mb-3">{{description}}</p>
-
-                        {{! Capabilities Preview }}
-                        {{#hascaps}}
-                        <div class="mb-3">
-                            <small class="d-block text-muted mb-1">{{#str}}capabilities, local_jobboard{{/str}}:</small>
+                    {{#hascaps}}
+                    <div class="jb-caps-preview">
+                        <span class="jb-caps-preview__label">{{#str}}capabilities, local_jobboard{{/str}}:</span>
+                        <div class="jb-caps-preview__list">
                             {{#capspreview}}
-                            <span class="badge bg-light text-dark me-1 mb-1">{{.}}</span>
+                            <span class="jb-badge jb-badge--secondary">{{.}}</span>
                             {{/capspreview}}
                         </div>
-                        {{/hascaps}}
-
-                        {{! Actions }}
-                        <div class="d-flex">
-                            {{#roleexists}}
-                            <a href="{{manageurl}}" class="btn jb-btn-{{color}} btn-sm">
-                                <i class="fa fa-users-gear me-1" aria-hidden="true"></i>
-                                {{#str}}manageusers, local_jobboard{{/str}}
-                            </a>
-                            {{/roleexists}}
-                            {{^roleexists}}
-                            <span class="text-danger small">
-                                <i class="fa fa-triangle-exclamation me-1" aria-hidden="true"></i>
-                                {{#str}}rolenotcreated, local_jobboard{{/str}}
-                            </span>
-                            {{/roleexists}}
-                        </div>
                     </div>
+                    {{/hascaps}}
+                </div>
+                <div class="jb-action-card__footer">
+                    {{#roleexists}}
+                    <a href="{{manageurl}}" class="jb-btn jb-btn--{{color}}">
+                        <i class="fa fa-users-gear"></i> {{#str}}manageusers, local_jobboard{{/str}}
+                    </a>
+                    {{/roleexists}}
+                    {{^roleexists}}
+                    <span class="jb-alert-inline jb-alert-inline--danger">
+                        <i class="fa fa-triangle-exclamation"></i> {{#str}}rolenotcreated, local_jobboard{{/str}}
+                    </span>
+                    {{/roleexists}}
                 </div>
             </div>
             {{/pluginroles}}
@@ -118,149 +106,143 @@
     </section>
     {{/selectedrole}}
 
+    {{! ================================================================ }}
+    {{! SINGLE ROLE MANAGEMENT VIEW }}
+    {{! ================================================================ }}
     {{#selectedrole}}
-    {{! Single Role Management View }}
-    <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm mb-3">
-        <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-        {{#str}}backtorolelist, local_jobboard{{/str}}
-    </a>
+    <div class="jb-role-back">
+        <a href="{{backurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+            <i class="fa fa-arrow-left"></i> {{#str}}backtorolelist, local_jobboard{{/str}}
+        </a>
+    </div>
 
     {{! Role Header Card }}
-    <section class="card shadow-sm mb-4" aria-labelledby="selected-role-heading">
-        <div class="card-header jb-bg-{{selectedrole.color}} text-white">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0" id="selected-role-heading">
-                    <i class="fa fa-{{selectedrole.icon}} me-2" aria-hidden="true"></i>
-                    {{selectedrole.name}}
-                </h5>
-                <span class="badge bg-light text-dark">{{selectedrole.usercount}} {{#str}}users{{/str}}</span>
+    <div class="jb-card jb-role-header-card jb-role-header-card--{{selectedrole.color}}">
+        <div class="jb-role-header-card__header">
+            <div class="jb-role-header-card__icon">
+                <i class="fa fa-{{selectedrole.icon}}"></i>
+            </div>
+            <div class="jb-role-header-card__title">
+                <h2>{{selectedrole.name}}</h2>
+                <span class="jb-badge jb-badge--light">{{selectedrole.usercount}} {{#str}}users{{/str}}</span>
             </div>
         </div>
-        <div class="card-body">
-            <p class="text-muted mb-0">{{selectedrole.description}}</p>
+        <div class="jb-role-header-card__body">
+            <p>{{selectedrole.description}}</p>
         </div>
-    </section>
+    </div>
 
-    <div class="row">
-        {{! Left Column: Assigned Users }}
-        <div class="col-lg-7 mb-4">
-            <section class="card shadow-sm h-100" aria-labelledby="assigned-users-heading">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0" id="assigned-users-heading">
-                        <i class="fa fa-users me-2" aria-hidden="true"></i>
-                        {{#str}}assignedusers, local_jobboard{{/str}}
-                    </h6>
-                    <span class="badge bg-primary">{{assignedusercount}} {{#str}}users{{/str}}</span>
+    <div class="jb-grid jb-grid--2-1">
+        {{! Assigned Users }}
+        <div class="jb-card">
+            <div class="jb-card__header">
+                <div class="jb-card__header-icon jb-card__header-icon--primary">
+                    <i class="fa fa-users"></i>
                 </div>
-                <div class="card-body">
-                    {{#hasassignedusers}}
-                    <div class="table-responsive">
-                        <table class="table table-hover jb-table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>{{#str}}user{{/str}}</th>
-                                    <th>{{#str}}email{{/str}}</th>
-                                    <th>{{#str}}assigned, local_jobboard{{/str}}</th>
-                                    <th>{{#str}}actions{{/str}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#assignedusers}}
-                                <tr>
-                                    <td>
+                <h3 class="jb-card__header-title">{{#str}}assignedusers, local_jobboard{{/str}}</h3>
+                <span class="jb-badge jb-badge--primary">{{assignedusercount}} {{#str}}users{{/str}}</span>
+            </div>
+            <div class="jb-card__body">
+                {{#hasassignedusers}}
+                <div class="jb-table-container">
+                    <table class="jb-table">
+                        <thead>
+                            <tr>
+                                <th>{{#str}}user{{/str}}</th>
+                                <th>{{#str}}email{{/str}}</th>
+                                <th>{{#str}}assigned, local_jobboard{{/str}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#assignedusers}}
+                            <tr>
+                                <td>
+                                    <div class="jb-user-cell">
                                         <strong>{{fullname}}</strong>
-                                        <br><small class="text-muted">#{{id}}</small>
-                                    </td>
-                                    <td>{{email}}</td>
-                                    <td>{{assigneddate}}</td>
-                                    <td>
-                                        <a href="{{unassignurl}}" class="btn btn-sm btn-outline-danger jb-btn-outline-danger"
-                                           title="{{#str}}unassign, local_jobboard{{/str}}"
-                                           onclick="return confirm('{{#str}}confirmunassign, local_jobboard{{/str}}');">
-                                            <i class="fa fa-user-minus" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {{/assignedusers}}
-                            </tbody>
-                        </table>
-                    </div>
-                    {{/hasassignedusers}}
-                    {{^hasassignedusers}}
-                    <div class="text-center py-5" role="status">
-                        <i class="fa fa-user-plus fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-                        <p class="text-muted">{{#str}}nousersassigned, local_jobboard{{/str}}</p>
-                    </div>
-                    {{/hasassignedusers}}
+                                        <small>#{{id}}</small>
+                                    </div>
+                                </td>
+                                <td>{{email}}</td>
+                                <td>{{assigneddate}}</td>
+                                <td>
+                                    <a href="{{unassignurl}}" class="jb-btn jb-btn--danger jb-btn--icon"
+                                       title="{{#str}}unassign, local_jobboard{{/str}}"
+                                       onclick="return confirm('{{#str}}confirmunassign, local_jobboard{{/str}}');">
+                                        <i class="fa fa-user-minus"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{/assignedusers}}
+                        </tbody>
+                    </table>
                 </div>
-            </section>
+                {{/hasassignedusers}}
+                {{^hasassignedusers}}
+                <div class="jb-empty">
+                    <i class="fa fa-user-plus"></i>
+                    <h3>{{#str}}nousersassigned, local_jobboard{{/str}}</h3>
+                </div>
+                {{/hasassignedusers}}
+            </div>
         </div>
 
-        {{! Right Column: Assign New Users }}
-        <div class="col-lg-5 mb-4">
-            <section class="card shadow-sm h-100" aria-labelledby="assign-users-heading">
-                <div class="card-header bg-white d-flex align-items-center">
-                    <i class="fa fa-user-plus fa-lg text-success me-3" aria-hidden="true"></i>
-                    <h6 class="mb-0" id="assign-users-heading">
-                        {{#str}}assignnewusers, local_jobboard{{/str}}
-                    </h6>
+        {{! Assign New Users }}
+        <div class="jb-card">
+            <div class="jb-card__header">
+                <div class="jb-card__header-icon jb-card__header-icon--success">
+                    <i class="fa fa-user-plus"></i>
                 </div>
-                <div class="card-body">
-                    <form method="post" action="{{assignformurl}}" id="assignform">
-                        <input type="hidden" name="sesskey" value="{{sesskey}}">
-                        <input type="hidden" name="action" value="assign">
-                        <input type="hidden" name="role" value="{{selectedrole.shortname}}">
+                <h3 class="jb-card__header-title">{{#str}}assignnewusers, local_jobboard{{/str}}</h3>
+            </div>
+            <div class="jb-card__body">
+                <form method="post" action="{{assignformurl}}" id="assignform">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="assign">
+                    <input type="hidden" name="role" value="{{selectedrole.shortname}}">
 
-                        {{! Search Input }}
-                        <div class="mb-3 mb-3">
-                            <label class="form-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
-                            <input type="text" class="form-control" id="usersearch"
-                                   placeholder="{{#str}}searchusersplaceholder, local_jobboard{{/str}}" autocomplete="off">
-                        </div>
+                    <div class="jb-form-group">
+                        <label class="jb-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
+                        <input type="text" class="jb-input" id="usersearch"
+                               placeholder="{{#str}}searchusersplaceholder, local_jobboard{{/str}}" autocomplete="off">
+                    </div>
 
-                        {{! User Selection }}
-                        <div class="mb-3 mb-3">
-                            <label class="form-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
-                            <select name="userids[]" id="userselect" class="form-control" multiple size="10">
-                                {{#availableusers}}
-                                <option value="{{id}}">{{fullname}} ({{email}})</option>
-                                {{/availableusers}}
-                            </select>
-                            <small class="form-text text-muted">{{#str}}selectmultiplehelp, local_jobboard{{/str}}</small>
-                        </div>
+                    <div class="jb-form-group">
+                        <label class="jb-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
+                        <select name="userids[]" id="userselect" class="jb-select" multiple size="10">
+                            {{#availableusers}}
+                            <option value="{{id}}">{{fullname}} ({{email}})</option>
+                            {{/availableusers}}
+                        </select>
+                        <small class="jb-help-text">{{#str}}selectmultiplehelp, local_jobboard{{/str}}</small>
+                    </div>
 
-                        <button type="submit" class="btn btn-success jb-btn-success w-100">
-                            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                            {{#str}}assignselected, local_jobboard{{/str}}
-                        </button>
-                    </form>
-                </div>
-            </section>
+                    <button type="submit" class="jb-btn jb-btn--success jb-btn--block">
+                        <i class="fa fa-user-plus"></i> {{#str}}assignselected, local_jobboard{{/str}}
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
     {{/selectedrole}}
 
-    {{! Navigation Footer }}
-    <footer class="card shadow-sm mt-4 bg-light">
-        <div class="card-body d-flex flex-wrap align-items-center justify-content-center">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary m-1">
-                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
-            <a href="{{committeeurl}}" class="btn btn-outline-primary jb-btn-outline-primary m-1">
-                <i class="fa fa-users me-2" aria-hidden="true"></i>
-                {{#str}}committees, local_jobboard{{/str}}
-            </a>
-            <a href="{{settingsurl}}" class="btn btn-outline-info jb-btn-outline-info m-1">
-                <i class="fa fa-gear me-2" aria-hidden="true"></i>
-                {{#str}}pluginsettings, local_jobboard{{/str}}
-            </a>
-        </div>
-    </footer>
+    {{! ================================================================ }}
+    {{! FOOTER NAVIGATION }}
+    {{! ================================================================ }}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-gauge"></i> {{#str}}dashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{committeeurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-users"></i> {{#str}}committees, local_jobboard{{/str}}
+        </a>
+        <a href="{{settingsurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-gear"></i> {{#str}}pluginsettings, local_jobboard{{/str}}
+        </a>
+    </div>
 </div>
 
 {{#selectedrole}}
-{{! JavaScript for user search filtering }}
 {{#js}}
 document.getElementById('usersearch').addEventListener('keyup', function() {
     var filter = this.value.toLowerCase();
@@ -272,3 +254,158 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 });
 {{/js}}
 {{/selectedrole}}
+
+<style>
+/* Roles Page - Clean jb-* Design */
+.jb-roles { max-width: 1200px; padding: 1rem; }
+
+/* Header */
+.jb-roles-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-roles-header__nav { margin-bottom: 1rem; }
+.jb-roles-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-roles-header__title i { color: var(--iser-verde, #1b9e88); }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Stats */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 160px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-decoration: none; }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--info { border-left: 3px solid #0d6efd; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #0d6efd; }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+
+/* Section */
+.jb-section { margin-bottom: 2rem; }
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e5e5; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
+
+/* Grid */
+.jb-grid { display: grid; gap: 1rem; }
+.jb-grid--3 { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.jb-grid--2-1 { grid-template-columns: 2fr 1fr; }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; }
+.jb-card__header-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.jb-card__header-icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-card__header-icon--success { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-card__header-title { flex: 1; font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-card__body { padding: 1rem; }
+
+/* Action Cards */
+.jb-action-card { display: flex; flex-direction: column; height: 100%; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-action-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-action-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-action-card--success { border-top: 3px solid #28a745; }
+.jb-action-card--warning { border-top: 3px solid #ffc107; }
+.jb-action-card--info { border-top: 3px solid #0d6efd; }
+.jb-action-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+.jb-action-card__icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.jb-action-card__icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-action-card__icon--success { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-action-card__icon--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-action-card__icon--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-action-card__body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.jb-action-card__title { font-size: 1rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-action-card__desc { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); margin: 0; line-height: 1.5; }
+.jb-action-card__footer { padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; }
+
+/* Caps Preview */
+.jb-caps-preview__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); display: block; margin-bottom: 0.5rem; }
+.jb-caps-preview__list { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+
+/* Role Header Card */
+.jb-role-back { margin-bottom: 1rem; }
+.jb-role-header-card { margin-bottom: 1.5rem; }
+.jb-role-header-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-role-header-card--success { border-top: 3px solid #28a745; }
+.jb-role-header-card--warning { border-top: 3px solid #ffc107; }
+.jb-role-header-card--info { border-top: 3px solid #0d6efd; }
+.jb-role-header-card__header { padding: 1rem; background: #f9fafb; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #f0f0f0; }
+.jb-role-header-card__icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-role-header-card__title { flex: 1; }
+.jb-role-header-card__title h2 { margin: 0 0 0.25rem; font-size: 1.125rem; font-weight: 600; }
+.jb-role-header-card__body { padding: 1rem; }
+.jb-role-header-card__body p { margin: 0; font-size: 0.875rem; color: var(--iser-gris-medio, #666); }
+
+/* Table */
+.jb-table-container { overflow-x: auto; }
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table th, .jb-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #f0f0f0; }
+.jb-table th { font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; }
+.jb-table tr:hover td { background: #f9fafb; }
+.jb-user-cell { display: flex; flex-direction: column; }
+.jb-user-cell small { color: var(--iser-gris-medio, #666); }
+
+/* Empty State */
+.jb-empty { text-align: center; padding: 2rem; }
+.jb-empty > i { font-size: 2.5rem; color: #d1d5db; margin-bottom: 0.75rem; display: block; }
+.jb-empty h3 { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Form Elements */
+.jb-form-group { margin-bottom: 1rem; }
+.jb-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--iser-gris-oscuro, #333); margin-bottom: 0.375rem; }
+.jb-input, .jb-select { width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; transition: border-color 0.15s; }
+.jb-input:focus, .jb-select:focus { outline: none; border-color: var(--iser-verde, #1b9e88); box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15); }
+.jb-help-text { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; display: block; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+.jb-badge--light { background: rgba(255,255,255,0.9); color: #333; }
+
+/* Alert Inline */
+.jb-alert-inline { font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 0.375rem; }
+.jb-alert-inline--danger { color: #dc3545; }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--block { width: 100%; }
+.jb-btn--icon { padding: 0.375rem; width: 32px; height: 32px; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--success { background: #28a745; color: #fff; }
+.jb-btn--success:hover { background: #1e7e34; color: #fff; }
+.jb-btn--warning { background: #ffc107; color: #1a1a1a; }
+.jb-btn--danger { background: #dc3545; color: #fff; }
+.jb-btn--danger:hover { background: #c82333; color: #fff; }
+.jb-btn--info { background: #0d6efd; color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-grid--2-1 { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .jb-roles-header__title { font-size: 1.25rem; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
+    .jb-grid--3 { grid-template-columns: 1fr; }
+    .jb-footer-nav { flex-direction: column; }
+    .jb-footer-nav .jb-btn { width: 100%; }
+}
+@media print { .jb-btn, .jb-roles-header__nav, .jb-footer-nav { display: none; } }
+</style>

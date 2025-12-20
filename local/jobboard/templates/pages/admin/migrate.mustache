@@ -1,9 +1,7 @@
 {{!
     @template local_jobboard/pages/migrate
 
-    Migration tool page template.
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Migration tool page template - Clean design with jb-* pattern.
 
     Context variables:
     * pagetitle - Page title string
@@ -17,188 +15,254 @@
     * importwarning - Import warning message
     * backurl - URL to go back
     * backtext - Back button text
-    * exportcounts - Array of export counts (doctypes, templates, etc.)
+    * exportcounts_left - Left column export counts
+    * exportcounts_right - Right column export counts
     * hasfiles - Boolean if there are files to export
     * filewarning - Warning about file export
+    * exportformhtml - Export form HTML
+    * importformhtml - Import form HTML
     * dryrunresults - Dry run results (if any)
     * hasdryrunresults - Boolean if showing dry run results
     * dryrunmessages - Array of dry run result messages
-    * loading - bool - Show skeleton loading state
-
-    Example context (json):
-    {
-        "pagetitle": "Migration Tool",
-        "exportcounts": [{"label": "Document types", "count": 10}]
-    }
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="jb-migrate-page" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-skeleton-text mb-4" style="width: 100%; height: 100px;"></div>
-    <div class="jb-skeleton-text mb-4" style="width: 100%; height: 60px;"></div>
-    <div class="row">
-        <div class="col-lg-6 mb-4"><div class="jb-skeleton-text" style="height: 300px;"></div></div>
-        <div class="col-lg-6 mb-4"><div class="jb-skeleton-text" style="height: 300px;"></div></div>
-    </div>
-</div>
-{{/loading}}
-
-{{^loading}}
-<div class="jb-migrate-page" data-region="jobboard-migrate">
-    {{! Skip Link for Accessibility }}
-    <a href="#migrate-content" class="jb-skip-link">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
+<div class="jb-migrate" id="jobboard-migrate">
+    {{! ================================================================ }}
+    {{! DRY RUN RESULTS VIEW }}
+    {{! ================================================================ }}
     {{#hasdryrunresults}}
-    {{! Dry Run Results View }}
-    <main id="migrate-content">
-        <div class="card shadow-sm mb-4 jb-fade-in-up">
-            <div class="card-header bg-white d-flex align-items-center">
-                <i class="fa fa-flask fa-lg text-info me-3" aria-hidden="true"></i>
-                <h5 class="mb-0">
-                    {{#str}}dryrunresults, local_jobboard{{/str}}
-                </h5>
-            </div>
-            <div class="card-body">
-                {{#dryrunmessages}}
-                <p class="mb-2 jb-fade-in" style="animation-delay: calc(0.1s + {{@index}} * 0.05s);">{{{message}}}</p>
-                {{/dryrunmessages}}
-            </div>
-        </div>
-        <a href="{{backurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift jb-fade-in" style="animation-delay: 0.2s;">
-            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-            {{#str}}back{{/str}}
+    <div class="jb-migrate-header">
+        <a href="{{backurl}}" class="jb-link">
+            <i class="fa fa-arrow-left"></i> {{#str}}back{{/str}}
         </a>
-    </main>
+        <h1 class="jb-migrate-header__title">
+            <i class="fa fa-flask"></i> {{#str}}dryrunresults, local_jobboard{{/str}}
+        </h1>
+    </div>
+
+    <div class="jb-card">
+        <div class="jb-card__body">
+            {{#dryrunmessages}}
+            <div class="jb-migrate-result">
+                {{{message}}}
+            </div>
+            {{/dryrunmessages}}
+        </div>
+        <div class="jb-card__footer">
+            <a href="{{backurl}}" class="jb-btn jb-btn--primary">
+                <i class="fa fa-arrow-left"></i> {{#str}}back{{/str}}
+            </a>
+        </div>
+    </div>
     {{/hasdryrunresults}}
 
+    {{! ================================================================ }}
+    {{! MAIN PAGE VIEW }}
+    {{! ================================================================ }}
     {{^hasdryrunresults}}
-    {{! Main Page View }}
-
-    {{! Page Header }}
-    <header class="jb-welcome-section bg-primary text-white rounded p-4 mb-4 jb-fade-in-up">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h2 class="mb-1 fw-bold">{{pagetitle}}</h2>
-                <p class="mb-0 opacity-75">{{pagedesc}}</p>
-            </div>
-            <i class="fa fa-right-left fa-3x opacity-25" aria-hidden="true"></i>
+    {{! Header }}
+    <div class="jb-migrate-header">
+        <div class="jb-migrate-header__nav">
+            <a href="{{backurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{backtext}}
+            </a>
         </div>
-    </header>
+        <h1 class="jb-migrate-header__title">
+            <i class="fa fa-right-left"></i> {{pagetitle}}
+        </h1>
+        <p class="jb-migrate-header__subtitle">{{pagedesc}}</p>
+    </div>
 
-    {{! Info Box }}
-    <div class="alert alert-info jb-alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
-        <i class="fa fa-circle-info fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
-        <div>
-            <strong class="d-block mb-1">{{infotitle}}</strong>
-            <p class="mb-0">{{infodesc}}</p>
+    {{! Info Alert }}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-circle-info"></i>
+        <div class="jb-alert__content">
+            <strong>{{infotitle}}</strong>
+            <span>{{infodesc}}</span>
         </div>
     </div>
 
     {{! Two Column Layout }}
-    <main id="migrate-content" class="row">
+    <div class="jb-grid jb-grid--2">
         {{! Export Section }}
-        <div class="col-lg-6 mb-4">
-            <section class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="export-heading">
-                <div class="card-header bg-white d-flex align-items-center">
-                    <i class="fa fa-download fa-lg text-primary me-3" aria-hidden="true"></i>
-                    <h5 class="mb-0" id="export-heading">
-                        {{exporttitle}}
-                    </h5>
+        <div class="jb-card jb-action-card jb-action-card--primary">
+            <div class="jb-action-card__header">
+                <div class="jb-action-card__icon jb-action-card__icon--primary">
+                    <i class="fa fa-download"></i>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted mb-3">{{exportdesc}}</p>
+                <span class="jb-badge jb-badge--primary">
+                    <i class="fa fa-database"></i> {{#str}}export, local_jobboard{{/str}}
+                </span>
+            </div>
+            <div class="jb-action-card__body">
+                <h3 class="jb-action-card__title">{{exporttitle}}</h3>
+                <p class="jb-action-card__desc">{{exportdesc}}</p>
 
-                    {{! Export Counts Info }}
-                    <div class="alert alert-info jb-alert-info mb-3">
-                        <i class="fa fa-circle-info me-2" aria-hidden="true"></i>
-                        <strong>{{#str}}fullexport_info, local_jobboard{{/str}}</strong>
-                    </div>
+                {{! Export Info }}
+                <div class="jb-alert jb-alert--info jb-alert--compact">
+                    <i class="fa fa-circle-info"></i>
+                    <span>{{#str}}fullexport_info, local_jobboard{{/str}}</span>
+                </div>
 
-                    <div class="card mb-3">
-                        <div class="card-body py-2">
-                            <h6 class="card-title mb-2">
-                                <i class="fa fa-database me-2" aria-hidden="true"></i>
-                                {{#str}}datatorexport, local_jobboard{{/str}}
-                            </h6>
-                            <div class="row small">
-                                <div class="col-md-6">
-                                    <ul class="jb-list-unstyled mb-0">
-                                        {{#exportcounts_left}}
-                                        <li class="jb-fade-in" style="animation-delay: calc(0.15s + {{@index}} * 0.03s);">
-                                            <i class="fa fa-check text-success me-1" aria-hidden="true"></i>
-                                            {{label}}: <strong>{{count}}</strong>
-                                        </li>
-                                        {{/exportcounts_left}}
-                                    </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <ul class="jb-list-unstyled mb-0">
-                                        {{#exportcounts_right}}
-                                        <li class="jb-fade-in" style="animation-delay: calc(0.15s + {{@index}} * 0.03s);">
-                                            <i class="fa fa-check text-success me-1" aria-hidden="true"></i>
-                                            {{label}}: <strong>{{count}}</strong>
-                                        </li>
-                                        {{/exportcounts_right}}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{#hasfiles}}
-                    <div class="alert alert-warning jb-alert-warning">
-                        <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
-                        {{filewarning}}
-                    </div>
-                    {{/hasfiles}}
-
-                    {{! Export Form Placeholder - Will be rendered by PHP }}
-                    <div id="export-form-container">
-                        {{{exportformhtml}}}
+                {{! Data to Export }}
+                <div class="jb-export-data">
+                    <h4 class="jb-export-data__title">
+                        <i class="fa fa-database"></i> {{#str}}datatorexport, local_jobboard{{/str}}
+                    </h4>
+                    <div class="jb-export-data__grid">
+                        <ul class="jb-export-list">
+                            {{#exportcounts_left}}
+                            <li><i class="fa fa-check"></i> {{label}}: <strong>{{count}}</strong></li>
+                            {{/exportcounts_left}}
+                        </ul>
+                        <ul class="jb-export-list">
+                            {{#exportcounts_right}}
+                            <li><i class="fa fa-check"></i> {{label}}: <strong>{{count}}</strong></li>
+                            {{/exportcounts_right}}
+                        </ul>
                     </div>
                 </div>
-            </section>
+
+                {{#hasfiles}}
+                <div class="jb-alert jb-alert--warning jb-alert--compact">
+                    <i class="fa fa-triangle-exclamation"></i>
+                    <span>{{filewarning}}</span>
+                </div>
+                {{/hasfiles}}
+
+                {{! Export Form }}
+                <div class="jb-form-container">
+                    {{{exportformhtml}}}
+                </div>
+            </div>
         </div>
 
         {{! Import Section }}
-        <div class="col-lg-6 mb-4">
-            <section class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="import-heading">
-                <div class="card-header bg-white d-flex align-items-center">
-                    <i class="fa fa-upload fa-lg text-success me-3" aria-hidden="true"></i>
-                    <h5 class="mb-0" id="import-heading">
-                        {{importtitle}}
-                    </h5>
+        <div class="jb-card jb-action-card jb-action-card--success">
+            <div class="jb-action-card__header">
+                <div class="jb-action-card__icon jb-action-card__icon--success">
+                    <i class="fa fa-upload"></i>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted mb-3">{{importdesc}}</p>
+                <span class="jb-badge jb-badge--success">
+                    <i class="fa fa-file-import"></i> {{#str}}import, local_jobboard{{/str}}
+                </span>
+            </div>
+            <div class="jb-action-card__body">
+                <h3 class="jb-action-card__title">{{importtitle}}</h3>
+                <p class="jb-action-card__desc">{{importdesc}}</p>
 
-                    {{! Warning Box }}
-                    <div class="alert alert-warning jb-alert-warning d-flex align-items-start">
-                        <i class="fa fa-triangle-exclamation fa-lg text-warning me-3 mt-1" aria-hidden="true"></i>
-                        <div>
-                            <strong class="d-block mb-1">{{#str}}importwarningtitle, local_jobboard{{/str}}</strong>
-                            {{importwarning}}
-                        </div>
-                    </div>
-
-                    {{! Import Form Placeholder - Will be rendered by PHP }}
-                    <div id="import-form-container">
-                        {{{importformhtml}}}
+                {{! Warning }}
+                <div class="jb-alert jb-alert--warning">
+                    <i class="fa fa-triangle-exclamation"></i>
+                    <div class="jb-alert__content">
+                        <strong>{{#str}}importwarningtitle, local_jobboard{{/str}}</strong>
+                        <span>{{importwarning}}</span>
                     </div>
                 </div>
-            </section>
+
+                {{! Import Form }}
+                <div class="jb-form-container">
+                    {{{importformhtml}}}
+                </div>
+            </div>
         </div>
-    </main>
+    </div>
 
-    {{! Back to Dashboard }}
-    <footer class="mt-3 jb-fade-in" style="animation-delay: 0.2s;">
-        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
-            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-            {{backtext}}
+    {{! Footer Navigation }}
+    <div class="jb-footer-nav">
+        <a href="{{backurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-arrow-left"></i> {{backtext}}
         </a>
-    </footer>
+    </div>
     {{/hasdryrunresults}}
 </div>
-{{/loading}}
+
+<style>
+/* Migration Page - Clean jb-* Design */
+.jb-migrate { max-width: 1200px; padding: 1rem; }
+
+/* Header */
+.jb-migrate-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-migrate-header__nav { margin-bottom: 1rem; }
+.jb-migrate-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-migrate-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-migrate-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Grid */
+.jb-grid { display: grid; gap: 1.5rem; }
+.jb-grid--2 { grid-template-columns: repeat(2, 1fr); }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+.jb-card__body { padding: 1rem; }
+.jb-card__footer { padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; }
+
+/* Action Cards */
+.jb-action-card { display: flex; flex-direction: column; height: 100%; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-action-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-action-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-action-card--success { border-top: 3px solid #28a745; }
+.jb-action-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+.jb-action-card__icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.jb-action-card__icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-action-card__icon--success { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-action-card__body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+.jb-action-card__title { font-size: 1.125rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-action-card__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0; line-height: 1.5; }
+
+/* Alerts */
+.jb-alert { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; border-radius: 8px; margin-bottom: 0; }
+.jb-alert > i { font-size: 1.125rem; margin-top: 0.125rem; }
+.jb-alert__content { flex: 1; }
+.jb-alert__content strong { display: block; margin-bottom: 0.25rem; }
+.jb-alert__content span { font-size: 0.875rem; opacity: 0.9; }
+.jb-alert--info { background: rgba(13, 110, 253, 0.1); border: 1px solid rgba(13, 110, 253, 0.2); color: #0d6efd; }
+.jb-alert--warning { background: rgba(255, 193, 7, 0.15); border: 1px solid rgba(255, 193, 7, 0.3); color: #856404; }
+.jb-alert--compact { padding: 0.75rem; }
+.jb-alert--compact > i { font-size: 1rem; }
+
+/* Export Data */
+.jb-export-data { background: #f9fafb; border-radius: 8px; padding: 1rem; }
+.jb-export-data__title { font-size: 0.875rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); margin: 0 0 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+.jb-export-data__title i { color: var(--iser-verde, #1b9e88); }
+.jb-export-data__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.jb-export-list { list-style: none; padding: 0; margin: 0; }
+.jb-export-list li { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); padding: 0.25rem 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-export-list li i { color: #28a745; font-size: 0.75rem; }
+
+/* Form Container */
+.jb-form-container { margin-top: auto; }
+
+/* Dry Run Result */
+.jb-migrate-result { padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.875rem; }
+.jb-migrate-result:last-child { border-bottom: none; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+.jb-badge i { font-size: 0.5rem; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; justify-content: flex-start; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-grid--2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .jb-migrate-header__title { font-size: 1.25rem; }
+    .jb-export-data__grid { grid-template-columns: 1fr; }
+}
+@media print { .jb-btn, .jb-migrate-header__nav { display: none; } }
+</style>
