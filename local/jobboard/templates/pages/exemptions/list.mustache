@@ -1,9 +1,7 @@
 {{!
     @template local_jobboard/pages/exemptions/list
 
-    Exemption management page template (list view).
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Exemption management page template - Clean design with jb-* pattern.
 
     Context variables:
     * pagetitle (string) - Page title
@@ -22,301 +20,367 @@
     * doctypesurl (string) - URL to manage doc types
     * reportsurl (string) - URL to reports
     * canviewreports (bool) - Can view reports
-    * loading (bool) - Show skeleton loading state
-
-    Example context (json):
-    {
-        "stats": {"total": 50, "active": 30, "expired": 15, "revoked": 5}
-    }
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="local-jobboard-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="jb-skeleton-title" style="width: 40%;"></div>
-        <div class="d-flex gap-2">
-            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
-            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-    </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="d-flex gap-3">
-                <div class="jb-skeleton-text" style="width: 200px; height: 40px;"></div>
-                <div class="jb-skeleton-text" style="width: 150px; height: 40px;"></div>
-                <div class="jb-skeleton-text" style="width: 150px; height: 40px;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body p-0">
-            {{> local_jobboard/components/table }}
-        </div>
-    </div>
-</div>
-{{/loading}}
-
-{{^loading}}
-<div class="local-jobboard-exemptions" data-region="jobboard-manage-exemptions">
-    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
-    <a href="#exemptions-main-content" class="visually-hidden-focusable">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
-    {{! Page Header - Breadcrumbs handled by Moodle via $PAGE->navbar }}
-    <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <h1 class="h4 mb-0">
-            <i class="fa fa-shield text-primary me-2" aria-hidden="true"></i>
-            {{pagetitle}}
-        </h1>
-        <div class="btn-group" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
-            <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
-                <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                {{#str}}addexemption, local_jobboard{{/str}}
-            </a>
-            <a href="{{importurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
-                <i class="fa fa-upload me-2" aria-hidden="true"></i>
-                {{#str}}importexemptions, local_jobboard{{/str}}
+<div class="jb-exemptions" id="jobboard-exemptions">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-exemptions-header">
+        <div class="jb-exemptions-header__nav">
+            <a href="{{dashboardurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
         </div>
-    </header>
+        <div class="jb-exemptions-header__main">
+            <h1 class="jb-exemptions-header__title">
+                <i class="fa fa-shield"></i> {{pagetitle}}
+            </h1>
+            <div class="jb-exemptions-header__actions">
+                <a href="{{addurl}}" class="jb-btn jb-btn--primary">
+                    <i class="fa fa-plus"></i> {{#str}}addexemption, local_jobboard{{/str}}
+                </a>
+                <a href="{{importurl}}" class="jb-btn jb-btn--outline">
+                    <i class="fa fa-upload"></i> {{#str}}importexemptions, local_jobboard{{/str}}
+                </a>
+            </div>
+        </div>
+    </div>
 
-    {{! Statistics Cards }}
-    <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-shield fa-2x text-primary mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.total}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}totalexemptions, local_jobboard{{/str}}</div>
-                </div>
+    {{! ================================================================ }}
+    {{! STATISTICS SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-stats">
+        <div class="jb-stat jb-stat--primary">
+            <div class="jb-stat__icon">
+                <i class="fa fa-shield"></i>
+            </div>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.total}}</span>
+                <span class="jb-stat__label">{{#str}}totalexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.active}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}activeexemptions, local_jobboard{{/str}}</div>
-                </div>
+        <div class="jb-stat jb-stat--success">
+            <div class="jb-stat__icon">
+                <i class="fa fa-circle-check"></i>
+            </div>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.active}}</span>
+                <span class="jb-stat__label">{{#str}}activeexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-warning">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-clock fa-2x text-warning mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.expired}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}expiredexemptions, local_jobboard{{/str}}</div>
-                </div>
+        <div class="jb-stat jb-stat--warning">
+            <div class="jb-stat__icon">
+                <i class="fa fa-clock"></i>
+            </div>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.expired}}</span>
+                <span class="jb-stat__label">{{#str}}expiredexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-danger">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-ban fa-2x text-danger mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.revoked}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}revokedexemptions, local_jobboard{{/str}}</div>
-                </div>
+        <div class="jb-stat jb-stat--danger">
+            <div class="jb-stat__icon">
+                <i class="fa fa-ban"></i>
+            </div>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.revoked}}</span>
+                <span class="jb-stat__label">{{#str}}revokedexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-    </section>
+    </div>
 
-    {{! Filters }}
-    <section class="card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="filters-heading" style="animation-delay: 0.25s;">
-        <div class="card-body">
-            <form method="get" action="{{filterformurl}}" class="jb-filter-form" role="search" aria-label="{{#str}}filterexemptions, local_jobboard{{/str}}">
-                <div class="row align-items-end">
-                    <div class="col-lg-4 col-md-6 mb-2">
-                        <label class="form-label small text-muted visually-hidden" for="search">{{#str}}search{{/str}}</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white">
-                                <i class="fa fa-magnifying-glass text-muted" aria-hidden="true"></i>
-                            </span>
-                            <input type="text" name="search" id="search" class="form-control"
-                                   placeholder="{{#str}}searchuser, local_jobboard{{/str}}" value="{{filters.search}}">
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-2">
-                        <label class="form-label small text-muted" for="type">{{#str}}type, local_jobboard{{/str}}</label>
-                        <select name="type" id="type" class="form-select">
-                            {{#typesoptions}}
-                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/typesoptions}}
-                        </select>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-2">
-                        <label class="form-label small text-muted" for="status">{{#str}}status{{/str}}</label>
-                        <select name="status" id="status" class="form-select">
-                            {{#statusoptions}}
-                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/statusoptions}}
-                        </select>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-2">
-                        <button type="submit" class="btn btn-primary jb-btn-primary w-100">
-                            <i class="fa fa-filter me-1" aria-hidden="true"></i>
-                            {{#str}}filter{{/str}}
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    {{! Exemptions Table }}
-    <main id="exemptions-main-content">
-        <section class="card shadow-sm mb-4 jb-fade-in-up jb-table-card" aria-labelledby="exemptions-heading" style="animation-delay: 0.3s;">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h2 class="fs-5 mb-0" id="exemptions-heading">
-                    <i class="fa fa-list text-primary me-2" aria-hidden="true"></i>
-                    {{#str}}exemptionlist, local_jobboard{{/str}}
-                </h2>
-                <span class="badge bg-primary rounded-pill">
-                    {{totalcount}} {{#str}}items, local_jobboard{{/str}}
-                </span>
+    {{! ================================================================ }}
+    {{! FILTERS SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-card jb-filter-card">
+        <form method="get" action="{{filterformurl}}" class="jb-filter-form">
+            <div class="jb-filter-form__search">
+                <i class="fa fa-magnifying-glass"></i>
+                <input type="text" name="search" class="jb-input"
+                       placeholder="{{#str}}searchuser, local_jobboard{{/str}}" value="{{filters.search}}">
             </div>
-            <div class="card-body p-0">
-                {{#hasexemptions}}
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0 jb-table" aria-label="{{#str}}exemptionlist, local_jobboard{{/str}}">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col">{{#str}}user{{/str}}</th>
-                                <th scope="col">{{#str}}exemptiontype, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center">{{#str}}exempteddocs, local_jobboard{{/str}}</th>
-                                <th scope="col" class="d-none jb-d-lg-table-cell">{{#str}}validfrom, local_jobboard{{/str}}</th>
-                                <th scope="col">{{#str}}validuntil, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center">{{#str}}status{{/str}}</th>
-                                <th scope="col" class="text-end" style="min-width: 120px;">{{#str}}actions{{/str}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#exemptions}}
-                            <tr data-exemption-id="{{id}}" class="{{#isexpiringsoon}}jb-table-warning{{/isexpiringsoon}}">
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="jb-avatar jb-avatar-sm bg-light rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                            <i class="fa fa-user text-muted" aria-hidden="true"></i>
-                                        </div>
-                                        <div>
-                                            <strong class="d-block">{{fullname}}</strong>
-                                            <small class="text-muted">{{email}}</small>
-                                        </div>
+            <div class="jb-filter-form__select">
+                <label class="jb-filter-label">{{#str}}type, local_jobboard{{/str}}</label>
+                <select name="type" class="jb-select">
+                    {{#typesoptions}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/typesoptions}}
+                </select>
+            </div>
+            <div class="jb-filter-form__select">
+                <label class="jb-filter-label">{{#str}}status{{/str}}</label>
+                <select name="status" class="jb-select">
+                    {{#statusoptions}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/statusoptions}}
+                </select>
+            </div>
+            <button type="submit" class="jb-btn jb-btn--primary">
+                <i class="fa fa-filter"></i> {{#str}}filter{{/str}}
+            </button>
+        </form>
+    </div>
+
+    {{! ================================================================ }}
+    {{! EXEMPTIONS TABLE }}
+    {{! ================================================================ }}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--primary">
+                <i class="fa fa-list"></i>
+            </div>
+            <h2 class="jb-card__header-title">{{#str}}exemptionlist, local_jobboard{{/str}}</h2>
+            <span class="jb-badge jb-badge--primary">{{totalcount}} {{#str}}items, local_jobboard{{/str}}</span>
+        </div>
+        <div class="jb-card__body jb-card__body--table">
+            {{#hasexemptions}}
+            <div class="jb-table-container">
+                <table class="jb-table">
+                    <thead>
+                        <tr>
+                            <th>{{#str}}user{{/str}}</th>
+                            <th>{{#str}}exemptiontype, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}exempteddocs, local_jobboard{{/str}}</th>
+                            <th class="jb-hide-md">{{#str}}validfrom, local_jobboard{{/str}}</th>
+                            <th>{{#str}}validuntil, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}status{{/str}}</th>
+                            <th class="jb-text-right">{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#exemptions}}
+                        <tr class="{{#isexpiringsoon}}jb-table-row--warning{{/isexpiringsoon}}">
+                            <td>
+                                <div class="jb-user-cell">
+                                    <div class="jb-user-cell__avatar">
+                                        <i class="fa fa-user"></i>
                                     </div>
-                                </td>
-                                <td>
-                                    <span class="badge jb-badge-outline-primary">{{typename}}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-secondary rounded-pill">
-                                        {{doctypescount}} {{#str}}doctypes, local_jobboard{{/str}}
-                                    </span>
-                                </td>
-                                <td class="d-none jb-d-lg-table-cell">
-                                    <small class="text-muted">{{validfrom}}</small>
-                                </td>
-                                <td>
-                                    {{#validuntil}}
-                                    <small class="{{#isexpiringsoon}}text-warning fw-bold{{/isexpiringsoon}}{{^isexpiringsoon}}text-muted{{/isexpiringsoon}}">
-                                        {{#isexpiringsoon}}<i class="fa fa-triangle-exclamation me-1" aria-hidden="true"></i>{{/isexpiringsoon}}
-                                        {{validuntil}}
-                                    </small>
-                                    {{/validuntil}}
-                                    {{^validuntil}}
-                                    <span class="badge bg-success rounded-pill">
-                                        <i class="fa fa-infinity me-1" aria-hidden="true"></i>
-                                        {{#str}}noexpiry, local_jobboard{{/str}}
-                                    </span>
-                                    {{/validuntil}}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge jb-badge-{{statuscolor}} rounded-pill">
-                                        {{#statusicon}}<i class="fa fa-{{statusicon}} me-1" aria-hidden="true"></i>{{/statusicon}}
-                                        {{statustext}}
-                                    </span>
-                                </td>
-                                <td class="text-end">
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
-                                        <a href="{{viewurl}}" class="btn btn-outline-primary jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
-                                            <i class="fa fa-eye" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}view, local_jobboard{{/str}}</span>
-                                        </a>
-                                        {{#isactive}}
-                                        <a href="{{editurl}}" class="btn btn-outline-secondary" title="{{#str}}edit, local_jobboard{{/str}}">
-                                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}edit, local_jobboard{{/str}}</span>
-                                        </a>
-                                        <a href="{{revokeurl}}" class="btn btn-outline-danger jb-btn-outline-danger" title="{{#str}}revoke, local_jobboard{{/str}}" onclick="return confirm('{{#str}}confirmrevoke, local_jobboard{{/str}}');">
-                                            <i class="fa fa-ban" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}revoke, local_jobboard{{/str}}</span>
-                                        </a>
-                                        {{/isactive}}
+                                    <div class="jb-user-cell__info">
+                                        <strong>{{fullname}}</strong>
+                                        <small>{{email}}</small>
                                     </div>
-                                </td>
-                            </tr>
-                            {{/exemptions}}
-                        </tbody>
-                    </table>
-                </div>
-                {{/hasexemptions}}
-
-                {{! Empty State }}
-                {{^hasexemptions}}
-                <div class="jb-empty-state" role="status">
-                    <i class="fa fa-shield jb-empty-state-icon" aria-hidden="true"></i>
-                    <h3 class="jb-empty-state-title">{{#str}}noexemptions, local_jobboard{{/str}}</h3>
-                    <p class="jb-empty-state-description">{{#str}}noexemptionsdesc, local_jobboard{{/str}}</p>
-                    <div class="jb-empty-state-actions">
-                        <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
-                            <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                            {{#str}}addexemption, local_jobboard{{/str}}
-                        </a>
-                    </div>
-                </div>
-                {{/hasexemptions}}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="jb-badge jb-badge--outline">{{typename}}</span>
+                            </td>
+                            <td class="jb-text-center">
+                                <span class="jb-badge jb-badge--secondary">{{doctypescount}}</span>
+                            </td>
+                            <td class="jb-hide-md">
+                                <small class="jb-text-muted">{{validfrom}}</small>
+                            </td>
+                            <td>
+                                {{#validuntil}}
+                                <span class="{{#isexpiringsoon}}jb-text-warning{{/isexpiringsoon}}{{^isexpiringsoon}}jb-text-muted{{/isexpiringsoon}}">
+                                    {{#isexpiringsoon}}<i class="fa fa-triangle-exclamation"></i> {{/isexpiringsoon}}
+                                    {{validuntil}}
+                                </span>
+                                {{/validuntil}}
+                                {{^validuntil}}
+                                <span class="jb-badge jb-badge--success">
+                                    <i class="fa fa-infinity"></i> {{#str}}noexpiry, local_jobboard{{/str}}
+                                </span>
+                                {{/validuntil}}
+                            </td>
+                            <td class="jb-text-center">
+                                <span class="jb-badge jb-badge--{{statuscolor}}">
+                                    {{#statusicon}}<i class="fa fa-{{statusicon}}"></i>{{/statusicon}}
+                                    {{statustext}}
+                                </span>
+                            </td>
+                            <td class="jb-text-right">
+                                <div class="jb-action-btns">
+                                    <a href="{{viewurl}}" class="jb-btn jb-btn--icon jb-btn--outline" title="{{#str}}view, local_jobboard{{/str}}">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    {{#isactive}}
+                                    <a href="{{editurl}}" class="jb-btn jb-btn--icon jb-btn--outline" title="{{#str}}edit, local_jobboard{{/str}}">
+                                        <i class="fa fa-pen-to-square"></i>
+                                    </a>
+                                    <a href="{{revokeurl}}" class="jb-btn jb-btn--icon jb-btn--danger" title="{{#str}}revoke, local_jobboard{{/str}}" onclick="return confirm('{{#str}}confirmrevoke, local_jobboard{{/str}}');">
+                                        <i class="fa fa-ban"></i>
+                                    </a>
+                                    {{/isactive}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/exemptions}}
+                    </tbody>
+                </table>
             </div>
+            {{/hasexemptions}}
 
-            {{! Pagination }}
-            {{#pagination}}
-            <div class="card-footer bg-white">
-                <nav aria-label="{{#str}}pagination, local_jobboard{{/str}}">
-                    {{{pagination}}}
-                </nav>
+            {{! Empty State }}
+            {{^hasexemptions}}
+            <div class="jb-empty">
+                <i class="fa fa-shield"></i>
+                <h3>{{#str}}noexemptions, local_jobboard{{/str}}</h3>
+                <p>{{#str}}noexemptionsdesc, local_jobboard{{/str}}</p>
+                <a href="{{addurl}}" class="jb-btn jb-btn--primary">
+                    <i class="fa fa-plus"></i> {{#str}}addexemption, local_jobboard{{/str}}
+                </a>
             </div>
-            {{/pagination}}
-        </section>
-    </main>
+            {{/hasexemptions}}
+        </div>
 
-    {{! Navigation Footer }}
-    <nav class="jb-navigation-footer d-flex flex-wrap justify-content-center gap-2 mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
-        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
-            <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-            {{#str}}dashboard, local_jobboard{{/str}}
+        {{! Pagination }}
+        {{#pagination}}
+        <div class="jb-card__footer">
+            <nav class="jb-pagination" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+                {{{pagination}}}
+            </nav>
+        </div>
+        {{/pagination}}
+    </div>
+
+    {{! ================================================================ }}
+    {{! FOOTER NAVIGATION }}
+    {{! ================================================================ }}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-gauge"></i> {{#str}}dashboard, local_jobboard{{/str}}
         </a>
-        <a href="{{doctypesurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
-            <i class="fa fa-folder me-2" aria-hidden="true"></i>
-            {{#str}}managedoctypes, local_jobboard{{/str}}
+        <a href="{{doctypesurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-folder"></i> {{#str}}managedoctypes, local_jobboard{{/str}}
         </a>
         {{#canviewreports}}
-        <a href="{{reportsurl}}" class="btn btn-outline-info jb-btn-outline-info">
-            <i class="fa fa-chart-bar me-2" aria-hidden="true"></i>
-            {{#str}}reports, local_jobboard{{/str}}
+        <a href="{{reportsurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-chart-bar"></i> {{#str}}reports, local_jobboard{{/str}}
         </a>
         {{/canviewreports}}
-    </nav>
+    </div>
 </div>
-{{/loading}}
+
+<style>
+/* Exemptions Page - Clean jb-* Design */
+.jb-exemptions { max-width: 1200px; padding: 1rem; }
+
+/* Header */
+.jb-exemptions-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-exemptions-header__nav { margin-bottom: 1rem; }
+.jb-exemptions-header__main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.jb-exemptions-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-exemptions-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-exemptions-header__actions { display: flex; gap: 0.5rem; }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Stats */
+.jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; }
+.jb-stat__icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-top: 3px solid #28a745; }
+.jb-stat--success .jb-stat__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-stat--success .jb-stat__value { color: #28a745; }
+.jb-stat--warning { border-top: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__icon { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-stat--warning .jb-stat__value { color: #856404; }
+.jb-stat--danger { border-top: 3px solid #dc3545; }
+.jb-stat--danger .jb-stat__icon { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+.jb-stat--danger .jb-stat__value { color: #dc3545; }
+
+/* Filter Card */
+.jb-filter-card { padding: 1rem; margin-bottom: 1.5rem; }
+.jb-filter-form { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.jb-filter-form__search { flex: 1; min-width: 200px; position: relative; }
+.jb-filter-form__search > i { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--iser-gris-medio, #666); }
+.jb-filter-form__search .jb-input { padding-left: 2.25rem; }
+.jb-filter-form__select { min-width: 150px; }
+.jb-filter-label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--iser-gris-medio, #666); margin-bottom: 0.375rem; }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; background: #f9fafb; }
+.jb-card__header-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.jb-card__header-icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-card__header-title { flex: 1; font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-card__body { padding: 1rem; }
+.jb-card__body--table { padding: 0; }
+.jb-card__footer { padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; }
+
+/* Table */
+.jb-table-container { overflow-x: auto; }
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table th, .jb-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #f0f0f0; }
+.jb-table th { font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; font-size: 0.8125rem; }
+.jb-table tbody tr:hover td { background: #f9fafb; }
+.jb-table-row--warning td { background: rgba(255, 193, 7, 0.08); }
+.jb-text-center { text-align: center; }
+.jb-text-right { text-align: right; }
+.jb-text-muted { color: var(--iser-gris-medio, #666); font-size: 0.8125rem; }
+.jb-text-warning { color: #856404; font-weight: 500; font-size: 0.8125rem; }
+
+/* User Cell */
+.jb-user-cell { display: flex; align-items: center; gap: 0.75rem; }
+.jb-user-cell__avatar { width: 36px; height: 36px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: var(--iser-gris-medio, #666); font-size: 0.875rem; }
+.jb-user-cell__info { display: flex; flex-direction: column; }
+.jb-user-cell__info strong { font-size: 0.875rem; color: var(--iser-negro, #1a1a1a); }
+.jb-user-cell__info small { font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
+
+/* Action Buttons */
+.jb-action-btns { display: flex; gap: 0.25rem; justify-content: flex-end; }
+
+/* Form Elements */
+.jb-input, .jb-select { width: 100%; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; transition: border-color 0.15s; }
+.jb-input:focus, .jb-select:focus { outline: none; border-color: var(--iser-verde, #1b9e88); box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15); }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+.jb-badge--outline { background: transparent; border: 1px solid #d1d5db; color: var(--iser-gris-oscuro, #333); }
+
+/* Empty State */
+.jb-empty { text-align: center; padding: 3rem 1rem; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
+.jb-empty h3 { font-size: 1.125rem; color: var(--iser-gris-oscuro, #333); margin: 0 0 0.5rem; }
+.jb-empty p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--icon { padding: 0.375rem; width: 32px; height: 32px; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--danger { background: #dc3545; color: #fff; }
+.jb-btn--danger:hover { background: #c82333; color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Pagination */
+.jb-pagination { display: flex; justify-content: center; }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Responsive - Hide on medium screens */
+.jb-hide-md { display: table-cell; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-stats { grid-template-columns: repeat(2, 1fr); }
+    .jb-hide-md { display: none; }
+}
+@media (max-width: 768px) {
+    .jb-exemptions-header__main { flex-direction: column; align-items: flex-start; }
+    .jb-exemptions-header__title { font-size: 1.25rem; }
+    .jb-exemptions-header__actions { width: 100%; }
+    .jb-exemptions-header__actions .jb-btn { flex: 1; }
+    .jb-stats { grid-template-columns: 1fr; }
+    .jb-filter-form { flex-direction: column; align-items: stretch; }
+    .jb-filter-form__search, .jb-filter-form__select { min-width: 100%; }
+    .jb-footer-nav { flex-direction: column; }
+    .jb-footer-nav .jb-btn { width: 100%; }
+}
+@media print { .jb-btn, .jb-exemptions-header__nav, .jb-exemptions-header__actions, .jb-filter-card, .jb-footer-nav, .jb-action-btns { display: none; } }
+</style>
