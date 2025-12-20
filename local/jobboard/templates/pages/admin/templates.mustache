@@ -18,7 +18,7 @@
     * str - Language strings
 }}
 <div class="jb-templates" id="jobboard-templates">
-    {{! Header }}}
+    {{! Header }}
     <div class="jb-templates-header">
         <div class="jb-templates-header__nav">
             <a href="{{dashboardurl}}" class="jb-link">
@@ -31,7 +31,7 @@
         <p class="jb-templates-header__subtitle">{{#str}}templatesdesc, local_jobboard{{/str}}</p>
     </div>
 
-    {{! Stats Cards }}}
+    {{! Stats Cards }}
     <div class="jb-stats">
         <div class="jb-stat-card jb-stat-card--primary">
             <div class="jb-stat-card__icon">
@@ -71,14 +71,14 @@
         </div>
     </div>
 
-    {{! Install Defaults Action }}}
+    {{! Install Defaults Action }}
     <div class="jb-action-bar">
         <a href="{{installurl}}" class="jb-btn jb-btn--success">
             <i class="fa fa-download"></i> {{str.installdefaults}}
         </a>
     </div>
 
-    {{! Category Tabs }}}
+    {{! Category Tabs }}
     <div class="jb-tabs">
         <a href="{{pageurl}}" class="jb-tab {{^currentcategory}}jb-tab--active{{/currentcategory}}">
             <i class="fa fa-list"></i>
@@ -93,7 +93,7 @@
         {{/categories}}
     </div>
 
-    {{! Templates Table }}}
+    {{! Templates Table }}
     {{#hastemplates}}
     <div class="jb-card">
         <div class="jb-card__header">
@@ -174,7 +174,7 @@
     </div>
     {{/hastemplates}}
 
-    {{! Empty State }}}
+    {{! Empty State }}
     {{^hastemplates}}
     <div class="jb-empty-state">
         <div class="jb-empty-state__icon">
@@ -188,7 +188,7 @@
     </div>
     {{/hastemplates}}
 
-    {{! Help Section }}}
+    {{! Help Section }}
     <div class="jb-help-section">
         <div class="jb-help-section__header">
             <i class="fa fa-circle-question"></i>
@@ -225,7 +225,7 @@
         </div>
     </div>
 
-    {{! Footer Navigation }}}
+    {{! Footer Navigation }}
     <div class="jb-footer-nav">
         <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
             <i class="fa fa-gauge"></i> {{str.dashboard}}
