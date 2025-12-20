@@ -33,40 +33,32 @@
 
     {{! Stats Cards }}
     <div class="jb-stats">
-        <div class="jb-stat-card jb-stat-card--primary">
-            <div class="jb-stat-card__icon">
-                <i class="fa fa-envelope"></i>
-            </div>
-            <div class="jb-stat-card__content">
-                <span class="jb-stat-card__value">{{stats.total}}</span>
-                <span class="jb-stat-card__label">{{str.totaltemplates}}</span>
+        <div class="jb-stat jb-stat--primary">
+            <i class="fa fa-envelope"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.total}}</span>
+                <span class="jb-stat__label">{{str.totaltemplates}}</span>
             </div>
         </div>
-        <div class="jb-stat-card jb-stat-card--success">
-            <div class="jb-stat-card__icon">
-                <i class="fa fa-circle-check"></i>
-            </div>
-            <div class="jb-stat-card__content">
-                <span class="jb-stat-card__value">{{stats.enabled}}</span>
-                <span class="jb-stat-card__label">{{str.templatesenabled}}</span>
+        <div class="jb-stat jb-stat--success">
+            <i class="fa fa-circle-check"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.enabled}}</span>
+                <span class="jb-stat__label">{{str.templatesenabled}}</span>
             </div>
         </div>
-        <div class="jb-stat-card jb-stat-card--warning">
-            <div class="jb-stat-card__icon">
-                <i class="fa fa-circle-pause"></i>
-            </div>
-            <div class="jb-stat-card__content">
-                <span class="jb-stat-card__value">{{stats.disabled}}</span>
-                <span class="jb-stat-card__label">{{str.templatesdisabled}}</span>
+        <div class="jb-stat jb-stat--warning">
+            <i class="fa fa-circle-pause"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.disabled}}</span>
+                <span class="jb-stat__label">{{str.templatesdisabled}}</span>
             </div>
         </div>
-        <div class="jb-stat-card jb-stat-card--info">
-            <div class="jb-stat-card__icon">
-                <i class="fa fa-folder"></i>
-            </div>
-            <div class="jb-stat-card__content">
-                <span class="jb-stat-card__value">{{stats.categories}}</span>
-                <span class="jb-stat-card__label">{{str.templatecategories}}</span>
+        <div class="jb-stat jb-stat--info">
+            <i class="fa fa-folder"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.categories}}</span>
+                <span class="jb-stat__label">{{str.templatecategories}}</span>
             </div>
         </div>
     </div>
@@ -257,22 +249,22 @@
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
 .jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
 
-/* Stats */
-.jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-.jb-stat-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
-.jb-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.jb-stat-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
-.jb-stat-card--success { border-top: 3px solid #28a745; }
-.jb-stat-card--warning { border-top: 3px solid #ffc107; }
-.jb-stat-card--info { border-top: 3px solid #17a2b8; }
-.jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-.jb-stat-card--primary .jb-stat-card__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
-.jb-stat-card--success .jb-stat-card__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
-.jb-stat-card--warning .jb-stat-card__icon { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
-.jb-stat-card--info .jb-stat-card__icon { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
-.jb-stat-card__content { display: flex; flex-direction: column; }
-.jb-stat-card__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
-.jb-stat-card__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+/* Stats - Border-left pattern (matching public/index) */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 160px; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+.jb-stat--info { border-left: 3px solid #17a2b8; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #17a2b8; }
 
 /* Action Bar */
 .jb-action-bar { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
@@ -363,12 +355,12 @@
 
 /* Mobile */
 @media (max-width: 992px) {
-    .jb-stats { grid-template-columns: repeat(2, 1fr); }
     .jb-help-section__grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
     .jb-public-header__title { font-size: 1.25rem; }
-    .jb-stats { grid-template-columns: 1fr; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
     .jb-tabs { flex-direction: column; }
     .jb-hide-mobile { display: none; }
     .jb-footer-nav { flex-direction: column; }
