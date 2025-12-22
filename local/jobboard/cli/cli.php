@@ -110,6 +110,9 @@ list($options, $unrecognized) = cli_get_params([
     // Sync from sedes folder options.
     'sync-sedes' => false,
     'sedes-path' => null,
+    // Sync metadata (faculties, programs).
+    'sync-metadata' => false,
+    'companyid' => null,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -135,6 +138,7 @@ list($options, $unrecognized) = cli_get_params([
     'V' => 'vacancy-id',
     'L' => 'list-applications',
     'Y' => 'sync-sedes',
+    'M' => 'sync-metadata',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -236,8 +240,13 @@ SYNC FROM SEDES (Recommended for updates):
   -Y, --sync-sedes          SYNC vacancies from sedes/ folder JSONs
                             - Creates new vacancies not in DB
                             - Updates existing vacancies (by code+location+modality)
-                            - Archives vacancies not in JSONs (preserves applications)
+                            - Leaves unchanged vacancies not in JSONs
   --sedes-path=PATH         Path to sedes folder (default: ./sedes)
+
+  -M, --sync-metadata       SYNC faculties and programs from sedes/ folder JSONs
+                            - Creates/updates faculties (FII, FCAS, BIENESTAR)
+                            - Creates/updates academic programs
+  --companyid=ID            IOMAD company ID for faculties (default: 1)
 
   SYNC EXAMPLES:
     # Preview sync changes (dry run)
@@ -248,6 +257,12 @@ SYNC FROM SEDES (Recommended for updates):
 
     # Sync and publish
     php cli.php --sync-sedes --convocatoria=1 --status=published --public --verbose
+
+    # Sync faculties and programs (run this first!)
+    php cli.php --sync-metadata --verbose
+
+    # Full sync: metadata first, then vacancies
+    php cli.php --sync-metadata --verbose && php cli.php --sync-sedes --convocatoria=1 --status=published --public --verbose
 
 APPLICATION MANAGEMENT:
   -D, --delete-application  DELETE applications (requires --idnumber or --application-id)
@@ -339,6 +354,273 @@ CSV;
     echo "#    - faculty: FCAS or FII\n";
     echo "# 4. Save and run: php cli.php --csv=yourfile.csv --create-structure --publish\n";
     exit(0);
+}
+
+// ============================================================
+// SYNC METADATA (FACULTIES AND PROGRAMS)
+// ============================================================
+if ($options['sync-metadata']) {
+    if (!$moodleavailable) {
+        cli_error("Sync metadata requires Moodle. Run from Moodle installation.");
+    }
+
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+    $companyid = $options['companyid'] ? (int) $options['companyid'] : 1;
+    $sedespath = $options['sedes-path'] ?: __DIR__ . '/sedes';
+
+    cli_heading("Sync Metadata from Sedes Folder");
+    echo "Company ID: $companyid\n";
+    echo "Sedes path: $sedespath\n";
+    if ($dryrun) {
+        echo "*** DRY RUN MODE - No changes will be made ***\n";
+    }
+    echo "\n";
+
+    // Verify sedes folder exists.
+    if (!is_dir($sedespath)) {
+        cli_error("Sedes folder not found: $sedespath");
+    }
+
+    // Collect all unique faculties and programs from JSONs.
+    $faculties = [];
+    $programs = [];
+    $sedefolders = glob($sedespath . '/*', GLOB_ONLYDIR);
+
+    foreach ($sedefolders as $sedefolder) {
+        $jsonfiles = glob($sedefolder . '/*.json');
+        foreach ($jsonfiles as $jsonfile) {
+            $basename = basename($jsonfile);
+            if ($basename === '_RESUMEN.json') {
+                continue;
+            }
+
+            $content = file_get_contents($jsonfile);
+            $data = json_decode($content, true);
+
+            if (!$data || !isset($data['vacancies'])) {
+                continue;
+            }
+
+            foreach ($data['vacancies'] as $vac) {
+                $faculty = trim($vac['faculty'] ?? '');
+                $program = trim($vac['program'] ?? '');
+
+                if (!empty($faculty) && !isset($faculties[$faculty])) {
+                    $faculties[$faculty] = [
+                        'code' => $faculty,
+                        'name' => get_faculty_name($faculty),
+                    ];
+                }
+
+                if (!empty($program) && !empty($faculty)) {
+                    $programKey = $faculty . '::' . $program;
+                    if (!isset($programs[$programKey])) {
+                        $programs[$programKey] = [
+                            'faculty' => $faculty,
+                            'name' => $program,
+                            'code' => generate_program_code($program),
+                        ];
+                    }
+                }
+            }
+        }
+    }
+
+    echo "Found " . count($faculties) . " unique faculties\n";
+    echo "Found " . count($programs) . " unique programs\n\n";
+
+    // Stats.
+    $stats = [
+        'faculties_created' => 0,
+        'faculties_updated' => 0,
+        'programs_created' => 0,
+        'programs_updated' => 0,
+        'errors' => 0,
+    ];
+
+    $adminuser = get_admin();
+    $now = time();
+
+    // ---- SYNC FACULTIES ----
+    cli_heading("Syncing Faculties");
+    foreach ($faculties as $facultyCode => $facultyData) {
+        $existing = $DB->get_record('local_jobboard_faculty', [
+            'companyid' => $companyid,
+            'code' => $facultyCode,
+        ]);
+
+        if ($existing) {
+            if (!$dryrun) {
+                $existing->name = $facultyData['name'];
+                $existing->timemodified = $now;
+                try {
+                    $DB->update_record('local_jobboard_faculty', $existing);
+                    $stats['faculties_updated']++;
+                    if ($verbose) {
+                        echo "UPDATED faculty: {$facultyCode} - {$facultyData['name']}\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR updating faculty {$facultyCode}: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['faculties_updated']++;
+                if ($verbose) {
+                    echo "DRY UPDATE faculty: {$facultyCode} - {$facultyData['name']}\n";
+                }
+            }
+        } else {
+            $record = new stdClass();
+            $record->companyid = $companyid;
+            $record->code = $facultyCode;
+            $record->name = $facultyData['name'];
+            $record->shortname = $facultyCode;
+            $record->enabled = 1;
+            $record->sortorder = 0;
+            $record->timecreated = $now;
+
+            if (!$dryrun) {
+                try {
+                    $facultyid = $DB->insert_record('local_jobboard_faculty', $record);
+                    $stats['faculties_created']++;
+                    if ($verbose) {
+                        echo "CREATED faculty: {$facultyCode} - {$facultyData['name']} [ID: $facultyid]\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR creating faculty {$facultyCode}: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['faculties_created']++;
+                if ($verbose) {
+                    echo "DRY CREATE faculty: {$facultyCode} - {$facultyData['name']}\n";
+                }
+            }
+        }
+    }
+
+    // ---- SYNC PROGRAMS ----
+    cli_heading("Syncing Programs");
+
+    // Get faculty IDs.
+    $facultyIds = [];
+    $existingFaculties = $DB->get_records('local_jobboard_faculty', ['companyid' => $companyid]);
+    foreach ($existingFaculties as $f) {
+        $facultyIds[$f->code] = $f->id;
+    }
+
+    foreach ($programs as $programKey => $programData) {
+        $facultyCode = $programData['faculty'];
+        $facultyId = $facultyIds[$facultyCode] ?? null;
+
+        if (!$facultyId) {
+            echo "WARNING: Faculty {$facultyCode} not found for program {$programData['name']}\n";
+            continue;
+        }
+
+        $existing = $DB->get_record('local_jobboard_program', [
+            'facultyid' => $facultyId,
+            'code' => $programData['code'],
+        ]);
+
+        if ($existing) {
+            if (!$dryrun) {
+                $existing->name = $programData['name'];
+                $existing->timemodified = $now;
+                try {
+                    $DB->update_record('local_jobboard_program', $existing);
+                    $stats['programs_updated']++;
+                    if ($verbose) {
+                        echo "UPDATED program: [{$facultyCode}] {$programData['name']}\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR updating program {$programData['code']}: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['programs_updated']++;
+                if ($verbose) {
+                    echo "DRY UPDATE program: [{$facultyCode}] {$programData['name']}\n";
+                }
+            }
+        } else {
+            $record = new stdClass();
+            $record->facultyid = $facultyId;
+            $record->code = $programData['code'];
+            $record->name = $programData['name'];
+            $record->shortname = mb_substr($programData['name'], 0, 50, 'UTF-8');
+            $record->enabled = 1;
+            $record->sortorder = 0;
+            $record->timecreated = $now;
+
+            if (!$dryrun) {
+                try {
+                    $programid = $DB->insert_record('local_jobboard_program', $record);
+                    $stats['programs_created']++;
+                    if ($verbose) {
+                        echo "CREATED program: [{$facultyCode}] {$programData['name']} [ID: $programid]\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR creating program {$programData['code']}: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['programs_created']++;
+                if ($verbose) {
+                    echo "DRY CREATE program: [{$facultyCode}] {$programData['name']}\n";
+                }
+            }
+        }
+    }
+
+    // Summary.
+    echo "\n";
+    cli_heading("Sync Metadata Summary");
+    echo "Faculties created: {$stats['faculties_created']}\n";
+    echo "Faculties updated: {$stats['faculties_updated']}\n";
+    echo "Programs created: {$stats['programs_created']}\n";
+    echo "Programs updated: {$stats['programs_updated']}\n";
+    echo "Errors: {$stats['errors']}\n";
+
+    if ($dryrun) {
+        echo "\n*** DRY RUN - No changes were made ***\n";
+    }
+
+    exit($stats['errors'] > 0 ? 1 : 0);
+}
+
+/**
+ * Get faculty full name from code.
+ */
+function get_faculty_name($code) {
+    $names = [
+        'FII' => 'Facultad de Ingenierías e Informática',
+        'FCAS' => 'Facultad de Ciencias Administrativas y Sociales',
+        'BIENESTAR' => 'Bienestar Institucional',
+    ];
+    return $names[$code] ?? $code;
+}
+
+/**
+ * Generate a program code from name.
+ */
+function generate_program_code($name) {
+    // Normalize and create a short code.
+    $name = mb_strtoupper($name, 'UTF-8');
+    $name = preg_replace('/[^A-Z0-9\s]/', '', $name);
+    $words = preg_split('/\s+/', trim($name));
+
+    // Take first letter of each significant word.
+    $significant = array_filter($words, function($w) {
+        return !in_array($w, ['EN', 'DE', 'LA', 'LAS', 'LOS', 'Y', 'E', 'O', 'A']);
+    });
+
+    if (count($significant) <= 3) {
+        return implode('', array_map(fn($w) => mb_substr($w, 0, 3, 'UTF-8'), $significant));
+    }
+
+    return implode('', array_map(fn($w) => mb_substr($w, 0, 1, 'UTF-8'), array_slice($significant, 0, 8)));
 }
 
 // ============================================================
