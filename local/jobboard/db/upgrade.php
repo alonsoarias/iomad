@@ -684,6 +684,51 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121819, 'local', 'jobboard');
     }
 
+    // Version 3.7.67 - Add Decano and Talento Humano review workflow.
+    // - Add review date fields to convocatoria table (dean_review_start, dean_review_end, hr_review_start, hr_review_end).
+    // - New capabilities: reviewasdecan, validateashr, viewpendingvalidation.
+    // - New application statuses: preselected, pending_validation.
+    if ($oldversion < 2025122030) {
+        $dbman = $DB->get_manager();
+
+        // ====================================================================
+        // 1. Add review date fields to convocatoria table.
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_convocatoria');
+
+        // Add dean_review_start field.
+        $field = new xmldb_field('dean_review_start', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'enddate');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add dean_review_end field.
+        $field = new xmldb_field('dean_review_end', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'dean_review_start');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add hr_review_start field.
+        $field = new xmldb_field('hr_review_start', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'dean_review_end');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add hr_review_end field.
+        $field = new xmldb_field('hr_review_end', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'hr_review_start');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ====================================================================
+        // 2. Update capabilities for existing installations.
+        // ====================================================================
+        update_capabilities('local_jobboard');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025122030, 'local', 'jobboard');
+    }
+
     return true;
 }
 

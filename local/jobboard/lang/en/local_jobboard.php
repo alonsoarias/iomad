@@ -70,6 +70,9 @@ $string['jobboard:managedoctypes'] = 'Manage document types';
 $string['jobboard:manageemailtemplates'] = 'Manage email templates';
 $string['jobboard:manageexemptions'] = 'Manage exemptions';
 $string['jobboard:unlimitedapplications'] = 'Unlimited applications';
+$string['jobboard:reviewasdecan'] = 'Review as Dean (preselect applicants)';
+$string['jobboard:validateashr'] = 'Validate as HR (Talento Humano)';
+$string['jobboard:viewpendingvalidation'] = 'View applicants pending HR validation';
 
 // =============================================================================
 // NAVIGATION & MENU
@@ -256,6 +259,8 @@ $string['convocatoria_status_archived'] = 'Archived';
 // Application status
 $string['appstatus:submitted'] = 'Submitted';
 $string['appstatus:under_review'] = 'Under review';
+$string['appstatus:preselected'] = 'Preselected';  // Internal status - only visible to Decano/HR.
+$string['appstatus:pending_validation'] = 'Pending HR validation';  // Internal - waiting for Talento Humano.
 $string['appstatus:docs_validated'] = 'Documents validated';
 $string['appstatus:docs_rejected'] = 'Documents rejected';
 $string['appstatus:interview'] = 'Interview';
@@ -328,6 +333,14 @@ $string['convocatoriaterms_pdf'] = 'Terms of Call PDF';
 $string['convocatoriaterms_pdf_help'] = 'Upload the terms and conditions document for this call in PDF format';
 $string['convocatoriastartdate'] = 'Start date';
 $string['convocatoriaenddate'] = 'End date';
+$string['dean_review_start'] = 'Dean review start';
+$string['dean_review_start_help'] = 'Date when the Dean can start reviewing applications. Usually after the convocatoria closes.';
+$string['dean_review_end'] = 'Dean review end';
+$string['dean_review_end_help'] = 'Deadline for Dean to complete the review and preselection of applicants.';
+$string['hr_review_start'] = 'HR validation start';
+$string['hr_review_start_help'] = 'Date when Talento Humano can start validating documents for preselected applicants.';
+$string['hr_review_end'] = 'HR validation end';
+$string['hr_review_end_help'] = 'Deadline for Talento Humano to complete document validation.';
 $string['convocatoriastatus'] = 'Status';
 $string['publishconvocatoria'] = 'Publish convocatoria';
 $string['closeconvocatoria'] = 'Close convocatoria';
@@ -4037,3 +4050,51 @@ $string['tour_convocatoria_manage_terms_title'] = 'Terms and Conditions';
 $string['tour_convocatoria_manage_terms_content'] = 'Define the terms applicants must accept when applying. This can include privacy policies and data handling agreements.';
 $string['tour_convocatoria_manage_save_title'] = 'Save Convocatoria';
 $string['tour_convocatoria_manage_save_content'] = 'Click Save to create or update the convocatoria. You can add vacancies after saving.';
+
+// =============================================================================
+// DEAN AND HR REVIEW WORKFLOW
+// =============================================================================
+
+// Dean review
+$string['deanreview'] = 'Dean Review';
+$string['deanreview_desc'] = 'Review applicant profiles and preselect candidates for HR validation.';
+$string['applicantstopreselect'] = 'Applicants to preselect';
+$string['applicantstopreselect_desc'] = 'Review submitted applications and select candidates for document validation by HR.';
+$string['preselect'] = 'Preselect';
+$string['preselectapplicant'] = 'Preselect applicant';
+$string['preselectapplicant_confirm'] = 'Are you sure you want to preselect this applicant? They will be sent to HR for document validation.';
+$string['applicantpreselected'] = 'Applicant has been preselected for HR validation.';
+$string['rejectapplicant'] = 'Reject applicant';
+$string['rejectapplicant_confirm'] = 'Are you sure you want to reject this applicant?';
+$string['applicantrejectedbydean'] = 'Applicant has been rejected.';
+$string['nodeanreviewaccess'] = 'You cannot access Dean review outside the configured review period.';
+$string['deanreviewnotstarted'] = 'Dean review period has not started yet. It starts on {$a}.';
+$string['deanreviewended'] = 'Dean review period has ended on {$a}.';
+
+// HR validation (Talento Humano)
+$string['hrvalidation'] = 'HR Validation';
+$string['hrvalidation_desc'] = 'Validate documents for preselected applicants.';
+$string['pendingvalidation'] = 'Pending validation';
+$string['pendingvalidation_desc'] = 'Applicants preselected by Dean, awaiting document validation.';
+$string['applicantstovalidate'] = 'Applicants to validate';
+$string['applicantstovalidate_desc'] = 'Review and validate documents for preselected applicants.';
+$string['senttohvalidation'] = 'Sent to HR validation';
+$string['nohrvalidationaccess'] = 'You cannot access HR validation outside the configured validation period.';
+$string['hrvalidationnotstarted'] = 'HR validation period has not started yet. It starts on {$a}.';
+$string['hrvalidationended'] = 'HR validation period has ended on {$a}.';
+
+// Dashboard sections
+$string['decanosection'] = 'Dean Review';
+$string['decanosection_desc'] = 'Preselect applicants for HR validation.';
+$string['hrsection'] = 'HR Validation';
+$string['hrsection_desc'] = 'Validate documents for preselected applicants.';
+
+// Review dates configuration
+$string['reviewdates'] = 'Review Dates';
+$string['reviewdates_help'] = 'Configure the dates for Dean review and HR validation periods. These periods should start after the convocatoria closes.';
+$string['deanreviewperiod'] = 'Dean review period';
+$string['hrvalidationperiod'] = 'HR validation period';
+
+// Status descriptions (internal)
+$string['status_preselected_desc'] = 'Applicant has been preselected by the Dean and is awaiting document validation by HR.';
+$string['status_pending_validation_desc'] = 'Applicant documents are being validated by Talento Humano.';
