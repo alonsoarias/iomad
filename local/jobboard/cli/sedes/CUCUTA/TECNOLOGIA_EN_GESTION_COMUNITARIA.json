@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-43",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE FUNDAMENTOS MATEMÀTICOS, ESTADÌSTICA",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-44",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN LENGUA CASTELLANA O COMUNICADOR SOCIAL O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE PRODUCCION, COMPRENSION DE TEXTOS – COMPETENCIAS COMUNICATIVAS – MEDIOS DE COMUNICACIÓN",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-45",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III.",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-46",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "INGENIERO AMBIENTAL O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE GESTION AMBIENTAL – TÉCNICA, TECNOLOGÍA Y CIENCIA",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-47",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PSICOLOGO O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE FUNDAMENTOS DE PSICOLOGÍA - INCLUSIÓN SOCIAL",
@@ -78,7 +78,7 @@
     },
     {
       "code": "FCAS-48",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ADMINISTRADOR DE EMPRESAS O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE FUNDAMENTOS DE ADMINISTRACION – DIRECCIONAMIENTO ESTRATÉGICO",
@@ -87,7 +87,7 @@
     },
     {
       "code": "FCAS-49",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "INGENIERO DE SISTEMAS",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR EL CURSO DE INFORMÁTICA APLICADA - CURSOS DE INFORMÁTICA TYT",
@@ -96,7 +96,7 @@
     },
     {
       "code": "FCAS-50",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE DESARROLLO HUMANO Y TERRITORIO - METODOLOGÌA Y MODELOS DE INTERVENCIÒN CON COMUNIDADES - SISTEMATIZACIÓN DE EXPERIENCIAS -",
@@ -105,7 +105,7 @@
     },
     {
       "code": "FCAS-51",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE METODOLOGÍA DE LA INVESTIGACIÓN - METODOLOGÍA DE LA INVESTIGACIÓN - INVESTIGACIÒN EN CIENCIAS SOCIALES",
@@ -114,7 +114,7 @@
     },
     {
       "code": "FCAS-52",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE PRÁCTICA II – PRÁCTICA COMUNITARIA – DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS",
@@ -123,7 +123,7 @@
     },
     {
       "code": "FCAS-53",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE GESTIÓN COMUNITARIA – ETICA Y ACCIÓN COMUNITARIA - COMUNIDAD",
@@ -132,7 +132,7 @@
     },
     {
       "code": "FCAS-54",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN EDUCACION BASICA CON ENFASIS EN EDUCACION FISICA RECREACION Y DEPORTES",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE ELECTIVA ÁREA DE DEPORTES",
@@ -141,7 +141,7 @@
     },
     {
       "code": "FCAS-55",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADA EN EDUCACIÓN ARTÍSTICA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "ORIENTAR LOS CURSOS DE ELECTIVA ÁREA DE CULTURA Y SOCIO HUMANÍSTICA",
@@ -150,7 +150,7 @@
     },
     {
       "code": "FCAS-89",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "FUNDAMENTOS MATEMÁTICOS ESTADÍSTICA CABS CURSO DE APOYO",
@@ -159,7 +159,7 @@
     },
     {
       "code": "FCAS-90",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN LENGUAS EXTRANJERAS.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "INGLÉS I INGLÉS II",
@@ -168,7 +168,7 @@
     },
     {
       "code": "FCAS-91",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "INFORMÁTICA APLICADA",
@@ -177,7 +177,7 @@
     },
     {
       "code": "FCAS-92",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "COMUNICADOR(A) SOCIAL LICENCIADO EN LENGUA CASTELLANA.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "COMPETENCIAS COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS MEDIOS DE COMUNICACIÓN",
@@ -186,7 +186,7 @@
     },
     {
       "code": "FCAS-93",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ADMINISTRADOR DE EMPRESAS",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA. ADMINISTRACIÓN GENERAL",
@@ -195,7 +195,7 @@
     },
     {
       "code": "FCAS-94",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN TRABAJO SOCIAL TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS FUNDAMENTOS DE SOCIOLOGÍA",
@@ -204,7 +204,7 @@
     },
     {
       "code": "FCAS-95",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN TRABAJO SOCIAL",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL",

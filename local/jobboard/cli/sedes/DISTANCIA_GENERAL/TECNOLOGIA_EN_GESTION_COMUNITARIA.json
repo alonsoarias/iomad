@@ -15,7 +15,7 @@
     },
     {
       "code": "FCAS-68",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "FUNDAMENTOS MATEMÁTICOS ESTADÍSTICA CABS CURSO DE APOYO",
@@ -24,7 +24,7 @@
     },
     {
       "code": "FCAS-69",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN LENGUAS EXTRANJERAS.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "INGLÉS I INGLÉS II",
@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-70",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "INFORMÁTICA APLICADA",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-71",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "COMUNICADOR(A) SOCIAL/ LICENCIADO EN LENGUA CASTELLANA.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "COMPETENCIAS COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS MEDIOS DE COMUNICACIÓN",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-72",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ADMINISTRADOR DE EMPRESAS",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA. ADMINISTRACIÓN GENERAL",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-73",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN TRABAJO SOCIAL/ PROFESIONAL EN PSICOLOGIA/ TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO.",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-74",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN TRABAJO SOCIAL",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "courses": "SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL",

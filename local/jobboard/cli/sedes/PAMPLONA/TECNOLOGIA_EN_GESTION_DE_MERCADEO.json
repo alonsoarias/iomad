@@ -15,7 +15,7 @@
     },
     {
       "code": "FCAS-26",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "courses": "ESTADISTICA",
@@ -24,7 +24,7 @@
     },
     {
       "code": "FCAS-27",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "LICENCIADO EN LENGUA CASTELLANA O COMUNICADOR SOCIAL O AREAS AFINES",
       "courses": "HABILIDADES COMUNICATIVAS - PRODUCCION Y COMPRENSION DE TEXTOS – COMPETENCIAS COMUNICATIVAS",
@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-28",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "ECONOMISTA CON EXPERIENCIA EN DOCENCIA",
       "courses": "FUNDAMENTOS DE ECONOMÍA",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-29",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PSICOLOGO, TRABAJADOR SOCIAL, COMUNITARIO CON EXPERIENCIA EN DOCENCIA EDU. SUPERIOR",
       "courses": "HABILIDADES INTRA E INTERPERSONALES, CIUDADANÍA Y CONVIVENCIA, SOCIEDAD Y RURALIDAD.",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-30",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O AFINES CON EXPERIENCIA EN EDU. SUPERIOR",
       "courses": "INGLÉS I, III, IV",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-31",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PROFESIONAL EN MERCADEO, O AFINES",
       "courses": "MERCADEO, MERCADEO ESTRATÉGICO, INV DE MERCADOS",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-32",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PROFESIONAL EN MERCADEO, ING, INDUSTRIAL, DISEÑADOR INDUSTRIAL, ADMINISTRADOR DE EMPRESAS O AREAS AFINES.",
       "courses": "EMPRENDIMIENTO, PRÁCTICA EN MERCADEO.",
@@ -78,7 +78,7 @@
     },
     {
       "code": "FCAS-33",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "CONTADOR PUBLICO, PROFESIONAL EN FINANCIERA Y/O ADMINISTRADOR DE EMPRESAS Y/O ECONOMISTA O AREAS AFINES",
       "courses": "FUNDAMENTOS DE ADMINISTRACIÓN CONTABILIDAD FINANCIERA.",
@@ -87,7 +87,7 @@
     },
     {
       "code": "FCAS-34",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "INGENIERO AMBIENTAL, INGENIERO CON POSTGRADO EN AMBIENTAL",
       "courses": "GESTIÓN AMBIENTAL.",
@@ -96,7 +96,7 @@
     },
     {
       "code": "FCAS-35",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PROFESIONAL EN MERCADEO, COMERCIO EXTERIOR, ADMINISTRADOR DE EMPRESAS O ING, INDUSTRIAL",
       "courses": "LOGÍSTICA Y DISTRIBUCIÓN, COMERCIALIZACIÓN DE BIENES Y SERVICIOS.",
@@ -105,7 +105,7 @@
     },
     {
       "code": "FCAS-36",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PROFESIONAL EN MERCADEO, ING. SISTEMAS",
       "courses": "HERRAMIENTAS TECNOLÓGICAS.",
@@ -114,7 +114,7 @@
     },
     {
       "code": "FCAS-37",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PROFESIONAL EN CIENCIAS ADMINISTRATIVAS, ECONÓMICAS Y SOCIALES, INGENIERÍAS CON POSGRADO EN EL AREA",
       "courses": "METODOLOGÍA DE LA INVESTIGACIÓN.",
@@ -123,7 +123,7 @@
     },
     {
       "code": "FCAS-38",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "DISEÑADOR GRÁFICO, PUBLICISTA, DISEÑADOR INDUSTRIAL, O PROFESIONAL EN MERCADEO, COMUNICADOR SOCIAL",
       "courses": "HERRAMIENTAS DE DISEÑO",
@@ -132,7 +132,7 @@
     },
     {
       "code": "FCAS-39",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "profile": "PROFESIONAL EN MERCADEO, PUBLICISTA, DISEÑADOR GRÁFICO, PUBLICISTA, DISEÑADOR INDUSTRIAL, COMUNICADOR SOCIAL CON ESPECIALIZACIÓN EN EL ÁREA.",
       "courses": "OPTATIVA I: PROMOCIÓN DIGITAL DE PRODUCTOS BIENES Y SERVICIOS, MEDIOS Y TECNOLOGÍAS DE COMUNICACIÓN. COMUNICACIÓN Y PUBLICIDAD.",

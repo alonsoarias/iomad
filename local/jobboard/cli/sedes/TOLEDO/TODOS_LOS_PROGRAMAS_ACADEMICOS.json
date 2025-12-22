@@ -6,7 +6,7 @@
   "vacancies": [
     {
       "code": "FII-01",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
@@ -15,7 +15,7 @@
     },
     {
       "code": "FII-05",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
       "profile": "LICENCIADO EN IDIOMAS/ LENGUAS EXTRANJERAS/ LENGUAS MODERNAS O AREAS AFINES",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II",
@@ -24,7 +24,7 @@
     },
     {
       "code": "FII-01",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
@@ -33,7 +33,7 @@
     },
     {
       "code": "FII-05",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FII-01",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FII-05",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III",

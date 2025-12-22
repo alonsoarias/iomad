@@ -687,10 +687,10 @@ if ($options['sync-sedes']) {
         'PRESENCIAL/DISTANCIA' => 'presencial', // Default to presencial for mixed.
     ];
 
-    // Contract type mapping.
+    // Contract type mapping (normalized types from JSON files).
     $contractMapping = [
         'OCASIONAL TIEMPO COMPLETO' => 'ocasional_tc',
-        'CATEDRA' => 'catedra',
+        'HORA CÁTEDRA' => 'catedra',
     ];
 
     // Faculty mapping for department field.

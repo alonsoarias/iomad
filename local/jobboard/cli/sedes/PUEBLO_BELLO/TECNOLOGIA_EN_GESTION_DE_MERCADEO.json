@@ -6,7 +6,7 @@
   "vacancies": [
     {
       "code": "FCAS-369",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
@@ -15,7 +15,7 @@
     },
     {
       "code": "FCAS-370",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA - METODOLOGÍA DE LA INVESTIGACIÓN",
@@ -24,7 +24,7 @@
     },
     {
       "code": "FCAS-371",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ECONOMISTA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-372",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSO DE MERCADEO - COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE. - COMUNICACIÓN Y PUBLICIDAD",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-373",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-374",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "COMUNICADOR SOCIAL",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "COMPETENCIAS COMUNICATIVAS - PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-375",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "CONTADOR PUBLICO - ADMINISTRADOR DE EMPRESAS CON ESPECIALISACIÓN EN FINANZAS",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "CONTABILIDAD FINANCIERA.",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-376",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "SOCIEDAD Y RURALIDAD",
@@ -78,7 +78,7 @@
     },
     {
       "code": "FCAS-377",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "INGENIERO EN SISTEMAS",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
@@ -87,7 +87,7 @@
     },
     {
       "code": "FCAS-378",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PSICOLOGO, LICENCIADO EN PEDAGOGIA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "HABILIDADES INTRA E INTERPERSONALES",

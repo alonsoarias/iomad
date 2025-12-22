@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-04",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "LICENCIADO(A) EN MATEMÁTICAS O ESTADÍSTICO.",
       "courses": "FUNDAMENTOS MATEMÁTICOS ESTADÍSTICA CABS CURSO DE APOYO",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-05",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "LICENCIADO(A) EN LENGUAS EXTRANJERAS.",
       "courses": "INGLÉS I INGLÉS II INGLÉS III",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-06",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "INGENIERO(A) EN REDES Y SISTEMAS / TECNÓLOGO(A) EN EL ÁREA DE LAS TIC.",
       "courses": "INFORMÁTICA APLICADA",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-07",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "COMUNICADOR(A) SOCIAL / LICENCIADO (A EN LINGÜÍSTICA Y COMUNICACIÓN / LICENCIADO (A) EN LENGUAS CASTELLANAS.",
       "courses": "COMPETENCIAS COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS MEDIOS DE COMUNICACIÓN",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-08",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "INGENIERA/O AMBIENTAL",
       "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA. GESTIÓN AMBIENTAL.",
@@ -78,7 +78,7 @@
     },
     {
       "code": "FCAS-09",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "LICENCIADO(A) EN EDUCACIÓN BÁSICA / PROFESIONAL EN TRABAJO SOCIAL. PROFESIONAL EN PEDAGOGÍA. TECNÓLOGO (A) EN TRABAJO SOCIAL Y COMUNITARIO. TECNÓLOGO(A) EN GESTIÓN COMUNITARIO.",
       "courses": "SOCIEDAD Y RURALIDAD DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS OPTATIVA II LÍNEA DE COMUNIDAD: PEDAGOGÍA SOCIAL DIRECCIÓN DE TRABAJO DE GRADO.",
@@ -87,7 +87,7 @@
     },
     {
       "code": "FCAS-10",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "PROFESIONAL EN TRABAJO SOCIAL O A FINES. PROFESIONAL EN PEDAGOGÍA. TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO. TECNÓLOGO (A) EN GESTIÓN COMUNITARIO.",
       "courses": "FUNDAMENTOS DE SOCIOLOGÍA COMUNIDAD ÉTICA Y ACCIÓN COMUNITARIA GESTIÓN COMUNITARIA DIRECCIÓN DE TRABAJO DE GRADO",
@@ -96,7 +96,7 @@
     },
     {
       "code": "FCAS-11",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "ADMINISTRADOR DE EMPRESAS",
       "courses": "ADMINISTRACIÓN GENERAL",
@@ -105,7 +105,7 @@
     },
     {
       "code": "FCAS-12",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
       "profile": "PROFESIONAL EN TRABAJO SOCIAL O A FINES. TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO. TECNÓLOGO(A) EN GESTIÓN COMUNITARIO.",
       "courses": "GRUPOS SOCIALES INCLUSIÓN SOCIAL FORMULACIÓN Y GESTIÓN DE PROYECTOS SOCIALES OPTATIVA I LÍNEA DE COMUNIDAD: DESARROLLO COMUNITARIO. DIRECCIÓN DE TRABAJO DE GRADO",

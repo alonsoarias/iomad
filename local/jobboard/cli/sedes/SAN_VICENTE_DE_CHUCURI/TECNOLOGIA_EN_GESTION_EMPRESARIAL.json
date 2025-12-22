@@ -6,7 +6,7 @@
   "vacancies": [
     {
       "code": "FCAS-348",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "ADMINISTRACION GENERAL EMPRENDIMIENTO FUENTES DE FINANCIACION Y NORMATIVIDAD COLOMBIANA",
@@ -15,7 +15,7 @@
     },
     {
       "code": "FCAS-349",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "ECONOMIA MERCADOS E INVESTIGACION DE MERCADOS",
@@ -24,7 +24,7 @@
     },
     {
       "code": "FCAS-350",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "CONTABILIDAD COSTOS Y PRESUPUESTOS CURSO DE APOYO DE CONTABILIDAD",
@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-351",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "SISTEMAS DE INFORMACION Y GESTION DOCUMENTAL",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-352",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I – II",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-353",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-354",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "HABILIDADES COMUNICATIVAS HABILIDADES INTRA E INTERPERSONALES ELECTIVA I SOCIOHUMANISTICA (CULTURA Y DIVERSIDAD)",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-355",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "SOCIEDAD Y RURALIDAD CIUDADANÍA Y CONVIVENCIA BIENESTAR EN EL PROGRAMA (PERMANENCIA, BIENESTAR FORMATIVO)",
@@ -78,7 +78,7 @@
     },
     {
       "code": "FCAS-356",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
       "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
       "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACIÓN DE PROYECTOS METODOLOGÍA DE LA INVESTIGACIÓN proyectos de INVESTIGACION Y EXTENSION semillero",

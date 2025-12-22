@@ -15,7 +15,7 @@
     },
     {
       "code": "FCAS-76",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
@@ -24,7 +24,7 @@
     },
     {
       "code": "FCAS-77",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA - METODOLOGÍA DE LA INVESTIGACIÓN",
@@ -33,7 +33,7 @@
     },
     {
       "code": "FCAS-78",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "ECONOMISTA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
@@ -42,7 +42,7 @@
     },
     {
       "code": "FCAS-79",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSO DE - MERCADEO - COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE. -COMUNICACIÓN Y PUBLICIDAD - MERCADEO ESTRATÉGICO - EMPRENDIMIENTO - LIDERAZGO Y GESTIÓN",
@@ -51,7 +51,7 @@
     },
     {
       "code": "FCAS-80",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR LOS CURSOS DE INGLES I - II - IV",
@@ -60,7 +60,7 @@
     },
     {
       "code": "FCAS-81",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "COMUNICADOR SOCIAL",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR CURSOS DE - COMPETENCIAS COMUNICATIVAS - PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS - OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)",
@@ -69,7 +69,7 @@
     },
     {
       "code": "FCAS-82",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "DISEÑADOR GRAFICO – PROFESIONAL EN MERCADEO Y PUBLICIDAD – COMUNICADOR SOCIAL",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE HERRAMIENTAS DE DISEÑO",
@@ -78,7 +78,7 @@
     },
     {
       "code": "FCAS-83",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "CONTADOR PUBLICO - ADMINISTRADOR DE EMPRESAS CON ESPECIALISACIÓN EN FINANZAS",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE CONTABILIDAD FINANCIERA",
@@ -87,7 +87,7 @@
     },
     {
       "code": "FCAS-84",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE SOCIEDAD Y RURALIDAD",
@@ -96,7 +96,7 @@
     },
     {
       "code": "FCAS-85",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "INGENIERO EN SISTEMAS",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
@@ -105,7 +105,7 @@
     },
     {
       "code": "FCAS-86",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "PSICOLOGO, LICENCIADO EN PEDAGOGIA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE HABILIDADES INTRA E INTERPERSONALES",
@@ -114,7 +114,7 @@
     },
     {
       "code": "FCAS-87",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "FILÓSOFO, PSICÓLOGO",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE ELECTIVA I",
@@ -123,7 +123,7 @@
     },
     {
       "code": "FCAS-88",
-      "contract_type": "CATEDRA",
+      "contract_type": "HORA CÁTEDRA",
       "profile": "LICENCIADO EN EDUCACIÓN ARTÍSTICA",
       "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
       "courses": "ORIENTAR EL CURSO DE ELECTIVA II",
