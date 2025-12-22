@@ -976,10 +976,10 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existing, $record);
 
             $record->id = $existing->id;
-            // Preserve existing status, publicationtype and positions
+            // Preserve existing status and publicationtype
             $record->status = $existing->status;
             $record->publicationtype = $existing->publicationtype;
-            $record->positions = $existing->positions;  // Keep manually adjusted positions
+            // Positions updated from JSON (source of truth - DOCX)
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -1018,10 +1018,10 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existingWithApp, $record);
 
             $record->id = $existingWithApp->id;
-            // Preserve existing status, publicationtype and positions
+            // Preserve existing status and publicationtype
             $record->status = $existingWithApp->status;
             $record->publicationtype = $existingWithApp->publicationtype;
-            $record->positions = $existingWithApp->positions;  // Keep manually adjusted positions
+            // Positions updated from JSON (source of truth - DOCX)
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -1060,10 +1060,10 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existingByCodeVac, $record);
 
             $record->id = $existingByCodeVac->id;
-            // Preserve existing status, publicationtype and positions
+            // Preserve existing status and publicationtype
             $record->status = $existingByCodeVac->status;
             $record->publicationtype = $existingByCodeVac->publicationtype;
-            $record->positions = $existingByCodeVac->positions;  // Keep manually adjusted positions
+            // Positions updated from JSON (source of truth - DOCX)
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -1123,17 +1123,78 @@ if ($options['sync-sedes']) {
         }
     }
 
-    // Vacancies not in JSONs remain unchanged (not archived).
+    // Handle vacancies not in JSONs (orphans).
+    $stats['archived'] = 0;
+    $stats['migrated'] = 0;
+
     if (!empty($existingByKey)) {
         echo "\n";
-        cli_heading("Vacantes No en JSONs (Sin Cambios)");
+        cli_heading("Vacantes Huérfanas (No en JSONs)");
+
+        // Build index of JSON vacancies by code for migration
+        $jsonByCode = [];
+        foreach ($jsonVacancies as $jkey => $jvac) {
+            $jcode = $jvac['code'];
+            if (!isset($jsonByCode[$jcode])) {
+                $jsonByCode[$jcode] = [];
+            }
+            $jsonByCode[$jcode][] = $jvac;
+        }
 
         foreach ($existingByKey as $key => $vac) {
-            $stats['unchanged']++;
-            if ($verbose) {
-                $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vac->id]);
-                $appNote = $appCount > 0 ? " ⚠️  $appCount POSTULACIONES" : "";
-                echo "= SIN CAMBIOS: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
+            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vac->id]);
+
+            if ($appCount > 0) {
+                // Has applications - try to migrate to matching JSON vacancy
+                $baseCode = preg_replace('/[a-z]$/', '', $vac->code); // Remove suffix like 'a', 'b'
+
+                // Find matching vacancy in current convocatoria by code
+                $matchingVacancy = null;
+                $sql = "SELECT * FROM {local_jobboard_vacancy}
+                        WHERE convocatoriaid = ? AND code LIKE ? AND id != ?
+                        ORDER BY id ASC LIMIT 1";
+                $matchingVacancy = $DB->get_record_sql($sql, [$convocatoriaid, $baseCode . '%', $vac->id]);
+
+                if ($matchingVacancy) {
+                    // Migrate applications to matching vacancy
+                    if (!$dryrun) {
+                        $DB->execute(
+                            "UPDATE {local_jobboard_application} SET vacancyid = ? WHERE vacancyid = ?",
+                            [$matchingVacancy->id, $vac->id]
+                        );
+                        // Archive the orphan vacancy
+                        $DB->update_record('local_jobboard_vacancy', (object)[
+                            'id' => $vac->id,
+                            'status' => 'archived',
+                            'timemodified' => $now
+                        ]);
+                    }
+                    $stats['migrated'] += $appCount;
+                    $stats['archived']++;
+                    if ($verbose) {
+                        echo "↪ MIGRADAS $appCount postulaciones: {$vac->code} → {$matchingVacancy->code} [ID: {$matchingVacancy->id}]\n";
+                        echo "  ✓ Vacante {$vac->code} archivada\n";
+                    }
+                } else {
+                    // No matching vacancy found - keep as is but warn
+                    $stats['unchanged']++;
+                    if ($verbose) {
+                        echo "⚠ CONSERVADA (sin match): {$vac->code} @ {$vac->location} ({$vac->modality}) - $appCount postulaciones\n";
+                    }
+                }
+            } else {
+                // No applications - archive the vacancy
+                if (!$dryrun) {
+                    $DB->update_record('local_jobboard_vacancy', (object)[
+                        'id' => $vac->id,
+                        'status' => 'archived',
+                        'timemodified' => $now
+                    ]);
+                }
+                $stats['archived']++;
+                if ($verbose) {
+                    echo "✗ ARCHIVADA: {$vac->code} @ {$vac->location} ({$vac->modality})\n";
+                }
             }
         }
     }
@@ -1141,12 +1202,14 @@ if ($options['sync-sedes']) {
     // Summary.
     echo "\n";
     cli_heading("Resumen de Sincronización");
-    echo "╔════════════════════════════════════╗\n";
-    echo "║  Creadas    : " . str_pad($stats['created'], 5) . "                 ║\n";
-    echo "║  Actualizadas: " . str_pad($stats['updated'], 5) . "               ║\n";
-    echo "║  Sin Cambios : " . str_pad($stats['unchanged'], 5) . "               ║\n";
-    echo "║  Errores     : " . str_pad($stats['errors'], 5) . "                 ║\n";
-    echo "╚════════════════════════════════════╝\n";
+    echo "╔════════════════════════════════════════════╗\n";
+    echo "║  Creadas       : " . str_pad($stats['created'], 5) . "                    ║\n";
+    echo "║  Actualizadas  : " . str_pad($stats['updated'], 5) . "                    ║\n";
+    echo "║  Archivadas    : " . str_pad($stats['archived'], 5) . "                    ║\n";
+    echo "║  Apps Migradas : " . str_pad($stats['migrated'], 5) . "                    ║\n";
+    echo "║  Sin Cambios   : " . str_pad($stats['unchanged'], 5) . "                    ║\n";
+    echo "║  Errores       : " . str_pad($stats['errors'], 5) . "                    ║\n";
+    echo "╚════════════════════════════════════════════╝\n";
 
     if ($dryrun) {
         echo "\n*** DRY RUN - No changes were made ***\n";
