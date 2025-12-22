@@ -485,12 +485,38 @@ if ($options['sync-sedes']) {
     // Get existing vacancies for this convocatoria.
     $existingVacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
     $existingByKey = [];
+    $existingByCode = []; // Additional index by code only
     foreach ($existingVacancies as $vac) {
         $key = $vac->code . '|' . $vac->location . '|' . $vac->modality;
         $existingByKey[$key] = $vac;
+        // Also index by code for application preservation
+        if (!isset($existingByCode[$vac->code])) {
+            $existingByCode[$vac->code] = [];
+        }
+        $existingByCode[$vac->code][] = $vac;
     }
 
     echo "Existing vacancies in DB for convocatoria $convocatoriaid: " . count($existingVacancies) . "\n\n";
+
+    // CRITICAL: Identify vacancies with applications to preserve them
+    $vacanciesWithApps = [];
+    $sql = "SELECT DISTINCT v.id, v.code, v.location, v.modality
+            FROM {local_jobboard_vacancy} v
+            INNER JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+            WHERE v.convocatoriaid = :convid";
+    $vacsWithApps = $DB->get_records_sql($sql, ['convid' => $convocatoriaid]);
+    foreach ($vacsWithApps as $vwa) {
+        $vacanciesWithApps[$vwa->code] = $vwa;
+    }
+
+    if (!empty($vacanciesWithApps)) {
+        echo "*** VACANCIES WITH APPLICATIONS (will be preserved): ***\n";
+        foreach ($vacanciesWithApps as $code => $vwa) {
+            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vwa->id]);
+            echo "  - $code (ID: {$vwa->id}) @ {$vwa->location} ({$vwa->modality}) - $appCount application(s)\n";
+        }
+        echo "\n";
+    }
 
     // Statistics.
     $stats = [
@@ -530,8 +556,9 @@ if ($options['sync-sedes']) {
         $record->status = $options['status'] ?: 'draft';
         $record->publicationtype = $options['public'] ? 'public' : 'internal';
 
+        // PRIORITY 1: Check if exact match exists (code + location + modality)
         if (isset($existingByKey[$key])) {
-            // Update existing.
+            // Update existing - exact match.
             $existing = $existingByKey[$key];
 
             // Check if vacancy has applications - if so, be careful.
@@ -563,6 +590,45 @@ if ($options['sync-sedes']) {
 
             // Mark as processed.
             unset($existingByKey[$key]);
+
+        // PRIORITY 2: Check if this code has applications - if so, update that vacancy instead
+        } else if (isset($vacanciesWithApps[$code])) {
+            // PRESERVE APPLICATION: Update existing vacancy with applications
+            $existingWithApp = $vacanciesWithApps[$code];
+            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $existingWithApp->id]);
+
+            $record->id = $existingWithApp->id;
+            $record->modifiedby = $adminuser->id;
+            $record->timemodified = $now;
+
+            // Note: This will update location/modality to the new values from JSON
+
+            if (!$dryrun) {
+                try {
+                    $DB->update_record('local_jobboard_vacancy', $record);
+                    $stats['updated']++;
+                    if ($verbose) {
+                        echo "UPDATED (PRESERVED APP): $code @ $location ($modality) [ID: {$existingWithApp->id}, $appCount APPLICATIONS PRESERVED]\n";
+                        echo "  (was @ {$existingWithApp->location} ({$existingWithApp->modality}))\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR updating $code (with app): " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['updated']++;
+                if ($verbose) {
+                    echo "DRY UPDATE (PRESERVE APP): $code @ $location ($modality) [$appCount APPLICATIONS]\n";
+                    echo "  (currently @ {$existingWithApp->location} ({$existingWithApp->modality}))\n";
+                }
+            }
+
+            // Mark the old key as processed
+            $oldKey = $existingWithApp->code . '|' . $existingWithApp->location . '|' . $existingWithApp->modality;
+            unset($existingByKey[$oldKey]);
+            // Remove from vacanciesWithApps to avoid processing again
+            unset($vacanciesWithApps[$code]);
+
         } else {
             // Create new.
             $record->createdby = $adminuser->id;
