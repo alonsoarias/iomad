@@ -509,19 +509,8 @@ trait dashboard_renderer {
             ];
         }
 
-        // Selection Committees.
+        // Program Reviewers.
         if ($caps['manageworkflow'] ?? false) {
-            $sections[] = [
-                'id' => 'committees',
-                'title' => get_string('committees', 'local_jobboard'),
-                'description' => get_string('committees_desc', 'local_jobboard'),
-                'icon' => 'users',
-                'color' => 'info',
-                'url' => (new moodle_url('/local/jobboard/admin/manage_committee.php'))->out(false),
-                'buttonlabel' => get_string('managecommittees', 'local_jobboard'),
-                'buttonicon' => 'users-cog',
-            ];
-
             // Program Reviewers.
             $sections[] = [
                 'id' => 'programreviewers',

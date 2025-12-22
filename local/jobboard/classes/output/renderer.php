@@ -31,7 +31,6 @@ declare(strict_types=1);
  * - review_renderer: Review and validation pages
  * - admin_renderer: Admin settings and tools pages
  * - exemption_renderer: Exemption management pages
- * - committee_renderer: Committee and reviewer assignment pages
  * - reports_renderer: Reports and analytics pages
  *
  * @package   local_jobboard
@@ -52,7 +51,6 @@ require_once(__DIR__ . '/renderer/application_renderer.php');
 require_once(__DIR__ . '/renderer/review_renderer.php');
 require_once(__DIR__ . '/renderer/admin_renderer.php');
 require_once(__DIR__ . '/renderer/exemption_renderer.php');
-require_once(__DIR__ . '/renderer/committee_renderer.php');
 require_once(__DIR__ . '/renderer/reports_renderer.php');
 
 /**
@@ -67,7 +65,6 @@ require_once(__DIR__ . '/renderer/reports_renderer.php');
  * - review_renderer: Document review and validation
  * - admin_renderer: Admin settings and tools
  * - exemption_renderer: Exemption management
- * - committee_renderer: Committee and reviewer assignment
  * - reports_renderer: Reports and analytics
  */
 class renderer extends renderer_base {
@@ -81,6 +78,5 @@ class renderer extends renderer_base {
     use renderer\review_renderer;
     use renderer\admin_renderer;
     use renderer\exemption_renderer;
-    use renderer\committee_renderer;
     use renderer\reports_renderer;
 }

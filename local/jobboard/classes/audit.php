@@ -70,9 +70,6 @@ class audit {
     const ENTITY_USER = 'user';
     const ENTITY_EMAIL_TEMPLATE = 'email_template';
     const ENTITY_INTERVIEW = 'interview';
-    const ENTITY_COMMITTEE = 'committee';
-    const ENTITY_EVALUATION = 'evaluation';
-    const ENTITY_DECISION = 'decision';
     const ENTITY_CONSENT = 'consent';
     const ENTITY_PROFILE = 'applicant_profile';
     const ENTITY_DOCTYPE = 'doctype';

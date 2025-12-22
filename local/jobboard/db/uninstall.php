@@ -60,7 +60,8 @@ function xmldb_local_jobboard_uninstall() {
  * Removes the following roles:
  * - jobboard_reviewer: Document reviewer role
  * - jobboard_coordinator: Selection coordinator role
- * - jobboard_committee: Selection committee member role
+ * - jobboard_dean: Dean role (profile approval)
+ * - jobboard_hr: HR role (document validation)
  *
  * @return void
  */
@@ -70,7 +71,8 @@ function local_jobboard_uninstall_remove_roles(): void {
     $roleshortnames = [
         'jobboard_reviewer',
         'jobboard_coordinator',
-        'jobboard_committee',
+        'jobboard_dean',
+        'jobboard_hr',
     ];
 
     foreach ($roleshortnames as $shortname) {

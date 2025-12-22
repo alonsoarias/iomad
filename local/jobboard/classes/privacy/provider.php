@@ -156,33 +156,6 @@ class provider implements
             'privacy:metadata:interviewer'
         );
 
-        // Committee member table.
-        $collection->add_database_table(
-            'local_jobboard_committee_member',
-            [
-                'userid' => 'privacy:metadata:committeemember:userid',
-                'committeeid' => 'privacy:metadata:committeemember:committeeid',
-                'role' => 'privacy:metadata:committeemember:role',
-                'addedby' => 'privacy:metadata:committeemember:addedby',
-                'timecreated' => 'privacy:metadata:committeemember:timecreated',
-            ],
-            'privacy:metadata:committeemember'
-        );
-
-        // Evaluation table (votes and scores from committee members).
-        $collection->add_database_table(
-            'local_jobboard_evaluation',
-            [
-                'userid' => 'privacy:metadata:evaluation:userid',
-                'applicationid' => 'privacy:metadata:evaluation:applicationid',
-                'score' => 'privacy:metadata:evaluation:score',
-                'vote' => 'privacy:metadata:evaluation:vote',
-                'comments' => 'privacy:metadata:evaluation:comments',
-                'timecreated' => 'privacy:metadata:evaluation:timecreated',
-            ],
-            'privacy:metadata:evaluation'
-        );
-
         // Consent table (user consent records).
         $collection->add_database_table(
             'local_jobboard_consent',
@@ -249,13 +222,9 @@ class provider implements
                       UNION
                       SELECT 1 FROM {local_jobboard_interviewer} i WHERE i.userid = :userid5
                       UNION
-                      SELECT 1 FROM {local_jobboard_committee_member} cm WHERE cm.userid = :userid6
+                      SELECT 1 FROM {local_jobboard_consent} co WHERE co.userid = :userid6
                       UNION
-                      SELECT 1 FROM {local_jobboard_evaluation} ev WHERE ev.userid = :userid7
-                      UNION
-                      SELECT 1 FROM {local_jobboard_consent} co WHERE co.userid = :userid8
-                      UNION
-                      SELECT 1 FROM {local_jobboard_applicant_profile} ap WHERE ap.userid = :userid9
+                      SELECT 1 FROM {local_jobboard_applicant_profile} ap WHERE ap.userid = :userid7
                   )";
 
         $contextlist->add_from_sql($sql, [
@@ -267,8 +236,6 @@ class provider implements
             'userid5' => $userid,
             'userid6' => $userid,
             'userid7' => $userid,
-            'userid8' => $userid,
-            'userid9' => $userid,
         ]);
 
         return $contextlist;
@@ -304,14 +271,6 @@ class provider implements
 
         // Get users from interviewers.
         $sql = "SELECT DISTINCT userid FROM {local_jobboard_interviewer}";
-        $userlist->add_from_sql('userid', $sql, []);
-
-        // Get users from committee members.
-        $sql = "SELECT DISTINCT userid FROM {local_jobboard_committee_member}";
-        $userlist->add_from_sql('userid', $sql, []);
-
-        // Get users from evaluations.
-        $sql = "SELECT DISTINCT userid FROM {local_jobboard_evaluation}";
         $userlist->add_from_sql('userid', $sql, []);
 
         // Get users from consent records.
@@ -352,12 +311,6 @@ class provider implements
 
         // Export interviewer assignments.
         self::export_interviewer_data($user->id, $context);
-
-        // Export committee memberships.
-        self::export_committee_data($user->id, $context);
-
-        // Export evaluations.
-        self::export_evaluation_data($user->id, $context);
 
         // Export consent records.
         self::export_consent_data($user->id, $context);
@@ -588,70 +541,6 @@ class provider implements
     }
 
     /**
-     * Export user committee memberships.
-     *
-     * @param int $userid User ID.
-     * @param \context $context The context.
-     */
-    private static function export_committee_data(int $userid, \context $context): void {
-        global $DB;
-
-        $sql = "SELECT cm.*, c.name as committeename, c.vacancyid
-                FROM {local_jobboard_committee_member} cm
-                JOIN {local_jobboard_committee} c ON c.id = cm.committeeid
-                WHERE cm.userid = :userid";
-
-        $records = $DB->get_records_sql($sql, ['userid' => $userid]);
-
-        $data = [];
-        foreach ($records as $record) {
-            $data[] = [
-                'committee_name' => $record->committeename,
-                'vacancy_id' => $record->vacancyid,
-                'role' => $record->role,
-                'assigned' => userdate($record->timecreated),
-            ];
-        }
-
-        if (!empty($data)) {
-            writer::with_context($context)->export_data(
-                [get_string('committees', 'local_jobboard')],
-                (object) ['committee_memberships' => $data]
-            );
-        }
-    }
-
-    /**
-     * Export user evaluations.
-     *
-     * @param int $userid User ID.
-     * @param \context $context The context.
-     */
-    private static function export_evaluation_data(int $userid, \context $context): void {
-        global $DB;
-
-        $evaluations = $DB->get_records('local_jobboard_evaluation', ['userid' => $userid]);
-
-        $data = [];
-        foreach ($evaluations as $eval) {
-            $data[] = [
-                'application_id' => $eval->applicationid,
-                'score' => $eval->score,
-                'vote' => $eval->vote,
-                'comments' => $eval->comments,
-                'created' => userdate($eval->timecreated),
-            ];
-        }
-
-        if (!empty($data)) {
-            writer::with_context($context)->export_data(
-                [get_string('evaluations', 'local_jobboard')],
-                (object) ['evaluations' => $data]
-            );
-        }
-    }
-
-    /**
      * Export user consent records.
      *
      * @param int $userid User ID.
@@ -809,12 +698,6 @@ class provider implements
 
         // Delete interviewer assignments.
         $DB->delete_records('local_jobboard_interviewer', ['userid' => $userid]);
-
-        // Delete committee memberships.
-        $DB->delete_records('local_jobboard_committee_member', ['userid' => $userid]);
-
-        // Delete evaluations.
-        $DB->delete_records('local_jobboard_evaluation', ['userid' => $userid]);
 
         // Delete consent records.
         $DB->delete_records('local_jobboard_consent', ['userid' => $userid]);

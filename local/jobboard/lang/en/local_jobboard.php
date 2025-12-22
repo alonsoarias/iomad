@@ -2096,7 +2096,9 @@ $string['cap_evaluate'] = 'Evaluate';
 $string['cap_manage'] = 'Manage';
 $string['cap_review'] = 'Review';
 $string['cap_validate'] = 'Validate';
-$string['cap_viewevaluations'] = 'View evaluations';
+$string['cap_reviewprofiles'] = 'Review profiles';
+$string['cap_approveprofile'] = 'Approve/reject profiles';
+$string['cap_validatehr'] = 'Final document validation';
 $string['cap_viewreports'] = 'View reports';
 
 // =============================================================================
@@ -2892,6 +2894,10 @@ $string['role_committee'] = 'Committee member';
 $string['role_committee_desc'] = 'Member of evaluation committee';
 $string['role_coordinator_desc'] = 'Coordinates the recruitment process';
 $string['role_reviewer_desc'] = 'Reviews applications and documents';
+$string['role_dean'] = 'Dean Reviewer';
+$string['role_dean_desc'] = 'Reviews applicant profiles and approves/rejects complete profiles';
+$string['role_hr'] = 'Human Resources';
+$string['role_hr_desc'] = 'Validates documents from applicants pre-selected by the Dean';
 $string['role_lead_reviewer'] = 'Lead reviewer';
 $string['role_observer'] = 'Observer';
 $string['changerole'] = 'Change role';

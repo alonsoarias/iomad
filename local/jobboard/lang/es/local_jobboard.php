@@ -2098,7 +2098,9 @@ $string['cap_evaluate'] = 'Evaluar';
 $string['cap_manage'] = 'Gestionar';
 $string['cap_review'] = 'Revisar';
 $string['cap_validate'] = 'Validar';
-$string['cap_viewevaluations'] = 'Ver evaluaciones';
+$string['cap_reviewprofiles'] = 'Revisar perfiles';
+$string['cap_approveprofile'] = 'Aprobar/rechazar perfiles';
+$string['cap_validatehr'] = 'Validación final de documentos';
 $string['cap_viewreports'] = 'Ver reportes';
 
 // =============================================================================
