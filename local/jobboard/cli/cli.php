@@ -1124,6 +1124,7 @@ if ($options['sync-sedes']) {
     }
 
     // Handle vacancies not in JSONs (orphans).
+    $stats['deleted'] = 0;
     $stats['archived'] = 0;
     $stats['migrated'] = 0;
 
@@ -1183,17 +1184,13 @@ if ($options['sync-sedes']) {
                     }
                 }
             } else {
-                // No applications - archive the vacancy
+                // No applications - delete the vacancy (not in JSONs = not in DOCX)
                 if (!$dryrun) {
-                    $DB->update_record('local_jobboard_vacancy', (object)[
-                        'id' => $vac->id,
-                        'status' => 'archived',
-                        'timemodified' => $now
-                    ]);
+                    $DB->delete_records('local_jobboard_vacancy', ['id' => $vac->id]);
                 }
-                $stats['archived']++;
+                $stats['deleted']++;
                 if ($verbose) {
-                    echo "✗ ARCHIVADA: {$vac->code} @ {$vac->location} ({$vac->modality})\n";
+                    echo "✗ ELIMINADA: {$vac->code} @ {$vac->location} ({$vac->modality})\n";
                 }
             }
         }
@@ -1205,7 +1202,8 @@ if ($options['sync-sedes']) {
     echo "╔════════════════════════════════════════════╗\n";
     echo "║  Creadas       : " . str_pad($stats['created'], 5) . "                    ║\n";
     echo "║  Actualizadas  : " . str_pad($stats['updated'], 5) . "                    ║\n";
-    echo "║  Archivadas    : " . str_pad($stats['archived'], 5) . "                    ║\n";
+    echo "║  Eliminadas    : " . str_pad($stats['deleted'], 5) . "                    ║\n";
+    echo "║  Archivadas    : " . str_pad($stats['archived'], 5) . " (apps migradas)     ║\n";
     echo "║  Apps Migradas : " . str_pad($stats['migrated'], 5) . "                    ║\n";
     echo "║  Sin Cambios   : " . str_pad($stats['unchanged'], 5) . "                    ║\n";
     echo "║  Errores       : " . str_pad($stats['errors'], 5) . "                    ║\n";
