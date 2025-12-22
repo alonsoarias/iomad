@@ -837,8 +837,7 @@ if ($options['sync-sedes']) {
         $record->positions = $vac['positions'];
         $record->requirements = build_vacancy_requirements_sync($vac);
         $record->desirable = build_vacancy_desirable_sync();
-        $record->status = $options['status'] ?: 'draft';
-        $record->publicationtype = $options['public'] ? 'public' : 'internal';
+        // NOTE: status and publicationtype are set per-case below to preserve existing values for updates
 
         // PRIORITY 1: Check if exact match exists (code + location + modality)
         if (isset($existingByKey[$key])) {
@@ -852,6 +851,9 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existing, $record);
 
             $record->id = $existing->id;
+            // Preserve existing status and publicationtype
+            $record->status = $existing->status;
+            $record->publicationtype = $existing->publicationtype;
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -890,6 +892,9 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existingWithApp, $record);
 
             $record->id = $existingWithApp->id;
+            // Preserve existing status and publicationtype
+            $record->status = $existingWithApp->status;
+            $record->publicationtype = $existingWithApp->publicationtype;
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -928,6 +933,9 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existingByCodeVac, $record);
 
             $record->id = $existingByCodeVac->id;
+            // Preserve existing status and publicationtype
+            $record->status = $existingByCodeVac->status;
+            $record->publicationtype = $existingByCodeVac->publicationtype;
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -957,6 +965,8 @@ if ($options['sync-sedes']) {
 
         } else {
             // Create new.
+            $record->status = $options['status'] ?: 'draft';
+            $record->publicationtype = $options['public'] ? 'public' : 'internal';
             $record->createdby = $adminuser->id;
             $record->timecreated = $now;
 
