@@ -33,6 +33,7 @@ use local_jobboard\document;
 use local_jobboard\vacancy;
 use local_jobboard\review_notifier;
 use local_jobboard\helper\iomad_helper;
+use local_jobboard\helper\role_access_helper;
 
 // Require review capability.
 require_capability('local/jobboard:reviewdocuments', $context);
@@ -137,10 +138,90 @@ if ($action && confirm_sesskey()) {
 
                 $app = new application($applicationid);
                 if ($app->id) {
-                    $validstatuses = ['draft', 'submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected', 'withdrawn'];
+                    $validstatuses = application::STATUSES;
                     if (in_array($newstatus, $validstatuses)) {
                         $app->change_status($newstatus, $notes, $USER->id);
                         \core\notification::success(get_string('statuschanged', 'local_jobboard'));
+                    }
+                }
+            }
+            break;
+
+        case 'approveprofile':
+            // Dean approves a profile.
+            if ($applicationid) {
+                require_capability('local/jobboard:approveprofile', $context);
+                $comments = optional_param('comments', '', PARAM_TEXT);
+
+                $app = new application($applicationid);
+                if ($app->id && $app->status === 'pending_dean_review') {
+                    // Check if dean has access (date-based).
+                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                    if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
+                        $app->approve_profile($comments);
+                        \core\notification::success(get_string('profile_approved', 'local_jobboard'));
+                    } else {
+                        \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
+                    }
+                }
+            }
+            break;
+
+        case 'rejectprofile':
+            // Dean rejects a profile.
+            if ($applicationid) {
+                require_capability('local/jobboard:approveprofile', $context);
+                $reason = required_param('reason', PARAM_TEXT);
+
+                $app = new application($applicationid);
+                if ($app->id && $app->status === 'pending_dean_review') {
+                    // Check if dean has access (date-based).
+                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                    if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
+                        $app->reject_profile($reason);
+                        \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
+                    } else {
+                        \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
+                    }
+                }
+            }
+            break;
+
+        case 'validatehr':
+            // HR validates final.
+            if ($applicationid) {
+                require_capability('local/jobboard:validatehr', $context);
+                $comments = optional_param('comments', '', PARAM_TEXT);
+
+                $app = new application($applicationid);
+                if ($app->id && $app->status === 'pending_hr_validation') {
+                    // Check if HR has access (date-based).
+                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                    if ($convocatoria && role_access_helper::can_hr_access($convocatoria)) {
+                        $app->validate_hr($comments);
+                        \core\notification::success(get_string('hr_validation_complete', 'local_jobboard'));
+                    } else {
+                        \core\notification::error(get_string('error:hr_access_dates', 'local_jobboard'));
+                    }
+                }
+            }
+            break;
+
+        case 'rejecthr':
+            // HR rejects.
+            if ($applicationid) {
+                require_capability('local/jobboard:validatehr', $context);
+                $reason = required_param('reason', PARAM_TEXT);
+
+                $app = new application($applicationid);
+                if ($app->id && $app->status === 'pending_hr_validation') {
+                    // Check if HR has access (date-based).
+                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                    if ($convocatoria && role_access_helper::can_hr_access($convocatoria)) {
+                        $app->reject_hr($reason);
+                        \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
+                    } else {
+                        \core\notification::error(get_string('error:hr_access_dates', 'local_jobboard'));
                     }
                 }
             }

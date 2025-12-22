@@ -4080,3 +4080,7 @@ $string['review_period_not_configured'] = 'Período de revisión no configurado'
 $string['review_period_pending'] = 'Período de revisión pendiente';
 $string['review_period_active'] = 'Período de revisión activo';
 $string['review_period_ended'] = 'Período de revisión finalizado';
+
+// Errores de validación de fechas de revisión
+$string['error:reviewdatebeforeend'] = 'La fecha de inicio de revisión debe ser posterior a la fecha de cierre de la convocatoria';
+$string['error:hrreviewbeforedean'] = 'La fecha de inicio de validación de Talento Humano debe ser posterior a la fecha de fin de revisión del Decano';
