@@ -703,10 +703,11 @@ function local_jobboard_install_tours(): void {
 /**
  * Create custom roles for the Job Board plugin.
  *
- * Creates three specialized roles:
+ * Creates specialized roles:
  * - jobboard_reviewer: Can review and validate applicant documents
  * - jobboard_coordinator: Can manage vacancies and coordinate selection
- * - jobboard_committee: Can evaluate candidates in selection process
+ * - jobboard_dean: Can review profiles and approve/reject applicants
+ * - jobboard_hr: Can validate documents for final HR approval
  *
  * @return void
  */

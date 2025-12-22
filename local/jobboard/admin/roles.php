@@ -22,7 +22,8 @@
  * Allows administrators to assign users to the plugin's custom roles:
  * - jobboard_reviewer: Document reviewers
  * - jobboard_coordinator: Selection coordinators
- * - jobboard_committee: Selection committee members
+ * - jobboard_dean: Dean reviewers (profile approval)
+ * - jobboard_hr: HR validators (document validation)
  *
  * @package   local_jobboard
  * @copyright 2024 ISER

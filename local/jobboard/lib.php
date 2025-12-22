@@ -36,7 +36,7 @@ function local_jobboard_user_has_custom_role(?int $userid = null): bool {
     $userid = $userid ?? $USER->id;
 
     // Get the custom role IDs.
-    $customroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_committee'];
+    $customroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_dean', 'jobboard_hr'];
     $roleids = $DB->get_fieldset_select('role', 'id', 'shortname IN (' .
         implode(',', array_fill(0, count($customroles), '?')) . ')', $customroles);
 
@@ -108,7 +108,7 @@ function local_jobboard_should_show_menu(): bool {
  *
  * VISIBILITY: Menu is only shown if:
  * - There are open convocatorias, OR
- * - User has a custom jobboard role (reviewer, coordinator, committee), OR
+ * - User has a custom jobboard role (reviewer, coordinator, dean, hr), OR
  * - User is a site admin
  *
  * Navigation Structure:
