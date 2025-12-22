@@ -2,11 +2,13 @@
   "sede": "EL_TARRA",
   "total_vacancies": 28,
   "by_faculty": {
-    "FCAS": 28
+    "FII": 0,
+    "FCAS": 28,
+    "BIENESTAR": 0
   },
   "programs": {
-    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
     "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 10,
-    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 7
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 7,
+    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11
   }
 }
