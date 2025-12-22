@@ -107,6 +107,9 @@ list($options, $unrecognized) = cli_get_params([
     'application-id' => null,
     'vacancy-id' => null,
     'list-applications' => false,
+    // Sync from sedes folder options.
+    'sync-sedes' => false,
+    'sedes-path' => null,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -131,6 +134,7 @@ list($options, $unrecognized) = cli_get_params([
     'A' => 'application-id',
     'V' => 'vacancy-id',
     'L' => 'list-applications',
+    'Y' => 'sync-sedes',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -228,6 +232,23 @@ EXAMPLES:
   # Parse only (standalone mode)
   php cli.php --export-json=perfiles.json --verbose
 
+SYNC FROM SEDES (Recommended for updates):
+  -Y, --sync-sedes          SYNC vacancies from sedes/ folder JSONs
+                            - Creates new vacancies not in DB
+                            - Updates existing vacancies (by code+location+modality)
+                            - Archives vacancies not in JSONs (preserves applications)
+  --sedes-path=PATH         Path to sedes folder (default: ./sedes)
+
+  SYNC EXAMPLES:
+    # Preview sync changes (dry run)
+    php cli.php --sync-sedes --convocatoria=1 --dryrun --verbose
+
+    # Sync vacancies for convocatoria 1
+    php cli.php --sync-sedes --convocatoria=1 --verbose
+
+    # Sync and publish
+    php cli.php --sync-sedes --convocatoria=1 --status=published --public --verbose
+
 APPLICATION MANAGEMENT:
   -D, --delete-application  DELETE applications (requires --idnumber or --application-id)
   -I, --idnumber=ID         User idnumber to identify the applicant
@@ -318,6 +339,390 @@ CSV;
     echo "#    - faculty: FCAS or FII\n";
     echo "# 4. Save and run: php cli.php --csv=yourfile.csv --create-structure --publish\n";
     exit(0);
+}
+
+// ============================================================
+// SYNC FROM SEDES FOLDER
+// ============================================================
+if ($options['sync-sedes']) {
+    if (!$moodleavailable) {
+        cli_error("Sync requires Moodle. Run from Moodle installation.");
+    }
+
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+    $convocatoriaid = $options['convocatoria'] ? (int) $options['convocatoria'] : null;
+    $sedespath = $options['sedes-path'] ?: __DIR__ . '/sedes';
+
+    if (!$convocatoriaid) {
+        cli_error("You must specify --convocatoria=ID for sync operation");
+    }
+
+    // Verify convocatoria exists.
+    $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+    if (!$convocatoria) {
+        cli_error("Convocatoria with ID $convocatoriaid not found");
+    }
+
+    cli_heading("Sync Vacancies from Sedes Folder");
+    echo "Convocatoria: {$convocatoria->name} (ID: $convocatoriaid)\n";
+    echo "Sedes path: $sedespath\n";
+    if ($dryrun) {
+        echo "*** DRY RUN MODE - No changes will be made ***\n";
+    }
+    echo "\n";
+
+    // Verify sedes folder exists.
+    if (!is_dir($sedespath)) {
+        cli_error("Sedes folder not found: $sedespath");
+    }
+
+    // Location name mapping (folder name -> DB location name).
+    $locationMapping = [
+        'PAMPLONA' => 'Pamplona (Sede Principal)',
+        'CUCUTA' => 'Cúcuta',
+        'TIBU' => 'Tibú',
+        'OCANA' => 'Ocaña',
+        'TOLEDO' => 'Toledo',
+        'EL_TARRA' => 'El Tarra',
+        'SARDINATA' => 'Sardinata',
+        'SAN_VICENTE_DE_CHUCURI' => 'San Vicente del Chucurí',
+        'PUEBLO_BELLO' => 'Pueblo Bello',
+        'SAN_PABLO' => 'San Pablo (Sur de Bolívar)',
+        'SANTA_ROSA_DEL_SUR' => 'Santa Rosa del Sur',
+        'FUNDACION' => 'Fundación',
+        'CIMITARRA' => 'Cimitarra',
+        'SALAZAR_DE_LAS_PALMAS' => 'SALAZAR DE LAS PALMAS',
+        'TAME' => 'Tame',
+        'SARAVENA' => 'Saravena',
+        'DISTANCIA_GENERAL' => 'A Distancia (Todos los CT)',
+    ];
+
+    // Modality mapping.
+    $modalityMapping = [
+        'PRESENCIAL' => 'presencial',
+        'DISTANCIA' => 'distancia',
+        'PRESENCIAL/DISTANCIA' => 'presencial', // Default to presencial for mixed.
+    ];
+
+    // Contract type mapping.
+    $contractMapping = [
+        'OCASIONAL TIEMPO COMPLETO' => 'ocasional_tc',
+        'CATEDRA' => 'catedra',
+    ];
+
+    // Faculty mapping for department field.
+    $facultyMapping = [
+        'FII' => 'Ingenierías e Informática',
+        'FCAS' => 'Ciencias Administrativas y Sociales',
+        'BIENESTAR' => 'BIENESTAR INSTITUCIONAL',
+    ];
+
+    // Read all vacancies from sedes folder.
+    $jsonVacancies = [];
+    $sedeFolders = scandir($sedespath);
+
+    foreach ($sedeFolders as $sedeFolder) {
+        if ($sedeFolder === '.' || $sedeFolder === '..') {
+            continue;
+        }
+
+        $sedePath = $sedespath . '/' . $sedeFolder;
+        if (!is_dir($sedePath)) {
+            continue;
+        }
+
+        $locationName = $locationMapping[$sedeFolder] ?? $sedeFolder;
+
+        // Read all JSON files in this sede folder.
+        $jsonFiles = glob($sedePath . '/*.json');
+        foreach ($jsonFiles as $jsonFile) {
+            $filename = basename($jsonFile);
+            if ($filename === '_RESUMEN.json') {
+                continue;
+            }
+
+            $content = file_get_contents($jsonFile);
+            $data = json_decode($content, true);
+            if (!$data || !isset($data['vacancies'])) {
+                if ($verbose) {
+                    echo "WARNING: Invalid JSON in $jsonFile\n";
+                }
+                continue;
+            }
+
+            foreach ($data['vacancies'] as $vacancy) {
+                $code = $vacancy['code'] ?? '';
+                if (empty($code)) {
+                    continue;
+                }
+
+                // Determine modality from vacancy or data.
+                $modality = $vacancy['modality'] ?? $data['modality'] ?? 'PRESENCIAL';
+                $modalityDb = $modalityMapping[strtoupper($modality)] ?? 'presencial';
+
+                // Create unique key.
+                $uniqueKey = $code . '|' . $locationName . '|' . $modalityDb;
+
+                $jsonVacancies[$uniqueKey] = [
+                    'code' => $code,
+                    'location' => $locationName,
+                    'modality' => $modalityDb,
+                    'program' => $vacancy['program'] ?? $data['program'] ?? '',
+                    'profile' => $vacancy['profile'] ?? '',
+                    'activities' => $vacancy['activities'] ?? $vacancy['courses'] ?? '',
+                    'contract_type' => $vacancy['contract_type'] ?? 'CATEDRA',
+                    'faculty' => $vacancy['faculty'] ?? $data['faculty'] ?? 'FCAS',
+                    'positions' => (int) ($vacancy['positions'] ?? 1),
+                    'sede_folder' => $sedeFolder,
+                ];
+            }
+        }
+    }
+
+    echo "Vacancies read from JSONs: " . count($jsonVacancies) . "\n\n";
+
+    // Get existing vacancies for this convocatoria.
+    $existingVacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
+    $existingByKey = [];
+    foreach ($existingVacancies as $vac) {
+        $key = $vac->code . '|' . $vac->location . '|' . $vac->modality;
+        $existingByKey[$key] = $vac;
+    }
+
+    echo "Existing vacancies in DB for convocatoria $convocatoriaid: " . count($existingVacancies) . "\n\n";
+
+    // Statistics.
+    $stats = [
+        'created' => 0,
+        'updated' => 0,
+        'archived' => 0,
+        'unchanged' => 0,
+        'errors' => 0,
+    ];
+
+    $adminuser = get_admin();
+    $now = time();
+
+    // Process JSON vacancies: create or update.
+    cli_heading("Processing JSON Vacancies");
+    foreach ($jsonVacancies as $key => $vac) {
+        $code = $vac['code'];
+        $location = $vac['location'];
+        $modality = $vac['modality'];
+
+        // Build vacancy record.
+        $record = new stdClass();
+        $record->code = $code;
+        $record->title = $vac['program'] . ' - ' . substr($vac['profile'], 0, 100);
+        $record->description = build_vacancy_description_sync($vac);
+        $record->contracttype = $contractMapping[$vac['contract_type']] ?? 'catedra';
+        $record->duration = $record->contracttype === 'ocasional_tc'
+            ? '4 meses (período académico semestral) - Contrato laboral a término fijo'
+            : 'Semestre académico (16 semanas) - Contrato de prestación de servicios por horas';
+        $record->location = $location;
+        $record->modality = $modality;
+        $record->department = $vac['program'];
+        $record->convocatoriaid = $convocatoriaid;
+        $record->positions = $vac['positions'];
+        $record->requirements = build_vacancy_requirements_sync($vac);
+        $record->desirable = build_vacancy_desirable_sync();
+        $record->status = $options['status'] ?: 'draft';
+        $record->publicationtype = $options['public'] ? 'public' : 'internal';
+
+        if (isset($existingByKey[$key])) {
+            // Update existing.
+            $existing = $existingByKey[$key];
+
+            // Check if vacancy has applications - if so, be careful.
+            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $existing->id]);
+
+            $record->id = $existing->id;
+            $record->modifiedby = $adminuser->id;
+            $record->timemodified = $now;
+
+            if (!$dryrun) {
+                try {
+                    $DB->update_record('local_jobboard_vacancy', $record);
+                    $stats['updated']++;
+                    if ($verbose) {
+                        $appNote = $appCount > 0 ? " [HAS $appCount APPLICATIONS]" : "";
+                        echo "UPDATED: $code @ $location ($modality)$appNote\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR updating $code: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['updated']++;
+                if ($verbose) {
+                    $appNote = $appCount > 0 ? " [HAS $appCount APPLICATIONS]" : "";
+                    echo "DRY UPDATE: $code @ $location ($modality)$appNote\n";
+                }
+            }
+
+            // Mark as processed.
+            unset($existingByKey[$key]);
+        } else {
+            // Create new.
+            $record->createdby = $adminuser->id;
+            $record->timecreated = $now;
+
+            if (!$dryrun) {
+                try {
+                    $newid = $DB->insert_record('local_jobboard_vacancy', $record);
+                    $stats['created']++;
+                    if ($verbose) {
+                        echo "CREATED: $code @ $location ($modality) [ID: $newid]\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR creating $code: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['created']++;
+                if ($verbose) {
+                    echo "DRY CREATE: $code @ $location ($modality)\n";
+                }
+            }
+        }
+    }
+
+    // Archive vacancies not in JSONs.
+    if (!empty($existingByKey)) {
+        echo "\n";
+        cli_heading("Archiving Vacancies Not in JSONs");
+
+        foreach ($existingByKey as $key => $vac) {
+            // Check for applications.
+            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vac->id]);
+
+            if ($vac->status === 'archived') {
+                $stats['unchanged']++;
+                continue;
+            }
+
+            if (!$dryrun) {
+                try {
+                    $DB->set_field('local_jobboard_vacancy', 'status', 'archived', ['id' => $vac->id]);
+                    $DB->set_field('local_jobboard_vacancy', 'timemodified', $now, ['id' => $vac->id]);
+                    $DB->set_field('local_jobboard_vacancy', 'modifiedby', $adminuser->id, ['id' => $vac->id]);
+                    $stats['archived']++;
+                    if ($verbose) {
+                        $appNote = $appCount > 0 ? " [PRESERVING $appCount APPLICATIONS]" : "";
+                        echo "ARCHIVED: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR archiving {$vac->code}: " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['archived']++;
+                if ($verbose) {
+                    $appNote = $appCount > 0 ? " [WOULD PRESERVE $appCount APPLICATIONS]" : "";
+                    echo "DRY ARCHIVE: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
+                }
+            }
+        }
+    }
+
+    // Summary.
+    echo "\n";
+    cli_heading("Sync Summary");
+    echo "Created: {$stats['created']}\n";
+    echo "Updated: {$stats['updated']}\n";
+    echo "Archived: {$stats['archived']}\n";
+    echo "Unchanged: {$stats['unchanged']}\n";
+    echo "Errors: {$stats['errors']}\n";
+
+    if ($dryrun) {
+        echo "\n*** DRY RUN - No changes were made ***\n";
+    }
+
+    exit($stats['errors'] > 0 ? 1 : 0);
+}
+
+/**
+ * Build vacancy description HTML for sync.
+ */
+function build_vacancy_description_sync($vac) {
+    $faculty = $vac['faculty'];
+    $facultyName = [
+        'FII' => 'Ingenierías e Informática',
+        'FCAS' => 'Ciencias Administrativas y Sociales',
+        'BIENESTAR' => 'BIENESTAR INSTITUCIONAL',
+    ][$faculty] ?? $faculty;
+
+    $contractLabel = $vac['contract_type'] === 'OCASIONAL TIEMPO COMPLETO'
+        ? 'Ocasional Tiempo Completo'
+        : 'Cátedra';
+
+    $duration = $vac['contract_type'] === 'OCASIONAL TIEMPO COMPLETO'
+        ? '4 meses (período académico semestral) - Contrato laboral a término fijo'
+        : 'Semestre académico (16 semanas) - Contrato de prestación de servicios por horas';
+
+    $activities = $vac['activities'];
+    if (is_array($activities)) {
+        $activities = implode(' | ', $activities);
+    }
+
+    return '<div class="vacancy-description">
+<div class="alert alert-secondary">
+<strong>Código:</strong> ' . htmlspecialchars($vac['code']) . ' | <strong>Facultad:</strong> ' . htmlspecialchars($facultyName) . ' | <strong>Modalidad:</strong> ' . ucfirst($vac['modality']) . '
+</div>
+<h4>Programa Académico</h4>
+<p><strong>' . htmlspecialchars($vac['program']) . '</strong></p>
+<h4>Actividades/Cursos a Orientar</h4>
+<p>' . htmlspecialchars($activities) . '</p>
+<h4>Información de la Vinculación</h4>
+<table class="table table-sm">
+<tr><th>Tipo de Vinculación</th><td><span class="badge badge-primary">' . $contractLabel . '</span></td></tr>
+<tr><th>Duración</th><td>' . $duration . '</td></tr>
+<tr><th>Sede</th><td>' . htmlspecialchars($vac['location']) . '</td></tr>
+<tr><th>Modalidad</th><td>' . ucfirst($vac['modality']) . '</td></tr>
+<tr><th>Facultad</th><td>' . htmlspecialchars($facultyName) . '</td></tr>
+</table>
+</div>';
+}
+
+/**
+ * Build vacancy requirements HTML for sync.
+ */
+function build_vacancy_requirements_sync($vac) {
+    return '<div class="vacancy-requirements">
+<h5>Perfil Profesional Requerido</h5>
+<p class="lead">' . htmlspecialchars($vac['profile']) . '</p>
+<h5>Requisitos Mínimos</h5>
+<ul>
+<li>Título profesional universitario acorde al perfil solicitado</li>
+<li>No tener inhabilidades ni incompatibilidades para contratar con el Estado</li>
+<li>Disponibilidad para la sede ' . htmlspecialchars($vac['location']) . ' en modalidad ' . ucfirst($vac['modality']) . '</li>
+</ul>
+<h5>Documentos a Presentar</h5>
+<ul>
+<li>Hoja de vida actualizada</li>
+<li>Cédula de ciudadanía</li>
+<li>Títulos académicos (pregrado y posgrado)</li>
+<li>Tarjeta profesional (si aplica)</li>
+<li>Certificaciones de experiencia laboral</li>
+<li>Certificados de antecedentes vigentes</li>
+</ul>
+</div>';
+}
+
+/**
+ * Build vacancy desirable HTML for sync.
+ */
+function build_vacancy_desirable_sync() {
+    return '<div class="vacancy-desirable">
+<h5>Requisitos Deseables</h5>
+<ul>
+<li>Experiencia docente en educación superior mínimo 1 año</li>
+<li>Publicaciones académicas o investigaciones en el área</li>
+<li>Manejo de herramientas tecnológicas para educación virtual</li>
+<li>Dominio de un segundo idioma (preferiblemente inglés)</li>
+</ul>
+</div>';
 }
 
 // ============================================================
