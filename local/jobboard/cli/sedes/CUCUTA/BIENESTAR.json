@@ -1,0 +1,53 @@
+{
+  "sede": "CUCUTA",
+  "program": "BIENESTAR",
+  "modality": "PRESENCIAL",
+  "total_vacancies": 5,
+  "vacancies": [
+    {
+      "code": "BIEN-10",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "profile": "Psicólogo(a) con postgrado en intervención comunitaria de 4 años experiencia en el área de bienestar en contexto de educación superior y 2 años con experiencia en trabajo con comunidad en condición de vulnerabilidad.",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Acompañamiento a población con enfoque diferencial. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el Centro de Desarrollo Cúcuta.",
+      "faculty": "BIENESTAR",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "BIEN-11",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "2",
+      "activities": "Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Participar en comités curriculares. Apoyo para el desarrollo del plan de acción de Bienestar Institucional.",
+      "faculty": "BIENESTAR",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "BIEN-12",
+      "contract_type": "CATEDRA",
+      "profile": "Licenciada en educación artisitica 2 año de experiencia en contextos de Educación superior",
+      "positions": "1",
+      "activities": "Orientar cursos de electiva de Cultura (arte con material encontrado y pintura). Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de cultura. Formar y acompañar a los grupos de danza y teatro institucionales.",
+      "faculty": "BIENESTAR",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "BIEN-13",
+      "contract_type": "CATEDRA",
+      "profile": "Licenciada en Educación Básica con énfasis en Educación física, Recreación y Deportes 1 años en contextos de Educación Superior y 2 años en contextos de Educación",
+      "positions": "1",
+      "activities": "Orientar cursos de electiva de deportes de presencial y a distancia. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de deportes. Entrenar y acompañar a las selecciones institucionales.",
+      "faculty": "BIENESTAR",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "BIEN-14",
+      "contract_type": "CATEDRA",
+      "profile": "Licenciado (a) en educación musical o afines con experiencia de 1 año en educación.",
+      "positions": "1",
+      "activities": "Orientar cursos de electiva de Cultura (música). Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de cultura. Formar y acompañar a los grupos de musicales institucionales.",
+      "faculty": "BIENESTAR",
+      "modality": "PRESENCIAL"
+    }
+  ]
+}

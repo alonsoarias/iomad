@@ -1,0 +1,80 @@
+{
+  "sede": "TAME",
+  "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+  "modality": "DISTANCIA",
+  "total_vacancies": 8,
+  "vacancies": [
+    {
+      "code": "FCAS-379",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-380",
+      "contract_type": "CATEDRA",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN – TECNICA TECNOLOGIA Y CIENCIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-381",
+      "contract_type": "CATEDRA",
+      "profile": "ECONOMISTA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-382",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE MERCADEO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-383",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-384",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "COMPETENCIAS COMUNICATIVAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-385",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "SOCIEDAD Y RURALIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-386",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO EN SISTEMAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

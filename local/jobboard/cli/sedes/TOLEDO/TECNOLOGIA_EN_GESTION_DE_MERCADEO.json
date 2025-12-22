@@ -1,0 +1,107 @@
+{
+  "sede": "TOLEDO",
+  "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+  "modality": "DISTANCIA",
+  "total_vacancies": 11,
+  "vacancies": [
+    {
+      "code": "FCAS-129",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-130",
+      "contract_type": "CATEDRA",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-131",
+      "contract_type": "CATEDRA",
+      "profile": "ECONOMISTA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-132",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE MERCADEO - LIDERAZGO Y GESTIÓN - MERCADEO ESTRATÉGICO - EMPRENDIMIENTO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-133",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – IV",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-134",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "COMPETENCIAS COMUNICATIVAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-135",
+      "contract_type": "CATEDRA",
+      "profile": "DISEÑADOR GRAFICO – PROFESIONAL EN MERCADEO Y PUBLICIDAD – COMUNICADOR SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "HERRAMIENTAS DE DISEÑO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-136",
+      "contract_type": "CATEDRA",
+      "profile": "CONTADOR PUBLICO - ADMINISTRADOR DE EMPRESAS CON ESPECIALISACIÓN EN FINANZAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "CONTABILIDAD FINANCIERA.",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-137",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "SOCIEDAD Y RURALIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-138",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO EN SISTEMAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-139",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN EDUCACIÓN ARTÍSTICA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE ELECTIVA II",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

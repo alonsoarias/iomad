@@ -1,0 +1,44 @@
+{
+  "sede": "PAMPLONA",
+  "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+  "modality": "PRESENCIAL",
+  "total_vacancies": 4,
+  "vacancies": [
+    {
+      "code": "FII-03",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE SISTEMAS",
+      "courses": "ORIENTAR LOS CURSOS DE LÓGICA COMPUTACIONAL - PROGRAMACIÓN ESTRUCTURADA - METODOLOGÍAS PARA EL DESARROLLO DE SOFWARE",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-04",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE SISTEMAS",
+      "courses": "ORIENTAR LOS CURSOS DE PROGRAMACIÓN DE SISTEMAS DE INFORMACIÓN - PROGRAMACIÓN MÓVIL - OPTATIVA DE DESARROLLO DE SOFTWARE (TRATAMIENTO DE DATOS)",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-05",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE TELECOMUNICACIONES",
+      "courses": "ORIENTAR LOS CURSOS DE ENRUTAMIENTO Y DIRECCIONAMIENTO - OPTATIVA DE GESTIÓN DE REDES (SEGURIDAD EN REDES)",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-06",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE TELECOMUNICACIONES",
+      "courses": "ORIENTAR LOS CURSOS DE REDES DE COMUNICACIONES - REDES CABLEADAS - GESTION DE PROYECTOS DE TECNOLOGÍA",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    }
+  ]
+}

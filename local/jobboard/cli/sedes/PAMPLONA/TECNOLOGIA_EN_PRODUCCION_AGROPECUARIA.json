@@ -1,0 +1,35 @@
+{
+  "sede": "PAMPLONA",
+  "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+  "modality": "PRESENCIAL",
+  "total_vacancies": 3,
+  "vacancies": [
+    {
+      "code": "FII-09",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "MEDICO VETERINARIO O MEDICO VETERINARIO Y ZOTECNISTA (MVZ)",
+      "courses": "ORIENTAR LOS CURSOS DE ANATOMIA Y FISIOLOGIA ANIMAL - INSEMINACIÓN ARTIFICIAL- TRANSFERNCIA DE EMBRIONES",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-10",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "ZOOTECNISTA O MEDICO VETERINARIO Y ZOTECNISTA (MVZ)",
+      "courses": "ORIENTAR LOS CURSOS DE NUTRICION ANIMAL - SUPLEMENTACION ALIMENTARIA - ADMINISTRACION AGROPECUARIA – ICA – PRODUCIÓN PECUARIA I",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-11",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "AGRONOMO – INGENIERO AGRONOMO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE RIEGOS Y DRENAJES - MAQUINARIA Y TOPOGRÁFIA- EXTENSIÓN RURAL Y POLITICA AGROPECUARIA",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    }
+  ]
+}

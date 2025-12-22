@@ -1,0 +1,12 @@
+{
+  "sede": "SAN_VICENTE_DE_CHUCURI",
+  "total_vacancies": 10,
+  "by_faculty": {
+    "FCAS": 9,
+    "BIENESTAR": 1
+  },
+  "programs": {
+    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 9,
+    "BIENESTAR": 1
+  }
+}

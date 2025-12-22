@@ -1,0 +1,134 @@
+{
+  "sede": "DISTANCIA_GENERAL",
+  "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+  "modality": "DISTANCIA",
+  "total_vacancies": 14,
+  "vacancies": [
+    {
+      "code": "FCAS-75",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "MERCADEO COMERCIALIZACIÓN DE BIENES Y SERVICIOS INVESTIGACIÓN DE MERCADOS COORDINACIÓN DE PROGRAMA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-76",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-77",
+      "contract_type": "CATEDRA",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA - METODOLOGÍA DE LA INVESTIGACIÓN",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-78",
+      "contract_type": "CATEDRA",
+      "profile": "ECONOMISTA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-79",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE - MERCADEO - COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE. -COMUNICACIÓN Y PUBLICIDAD - MERCADEO ESTRATÉGICO - EMPRENDIMIENTO - LIDERAZGO Y GESTIÓN",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-80",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I - II - IV",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-81",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSOS DE - COMPETENCIAS COMUNICATIVAS - PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS - OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-82",
+      "contract_type": "CATEDRA",
+      "profile": "DISEÑADOR GRAFICO – PROFESIONAL EN MERCADEO Y PUBLICIDAD – COMUNICADOR SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE HERRAMIENTAS DE DISEÑO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-83",
+      "contract_type": "CATEDRA",
+      "profile": "CONTADOR PUBLICO - ADMINISTRADOR DE EMPRESAS CON ESPECIALISACIÓN EN FINANZAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE CONTABILIDAD FINANCIERA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-84",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE SOCIEDAD Y RURALIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-85",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO EN SISTEMAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-86",
+      "contract_type": "CATEDRA",
+      "profile": "PSICOLOGO, LICENCIADO EN PEDAGOGIA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE HABILIDADES INTRA E INTERPERSONALES",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-87",
+      "contract_type": "CATEDRA",
+      "profile": "FILÓSOFO, PSICÓLOGO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE ELECTIVA I",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-88",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN EDUCACIÓN ARTÍSTICA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR EL CURSO DE ELECTIVA II",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

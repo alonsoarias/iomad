@@ -1,0 +1,44 @@
+{
+  "sede": "TOLEDO",
+  "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+  "modality": "DISTANCIA",
+  "total_vacancies": 4,
+  "vacancies": [
+    {
+      "code": "FCAS-140",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO. DOCENTE CATEDRA.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "FUNDAMENTOS MATEMÁTICOS CABS CURSO DE APOYO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-141",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC. DOCENTE CATEDRA.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "INFORMÁTICA APLICADA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-142",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR/A SOCIAL LICENCIADO EN LENGUA CASTELLANA. DOCENTE CATEDRA.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "COMPETENCIAS COMUNICATIVAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-143",
+      "contract_type": "CATEDRA",
+      "profile": "TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO, PROFESIONAL EN TRABAJO SOCIAL. DOCENTE CATEDRA.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA FUNDAMENTOS DE SOCIOLOGÍA SUJETO Y FAMILIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

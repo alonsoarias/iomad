@@ -1,0 +1,35 @@
+{
+  "sede": "PAMPLONA",
+  "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+  "modality": "PRESENCIAL",
+  "total_vacancies": 3,
+  "vacancies": [
+    {
+      "code": "FII-16",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "INGENIERO CIVIL",
+      "courses": "ORIENTAR LOS CURSOS DE COSTOS, PRESUPUESTO Y PROGRAMACIÓN DE OBRA – OPTATIVA DE PROFUNDIZACION MATERIALES Y EQUIPO – MATERIALES DE CONSTRUCCIÓN - TRABAJOS DE GRADO",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-17",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "INGENIERO CIVIL",
+      "courses": "ORIENTAR LOS CURSOS DE TRAZADO DE VIAS - OPTATIVA I (CIMENTACIONES Y OBRAS DE CONTENCIÓN - OPTATIVA II (CONTRATACION ESTATAL - TRABAJOS DE GRADO.",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    },
+    {
+      "code": "FII-18",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "ARQUITECTO",
+      "courses": "ORIENTAR LOS CURSOS DE DIBUJO TECNICO DIGITAL –METODOLOGIA DE LA INVESTIGACION –TÉCNICA, TECNOLOGÍA Y CIENCIA - TRABAJOS DE GRADO.",
+      "faculty": "FII",
+      "modality": "PRESENCIAL"
+    }
+  ]
+}

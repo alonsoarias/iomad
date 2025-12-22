@@ -1,0 +1,71 @@
+{
+  "sede": "SAN_PABLO",
+  "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+  "modality": "DISTANCIA",
+  "total_vacancies": 7,
+  "vacancies": [
+    {
+      "code": "FCAS-318",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "FUNDAMENTOS MATEMÁTICOS ESTADÍSTICA CABS CURSO DE APOYO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-319",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN LENGUAS EXTRANJERAS",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "INGLÉS I INGLÉS II",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-320",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "INFORMÁTICA APLICADA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-321",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR/A SOCIAL LICENCIADO EN LENGUA CASTELLANA.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "COMPETENCIAS COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS MEDIOS DE COMUNICACIÓN",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-322",
+      "contract_type": "CATEDRA",
+      "profile": "ADMINISTRADOR DE EMPRESAS",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA. ADMINISTRACIÓN GENERAL",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-323",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN TRABAJO SOCIAL TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS FUNDAMENTOS DE SOCIOLOGÍA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-324",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN TRABAJO SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

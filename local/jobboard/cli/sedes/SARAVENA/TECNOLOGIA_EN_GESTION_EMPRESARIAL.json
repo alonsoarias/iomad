@@ -1,0 +1,116 @@
+{
+  "sede": "SARAVENA",
+  "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+  "modality": "DISTANCIA",
+  "total_vacancies": 12,
+  "vacancies": [
+    {
+      "code": "FCAS-336",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "ADMINISTRACION GENERAL EMPRENDIMIENTO FUENTES DE FINANCIACION Y NORMATIVIDAD COLOMBIANA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-337",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "ECONOMIA MERCADEO E INVESTIGACIÓN DE MERCADOS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-338",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "CONTABILIDAD COSTOS Y PRESUPUESTOS GESTIÓN DEL TALENTO HUMANO CURSO DE APOYO DE CONTABILIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-339",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN AGRONEGOCIOS O ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS O CIENCIAS AGRARIAS CON POSGRADO EN ADMINISTRACIÓN DE EMPRESAS O EXPERIENCIA EN FORMULACIÓN DE PROYECTOS EN EL ÁREA DE AGRONEGOCIOS",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "SERVICIOS AGRARIOS DESARROLLO EMPRESARIAL RURAL SISTEMAS DE GESTION OPTATIVAI (AGRONEGOCIOS)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-340",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "SISTEMAS DE INFORMACION Y GESTION DOCUMENTAL SISTEMAS DE GESTION",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-341",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "FORMULACIÓN DE PROYECTOS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-342",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES II – III",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-343",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-344",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "HABILIDADES COMUNICATIVAS HABILIDADES INTRA E INTERPERSONALES ELECTIVA I SOCIOHUMANISTICA (CULTURA Y DIVERSIDAD) ELECTIVA II SOCIOHUMANISTICA (historia del arte)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-345",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "SOCIEDAD Y RURALIDAD CIUDADANÍA Y CONVIVENCIA BIENESTAR EN EL PROGRAMA (PERMANENCIA, BIENESTAR FORMATIVO)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-346",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO O PRFESIONAL EN CIENCIAS NATURALES Y EDUCACIÓN O INGENIERÍA AMBIENTALES O ÁREAS AFINES CON POSGRADO EN EL ÁREA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "GESTION AMBIENTAL (PARA TRES SEMESTRES)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-347",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACIÓN DE PROYECTOS METODOLOGÍA DE LA INVESTIGACIÓN proyectos de INVESTIGACION Y EXTENSION semillero",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

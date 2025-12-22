@@ -1,0 +1,62 @@
+{
+  "sede": "SALAZAR_DE_LAS_PALMAS",
+  "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+  "modality": "DISTANCIA",
+  "total_vacancies": 6,
+  "vacancies": [
+    {
+      "code": "FCAS-232",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "FUNDAMENTOS MATEMÁTICOS ESTADÍSTICA CABS CURSO DE APOYO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-233",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN LENGUAS EXTRANJERAS.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "INGLÉS I",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-234",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "INFORMÁTICA APLICADA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-235",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR(A)SOCIAL LICENCIADO EN LENGUA CASTELLANA.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "COMPETENCIAS COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-236",
+      "contract_type": "CATEDRA",
+      "profile": "ADMINISTRADOR DE EMPRESAS",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "ADMINISTRACIÓN GENERAL TÉCNICA, TECNOLOGÍA Y CIENCIA.",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-237",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN TRABAJO SOCIAL/ TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO.",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA SUJETO Y FAMILIA FUNDAMENTOS DE SOCIOLOGÍA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

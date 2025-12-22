@@ -1,0 +1,12 @@
+{
+  "sede": "DISTANCIA_GENERAL",
+  "total_vacancies": 33,
+  "by_faculty": {
+    "FCAS": 33
+  },
+  "programs": {
+    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 8,
+    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 14
+  }
+}

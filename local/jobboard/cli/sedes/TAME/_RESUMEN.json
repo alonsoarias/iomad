@@ -1,0 +1,12 @@
+{
+  "sede": "TAME",
+  "total_vacancies": 9,
+  "by_faculty": {
+    "FCAS": 8,
+    "BIENESTAR": 1
+  },
+  "programs": {
+    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 8,
+    "BIENESTAR": 1
+  }
+}

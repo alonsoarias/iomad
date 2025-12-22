@@ -1,0 +1,14 @@
+{
+  "sede": "SANTA_ROSA_DEL_SUR",
+  "total_vacancies": 28,
+  "by_faculty": {
+    "FCAS": 27,
+    "BIENESTAR": 1
+  },
+  "programs": {
+    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
+    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 12,
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 4,
+    "BIENESTAR": 1
+  }
+}

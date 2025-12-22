@@ -1,0 +1,116 @@
+{
+  "sede": "FUNDACION",
+  "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+  "modality": "DISTANCIA",
+  "total_vacancies": 12,
+  "vacancies": [
+    {
+      "code": "FCAS-357",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-358",
+      "contract_type": "CATEDRA",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA - METODOLOGÍA DE LA INVESTIGACIÓN",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-359",
+      "contract_type": "CATEDRA",
+      "profile": "ECONOMISTA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-360",
+      "contract_type": "CATEDRA",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR CURSO DE MERCADEO - COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE. - COMUNICACIÓN Y PUBLICIDAD - INVESTIGACIÓN DE MERCADOS - COMERCIALIZACIÓN DE BIENES Y SERVICIOS - LOGÍSTICA Y DISTRIBUCIÓN",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-361",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – II - III",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-362",
+      "contract_type": "CATEDRA",
+      "profile": "COMUNICADOR SOCIAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "COMPETENCIAS COMUNICATIVAS - PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS -MEDIOS Y TECNOLOGÍAS DE COMUNICACIÓN -",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-363",
+      "contract_type": "CATEDRA",
+      "profile": "CONTADOR PUBLICO - ADMINISTRADOR DE EMPRESAS CON ESPECIALISACIÓN EN FINANZAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "CONTABILIDAD FINANCIERA.",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-364",
+      "contract_type": "CATEDRA",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "SOCIEDAD Y RURALIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-365",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO EN SISTEMAS",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-366",
+      "contract_type": "CATEDRA",
+      "profile": "PSICOLOGO, LICENCIADO EN PEDAGOGIA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "HABILIDADES INTRA E INTERPERSONALES",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-367",
+      "contract_type": "CATEDRA",
+      "profile": "FILÓSOFO, PSICÓLOGO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "ELECTIVA I",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-368",
+      "contract_type": "CATEDRA",
+      "profile": "INGENIERO AMBIENTAL",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "courses": "GESTION AMBIENTAL",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    }
+  ]
+}
