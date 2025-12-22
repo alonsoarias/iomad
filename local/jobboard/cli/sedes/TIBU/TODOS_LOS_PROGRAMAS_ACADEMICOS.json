@@ -1,62 +1,26 @@
 {
-  "sede": "TIBU",
-  "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-  "modality": "DISTANCIA",
-  "total_vacancies": 6,
-  "vacancies": [
-    {
-      "code": "FII-01",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
-      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
-      "faculty": "FII",
-      "modality": "DISTANCIA"
-    },
-    {
-      "code": "FII-05",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-      "profile": "LICENCIADO EN IDIOMAS/ LENGUAS EXTRANJERAS/ LENGUAS MODERNAS O AREAS AFINES",
-      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II",
-      "faculty": "FII",
-      "modality": "DISTANCIA"
-    },
-    {
-      "code": "FII-01",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
-      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
-      "faculty": "FII",
-      "modality": "DISTANCIA"
-    },
-    {
-      "code": "FII-05",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
-      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III",
-      "faculty": "FII",
-      "modality": "DISTANCIA"
-    },
-    {
-      "code": "FII-01",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
-      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
-      "faculty": "FII",
-      "modality": "DISTANCIA"
-    },
-    {
-      "code": "FII-05",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
-      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
-      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III",
-      "faculty": "FII",
-      "modality": "DISTANCIA"
-    }
-  ]
+    "sede": "TIBU",
+    "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
+    "modality": "DISTANCIA",
+    "total_vacancies": 6,
+    "vacancies": [
+        {
+            "code": "FII-01",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
+            "profile": "LICENCIADO EN MATEMATICAS \/ MATEMÁTICO O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
+        },
+        {
+            "code": "FII-05",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
+            "profile": "LICENCIADO EN IDIOMAS\/ LENGUAS EXTRANJERAS\/ LENGUAS MODERNAS O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
+        }
+    ]
 }

@@ -864,8 +864,11 @@ if ($options['sync-sedes']) {
                 $modality = $vacancy['modality'] ?? $data['modality'] ?? 'PRESENCIAL';
                 $modalityDb = $modalityMapping[strtoupper($modality)] ?? 'presencial';
 
-                // Create unique key.
-                $uniqueKey = $code . '|' . $locationName . '|' . $modalityDb;
+                // Get program for unique key.
+                $program = $vacancy['program'] ?? $data['program'] ?? '';
+
+                // Create unique key (includes program to allow same code in different programs).
+                $uniqueKey = $code . '|' . $locationName . '|' . $modalityDb . '|' . $program;
 
                 $jsonVacancies[$uniqueKey] = [
                     'code' => $code,
@@ -890,7 +893,8 @@ if ($options['sync-sedes']) {
     $existingByKey = [];
     $existingByCode = []; // Additional index by code only
     foreach ($existingVacancies as $vac) {
-        $key = $vac->code . '|' . $vac->location . '|' . $vac->modality;
+        // Include department (program) in key to match JSON key structure
+        $key = $vac->code . '|' . $vac->location . '|' . $vac->modality . '|' . ($vac->department ?? '');
         $existingByKey[$key] = $vac;
         // Also index by code for application preservation
         if (!isset($existingByCode[$vac->code])) {

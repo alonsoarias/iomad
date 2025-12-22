@@ -1,125 +1,116 @@
 {
-  "sede": "PAMPLONA",
-  "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-  "modality": "PRESENCIAL",
-  "total_vacancies": 13,
-  "vacancies": [
-    {
-      "code": "FCAS-13",
-      "contract_type": "OCASIONAL TIEMPO COMPLETO",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
-      "courses": "ORIENTAR LOS CURSOS DE: EMPRENDIMIENTO ADMINISTRACIÓN GENERAL PLANEACIÓN Y DIRECCIONAMIENTO ESTRATÉGICO. COORDINACIÓN DE PROGRAMA.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-14",
-      "contract_type": "OCASIONAL TIEMPO COMPLETO",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "ADMINISTRADOR DE EMPRESAS - ESPECIALISTA EN COMUNICACIÓN EDUCATIVA - ESPECIALISTA EN GERENCIA FINANCIERA, ÁREAS AFINES.",
-      "courses": "ORIENTAR LOS CURSOS DE: TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACION DE PROYECTOS EVALUACIÓN DEL DESEMPEÑO.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-15",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
-      "courses": "ORIENTAR LOS CURSOS DE: OPTATIVA I (BIENESTAR SOCIAL LABORAL) OPTATIVA II (GESTION DEL CONOCIMIENTO) – ECONOMIA",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-16",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
-      "courses": "ORIENTAR LOS CURSOS DE: CAPACITACIÓN Y ENTRENAMIENTO DE PERSONAL METODOLOGÍA DE LA INVESTIGACIÓN",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-17",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "LICENCIADO EN MATEMÁTICAS O MATEMÁTICO CON POSGRADO.",
-      "courses": "ORIENTAR LOS CURSOS DE: MATEMATICA APLICADA ESTADISTICA.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-18",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "INGENIERO INDUSTRIAL, ESPECIALISTA EN SIG.",
-      "courses": "ORIENTAR LOS CURSOS DE: ADMINISTRACION DE LA PRODUCCION SEGURIDAD Y SALUD EN EL TRABAJO",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-19",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "INGENIERO AMBIENTAL O LICENCIADO EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL O PROFESIONAL CON EN INGENIERÍA AMBIENTAL CON POSGRADO.",
-      "courses": "ORIENTAR LOS CURSOS DE: GESTION AMBIENTAL",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-20",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS CON POSGRADO",
-      "courses": "ORIENTAR LOS CURSOS DE: INGLES I INGLES II INGLES III.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-20",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "INGENIERO DE SISTEMAS",
-      "courses": "ORIENTAR LOS CURSOS DE: OFIMATICA SISTEMAS DE INFORMACION.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-21",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "LICENCIADO EN LENGUA CASTELLANA O COMUNICADOR SOCIAL CON POSGRADO.",
-      "courses": "ORIENTAR LOS CURSOS DE: HABILIDADES COMUNICATIVAS PRODUCCION Y COMPRENSION DE TEXTOS.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-22",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "LICENCIADO EN DESARROLLO COMUNITARIO, TRABAJADOR SOCIAL, SOCIÓLOGO, LICENCIADO EN CIENCIAS SOCIALES O PSICÓLOGO.",
-      "courses": "ORIENTAR LOS CURSOS DE: SOCIEDAD Y RURALIDAD CIUDADANIA Y CONVIVENCIA.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-23",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "PSICÓLOGO O LICENCIADA EN PEDAGOGÍA CON POSGRADO.",
-      "courses": "ORIENTAR LOS CURSOS DE: HABILIDADES INTRA E INTERPERSONALES",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FCAS-24",
-      "contract_type": "HORA CÁTEDRA",
-      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
-      "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
-      "courses": "ORIENTAR LOS CURSO DE: TRABAJO DE GRADO.",
-      "faculty": "FCAS",
-      "modality": "PRESENCIAL"
-    }
-  ]
+    "sede": "PAMPLONA",
+    "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+    "modality": "PRESENCIAL",
+    "total_vacancies": 13,
+    "vacancies": [
+        {
+            "code": "FCAS-13",
+            "contract_type": "OCASIONAL TIEMPO COMPLETO",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
+            "courses": "ORIENTAR LOS CURSOS DE: EMPRENDIMIENTO ADMINISTRACIÓN GENERAL PLANEACIÓN Y DIRECCIONAMIENTO ESTRATÉGICO. COORDINACIÓN DE PROGRAMA.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-14",
+            "contract_type": "OCASIONAL TIEMPO COMPLETO",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "ADMINISTRADOR DE EMPRESAS - ESPECIALISTA EN COMUNICACIÓN EDUCATIVA - ESPECIALISTA EN GERENCIA FINANCIERA, ÁREAS AFINES.",
+            "courses": "ORIENTAR LOS CURSOS DE: TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACION DE PROYECTOS EVALUACIÓN DEL DESEMPEÑO.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-15",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
+            "courses": "ORIENTAR LOS CURSOS DE: OPTATIVA I (BIENESTAR SOCIAL LABORAL) OPTATIVA II (GESTION DEL CONOCIMIENTO) – ECONOMIA",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-16",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
+            "courses": "ORIENTAR LOS CURSOS DE: CAPACITACIÓN Y ENTRENAMIENTO DE PERSONAL METODOLOGÍA DE LA INVESTIGACIÓN",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-17",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "LICENCIADO EN MATEMÁTICAS O MATEMÁTICO CON POSGRADO.",
+            "courses": "ORIENTAR LOS CURSOS DE: MATEMATICA APLICADA ESTADISTICA.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-18",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "INGENIERO INDUSTRIAL, ESPECIALISTA EN SIG.",
+            "courses": "ORIENTAR LOS CURSOS DE: ADMINISTRACION DE LA PRODUCCION SEGURIDAD Y SALUD EN EL TRABAJO",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-19",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "INGENIERO AMBIENTAL O LICENCIADO EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL O PROFESIONAL CON EN INGENIERÍA AMBIENTAL CON POSGRADO.",
+            "courses": "ORIENTAR LOS CURSOS DE: GESTION AMBIENTAL",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-20",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS CON POSGRADO",
+            "courses": "ORIENTAR LOS CURSOS DE: INGLES I INGLES II INGLES III.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-21",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "LICENCIADO EN LENGUA CASTELLANA O COMUNICADOR SOCIAL CON POSGRADO.",
+            "courses": "ORIENTAR LOS CURSOS DE: HABILIDADES COMUNICATIVAS PRODUCCION Y COMPRENSION DE TEXTOS.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-22",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "LICENCIADO EN DESARROLLO COMUNITARIO, TRABAJADOR SOCIAL, SOCIÓLOGO, LICENCIADO EN CIENCIAS SOCIALES O PSICÓLOGO.",
+            "courses": "ORIENTAR LOS CURSOS DE: SOCIEDAD Y RURALIDAD CIUDADANIA Y CONVIVENCIA.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-23",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "PSICÓLOGO O LICENCIADA EN PEDAGOGÍA CON POSGRADO.",
+            "courses": "ORIENTAR LOS CURSOS DE: HABILIDADES INTRA E INTERPERSONALES",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-24",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "ADMINISTRADOR DE EMPRESAS, CON POSGRADO EN ÁREAS AFINES DE LA ADMINISTRACIÓN.",
+            "courses": "ORIENTAR LOS CURSO DE: TRABAJO DE GRADO.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        }
+    ]
 }
