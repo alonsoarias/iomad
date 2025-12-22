@@ -652,8 +652,20 @@ if ($options['normalize-programs']) {
     $normalizeProgram = function($program) {
         $trimmed = trim($program);
 
-        // Normalize accents - replace non-accented with accented
-        $replacements = [
+        // Step 1: Convert to uppercase first
+        $result = mb_strtoupper($trimmed, 'UTF-8');
+
+        // Step 2: Fix common typos
+        $typoFixes = [
+            'TECNOLOGÍA NE ' => 'TECNOLOGÍA EN ',  // Typo: NE -> EN
+            ' / ' => ' - ',  // Normalize separator
+        ];
+        foreach ($typoFixes as $from => $to) {
+            $result = str_replace($from, $to, $result);
+        }
+
+        // Step 3: Normalize accents - replace non-accented with accented
+        $accentReplacements = [
             'TECNOLOGIA' => 'TECNOLOGÍA',
             'TECNICA' => 'TÉCNICA',
             'GESTION' => 'GESTIÓN',
@@ -662,18 +674,30 @@ if ($options['normalize-programs']) {
             'RECUPERACION' => 'RECUPERACIÓN',
             'CONSTRUCCION' => 'CONSTRUCCIÓN',
             'ECOSISTEMA FORESTALES' => 'ECOSISTEMAS FORESTALES',
+            'INGENIERIAS' => 'INGENIERÍAS',
+            'INFORMATICA' => 'INFORMÁTICA',
+            'ACADEMICOS' => 'ACADÉMICOS',
         ];
-
-        $result = $trimmed;
-        foreach ($replacements as $from => $to) {
-            if (strpos($result, $to) === false) {
+        foreach ($accentReplacements as $from => $to) {
+            if (mb_strpos($result, $to, 0, 'UTF-8') === false) {
                 $result = str_replace($from, $to, $result);
             }
         }
 
-        // Normalize TODOS LOS PROGRAMAS
-        if ($result === 'TODOS LOS PROGRAMAS') {
-            $result = 'TODOS LOS PROGRAMAS ACADÉMICOS';
+        // Step 4: Normalize specific program names to standard format
+        $programMapping = [
+            // Incomplete entries - map to most likely full name
+            'TECNOLOGÍA EN' => 'TECNOLOGÍA EN GESTIÓN EMPRESARIAL',
+            'TECNOLOGÍA EN GESTIÓN' => 'TECNOLOGÍA EN GESTIÓN EMPRESARIAL',
+            // TODOS variations
+            'TODOS LOS PROGRAMAS' => 'TODOS LOS PROGRAMAS ACADÉMICOS',
+            'TODOS LOS PROGRAMAS DE LA FACULTAD DE INGENIERÍAS E INFORMÁTICA' => 'TODOS LOS PROGRAMAS ACADÉMICOS',
+            // BIENESTAR
+            'BIENESTAR INSTITUCIONAL' => 'BIENESTAR',
+        ];
+
+        if (isset($programMapping[$result])) {
+            $result = $programMapping[$result];
         }
 
         return $result;
