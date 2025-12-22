@@ -848,6 +848,9 @@ if ($options['sync-sedes']) {
             // Check if vacancy has applications - if so, be careful.
             $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $existing->id]);
 
+            // Detect changes before update
+            $changes = get_vacancy_changes($existing, $record);
+
             $record->id = $existing->id;
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
@@ -857,18 +860,20 @@ if ($options['sync-sedes']) {
                     $DB->update_record('local_jobboard_vacancy', $record);
                     $stats['updated']++;
                     if ($verbose) {
-                        $appNote = $appCount > 0 ? " [HAS $appCount APPLICATIONS]" : "";
-                        echo "UPDATED: $code @ $location ($modality)$appNote\n";
+                        $appNote = $appCount > 0 ? " ⚠️  $appCount POSTULACIONES" : "";
+                        echo "✓ ACTUALIZADO: $code @ $location ($modality)$appNote\n";
+                        print_vacancy_changes($code, $changes, $appCount);
                     }
                 } catch (Exception $e) {
-                    echo "ERROR updating $code: " . $e->getMessage() . "\n";
+                    echo "✗ ERROR actualizando $code: " . $e->getMessage() . "\n";
                     $stats['errors']++;
                 }
             } else {
                 $stats['updated']++;
                 if ($verbose) {
-                    $appNote = $appCount > 0 ? " [HAS $appCount APPLICATIONS]" : "";
-                    echo "DRY UPDATE: $code @ $location ($modality)$appNote\n";
+                    $appNote = $appCount > 0 ? " ⚠️  $appCount POSTULACIONES" : "";
+                    echo "[DRY] ACTUALIZADO: $code @ $location ($modality)$appNote\n";
+                    print_vacancy_changes($code, $changes, $appCount);
                 }
             }
 
@@ -878,32 +883,33 @@ if ($options['sync-sedes']) {
         // PRIORITY 2: Check if this code has applications - if so, update that vacancy instead
         } else if (isset($vacanciesWithApps[$code])) {
             // PRESERVE APPLICATION: Update existing vacancy with applications
-            $existingWithApp = $vacanciesWithApps[$code];
+            $existingWithApp = $DB->get_record('local_jobboard_vacancy', ['id' => $vacanciesWithApps[$code]->id]);
             $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $existingWithApp->id]);
+
+            // Detect changes before update
+            $changes = get_vacancy_changes($existingWithApp, $record);
 
             $record->id = $existingWithApp->id;
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
-
-            // Note: This will update location/modality to the new values from JSON
 
             if (!$dryrun) {
                 try {
                     $DB->update_record('local_jobboard_vacancy', $record);
                     $stats['updated']++;
                     if ($verbose) {
-                        echo "UPDATED (PRESERVED APP): $code @ $location ($modality) [ID: {$existingWithApp->id}, $appCount APPLICATIONS PRESERVED]\n";
-                        echo "  (was @ {$existingWithApp->location} ({$existingWithApp->modality}))\n";
+                        echo "✓ ACTUALIZADO (PRESERVA $appCount POSTULACIONES): $code @ $location ($modality) [ID: {$existingWithApp->id}]\n";
+                        print_vacancy_changes($code, $changes, $appCount);
                     }
                 } catch (Exception $e) {
-                    echo "ERROR updating $code (with app): " . $e->getMessage() . "\n";
+                    echo "✗ ERROR actualizando $code (con postulaciones): " . $e->getMessage() . "\n";
                     $stats['errors']++;
                 }
             } else {
                 $stats['updated']++;
                 if ($verbose) {
-                    echo "DRY UPDATE (PRESERVE APP): $code @ $location ($modality) [$appCount APPLICATIONS]\n";
-                    echo "  (currently @ {$existingWithApp->location} ({$existingWithApp->modality}))\n";
+                    echo "[DRY] ACTUALIZADO (PRESERVA $appCount POSTULACIONES): $code @ $location ($modality)\n";
+                    print_vacancy_changes($code, $changes, $appCount);
                 }
             }
 
@@ -918,6 +924,9 @@ if ($options['sync-sedes']) {
             // Update first existing vacancy with this code
             $existingByCodeVac = array_shift($existingByCode[$code]);
 
+            // Detect changes before update
+            $changes = get_vacancy_changes($existingByCodeVac, $record);
+
             $record->id = $existingByCodeVac->id;
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
@@ -927,18 +936,18 @@ if ($options['sync-sedes']) {
                     $DB->update_record('local_jobboard_vacancy', $record);
                     $stats['updated']++;
                     if ($verbose) {
-                        echo "UPDATED (BY CODE): $code @ $location ($modality) [ID: {$existingByCodeVac->id}]\n";
-                        echo "  (was @ {$existingByCodeVac->location} ({$existingByCodeVac->modality}))\n";
+                        echo "✓ ACTUALIZADO (POR CÓDIGO): $code @ $location ($modality) [ID: {$existingByCodeVac->id}]\n";
+                        print_vacancy_changes($code, $changes, 0);
                     }
                 } catch (Exception $e) {
-                    echo "ERROR updating $code (by code): " . $e->getMessage() . "\n";
+                    echo "✗ ERROR actualizando $code (por código): " . $e->getMessage() . "\n";
                     $stats['errors']++;
                 }
             } else {
                 $stats['updated']++;
                 if ($verbose) {
-                    echo "DRY UPDATE (BY CODE): $code @ $location ($modality)\n";
-                    echo "  (currently @ {$existingByCodeVac->location} ({$existingByCodeVac->modality}))\n";
+                    echo "[DRY] ACTUALIZADO (POR CÓDIGO): $code @ $location ($modality)\n";
+                    print_vacancy_changes($code, $changes, 0);
                 }
             }
 
@@ -956,16 +965,21 @@ if ($options['sync-sedes']) {
                     $newid = $DB->insert_record('local_jobboard_vacancy', $record);
                     $stats['created']++;
                     if ($verbose) {
-                        echo "CREATED: $code @ $location ($modality) [ID: $newid]\n";
+                        echo "+ CREADA: $code @ $location ($modality) [ID: $newid]\n";
+                        echo "    ├─ Programa       : {$vac['program']}\n";
+                        echo "    ├─ Tipo Contrato  : {$vac['contract_type']}\n";
+                        echo "    └─ Perfil         : " . mb_substr($vac['profile'], 0, 50, 'UTF-8') . "...\n";
                     }
                 } catch (Exception $e) {
-                    echo "ERROR creating $code: " . $e->getMessage() . "\n";
+                    echo "✗ ERROR creando $code: " . $e->getMessage() . "\n";
                     $stats['errors']++;
                 }
             } else {
                 $stats['created']++;
                 if ($verbose) {
-                    echo "DRY CREATE: $code @ $location ($modality)\n";
+                    echo "[DRY] + CREADA: $code @ $location ($modality)\n";
+                    echo "    ├─ Programa       : {$vac['program']}\n";
+                    echo "    └─ Tipo Contrato  : {$vac['contract_type']}\n";
                 }
             }
         }
@@ -974,31 +988,78 @@ if ($options['sync-sedes']) {
     // Vacancies not in JSONs remain unchanged (not archived).
     if (!empty($existingByKey)) {
         echo "\n";
-        cli_heading("Vacancies Not in JSONs (Unchanged)");
+        cli_heading("Vacantes No en JSONs (Sin Cambios)");
 
         foreach ($existingByKey as $key => $vac) {
             $stats['unchanged']++;
             if ($verbose) {
                 $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vac->id]);
-                $appNote = $appCount > 0 ? " [HAS $appCount APPLICATIONS]" : "";
-                echo "UNCHANGED: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
+                $appNote = $appCount > 0 ? " ⚠️  $appCount POSTULACIONES" : "";
+                echo "= SIN CAMBIOS: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
             }
         }
     }
 
     // Summary.
     echo "\n";
-    cli_heading("Sync Summary");
-    echo "Created: {$stats['created']}\n";
-    echo "Updated: {$stats['updated']}\n";
-    echo "Unchanged: {$stats['unchanged']}\n";
-    echo "Errors: {$stats['errors']}\n";
+    cli_heading("Resumen de Sincronización");
+    echo "╔════════════════════════════════════╗\n";
+    echo "║  Creadas    : " . str_pad($stats['created'], 5) . "                 ║\n";
+    echo "║  Actualizadas: " . str_pad($stats['updated'], 5) . "               ║\n";
+    echo "║  Sin Cambios : " . str_pad($stats['unchanged'], 5) . "               ║\n";
+    echo "║  Errores     : " . str_pad($stats['errors'], 5) . "                 ║\n";
+    echo "╚════════════════════════════════════╝\n";
 
     if ($dryrun) {
         echo "\n*** DRY RUN - No changes were made ***\n";
     }
 
     exit($stats['errors'] > 0 ? 1 : 0);
+}
+
+/**
+ * Compare old vacancy with new data and return list of changed fields.
+ */
+function get_vacancy_changes($existing, $newRecord) {
+    $changes = [];
+    $compareFields = [
+        'title' => 'Título',
+        'contracttype' => 'Tipo Contrato',
+        'location' => 'Ubicación',
+        'modality' => 'Modalidad',
+        'department' => 'Programa',
+        'positions' => 'Posiciones',
+    ];
+
+    foreach ($compareFields as $field => $label) {
+        $oldVal = isset($existing->$field) ? trim($existing->$field) : '';
+        $newVal = isset($newRecord->$field) ? trim($newRecord->$field) : '';
+
+        if ($oldVal !== $newVal) {
+            $changes[] = [
+                'field' => $label,
+                'old' => mb_substr($oldVal, 0, 50, 'UTF-8'),
+                'new' => mb_substr($newVal, 0, 50, 'UTF-8'),
+            ];
+        }
+    }
+
+    return $changes;
+}
+
+/**
+ * Print detailed change report for a vacancy.
+ */
+function print_vacancy_changes($code, $changes, $appCount = 0) {
+    if (empty($changes)) {
+        echo "  (sin cambios en campos principales)\n";
+        return;
+    }
+
+    foreach ($changes as $change) {
+        $fieldPad = str_pad($change['field'], 15);
+        echo "    ├─ $fieldPad: \"{$change['old']}\" → \"{$change['new']}\"\n";
+    }
 }
 
 /**
@@ -1014,7 +1075,7 @@ function build_vacancy_description_sync($vac) {
 
     $contractLabel = $vac['contract_type'] === 'OCASIONAL TIEMPO COMPLETO'
         ? 'Ocasional Tiempo Completo'
-        : 'Cátedra';
+        : 'Hora Cátedra';
 
     $duration = $vac['contract_type'] === 'OCASIONAL TIEMPO COMPLETO'
         ? '4 meses (período académico semestral) - Contrato laboral a término fijo'
