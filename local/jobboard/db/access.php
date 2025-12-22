@@ -206,45 +206,6 @@ $capabilities = [
         ],
     ],
 
-    // =========================================================================
-    // Decano (Dean) capabilities - Review and preselect applicants.
-    // =========================================================================
-
-    // Decano can review applicant profiles and preselect/reject.
-    // This happens AFTER convocatoria closes, within review dates.
-    // Preselection is INTERNAL - applicant doesn't see this status.
-    'local/jobboard:reviewasdecan' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
-    // =========================================================================
-    // Talento Humano (HR) capabilities - Validate documents for preselected.
-    // =========================================================================
-
-    // Talento Humano can validate/reject documents for preselected applicants.
-    // This happens after Decano preselects, within HR review dates.
-    'local/jobboard:validateashr' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
-    // View applicants pending HR validation (preselected by Decano).
-    'local/jobboard:viewpendingvalidation' => [
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
     'local/jobboard:assignreviewers' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,

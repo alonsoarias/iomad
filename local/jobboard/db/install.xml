@@ -631,10 +631,6 @@
         <FIELD NAME="pdf_filename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Original filename of PDF document"/>
         <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Start date for applications"/>
         <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="End date for applications"/>
-        <FIELD NAME="dean_review_start" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Start date for Decano review (after convocatoria closes)"/>
-        <FIELD NAME="dean_review_end" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="End date for Decano review"/>
-        <FIELD NAME="hr_review_start" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Start date for Talento Humano validation"/>
-        <FIELD NAME="hr_review_end" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="End date for Talento Humano validation"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Status: draft, open, closed, archived"/>
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD company ID"/>
         <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>

@@ -100,8 +100,6 @@ class application {
         'draft',
         'submitted',
         'under_review',
-        'preselected',           // Internal status - applicant sees 'under_review'.
-        'pending_validation',    // Ready for Talento Humano to validate documents.
         'docs_validated',
         'docs_rejected',
         'interview',
@@ -110,26 +108,12 @@ class application {
         'withdrawn',
     ];
 
-    /** @var array Internal statuses not visible to applicants. */
-    public const INTERNAL_STATUSES = [
-        'preselected',
-        'pending_validation',
-    ];
-
-    /** @var array Status mapping for applicant view (internal -> public). */
-    public const STATUS_PUBLIC_MAP = [
-        'preselected' => 'under_review',
-        'pending_validation' => 'under_review',
-    ];
-
     /** @var array Allowed status transitions. */
     public const TRANSITIONS = [
         'draft' => ['submitted'],
         'submitted' => ['under_review', 'rejected'],
-        'under_review' => ['preselected', 'rejected'],              // Decano preselects or rejects.
-        'preselected' => ['pending_validation', 'rejected'],        // Internal -> HR validation.
-        'pending_validation' => ['docs_validated', 'docs_rejected'], // HR validates documents.
-        'docs_rejected' => ['pending_validation'],                  // Re-submit for validation.
+        'under_review' => ['docs_validated', 'docs_rejected'],
+        'docs_rejected' => ['under_review'],
         'docs_validated' => ['interview', 'rejected'],
         'interview' => ['selected', 'rejected'],
     ];
@@ -833,74 +817,10 @@ class application {
     /**
      * Get status display name.
      *
-     * @param bool $forapplicant If true, show public-facing status (hide internal statuses).
      * @return string The localized status name.
      */
-    public function get_status_display(bool $forapplicant = false): string {
-        $status = $forapplicant ? $this->get_public_status() : $this->status;
-        return get_string('appstatus:' . $status, 'local_jobboard');
-    }
-
-    /**
-     * Check if current status is internal (not visible to applicant).
-     *
-     * @return bool True if status is internal.
-     */
-    public function is_internal_status(): bool {
-        return in_array($this->status, self::INTERNAL_STATUSES);
-    }
-
-    /**
-     * Get the public-facing status for the applicant.
-     * Internal statuses are mapped to their public equivalents.
-     *
-     * @return string The public status.
-     */
-    public function get_public_status(): string {
-        if (isset(self::STATUS_PUBLIC_MAP[$this->status])) {
-            return self::STATUS_PUBLIC_MAP[$this->status];
-        }
-        return $this->status;
-    }
-
-    /**
-     * Check if application is preselected (by Decano).
-     *
-     * @return bool True if preselected.
-     */
-    public function is_preselected(): bool {
-        return $this->status === 'preselected';
-    }
-
-    /**
-     * Check if application is pending HR validation.
-     *
-     * @return bool True if pending validation.
-     */
-    public function is_pending_validation(): bool {
-        return $this->status === 'pending_validation';
-    }
-
-    /**
-     * Preselect the application (Decano action).
-     * Transitions from under_review to preselected.
-     *
-     * @param string $comments Optional comments.
-     * @param int|null $changedby User making the change.
-     */
-    public function preselect(string $comments = '', ?int $changedby = null): void {
-        $this->change_status('preselected', $comments, $changedby);
-    }
-
-    /**
-     * Send to HR for validation (after preselection).
-     * Transitions from preselected to pending_validation.
-     *
-     * @param string $comments Optional comments.
-     * @param int|null $changedby User making the change.
-     */
-    public function send_to_hr_validation(string $comments = '', ?int $changedby = null): void {
-        $this->change_status('pending_validation', $comments, $changedby);
+    public function get_status_display(): string {
+        return get_string('appstatus:' . $this->status, 'local_jobboard');
     }
 
     /**
