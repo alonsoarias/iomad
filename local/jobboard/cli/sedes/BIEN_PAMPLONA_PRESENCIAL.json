@@ -1,0 +1,83 @@
+{
+  "sede": "BIEN_PAMPLONA_PRESENCIAL",
+  "metadata": {
+    "faculty": "BIENESTAR",
+    "location": "PAMPLONA",
+    "modality": "PRESENCIAL"
+  },
+  "total_vacancies": 9,
+  "vacancies": [
+    {
+      "code": "BIEN-01",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "profile": "Psicólogo(a) con postgrado en psicología clínica y de la salud, magister en educación y desarrollo social con 4 años de experiencia en atención psicosocial y 1 año de Experiencia en contextos de educación superior",
+      "positions": 1,
+      "activities": "Atención a pacientes en el área de psicología clínica en el contexto de educación superior y desarrollo de campañas enfocadas a la prevención de la enfermedad y promoción de la salud mental. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-02",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "profile": "Psicólogo(a) con postgrado en Gestión de Seguridad y Salud en el Trabajo con 2 años de Experiencia en contextos de Educación Superior",
+      "positions": 1,
+      "activities": "Aplicación y seguimiento a la batería de riesgos psicosocial, ejecución de plan de acción de SST y plan de Bienestar Social Laboral. Acompañamiento a apoyos de bienestar en centros tutoriales. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-03",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "profile": "Psicólogo o Trabajador Social o Licenciado en Ciencias Sociales o Sociólogo o Licenciado (a) en educación especial o antropólogo con postgrado, con 2 años de experiencia en contextos de educación inclusiva en instituciones de educación superior.",
+      "positions": 1,
+      "activities": "Actualización de la política de inclusión, crear e implementar la ruta inclusiva institucional. Diseñar estrategias pedagógicas para la inclusión de las poblaciones vulnerables. Conformar y dinamizar el comité de inclusión institucional. Brindar orientaciones y capacitar a los profesores de la institución. Acompañar a la población priorizadas por la política y garantizar su permanencia. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-04",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a), con experiencia mínima de 4 años en contextos de educación superior relacionadas con protocolos para la prevención de violencia de género",
+      "positions": 1,
+      "activities": "Desarrollo de la ruta de prevención de violencia de género. Desarrollar acciones de acompañamiento psicosocial para la prevención de la violencia de género. Implementación del plan de acción del plan de trabajo del protocolo de prevención de violencias basadas en género. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-05",
+      "contract_type": "CATEDRA",
+      "profile": "Licenciando (a) en educación básica con énfasis en educación física recreación y deportes con experiencia mínima de 2 años en contextos de Educación Superior",
+      "positions": 3,
+      "activities": "Orientar cursos de electiva de deportes. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de deportes. Entrenar y acompañar a las selecciones institucionales.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-06",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": 10,
+      "activities": "Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Participar en comités curriculares. Apoyo para el desarrollo del plan de acción de Bienestar Institucional.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-07",
+      "contract_type": "CATEDRA",
+      "profile": "Profesional con formación en producción audiovisual, montaje coreográfico, danza teatro y escritura de guiones con 1 año de experiencia en contextos de Educación superior",
+      "positions": 1,
+      "activities": "Orientar cursos de electiva de Cultura (Danzas y expresión corporal). Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de cultura. Formar y acompañar a los grupos de danza y teatro institucionales.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-08",
+      "contract_type": "CATEDRA",
+      "profile": "Profesional con postgrado en metodología para la educación artística 3 año de experiencia en contextos de Educación superior",
+      "positions": 1,
+      "activities": "Orientar cursos de electiva de Cultura (arte con material encontrado y pintura). Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de cultura. Formar y acompañar a los grupos de danza y teatro institucionales.",
+      "program": "Bienestar Universitario"
+    },
+    {
+      "code": "BIEN-09",
+      "contract_type": "CATEDRA",
+      "profile": "Licenciado (a) en educación musical o afines con experiencia de 1 año en educación.",
+      "positions": 2,
+      "activities": "Orientar cursos de electiva de Cultura (música). Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de cultura. Formar y acompañar a los grupos de musicales institucionales.",
+      "program": "Bienestar Universitario"
+    }
+  ]
+}

@@ -1,0 +1,534 @@
+{
+  "sede": "FII_PAMPLONA_PRESENCIAL",
+  "metadata": {
+    "faculty": "FII",
+    "location": "PAMPLONA",
+    "modality": "PRESENCIAL"
+  },
+  "total_vacancies": 41,
+  "vacancies": [
+    {
+      "code": "FII-1",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS/ INGENIERO AGROINDUSTRIAL/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "INTRODUCCION A LA AGROINDUSTRIA",
+        "PROCESOS AGROALIMENTARIOS I",
+        "PROCESOS AGROALIMENTARIOS II"
+      ]
+    },
+    {
+      "code": "FII-2",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS/ INGENIERO AGROINDUSTRIAL/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "GESTION AGROINDUSTRIAL",
+        "PROYECTOS PRODUCTIVOS",
+        "MATERIAS PRIMAS",
+        "POSCOSECHA."
+      ]
+    },
+    {
+      "code": "FII-3",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE SISTEMAS",
+      "courses": [
+        "LÓGICA COMPUTACIONAL",
+        "PROGRAMACIÓN ESTRUCTURADA",
+        "METODOLOGÍAS PARA EL DESARROLLO DE SOFWARE"
+      ]
+    },
+    {
+      "code": "FII-4",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE SISTEMAS",
+      "courses": [
+        "PROGRAMACIÓN DE SISTEMAS DE INFORMACIÓN",
+        "PROGRAMACIÓN MÓVIL",
+        "OPTATIVA DE DESARROLLO DE SOFTWARE (TRATAMIENTO DE DATOS)"
+      ]
+    },
+    {
+      "code": "FII-5",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE TELECOMUNICACIONES",
+      "courses": [
+        "ENRUTAMIENTO",
+        "DIRECCIONAMIENTO",
+        "OPTATIVA DE GESTIÓN DE REDES (SEGURIDAD EN REDES)"
+      ]
+    },
+    {
+      "code": "FII-6",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "INGENIERO DE TELECOMUNICACIONES",
+      "courses": [
+        "REDES DE COMUNICACIONES",
+        "REDES CABLEADAS",
+        "GESTION DE PROYECTOS DE TECNOLOGÍA"
+      ]
+    },
+    {
+      "code": "FII-7",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": [
+        "INGLES I",
+        "INGLES II",
+        "INGLES III"
+      ]
+    },
+    {
+      "code": "FII-8",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PROTECCIÓN Y RECUPERACIÓN DE ECOSISTEMAS FORESTALES",
+      "profile": "INGENIERO FORESTAL O AGROFORESTAL O ÁREAS AFINES",
+      "courses": [
+        "ECOLOGIA",
+        "CLIMATOTOGIA",
+        "ECOLOGIA DE SISTEMAS FORESTALES",
+        "FORESTERIA",
+        "SOSTENIBILIDAD",
+        "PROCESAMIENTO DE PRODUCTOS FORESTALES"
+      ]
+    },
+    {
+      "code": "FII-9",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "MEDICO VETERINARIO O MEDICO VETERINARIO Y ZOTECNISTA (MVZ)",
+      "courses": [
+        "ANATOMIA",
+        "FISIOLOGIA ANIMAL",
+        "INSEMINACIÓN ARTIFICIAL",
+        "TRANSFERNCIA DE EMBRIONES"
+      ]
+    },
+    {
+      "code": "FII-10",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "ZOOTECNISTA O MEDICO VETERINARIO Y ZOTECNISTA (MVZ)",
+      "courses": [
+        "NUTRICION ANIMAL",
+        "SUPLEMENTACION ALIMENTARIA",
+        "ADMINISTRACION AGROPECUARIA",
+        "ICA",
+        "PRODUCIÓN PECUARIA I"
+      ]
+    },
+    {
+      "code": "FII-11",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "AGRONOMO – INGENIERO AGRONOMO O AREAS AFINES",
+      "courses": [
+        "RIEGOS",
+        "DRENAJES",
+        "MAQUINARIA",
+        "TOPOGRÁFIA",
+        "EXTENSIÓN RURAL",
+        "POLITICA AGROPECUARIA"
+      ]
+    },
+    {
+      "code": "FII-12",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNICA PROFESIONAL EN PROCESOS DE LA SEGURIDAD Y SALUD EN EL TRABAJO",
+      "profile": "PROFESIONAL EN SEGURIDAD Y SALUD EN EL TRABAJO O PROFESIONAL EN TODAS LAS ÁREAS CON POSGRADO EN SEGURIDAD Y SALUD EN EL TRABAJO",
+      "courses": [
+        "INTRODUCCIÓN A LA SST",
+        "CAPACITACIÓN",
+        "ENTRENAMIENTO EN SST",
+        "FUNDAMENTOS DE ERGONOMÍA"
+      ]
+    },
+    {
+      "code": "FII-13",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNICA PROFESIONAL EN PROCESOS DE LA SEGURIDAD Y SALUD EN EL TRABAJO",
+      "profile": "PROFESIONAL EN SEGURIDAD Y SALUD EN EL TRABAJO O PROFESIONAL EN TODAS LAS ÁREAS CON POSGRADO EN SEGURIDAD Y SALUD EN EL TRABAJO",
+      "courses": [
+        "CIENCIAS BÁSICAS ENFOCADAS A LA SST",
+        "GENERALIDADES DEL SISTEMA DE GESTIÓN EN SST, MEDICINA DEL TRABAJO",
+        "PRÁCTICA EN SST"
+      ]
+    },
+    {
+      "code": "FII-14",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
+      "profile": "INGENIERO INDUSTRIAL",
+      "courses": [
+        "ERGONOMÍA",
+        "GESTIÓN DE LA SEGURIDAD",
+        "SALUD EN EL TRABAJO",
+        "GESTIÓN DEL TALENTO HUMANO",
+        "TRABAJOS DE GRADO"
+      ]
+    },
+    {
+      "code": "FII-15",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
+      "profile": "INGENIERO INDUSTRIAL",
+      "courses": [
+        "PROCESOS INDUSTRIALES",
+        "DISTRIBUCIÓN DE PLANTAS",
+        "OPTATIVA I",
+        "OPTATIVA II",
+        "FORMULACIÓN DE PROYECTOS",
+        "COSTOS",
+        "PRESUPUESTOS",
+        "TRABAJOS DE GRADO"
+      ]
+    },
+    {
+      "code": "FII-16",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "INGENIERO CIVIL",
+      "courses": [
+        "COSTOS, PRESUPUESTO",
+        "PROGRAMACIÓN DE OBRA",
+        "OPTATIVA DE PROFUNDIZACION MATERIALES",
+        "EQUIPO",
+        "MATERIALES DE CONSTRUCCIÓN",
+        "TRABAJOS DE GRADO"
+      ]
+    },
+    {
+      "code": "FII-17",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "INGENIERO CIVIL",
+      "courses": [
+        "TRAZADO DE VIAS",
+        "OPTATIVA I (CIMENTACIONES",
+        "OBRAS DE CONTENCIÓN",
+        "OPTATIVA II (CONTRATACION ESTATAL",
+        "TRABAJOS DE GRADO."
+      ]
+    },
+    {
+      "code": "FII-18",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "ARQUITECTO",
+      "courses": [
+        "DIBUJO TECNICO DIGITAL",
+        "METODOLOGIA DE LA INVESTIGACION",
+        "TÉCNICA, TECNOLOGÍA",
+        "CIENCIA",
+        "TRABAJOS DE GRADO."
+      ]
+    },
+    {
+      "code": "FII-19",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "LICENCIADO EN MATEMATICAS/ MATEMÁTICO / INGENIERO / O AREAS AFINES",
+      "courses": [
+        "ALGEBRA",
+        "TRIGONOMETRIA",
+        "MATEMATICAS",
+        "MATEMATICA APLICADA",
+        "CALCULOS"
+      ]
+    },
+    {
+      "code": "FII-20",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO / ESTADISTICO O AREAS AFINES",
+      "courses": [
+        "ESTADISTICA",
+        "BIOESTADISTICA",
+        "ESTADISTICA",
+        "PROBABILIDADES."
+      ]
+    },
+    {
+      "code": "FII-21",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "LICENCIADO EN FÍSICA / FISICO O AREAS AFINES",
+      "courses": [
+        "FISICA",
+        "FISICA MECANICA",
+        "LABORATORIO DE FISICA MECANICA"
+      ]
+    },
+    {
+      "code": "FII-22",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PRODUCCION AGROPECUARIA - TECNOLOGÍA EN PROTECCIÓN Y RECUPERACIÓN DE ECOSISTEMA FORESTALES",
+      "profile": "LICENCIADO EN CIENCIAS NATURALES O LICENCIADOS EN BIOLOGIA O BIOLOGO O AREAS AFINES.",
+      "courses": [
+        "BIOLOGIA GENERAL",
+        "BIOLOGIA APLICADA."
+      ]
+    },
+    {
+      "code": "FII-23",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
+      "courses": [
+        "QUIMICA",
+        "QUIMICA GENERAL",
+        "QUIMICA APLICADA",
+        "BIOQUIMICA APLICADA",
+        "FISICOQUIMICA AGROINDUSTRIAL",
+        "PROCESOS DE TRANSFORMACION FISICOQUIMICA."
+      ]
+    },
+    {
+      "code": "FII-24",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PRODUCCION AGROPECUARIA",
+      "profile": "MICROBIOLOGO",
+      "courses": [
+        "MICROBIOLOGIA",
+        "INOCUIDAD EN LOS PROCESOS AGROINDUSTRIALES"
+      ]
+    },
+    {
+      "code": "FII-25",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "LICENCIADO EN LENGUA CASTELLANA O COMUNICADOR SOCIAL O AREAS AFINES",
+      "courses": [
+        "HABILIDADES COMUNICATIVAS",
+        "PRODUCCION",
+        "COMPRENSION DE TEXTOS",
+        "COMPETENCIAS COMUNICATIVAS"
+      ]
+    },
+    {
+      "code": "FII-26",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "CONTADOR PUBLICO Y/O ADMINISTRADOR DE EMPRESAS Y/O ECONOMISTA O AREAS AFINES",
+      "courses": [
+        "CONTABILIDAD",
+        "COSTOS",
+        "PRESUPUESTO",
+        "CONTABILIDAD FINANCIERA",
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "ECOSISTEMA ECONÓMICO AGROINDUSTRIAL",
+        "ADMINISTRACIÓN GENERAL"
+      ]
+    },
+    {
+      "code": "FII-27",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": [
+        "INGLES I",
+        "INGLES II",
+        "INGLES III",
+        "INGLES TECNICO I, II y III."
+      ]
+    },
+    {
+      "code": "FII-28",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "PROFESIONAL EN CIENCIAS SOCIALES Y HUMANAS - TRABAJADOR SOCIAL - LICENCIADO EN DESARROLLO COMUNITARIO O AREAS AFINES",
+      "courses": [
+        "SOCIEDAD",
+        "RURALIDAD",
+        "CIUDADANIA",
+        "CONVIVENCIA",
+        "ELECTIVAS DE SOCIOHUMANISTICA"
+      ]
+    },
+    {
+      "code": "FII-29",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "INGENIERO AMBIENTAL O AREAS AFINES",
+      "courses": [
+        "AMBIENTAL",
+        "GESTION AMBIENTAL",
+        "SANEAMIENTO",
+        "LEGISLACION AMBIENTAL"
+      ]
+    },
+    {
+      "code": "FII-30",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "PSICOLOGO – SOCIOLOGO O AREAS AFINES",
+      "courses": [
+        "HABILIDADES INTRA E INTERPERSONALES"
+      ]
+    },
+    {
+      "code": "FII-31",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "ADMINISTRADOR DE EMPRESAS O AREAS AFINES",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACION",
+        "TECNICAS",
+        "ESTRATEGIAS DE INVESTIGACION",
+        "METODOLOGIA DE LA INVESTIGACION",
+        "TECNICA TECNOLOGIA",
+        "CIENCIA"
+      ]
+    },
+    {
+      "code": "FII-32",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "ABOGADO",
+      "courses": [
+        "LEGISLACION LABORAL."
+      ]
+    },
+    {
+      "code": "FII-33",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "INGENIERO ELECTRÓNICO / INGENIERO MECATRÓNICO O AREAS AFINES",
+      "courses": [
+        "ELECTRICIDAD",
+        "ELECTRÓNICA APLICADA, COMPUTACIÓN FISICA, HERRAMIENTAS TECNOLOGICAS",
+        "PROGRAMACION APLICADA",
+        "TECNICA TECNOLOGIA",
+        "CIENCIA"
+      ]
+    },
+    {
+      "code": "FII-34",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "INGENIERO DE SISTEMAS",
+      "courses": [
+        "INFORMATICA, SERVIDORES, PROGRAMACION ORIENTADA A OBJETOS, DISEÑOS PARA LA WEB",
+        "SISTEMAS OPERATIVOS",
+        "SISTEMAS DE INFORMACIÓN DE SST"
+      ]
+    },
+    {
+      "code": "FII-35",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PRODUCCIÓN AGROPECUARIA",
+      "profile": "AGRONOMO – INGENIERO AGRONOMO O AREAS AFINES",
+      "courses": [
+        "SANIDAD VEGETAL",
+        "ANATOMIA",
+        "FISIOLOGIA VEGETAL",
+        "EXTENSIÓN RURAL",
+        "POLITICA AGROPECUARIA"
+      ]
+    },
+    {
+      "code": "FII-36",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "MEDICO VETERINARIO O MEDICO VETERINARIO Y ZOTECNISTA (MVZ)",
+      "courses": [
+        "SANIDAD ANIMAL",
+        "FISIOLOGIA DE LA REPRODUCCIÓN",
+        "INSEMINACIÓN ARTIFICIAL",
+        "TRANSFERENCIA DE EMBRIONES"
+      ]
+    },
+    {
+      "code": "FII-37",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "ZOOTECNISTA O MEDICO VETERINARIO Y ZOTECNISTA (MVZ)",
+      "courses": [
+        "CONSERVACION DE FORRAJES",
+        "NUTRICION",
+        "PASTOS",
+        "FORRAJES",
+        "PRODUCIÓN",
+        "PROCESAMIENTO DE PRODUCTOS PARA ALIMENTACION ANIMAL"
+      ]
+    },
+    {
+      "code": "FII-38",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "INGENIERO CIVIL",
+      "courses": [
+        "ACUEDUCTOS",
+        "ALCANTARILLADOS",
+        "INSTALACIONES HIDROSANITARIAS PARA EDIFICACIONES",
+        "LABORATORIO DE PAVIMENTOS, TOPOGRAFIA",
+        "ALTIMETRIA, TOPOGRAFIA",
+        "PLANIMETRIA, MECANICA DE FLUIDOS E HIDRAULICA",
+        "GEOLOGIA APLICADA",
+        "DISEÑO DE MEZCLAS",
+        "MECANICA DE MATERIALES",
+        "MECÁNICA DE SUELOS",
+        "RESIDENCIA",
+        "SUPERVISIÓN TECNICA DE OBRAS",
+        "CONSTRUCIONES SISMORRESISTENTES",
+        "TRABAJOS DE GRADO."
+      ]
+    },
+    {
+      "code": "FII-39",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "PROFESIONAL EN SEGURIDAD Y SALUD EN EL TRABAJO O PROFESIONAL EN TODAS LAS ÁREAS CON POSGRADO EN SEGURIDAD Y SALUD EN EL TRABAJO CON LICENCIA EN SEGURIDAD Y SALUD EN EL TRABAJO VIGENTE O CERTIFICADO DE COORDINADOR DE TRABAJO EN ALTURAS VIGENTE O CURSOS EN EMERGENCIAS Y DESASTRES",
+      "courses": [
+        "SEGURIDAD",
+        "SALUD EN EL TRABAJO",
+        "SALUD PÚBLICA",
+        "SEGURIDAD INDUSTRIAL",
+        "HIGIENE INDUSTRIAL",
+        "OPTATIVA. SEGURIDAD VIAL",
+        "OPTATIVA. BIOSEGURIDAD",
+        "TRABAJO SEGURO EN ALTURAS",
+        "FUNDAMENTOS EN EMERGENCIAS",
+        "DESASTRES",
+        "GESTION DE LA SEGURIDAD",
+        "SALUD EN EL TRABAJO"
+      ]
+    },
+    {
+      "code": "FII-40",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "INGENIERO DE ALIMENTOS O INGENIERO AGROINDUSTRIAL O DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "OPTATIVA I DE PROFUNDIZACIÓN AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN PECUARIO)",
+        "OPTATIVA II AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN AGRÍCOLA).",
+        "CALIDAD E INOCUIDAD EN LA INDUSTRIA AGROALIMENTARIA"
+      ]
+    },
+    {
+      "code": "FII-41",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS",
+      "profile": "INGENIERO INDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "PLANEACIÓN",
+        "CONTROL DE LA PRODUCCIÓN",
+        "RESPONSABILIDAD SOCIAL",
+        "PRODUCTIVIDAD",
+        "COMPETITIVIDAD",
+        "LOGÍSTICA",
+        "DISTRIBUCIÓN. GESTION INDUSTRIAL",
+        "PROCESOS INDUSTRIALES",
+        "SIMULACIÓN DE PROCESOS",
+        "AGROINDUSTRIA NO ALIMENTARIA I"
+      ]
+    }
+  ]
+}

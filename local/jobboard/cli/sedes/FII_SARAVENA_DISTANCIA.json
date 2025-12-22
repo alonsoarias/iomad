@@ -1,0 +1,70 @@
+{
+  "sede": "FII_SARAVENA_DISTANCIA",
+  "metadata": {
+    "faculty": "FII",
+    "location": "SARAVENA",
+    "modality": "DISTANCIA"
+  },
+  "total_vacancies": 6,
+  "vacancies": [
+    {
+      "code": "FII-1",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FII-2",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "LICENCIADO EN FÍSICA / FISICO O AREAS AFINES",
+      "courses": [
+        "FISICA"
+      ]
+    },
+    {
+      "code": "FII-3",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
+      "courses": [
+        "QUIMICA"
+      ]
+    },
+    {
+      "code": "FII-4",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "MICROBIOLOGO",
+      "courses": [
+        "MICROBIOLOGIA"
+      ]
+    },
+    {
+      "code": "FII-5",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": [
+        "INGLES I",
+        "INGLES II"
+      ]
+    },
+    {
+      "code": "FII-6",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS O INGENIERO AGROINDUSTRIAL O DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "INTRODUCCION A LA AGROINDUSTRIA",
+        "PROCESOS AGROALIMENTARIOS",
+        "PROCESOS NO AGROALIMENTARIOS",
+        "MATERIAS PRIMAS",
+        "POSTCOSECHA"
+      ]
+    }
+  ]
+}
