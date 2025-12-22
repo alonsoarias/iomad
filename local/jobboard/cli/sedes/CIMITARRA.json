@@ -1,0 +1,119 @@
+{
+  "sede": "CIMITARRA",
+  "total_vacancies": 12,
+  "by_faculty": {
+    "FII": 0,
+    "FCAS": 11,
+    "BIENESTAR": 1
+  },
+  "vacancies": [
+    {
+      "code": "FCAS-325",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "ADMINISTRACION GENERAL EMPRENDIMIENTO FUENTES DE FINANCIACION Y NORMATIVIDAD COLOMBIANA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-326",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO",
+      "courses": "ECONOMIA MERCADEO E INVESTIGACIÓN DE MERCADOS TECNICAS DE COMERCIALIZACION",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-327",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION",
+      "courses": "CONTABILIDAD COSTOS Y PRESUPUESTOS GESTIÓN DEL TALENTO HUMANO CURSO DE APOYO DE CONTABILIDAD CAPACITACION Y ENTRENAMIENTO Y EVALUACION DE PERSONAL",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-328",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN AGRONEGOCIOS O ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS O CIENCIAS AGRARIAS CON POSGRADO EN ADMINISTRACIÓN DE EMPRESAS O EXPERIENCIA EN FORMULACIÓN DE PROYECTOS EN EL ÁREA DE AGRONEGOCIOS",
+      "courses": "SERVICIOS AGRARIOS DESARROLLO EMPRESARIAL RURAL SISTEMAS DE GESTION OPTATIVAI (AGRONEGOCIOS)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-329",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES",
+      "courses": "SISTEMAS DE INFORMACION Y GESTION DOCUMENTAL SISTEMAS DE GESTION",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-330",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "courses": "FORMULACIÓN DE PROYECTOS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-331",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES II – III",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-332",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-333",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES",
+      "courses": "HABILIDADES COMUNICATIVAS ELECTIVA I SOCIOHUMANISTICA (CULTURA Y DIVERSIDAD) ELECTIVA II SOCIOHUMANISTICA (historia del arte)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-334",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES",
+      "courses": "SOCIEDAD Y RURALIDAD CIUDADANÍA Y CONVIVENCIA BIENESTAR EN EL PROGRAMA (PERMANENCIA, BIENESTAR FORMATIVO)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-335",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO O PRFESIONAL EN CIENCIAS NATURALES Y EDUCACIÓN O INGENIERÍA AMBIENTALES O ÁREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "GESTION AMBIENTAL (PARA TRES SEMESTRES)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-23",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

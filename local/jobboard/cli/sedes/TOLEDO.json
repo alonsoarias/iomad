@@ -1,0 +1,317 @@
+{
+  "sede": "TOLEDO",
+  "total_vacancies": 34,
+  "by_faculty": {
+    "FII": 7,
+    "FCAS": 26,
+    "BIENESTAR": 1
+  },
+  "vacancies": [
+    {
+      "code": "FII - 01",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII - 02",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "LICENCIADO EN FÍSICA / FISICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE FISICA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII – 03",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE QUIMICA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-04",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "MICROBIOLOGO",
+      "courses": "ORIENTAR LOS CURSOS DE MICROBIOLOGIA -INOCUIDAD EN LOS PROCESOS AGROINDUSTRIALES",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-05",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
+      "profile": "LICENCIADO EN IDIOMAS/ LENGUAS EXTRANJERAS/ LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-06",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS/ INGENIERO AGROINDUSTRIAL/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INTRODUCCION A LA AGROINDUSTRIA - PROCESOS AGROALIMENTARIOS – MATERIAS PRIMAS Y POSCOSECHA – PROCESOS NO AGROALIMENTARIOS",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-07",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO INDUSTRIAL O INGENIERO AGROINDUSTRIAL O DE PRODUCCIÓN AGROINDUSTRIAL- ÁREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS AGROINDUSTRIA NO ALIMENTARIA I (SUBPRODUCTOS DE ORIGEN PECUARIO), AGROINDUSTRIA NO ALIMENTARIA II (SUBPRODUCTOS DE ORIGEN AGRÍCOLA)",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-119",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "ADMINISTRACION GENERAL EMPRENDIMIENTO FUENTES DE FINANCIACION PRÁCTICA EMPRESARIAL PLANEACIÓN Y DIRECCIONAMIENTO ESTRATÉGICO OPTATIA II (ADMINISTRACION)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-120",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO",
+      "courses": "ECONOMIA MERCADEO E INVESTIGACIÓN DE MERCADOS GESTIÓN DE NEGOCIOS TÉCNICAS DE COMERCIALIZACIÓN",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-121",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION",
+      "courses": "CONTABILIDAD COSTOS Y PRESUPUESTOS CAPACITACIÓN, ENTRENAMIENTO Y EVALUACIÓN DEL PERSONAL CURSO DE APOYO DE CONTABILIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-122",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN AGRONEGOCIOS O ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS O CIENCIAS AGRARIAS CON POSGRADO EN ADMINISTRACIÓN DE EMPRESAS O EXPERIENCIA EN FORMULACIÓN DE PROYECTOS EN EL ÁREA DE AGRONEGOCIOS",
+      "courses": "OPTATIVA I (AGRONEGOCIOS) SERVICIOS AGRARIOS DESARROLLO EMPRESARIAL RURAL",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-123",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES",
+      "courses": "INFORMÁTICA APLICADA A LA EMPRESA LABORATORIO DE SIMULACIÓN SISTEMAS DE GESTION",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-124",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO O PRFESIONAL EN CIENCIAS NATURALES Y EDUCACIÓN O INGENIERÍA AMBIENTALES O ÁREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "GESTION AMBIENTAL (PARA TRES SEMESTRES)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-125",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACIÓN DE PROYECTOS METODOLOGÍA DE LA INVESTIGACIÓN proyectos de INVESTIGACION Y EXTENSION semillero",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-110",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES II – V",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-126",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-127",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES",
+      "courses": "HABILIDADES COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS ELECTIVA I SOCIOHUMANISTICA (CULTURA Y DIVERSIDAD) ELECTIVA II SOCIOHUMANISTICA (historia del arte)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-128",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES",
+      "courses": "SOCIEDAD Y RURALIDAD HABILIDADES INTRA E INTERPERSONALES CIUDADANÍA Y CONVIVENCIA BIENESTAR EN EL PROGRAMA (PERMANENCIA, BIENESTAR FORMATIVO)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-129",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-130",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-131",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ECONOMISTA",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-132",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD O AREAS AFINES",
+      "courses": "ORIENTAR CURSO DE MERCADEO - LIDERAZGO Y GESTIÓN - MERCADEO ESTRATÉGICO - EMPRENDIMIENTO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-133",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – IV",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-134",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "COMUNICADOR SOCIAL",
+      "courses": "COMPETENCIAS COMUNICATIVAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-135",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "DISEÑADOR GRAFICO – PROFESIONAL EN MERCADEO Y PUBLICIDAD – COMUNICADOR SOCIAL",
+      "courses": "HERRAMIENTAS DE DISEÑO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-136",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "CONTADOR PUBLICO - ADMINISTRADOR DE EMPRESAS CON ESPECIALISACIÓN EN FINANZAS",
+      "courses": "CONTABILIDAD FINANCIERA.",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-137",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "courses": "SOCIEDAD Y RURALIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-138",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "INGENIERO EN SISTEMAS",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-139",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN EDUCACIÓN ARTÍSTICA",
+      "courses": "ORIENTAR EL CURSO DE ELECTIVA II",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-140",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO. DOCENTE CATEDRA.",
+      "courses": "FUNDAMENTOS MATEMÁTICOS CABS CURSO DE APOYO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-141",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC. DOCENTE CATEDRA.",
+      "courses": "INFORMÁTICA APLICADA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-142",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "COMUNICADOR/A SOCIAL LICENCIADO EN LENGUA CASTELLANA. DOCENTE CATEDRA.",
+      "courses": "COMPETENCIAS COMUNICATIVAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-143",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO, PROFESIONAL EN TRABAJO SOCIAL. DOCENTE CATEDRA.",
+      "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA FUNDAMENTOS DE SOCIOLOGÍA SUJETO Y FAMILIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-15",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

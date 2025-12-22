@@ -1,0 +1,92 @@
+{
+  "sede": "TAME",
+  "total_vacancies": 9,
+  "by_faculty": {
+    "FII": 0,
+    "FCAS": 8,
+    "BIENESTAR": 1
+  },
+  "vacancies": [
+    {
+      "code": "FCAS-379",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-380",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN – TECNICA TECNOLOGIA Y CIENCIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-381",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ECONOMISTA",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-382",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
+      "courses": "ORIENTAR CURSO DE MERCADEO",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-383",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-384",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "COMUNICADOR SOCIAL",
+      "courses": "COMPETENCIAS COMUNICATIVAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-385",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "courses": "SOCIEDAD Y RURALIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-386",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "INGENIERO EN SISTEMAS",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-25",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    }
+  ]
+}

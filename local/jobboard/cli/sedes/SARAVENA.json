@@ -1,0 +1,182 @@
+{
+  "sede": "SARAVENA",
+  "total_vacancies": 19,
+  "by_faculty": {
+    "FII": 6,
+    "FCAS": 12,
+    "BIENESTAR": 1
+  },
+  "vacancies": [
+    {
+      "code": "FII - 01",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII - 02",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "LICENCIADO EN FÍSICA / FISICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE FISICA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII – 03",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE QUIMICA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-04",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "MICROBIOLOGO",
+      "courses": "ORIENTAR LOS CURSOS DE MICROBIOLOGIA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-05",
+      "contract_type": "CATEDRA",
+      "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FII-06",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS O INGENIERO AGROINDUSTRIAL O DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INTRODUCCION A LA AGROINDUSTRIA - PROCESOS AGROALIMENTARIOS- PROCESOS NO AGROALIMENTARIOS- MATERIAS PRIMAS Y POSTCOSECHA",
+      "faculty": "FII",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-336",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "ADMINISTRACION GENERAL EMPRENDIMIENTO FUENTES DE FINANCIACION Y NORMATIVIDAD COLOMBIANA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-337",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO",
+      "courses": "ECONOMIA MERCADEO E INVESTIGACIÓN DE MERCADOS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-338",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION",
+      "courses": "CONTABILIDAD COSTOS Y PRESUPUESTOS GESTIÓN DEL TALENTO HUMANO CURSO DE APOYO DE CONTABILIDAD",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-339",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN AGRONEGOCIOS O ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS O CIENCIAS AGRARIAS CON POSGRADO EN ADMINISTRACIÓN DE EMPRESAS O EXPERIENCIA EN FORMULACIÓN DE PROYECTOS EN EL ÁREA DE AGRONEGOCIOS",
+      "courses": "SERVICIOS AGRARIOS DESARROLLO EMPRESARIAL RURAL SISTEMAS DE GESTION OPTATIVAI (AGRONEGOCIOS)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-340",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES",
+      "courses": "SISTEMAS DE INFORMACION Y GESTION DOCUMENTAL SISTEMAS DE GESTION",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-341",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "courses": "FORMULACIÓN DE PROYECTOS",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-342",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES II – III",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-343",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-344",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES",
+      "courses": "HABILIDADES COMUNICATIVAS HABILIDADES INTRA E INTERPERSONALES ELECTIVA I SOCIOHUMANISTICA (CULTURA Y DIVERSIDAD) ELECTIVA II SOCIOHUMANISTICA (historia del arte)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-345",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES",
+      "courses": "SOCIEDAD Y RURALIDAD CIUDADANÍA Y CONVIVENCIA BIENESTAR EN EL PROGRAMA (PERMANENCIA, BIENESTAR FORMATIVO)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-346",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO O PRFESIONAL EN CIENCIAS NATURALES Y EDUCACIÓN O INGENIERÍA AMBIENTALES O ÁREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "GESTION AMBIENTAL (PARA TRES SEMESTRES)",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "FCAS-347",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACIÓN DE PROYECTOS METODOLOGÍA DE LA INVESTIGACIÓN proyectos de INVESTIGACION Y EXTENSION semillero",
+      "faculty": "FCAS",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-27",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    }
+  ]
+}
