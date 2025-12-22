@@ -52,14 +52,23 @@ class status_helper {
     /** @var string Application status: submitted */
     const APP_SUBMITTED = 'submitted';
 
-    /** @var string Application status: under_review */
-    const APP_UNDER_REVIEW = 'under_review';
+    /** @var string Application status: pending dean review */
+    const APP_PENDING_DEAN_REVIEW = 'pending_dean_review';
 
-    /** @var string Application status: approved */
-    const APP_APPROVED = 'approved';
+    /** @var string Application status: dean approved */
+    const APP_DEAN_APPROVED = 'dean_approved';
 
-    /** @var string Application status: rejected */
-    const APP_REJECTED = 'rejected';
+    /** @var string Application status: dean rejected */
+    const APP_DEAN_REJECTED = 'dean_rejected';
+
+    /** @var string Application status: pending HR validation */
+    const APP_PENDING_HR_VALIDATION = 'pending_hr_validation';
+
+    /** @var string Application status: HR validated */
+    const APP_HR_VALIDATED = 'hr_validated';
+
+    /** @var string Application status: HR rejected */
+    const APP_HR_REJECTED = 'hr_rejected';
 
     /** @var string Application status: withdrawn */
     const APP_WITHDRAWN = 'withdrawn';
@@ -99,9 +108,12 @@ class status_helper {
         return [
             self::APP_DRAFT => get_string('status_draft', 'local_jobboard'),
             self::APP_SUBMITTED => get_string('status_submitted', 'local_jobboard'),
-            self::APP_UNDER_REVIEW => get_string('status_under_review', 'local_jobboard'),
-            self::APP_APPROVED => get_string('status_approved', 'local_jobboard'),
-            self::APP_REJECTED => get_string('status_rejected', 'local_jobboard'),
+            self::APP_PENDING_DEAN_REVIEW => get_string('status_pending_dean_review', 'local_jobboard'),
+            self::APP_DEAN_APPROVED => get_string('status_dean_approved', 'local_jobboard'),
+            self::APP_DEAN_REJECTED => get_string('status_dean_rejected', 'local_jobboard'),
+            self::APP_PENDING_HR_VALIDATION => get_string('status_pending_hr_validation', 'local_jobboard'),
+            self::APP_HR_VALIDATED => get_string('status_hr_validated', 'local_jobboard'),
+            self::APP_HR_REJECTED => get_string('status_hr_rejected', 'local_jobboard'),
             self::APP_WITHDRAWN => get_string('status_withdrawn', 'local_jobboard'),
         ];
     }
@@ -127,12 +139,15 @@ class status_helper {
      */
     public static function get_allowed_transitions(): array {
         return [
-            self::APP_DRAFT => [self::APP_SUBMITTED, self::APP_WITHDRAWN],
-            self::APP_SUBMITTED => [self::APP_UNDER_REVIEW, self::APP_WITHDRAWN],
-            self::APP_UNDER_REVIEW => [self::APP_APPROVED, self::APP_REJECTED, self::APP_SUBMITTED],
-            self::APP_APPROVED => [],
-            self::APP_REJECTED => [self::APP_UNDER_REVIEW],
-            self::APP_WITHDRAWN => [],
+            self::APP_DRAFT => [self::APP_SUBMITTED],
+            self::APP_SUBMITTED => [self::APP_PENDING_DEAN_REVIEW, self::APP_WITHDRAWN],
+            self::APP_PENDING_DEAN_REVIEW => [self::APP_DEAN_APPROVED, self::APP_DEAN_REJECTED],
+            self::APP_DEAN_APPROVED => [self::APP_PENDING_HR_VALIDATION],
+            self::APP_DEAN_REJECTED => [], // Final state.
+            self::APP_PENDING_HR_VALIDATION => [self::APP_HR_VALIDATED, self::APP_HR_REJECTED],
+            self::APP_HR_VALIDATED => [], // Final state.
+            self::APP_HR_REJECTED => [], // Final state.
+            self::APP_WITHDRAWN => [], // Final state.
         ];
     }
 
@@ -193,9 +208,12 @@ class status_helper {
             'application' => [
                 self::APP_DRAFT => 'bg-secondary',
                 self::APP_SUBMITTED => 'bg-info',
-                self::APP_UNDER_REVIEW => 'bg-warning',
-                self::APP_APPROVED => 'bg-success',
-                self::APP_REJECTED => 'bg-danger',
+                self::APP_PENDING_DEAN_REVIEW => 'bg-warning',
+                self::APP_DEAN_APPROVED => 'bg-primary',
+                self::APP_DEAN_REJECTED => 'bg-danger',
+                self::APP_PENDING_HR_VALIDATION => 'bg-warning',
+                self::APP_HR_VALIDATED => 'bg-success',
+                self::APP_HR_REJECTED => 'bg-danger',
                 self::APP_WITHDRAWN => 'bg-dark',
             ],
             'document' => [

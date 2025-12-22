@@ -684,6 +684,121 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121819, 'local', 'jobboard');
     }
 
+    // Version 4.0.0 - Major workflow restructuring:
+    // - Add dean/HR review date fields to convocatoria
+    // - Add userrole field to audit table
+    // - Create new roles (dean, hr)
+    // - Remove committee-related tables and role
+    // - Migrate application statuses to new workflow
+    if ($oldversion < 2025122100) {
+        $dbman = $DB->get_manager();
+
+        // ====================================================================
+        // 1. Add review date fields to convocatoria table
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_convocatoria');
+
+        $fields = [
+            new xmldb_field('dean_review_startdate', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'max_applications_per_user'),
+            new xmldb_field('dean_review_enddate', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'dean_review_startdate'),
+            new xmldb_field('hr_review_startdate', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'dean_review_enddate'),
+            new xmldb_field('hr_review_enddate', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'hr_review_startdate'),
+        ];
+
+        foreach ($fields as $field) {
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        // ====================================================================
+        // 2. Add userrole field to audit table
+        // ====================================================================
+        $audittable = new xmldb_table('local_jobboard_audit');
+        $rolefield = new xmldb_field('userrole', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'userid');
+
+        if (!$dbman->field_exists($audittable, $rolefield)) {
+            $dbman->add_field($audittable, $rolefield);
+
+            // Add index for userrole.
+            $index = new xmldb_index('userrole_idx', XMLDB_INDEX_NOTUNIQUE, ['userrole']);
+            if (!$dbman->index_exists($audittable, $index)) {
+                $dbman->add_index($audittable, $index);
+            }
+        }
+
+        // ====================================================================
+        // 3. Create new roles: jobboard_dean and jobboard_hr
+        // ====================================================================
+        local_jobboard_upgrade_create_dean_hr_roles();
+
+        // ====================================================================
+        // 4. Migrate application statuses to new workflow
+        // ====================================================================
+        $statusmap = [
+            'under_review' => 'pending_dean_review',
+            'docs_validated' => 'dean_approved',
+            'docs_rejected' => 'pending_dean_review', // Give another chance
+            'interview' => 'pending_hr_validation',
+            'selected' => 'hr_validated',
+            // 'rejected' stays as is or maps based on context
+        ];
+
+        foreach ($statusmap as $oldstatus => $newstatus) {
+            $DB->execute(
+                "UPDATE {local_jobboard_application} SET status = :newstatus WHERE status = :oldstatus",
+                ['newstatus' => $newstatus, 'oldstatus' => $oldstatus]
+            );
+        }
+
+        // ====================================================================
+        // 5. Delete committee-related tables (in correct order for FK)
+        // ====================================================================
+        $tablestodrop = [
+            'local_jobboard_decision',
+            'local_jobboard_evaluation',
+            'local_jobboard_criteria',
+            'local_jobboard_committee_member',
+            'local_jobboard_committee',
+        ];
+
+        foreach ($tablestodrop as $tablename) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->table_exists($table)) {
+                $dbman->drop_table($table);
+            }
+        }
+
+        // ====================================================================
+        // 6. Delete committee role and its capabilities
+        // ====================================================================
+        $committeerole = $DB->get_record('role', ['shortname' => 'jobboard_committee']);
+        if ($committeerole) {
+            // Remove role assignments.
+            $DB->delete_records('role_assignments', ['roleid' => $committeerole->id]);
+            // Remove role capabilities.
+            $DB->delete_records('role_capabilities', ['roleid' => $committeerole->id]);
+            // Delete the role.
+            delete_role($committeerole->id);
+        }
+
+        // ====================================================================
+        // 7. Delete obsolete capabilities
+        // ====================================================================
+        $obsoletecaps = [
+            'local/jobboard:evaluate',
+            'local/jobboard:viewevaluations',
+        ];
+
+        foreach ($obsoletecaps as $capname) {
+            $DB->delete_records('capabilities', ['name' => $capname]);
+            $DB->delete_records('role_capabilities', ['capability' => $capname]);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025122100, 'local', 'jobboard');
+    }
+
     return true;
 }
 
@@ -939,5 +1054,73 @@ function local_jobboard_upgrade_doctypes(): void {
             $insert->timemodified = $now;
             $DB->insert_record('local_jobboard_doctype', $insert);
         }
+    }
+}
+
+/**
+ * Create new Dean and HR roles for the workflow restructuring.
+ *
+ * Creates two new roles:
+ * - jobboard_dean: Reviews applicant profiles and approves/rejects them
+ * - jobboard_hr: Validates documents for dean-approved applicants
+ *
+ * @return void
+ */
+function local_jobboard_upgrade_create_dean_hr_roles(): void {
+    global $DB;
+
+    $systemcontext = context_system::instance();
+
+    // Role: Dean Reviewer.
+    $deanrole = $DB->get_record('role', ['shortname' => 'jobboard_dean']);
+    if (!$deanrole) {
+        $deanroleid = create_role(
+            get_string('role_dean', 'local_jobboard'),
+            'jobboard_dean',
+            get_string('role_dean_desc', 'local_jobboard'),
+            'teacher'
+        );
+
+        $deancaps = [
+            'local/jobboard:view',
+            'local/jobboard:viewinternal',
+            'local/jobboard:viewallapplications',
+            'local/jobboard:downloadanydocument',
+            'local/jobboard:reviewprofiles',
+            'local/jobboard:approveprofile',
+        ];
+
+        foreach ($deancaps as $cap) {
+            assign_capability($cap, CAP_ALLOW, $deanroleid, $systemcontext->id);
+        }
+
+        set_role_contextlevels($deanroleid, [CONTEXT_SYSTEM]);
+    }
+
+    // Role: HR Validator.
+    $hrrole = $DB->get_record('role', ['shortname' => 'jobboard_hr']);
+    if (!$hrrole) {
+        $hrroleid = create_role(
+            get_string('role_hr', 'local_jobboard'),
+            'jobboard_hr',
+            get_string('role_hr_desc', 'local_jobboard'),
+            'teacher'
+        );
+
+        $hrcaps = [
+            'local/jobboard:view',
+            'local/jobboard:viewinternal',
+            'local/jobboard:viewallapplications',
+            'local/jobboard:downloadanydocument',
+            'local/jobboard:validatedocuments',
+            'local/jobboard:reviewdocuments',
+            'local/jobboard:validatehr',
+        ];
+
+        foreach ($hrcaps as $cap) {
+            assign_capability($cap, CAP_ALLOW, $hrroleid, $systemcontext->id);
+        }
+
+        set_role_contextlevels($hrroleid, [CONTEXT_SYSTEM]);
     }
 }

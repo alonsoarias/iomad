@@ -217,6 +217,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userrole" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Role shortname of user performing action"/>
         <FIELD NAME="action" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Action performed"/>
         <FIELD NAME="entitytype" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Entity type: vacancy, application, document"/>
         <FIELD NAME="entityid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
@@ -236,6 +237,7 @@
         <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated"/>
         <INDEX NAME="action_idx" UNIQUE="false" FIELDS="action"/>
         <INDEX NAME="time_idx" UNIQUE="false" FIELDS="timecreated"/>
+        <INDEX NAME="userrole_idx" UNIQUE="false" FIELDS="userrole"/>
       </INDEXES>
     </TABLE>
 
@@ -638,6 +640,10 @@
         <FIELD NAME="terms" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Terms and conditions for this convocatoria"/>
         <FIELD NAME="allow_multiple_applications" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 if users can apply to multiple vacancies in this convocatoria"/>
         <FIELD NAME="max_applications_per_user" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Maximum applications per user in this convocatoria (0=unlimited)"/>
+        <FIELD NAME="dean_review_startdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Start date for dean review period"/>
+        <FIELD NAME="dean_review_enddate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="End date for dean review period"/>
+        <FIELD NAME="hr_review_startdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Start date for HR validation period"/>
+        <FIELD NAME="hr_review_enddate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="End date for HR validation period"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

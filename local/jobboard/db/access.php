@@ -226,26 +226,32 @@ $capabilities = [
     ],
 
     // =========================================================================
-    // Selection committee capabilities.
+    // Dean review capabilities (profile approval workflow).
     // =========================================================================
 
-    'local/jobboard:evaluate' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'teacher' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
-    'local/jobboard:viewevaluations' => [
+    // Review applicant profiles (read-only access to documents).
+    'local/jobboard:reviewprofiles' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW,
-        ],
+        'archetypes' => [],
+    ],
+
+    // Approve or reject applicant profiles.
+    'local/jobboard:approveprofile' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [],
+    ],
+
+    // =========================================================================
+    // HR validation capabilities (final document validation).
+    // =========================================================================
+
+    // Final HR validation of documents.
+    'local/jobboard:validatehr' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [],
     ],
 
     // =========================================================================

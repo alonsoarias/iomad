@@ -56,7 +56,7 @@ $PAGE->navbar->add(get_string('administration', 'local_jobboard'),
 $PAGE->navbar->add(get_string('manageroles', 'local_jobboard'));
 
 // Define the plugin roles for action handling.
-$pluginroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_committee'];
+$pluginroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_dean', 'jobboard_hr'];
 
 // Handle actions.
 if ($action === 'assign' && confirm_sesskey()) {

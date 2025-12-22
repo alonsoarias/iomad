@@ -99,23 +99,34 @@ class application {
     public const STATUSES = [
         'draft',
         'submitted',
-        'under_review',
-        'docs_validated',
-        'docs_rejected',
-        'interview',
-        'selected',
-        'rejected',
+        'pending_dean_review',
+        'dean_approved',
+        'dean_rejected',
+        'pending_hr_validation',
+        'hr_validated',
+        'hr_rejected',
         'withdrawn',
     ];
 
     /** @var array Allowed status transitions. */
     public const TRANSITIONS = [
         'draft' => ['submitted'],
-        'submitted' => ['under_review', 'rejected'],
-        'under_review' => ['docs_validated', 'docs_rejected'],
-        'docs_rejected' => ['under_review'],
-        'docs_validated' => ['interview', 'rejected'],
-        'interview' => ['selected', 'rejected'],
+        'submitted' => ['pending_dean_review', 'withdrawn'],
+        'pending_dean_review' => ['dean_approved', 'dean_rejected'],
+        'dean_approved' => ['pending_hr_validation'],
+        'dean_rejected' => [], // Final state.
+        'pending_hr_validation' => ['hr_validated', 'hr_rejected'],
+        'hr_validated' => [], // Final state.
+        'hr_rejected' => [], // Final state.
+        'withdrawn' => [], // Final state.
+    ];
+
+    /** @var array Final status values that cannot be changed. */
+    public const FINAL_STATUSES = [
+        'dean_rejected',
+        'hr_validated',
+        'hr_rejected',
+        'withdrawn',
     ];
 
     /**
@@ -666,6 +677,89 @@ class application {
     }
 
     /**
+     * Check if application is in a final state.
+     *
+     * @return bool True if in final state.
+     */
+    public function is_final(): bool {
+        return in_array($this->status, self::FINAL_STATUSES);
+    }
+
+    /**
+     * Advance application to dean review when convocatoria closes.
+     *
+     * @throws \moodle_exception If transition not allowed.
+     */
+    public function advance_to_dean_review(): void {
+        if ($this->status !== 'submitted') {
+            throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
+        }
+
+        $this->change_status('pending_dean_review',
+            get_string('convocatoria_closed_advancing', 'local_jobboard'));
+    }
+
+    /**
+     * Approve profile (Dean only).
+     *
+     * @param string $comments Optional comments.
+     * @throws \moodle_exception If transition not allowed.
+     */
+    public function approve_profile(string $comments = ''): void {
+        if ($this->status !== 'pending_dean_review') {
+            throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
+        }
+
+        $this->change_status('dean_approved', $comments);
+
+        // Automatically advance to HR validation.
+        $this->change_status('pending_hr_validation',
+            get_string('profile_approved_advancing', 'local_jobboard'));
+    }
+
+    /**
+     * Reject profile (Dean only).
+     *
+     * @param string $reason Rejection reason.
+     * @throws \moodle_exception If transition not allowed.
+     */
+    public function reject_profile(string $reason): void {
+        if ($this->status !== 'pending_dean_review') {
+            throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
+        }
+
+        $this->change_status('dean_rejected', $reason);
+    }
+
+    /**
+     * Validate by HR (final positive state).
+     *
+     * @param string $comments Optional comments.
+     * @throws \moodle_exception If transition not allowed.
+     */
+    public function validate_hr(string $comments = ''): void {
+        if ($this->status !== 'pending_hr_validation') {
+            throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
+        }
+
+        $this->change_status('hr_validated', $comments);
+    }
+
+    /**
+     * Reject by HR (final negative state).
+     *
+     * @param string $reason Rejection reason.
+     * @throws \moodle_exception If transition not allowed.
+     */
+    public function reject_hr(string $reason): void {
+        if ($this->status !== 'pending_hr_validation') {
+            throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
+        }
+
+        $this->change_status('hr_rejected', $reason);
+    }
+
+    /**
      * Withdraw the application.
      *
      * @param string $reason Optional reason.
@@ -674,8 +768,7 @@ class application {
         global $DB, $USER;
 
         // Can only withdraw if not already final.
-        $finalstatuses = ['selected', 'rejected', 'withdrawn'];
-        if (in_array($this->status, $finalstatuses)) {
+        if ($this->is_final()) {
             return;
         }
 

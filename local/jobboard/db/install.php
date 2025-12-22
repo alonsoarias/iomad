@@ -770,7 +770,6 @@ function local_jobboard_create_roles(): void {
             'local/jobboard:changeapplicationstatus',
             'local/jobboard:assignreviewers',
             'local/jobboard:viewreports',
-            'local/jobboard:viewevaluations',
             'local/jobboard:manageworkflow',
         ];
 
@@ -781,29 +780,58 @@ function local_jobboard_create_roles(): void {
         set_role_contextlevels($coordinatorroleid, [CONTEXT_SYSTEM]);
     }
 
-    // Role: Selection Committee Member.
-    $committeerole = $DB->get_record('role', ['shortname' => 'jobboard_committee']);
-    if (!$committeerole) {
-        $committeeroleid = create_role(
-            get_string('role_committee', 'local_jobboard'),
-            'jobboard_committee',
-            get_string('role_committee_desc', 'local_jobboard'),
+    // Role: Dean Reviewer.
+    $deanrole = $DB->get_record('role', ['shortname' => 'jobboard_dean']);
+    if (!$deanrole) {
+        $deanroleid = create_role(
+            get_string('role_dean', 'local_jobboard'),
+            'jobboard_dean',
+            get_string('role_dean_desc', 'local_jobboard'),
             'teacher'
         );
 
-        // Assign capabilities for committee role.
-        $committeecaps = [
+        // Assign capabilities for dean role.
+        $deancaps = [
             'local/jobboard:view',
             'local/jobboard:viewinternal',
-            'local/jobboard:evaluate',
-            'local/jobboard:viewevaluations',
+            'local/jobboard:viewallapplications',
             'local/jobboard:downloadanydocument',
+            'local/jobboard:reviewprofiles',
+            'local/jobboard:approveprofile',
         ];
 
-        foreach ($committeecaps as $cap) {
-            assign_capability($cap, CAP_ALLOW, $committeeroleid, $systemcontext->id);
+        foreach ($deancaps as $cap) {
+            assign_capability($cap, CAP_ALLOW, $deanroleid, $systemcontext->id);
         }
 
-        set_role_contextlevels($committeeroleid, [CONTEXT_SYSTEM]);
+        set_role_contextlevels($deanroleid, [CONTEXT_SYSTEM]);
+    }
+
+    // Role: HR Validator.
+    $hrrole = $DB->get_record('role', ['shortname' => 'jobboard_hr']);
+    if (!$hrrole) {
+        $hrroleid = create_role(
+            get_string('role_hr', 'local_jobboard'),
+            'jobboard_hr',
+            get_string('role_hr_desc', 'local_jobboard'),
+            'teacher'
+        );
+
+        // Assign capabilities for HR role.
+        $hrcaps = [
+            'local/jobboard:view',
+            'local/jobboard:viewinternal',
+            'local/jobboard:viewallapplications',
+            'local/jobboard:downloadanydocument',
+            'local/jobboard:validatedocuments',
+            'local/jobboard:reviewdocuments',
+            'local/jobboard:validatehr',
+        ];
+
+        foreach ($hrcaps as $cap) {
+            assign_capability($cap, CAP_ALLOW, $hrroleid, $systemcontext->id);
+        }
+
+        set_role_contextlevels($hrroleid, [CONTEXT_SYSTEM]);
     }
 }

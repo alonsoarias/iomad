@@ -103,8 +103,11 @@ class audit {
     ) {
         global $DB, $USER;
 
+        $actualuserid = $userid ?? ($USER->id ?? 0);
+
         $record = new \stdClass();
-        $record->userid = $userid ?? ($USER->id ?? 0);
+        $record->userid = $actualuserid;
+        $record->userrole = self::get_user_jobboard_role($actualuserid);
         $record->action = $action;
         $record->entitytype = $entitytype;
         $record->entityid = $entityid;
@@ -122,6 +125,40 @@ class audit {
             debugging('Failed to log audit record: ' . $e->getMessage(), DEBUG_DEVELOPER);
             return false;
         }
+    }
+
+    /**
+     * Get the jobboard role for a user.
+     *
+     * @param int $userid The user ID.
+     * @return string|null Role shortname or null.
+     */
+    protected static function get_user_jobboard_role(int $userid): ?string {
+        global $DB;
+
+        if (!$userid) {
+            return null;
+        }
+
+        $context = \context_system::instance();
+        $roles = get_user_roles($context, $userid);
+
+        // Priority order for jobboard roles.
+        $jobboardroles = [
+            'jobboard_dean',
+            'jobboard_hr',
+            'jobboard_coordinator',
+            'jobboard_reviewer',
+            'manager',
+        ];
+
+        foreach ($roles as $role) {
+            if (in_array($role->shortname, $jobboardroles)) {
+                return $role->shortname;
+            }
+        }
+
+        return null;
     }
 
     /**

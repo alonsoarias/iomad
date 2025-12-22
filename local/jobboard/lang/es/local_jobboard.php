@@ -271,16 +271,15 @@ $string['docstatus:rejected'] = 'Rechazado';
 $string['docstatus:resubmitted'] = 'Reenviado';
 
 // Cadenas dinámicas de estado (usadas con get_string('status_' . $status))
-// Estados de postulación
+// Estados de postulación - Nuevo flujo de trabajo v4.0
 $string['status_submitted'] = 'Enviada';
-$string['status_under_review'] = 'En revisión';
-$string['status_docs_validated'] = 'Documentos validados';
-$string['status_docs_rejected'] = 'Documentos rechazados';
-$string['status_interview'] = 'Entrevista';
-$string['status_selected'] = 'Seleccionado';
-$string['status_rejected'] = 'Rechazado';
+$string['status_pending_dean_review'] = 'Pendiente revisión Decano';
+$string['status_dean_approved'] = 'Aprobado por Decano';
+$string['status_dean_rejected'] = 'Rechazado por Decano';
+$string['status_pending_hr_validation'] = 'Pendiente validación T. Humano';
+$string['status_hr_validated'] = 'Validado por Talento Humano';
+$string['status_hr_rejected'] = 'Rechazado por Talento Humano';
 $string['status_withdrawn'] = 'Retirada';
-$string['status_waitlist'] = 'Lista de espera';
 // Estados de vacante
 $string['status_draft'] = 'Borrador';
 $string['status_published'] = 'Publicada';
@@ -2903,9 +2902,10 @@ $string['noshow'] = 'No presentado';
 // CADENAS DE ROLES
 // =============================================================================
 
-$string['role_chair'] = 'Presidente';
-$string['role_committee'] = 'Miembro del comité';
-$string['role_committee_desc'] = 'Miembro del comité de evaluación';
+$string['role_dean'] = 'Decano Revisor';
+$string['role_dean_desc'] = 'Revisa perfiles de postulantes y aprueba/rechaza perfiles completos';
+$string['role_hr'] = 'Talento Humano';
+$string['role_hr_desc'] = 'Valida documentos de postulantes preseleccionados por el Decano';
 $string['role_coordinator_desc'] = 'Coordina el proceso de reclutamiento';
 $string['role_reviewer_desc'] = 'Revisa postulaciones y documentos';
 $string['role_lead_reviewer'] = 'Revisor líder';
@@ -4035,3 +4035,48 @@ $string['tour_convocatoria_manage_terms_title'] = 'Términos y Condiciones';
 $string['tour_convocatoria_manage_terms_content'] = 'Defina los términos que los aspirantes deben aceptar al postularse. Esto puede incluir políticas de privacidad y acuerdos de manejo de datos.';
 $string['tour_convocatoria_manage_save_title'] = 'Guardar Convocatoria';
 $string['tour_convocatoria_manage_save_content'] = 'Haga clic en Guardar para crear o actualizar la convocatoria. Puede agregar vacantes después de guardar.';
+
+// =============================================================================
+// FLUJO DE TRABAJO DECANO/TALENTO HUMANO v4.0
+// =============================================================================
+
+// Campos de convocatoria para fechas de revisión
+$string['reviewdates'] = 'Fechas de revisión';
+$string['reviewdates_help'] = 'Configure las fechas en las cuales cada rol puede acceder a revisar las postulaciones.';
+$string['dean_review_startdate'] = 'Inicio revisión Decano';
+$string['dean_review_startdate_help'] = 'Fecha desde la cual el Decano puede revisar los perfiles de postulantes.';
+$string['dean_review_enddate'] = 'Fin revisión Decano';
+$string['dean_review_enddate_help'] = 'Fecha hasta la cual el Decano puede revisar y aprobar/rechazar perfiles.';
+$string['hr_review_startdate'] = 'Inicio validación Talento Humano';
+$string['hr_review_startdate_help'] = 'Fecha desde la cual Talento Humano puede validar documentos.';
+$string['hr_review_enddate'] = 'Fin validación Talento Humano';
+$string['hr_review_enddate_help'] = 'Fecha hasta la cual Talento Humano puede realizar la validación final.';
+
+// Mensajes de flujo de trabajo
+$string['convocatoria_closed_advancing'] = 'Convocatoria cerrada, postulación avanzada a revisión de Decano';
+$string['profile_approved_advancing'] = 'Perfil aprobado por Decano, avanzando a validación de Talento Humano';
+$string['profile_approved'] = 'Perfil aprobado';
+$string['profile_rejected'] = 'Perfil rechazado';
+$string['hr_validation_complete'] = 'Validación de Talento Humano completada';
+
+// Errores de acceso por fechas
+$string['error:dean_access_dates'] = 'El período de revisión del Decano no está activo para esta convocatoria';
+$string['error:hr_access_dates'] = 'El período de validación de Talento Humano no está activo para esta convocatoria';
+$string['error:invalidtransition'] = 'Transición de estado no permitida';
+
+// Capabilities
+$string['jobboard:reviewprofiles'] = 'Revisar perfiles de postulantes';
+$string['jobboard:approveprofile'] = 'Aprobar/rechazar perfiles completos';
+$string['jobboard:validatehr'] = 'Validación final de documentos por Talento Humano';
+
+// Acciones
+$string['approve_profile'] = 'Aprobar perfil';
+$string['reject_profile'] = 'Rechazar perfil';
+$string['validate_hr'] = 'Validar (Talento Humano)';
+$string['reject_hr'] = 'Rechazar (Talento Humano)';
+
+// Estados del período de revisión
+$string['review_period_not_configured'] = 'Período de revisión no configurado';
+$string['review_period_pending'] = 'Período de revisión pendiente';
+$string['review_period_active'] = 'Período de revisión activo';
+$string['review_period_ended'] = 'Período de revisión finalizado';
