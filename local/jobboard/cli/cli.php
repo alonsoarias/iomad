@@ -498,22 +498,25 @@ if ($options['sync-sedes']) {
 
     echo "Existing vacancies in DB for convocatoria $convocatoriaid: " . count($existingVacancies) . "\n\n";
 
-    // CRITICAL: Identify vacancies with applications to preserve them
+    // CRITICAL: Identify ALL vacancies with applications to preserve them (any convocatoria)
     $vacanciesWithApps = [];
-    $sql = "SELECT DISTINCT v.id, v.code, v.location, v.modality
+    $sql = "SELECT DISTINCT v.id, v.code, v.location, v.modality, v.convocatoriaid,
+                   (SELECT COUNT(*) FROM {local_jobboard_application} WHERE vacancyid = v.id) as app_count
             FROM {local_jobboard_vacancy} v
-            INNER JOIN {local_jobboard_application} a ON a.vacancyid = v.id
-            WHERE v.convocatoriaid = :convid";
-    $vacsWithApps = $DB->get_records_sql($sql, ['convid' => $convocatoriaid]);
+            INNER JOIN {local_jobboard_application} a ON a.vacancyid = v.id";
+    $vacsWithApps = $DB->get_records_sql($sql);
     foreach ($vacsWithApps as $vwa) {
-        $vacanciesWithApps[$vwa->code] = $vwa;
+        // Store by code - if multiple vacancies with same code have apps, prefer the one in target convocatoria
+        if (!isset($vacanciesWithApps[$vwa->code]) || $vwa->convocatoriaid == $convocatoriaid) {
+            $vacanciesWithApps[$vwa->code] = $vwa;
+        }
     }
 
     if (!empty($vacanciesWithApps)) {
         echo "*** VACANCIES WITH APPLICATIONS (will be preserved): ***\n";
         foreach ($vacanciesWithApps as $code => $vwa) {
-            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vwa->id]);
-            echo "  - $code (ID: {$vwa->id}) @ {$vwa->location} ({$vwa->modality}) - $appCount application(s)\n";
+            $convNote = $vwa->convocatoriaid == $convocatoriaid ? "" : " [CONV:{$vwa->convocatoriaid}]";
+            echo "  - $code (ID: {$vwa->id}) @ {$vwa->location} ({$vwa->modality}) - {$vwa->app_count} app(s)$convNote\n";
         }
         echo "\n";
     }
