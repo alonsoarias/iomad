@@ -1,26 +1,26 @@
 {
-  "sede": "PAMPLONA",
-  "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
-  "modality": "PRESENCIAL",
-  "total_vacancies": 2,
-  "vacancies": [
-    {
-      "code": "FII-14",
-      "contract_type": "OCASIONAL TIEMPO COMPLETO",
-      "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
-      "profile": "INGENIERO INDUSTRIAL",
-      "courses": "ORIENTAR LOS CURSOS DE ERGONOMÍA - GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO - GESTIÓN DEL TALENTO HUMANO - TRABAJOS DE GRADO",
-      "faculty": "FII",
-      "modality": "PRESENCIAL"
-    },
-    {
-      "code": "FII-15",
-      "contract_type": "OCASIONAL TIEMPO COMPLETO",
-      "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
-      "profile": "INGENIERO INDUSTRIAL",
-      "courses": "ORIENTAR LOS CURSOS DE PROCESOS INDUSTRIALES - DISTRIBUCIÓN DE PLANTAS - OPTATIVA I - OPTATIVA II - FORMULACIÓN DE PROYECTOS - COSTOS Y PRESUPUESTOS - TRABAJOS DE GRADO",
-      "faculty": "FII",
-      "modality": "PRESENCIAL"
-    }
-  ]
+    "sede": "PAMPLONA",
+    "program": "TECNOLOGÍA EN GESTIÓN INDUSTRIAL",
+    "modality": "PRESENCIAL",
+    "total_vacancies": 2,
+    "vacancies": [
+        {
+            "code": "FII-14",
+            "contract_type": "OCASIONAL TIEMPO COMPLETO",
+            "program": "TECNOLOGÍA EN GESTIÓN INDUSTRIAL",
+            "profile": "INGENIERO INDUSTRIAL",
+            "courses": "ORIENTAR LOS CURSOS DE ERGONOMÍA - GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO - GESTIÓN DEL TALENTO HUMANO - TRABAJOS DE GRADO",
+            "faculty": "FII",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FII-15",
+            "contract_type": "OCASIONAL TIEMPO COMPLETO",
+            "program": "TECNOLOGÍA EN GESTIÓN INDUSTRIAL",
+            "profile": "INGENIERO INDUSTRIAL",
+            "courses": "ORIENTAR LOS CURSOS DE PROCESOS INDUSTRIALES - DISTRIBUCIÓN DE PLANTAS - OPTATIVA I - OPTATIVA II - FORMULACIÓN DE PROYECTOS - COSTOS Y PRESUPUESTOS - TRABAJOS DE GRADO",
+            "faculty": "FII",
+            "modality": "PRESENCIAL"
+        }
+    ]
 }

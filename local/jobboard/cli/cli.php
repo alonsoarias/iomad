@@ -113,6 +113,8 @@ list($options, $unrecognized) = cli_get_params([
     // Sync metadata (faculties, programs).
     'sync-metadata' => false,
     'companyid' => null,
+    // Normalize programs in database.
+    'normalize-programs' => false,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -139,6 +141,7 @@ list($options, $unrecognized) = cli_get_params([
     'L' => 'list-applications',
     'Y' => 'sync-sedes',
     'M' => 'sync-metadata',
+    'N' => 'normalize-programs',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -247,6 +250,11 @@ SYNC FROM SEDES (Recommended for updates):
                             - Creates/updates faculties (FII, FCAS, BIENESTAR)
                             - Creates/updates academic programs
   --companyid=ID            IOMAD company ID for faculties (default: 1)
+
+  -N, --normalize-programs  NORMALIZE program names in database
+                            - Fixes missing accents (TECNOLOGIA -> TECNOLOGÍA)
+                            - Standardizes names (TODOS LOS PROGRAMAS -> TODOS LOS PROGRAMAS ACADÉMICOS)
+                            - Updates vacancy.department field
 
   SYNC EXAMPLES:
     # Preview sync changes (dry run)
@@ -621,6 +629,95 @@ function generate_program_code($name) {
     }
 
     return implode('', array_map(fn($w) => mb_substr($w, 0, 1, 'UTF-8'), array_slice($significant, 0, 8)));
+}
+
+// ============================================================
+// NORMALIZE PROGRAMS IN DATABASE
+// ============================================================
+if ($options['normalize-programs']) {
+    if (!$moodleavailable) {
+        cli_error("Normalize programs requires Moodle. Run from Moodle installation.");
+    }
+
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+
+    cli_heading("Normalize Program Names in Database");
+    if ($dryrun) {
+        echo "*** DRY RUN MODE - No changes will be made ***\n";
+    }
+    echo "\n";
+
+    // Normalization function
+    $normalizeProgram = function($program) {
+        $trimmed = trim($program);
+
+        // Normalize accents - replace non-accented with accented
+        $replacements = [
+            'TECNOLOGIA' => 'TECNOLOGÍA',
+            'TECNICA' => 'TÉCNICA',
+            'GESTION' => 'GESTIÓN',
+            'PRODUCCION' => 'PRODUCCIÓN',
+            'PROTECCION' => 'PROTECCIÓN',
+            'RECUPERACION' => 'RECUPERACIÓN',
+            'CONSTRUCCION' => 'CONSTRUCCIÓN',
+            'ECOSISTEMA FORESTALES' => 'ECOSISTEMAS FORESTALES',
+        ];
+
+        $result = $trimmed;
+        foreach ($replacements as $from => $to) {
+            if (strpos($result, $to) === false) {
+                $result = str_replace($from, $to, $result);
+            }
+        }
+
+        // Normalize TODOS LOS PROGRAMAS
+        if ($result === 'TODOS LOS PROGRAMAS') {
+            $result = 'TODOS LOS PROGRAMAS ACADÉMICOS';
+        }
+
+        return $result;
+    };
+
+    // Get all distinct programs from vacancies
+    $programs = $DB->get_records_sql('SELECT DISTINCT department FROM {local_jobboard_vacancy} ORDER BY department');
+    $stats = ['normalized' => 0, 'unchanged' => 0, 'vacancies_updated' => 0];
+
+    cli_heading("Programs Found");
+    foreach ($programs as $p) {
+        $original = $p->department;
+        $normalized = $normalizeProgram($original);
+
+        if ($original !== $normalized) {
+            echo "  ✗ $original\n    → $normalized\n\n";
+
+            if (!$dryrun) {
+                // Update all vacancies with this program name
+                $count = $DB->count_records('local_jobboard_vacancy', ['department' => $original]);
+                $DB->execute(
+                    "UPDATE {local_jobboard_vacancy} SET department = ? WHERE department = ?",
+                    [$normalized, $original]
+                );
+                $stats['vacancies_updated'] += $count;
+            }
+            $stats['normalized']++;
+        } else {
+            if ($verbose) {
+                echo "  ✓ $original\n";
+            }
+            $stats['unchanged']++;
+        }
+    }
+
+    echo "\n";
+    cli_heading("Summary");
+    echo "Programs normalized: " . $stats['normalized'] . "\n";
+    echo "Programs unchanged: " . $stats['unchanged'] . "\n";
+    if (!$dryrun) {
+        echo "Vacancies updated: " . $stats['vacancies_updated'] . "\n";
+    }
+
+    exit(0);
 }
 
 // ============================================================
