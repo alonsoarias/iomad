@@ -2,7 +2,7 @@
   "sede": "PAMPLONA",
   "program": "BIENESTAR",
   "modality": "PRESENCIAL",
-  "total_vacancies": 9,
+  "total_vacancies": 24,
   "vacancies": [
     {
       "code": "BIEN-01",
@@ -84,6 +84,141 @@
       "activities": "Orientar cursos de electiva de Cultura (música). Apoyo para el desarrollo del plan de acción de Bienestar Institucional en el área de cultura. Formar y acompañar a los grupos de musicales institucionales.",
       "faculty": "BIENESTAR",
       "modality": "PRESENCIAL"
+    },
+    {
+      "code": "BIEN-15",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-16",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-17",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-18",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-19",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-20",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-21",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-22",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-23",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-24",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-25",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-26",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-27",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-28",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
+    },
+    {
+      "code": "BIEN-29",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales",
+      "faculty": "BIENESTAR",
+      "modality": "DISTANCIA"
     }
   ]
 }

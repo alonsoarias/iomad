@@ -1,15 +1,13 @@
 {
   "sede": "SARAVENA",
-  "total_vacancies": 36,
+  "total_vacancies": 35,
   "by_faculty": {
     "FII": 23,
-    "FCAS": 12,
-    "BIENESTAR": 1
+    "FCAS": 12
   },
   "programs": {
     "TODOS LOS PROGRAMAS ACADÉMICOS": 6,
     "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES": 17,
-    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 12,
-    "BIENESTAR": 1
+    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 12
   }
 }

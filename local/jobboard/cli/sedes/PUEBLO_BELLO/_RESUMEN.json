@@ -1,12 +1,10 @@
 {
   "sede": "PUEBLO_BELLO",
-  "total_vacancies": 11,
+  "total_vacancies": 10,
   "by_faculty": {
-    "FCAS": 10,
-    "BIENESTAR": 1
+    "FCAS": 10
   },
   "programs": {
-    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 10,
-    "BIENESTAR": 1
+    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 10
   }
 }

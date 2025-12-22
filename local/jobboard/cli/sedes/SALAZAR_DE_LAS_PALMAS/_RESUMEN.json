@@ -1,14 +1,12 @@
 {
   "sede": "SALAZAR_DE_LAS_PALMAS",
-  "total_vacancies": 32,
+  "total_vacancies": 31,
   "by_faculty": {
-    "FCAS": 31,
-    "BIENESTAR": 1
+    "FCAS": 31
   },
   "programs": {
     "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
     "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 14,
-    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 6,
-    "BIENESTAR": 1
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 6
   }
 }

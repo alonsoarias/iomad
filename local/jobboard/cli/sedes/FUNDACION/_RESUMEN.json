@@ -1,12 +1,10 @@
 {
   "sede": "FUNDACION",
-  "total_vacancies": 13,
+  "total_vacancies": 12,
   "by_faculty": {
-    "FCAS": 12,
-    "BIENESTAR": 1
+    "FCAS": 12
   },
   "programs": {
-    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 12,
-    "BIENESTAR": 1
+    "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 12
   }
 }

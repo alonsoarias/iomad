@@ -1,14 +1,12 @@
 {
   "sede": "OCANA",
-  "total_vacancies": 31,
+  "total_vacancies": 30,
   "by_faculty": {
-    "FCAS": 30,
-    "BIENESTAR": 1
+    "FCAS": 30
   },
   "programs": {
     "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
     "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 12,
-    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 7,
-    "BIENESTAR": 1
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 7
   }
 }

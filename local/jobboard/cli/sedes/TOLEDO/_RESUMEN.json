@@ -1,17 +1,15 @@
 {
   "sede": "TOLEDO",
-  "total_vacancies": 50,
+  "total_vacancies": 49,
   "by_faculty": {
     "FII": 23,
-    "FCAS": 26,
-    "BIENESTAR": 1
+    "FCAS": 26
   },
   "programs": {
     "TODOS LOS PROGRAMAS ACADÉMICOS": 6,
     "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES": 17,
     "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
     "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 11,
-    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 4,
-    "BIENESTAR": 1
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 4
   }
 }
