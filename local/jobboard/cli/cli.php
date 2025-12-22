@@ -912,87 +912,86 @@ if ($options['sync-sedes']) {
     $stats = [
         'created' => 0,
         'deleted' => 0,
-        'migrated' => 0,
+        'restored' => 0,
+        'orphaned' => 0,
         'errors' => 0,
     ];
 
     // ========================================================================
-    // PASO 1: Identificar vacantes CON postulaciones (estas se migrarán)
+    // PASO 1: Respaldar TODAS las postulaciones con info de vacante
     // ========================================================================
-    cli_heading("PASO 1: Identificar Vacantes con Postulaciones");
+    cli_heading("PASO 1: Respaldar Postulaciones");
 
-    $vacanciesWithApps = [];
-    $sql = "SELECT v.id, v.code, v.location, v.modality, v.department,
-                   (SELECT COUNT(*) FROM {local_jobboard_application} WHERE vacancyid = v.id) as app_count
-            FROM {local_jobboard_vacancy} v
-            WHERE v.convocatoriaid = ?
-            AND EXISTS (SELECT 1 FROM {local_jobboard_application} WHERE vacancyid = v.id)";
-    $vacsWithApps = $DB->get_records_sql($sql, [$convocatoriaid]);
+    $sql = "SELECT a.*, v.code, v.department as program, v.title as vacancy_title,
+                   v.location, v.modality
+            FROM {local_jobboard_application} a
+            INNER JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            WHERE v.convocatoriaid = ?";
+    $applications = $DB->get_records_sql($sql, [$convocatoriaid]);
 
-    foreach ($vacsWithApps as $vwa) {
-        $vacanciesWithApps[$vwa->id] = $vwa;
-    }
-
-    $totalApps = 0;
-    if (!empty($vacanciesWithApps)) {
-        echo "Vacantes con postulaciones a migrar:\n";
-        foreach ($vacanciesWithApps as $vwa) {
-            echo "  - {$vwa->code} (ID: {$vwa->id}) @ {$vwa->location} - {$vwa->app_count} postulación(es)\n";
-            $totalApps += $vwa->app_count;
-        }
-        echo "Total: " . count($vacanciesWithApps) . " vacantes, $totalApps postulaciones\n\n";
-    } else {
-        echo "No hay vacantes con postulaciones.\n\n";
-    }
-
-    // ========================================================================
-    // PASO 2: Eliminar TODAS las vacantes SIN postulaciones
-    // ========================================================================
-    cli_heading("PASO 2: Eliminar Vacantes sin Postulaciones");
-
-    $vacanciesWithoutApps = array_filter($existingVacancies, function($v) use ($vacanciesWithApps) {
-        return !isset($vacanciesWithApps[$v->id]);
-    });
-
-    if (!empty($vacanciesWithoutApps)) {
-        if (!$dryrun) {
-            foreach ($vacanciesWithoutApps as $vac) {
-                $DB->delete_records('local_jobboard_vacancy', ['id' => $vac->id]);
-                $stats['deleted']++;
+    if (!empty($applications)) {
+        echo "Postulaciones respaldadas: " . count($applications) . "\n";
+        if ($verbose) {
+            foreach ($applications as $app) {
+                // Extract profile from title (format: "PROGRAM - PROFILE")
+                $profile = '';
+                if (strpos($app->vacancy_title, ' - ') !== false) {
+                    $parts = explode(' - ', $app->vacancy_title, 2);
+                    $profile = $parts[1] ?? '';
+                }
+                echo "  - App #{$app->id}: {$app->code} @ {$app->location} | Programa: {$app->program} | Perfil: " . mb_substr($profile, 0, 50, 'UTF-8') . "\n";
             }
-        } else {
-            $stats['deleted'] = count($vacanciesWithoutApps);
         }
-        echo "Eliminadas: " . count($vacanciesWithoutApps) . " vacantes sin postulaciones\n\n";
+        echo "\n";
     } else {
-        echo "No hay vacantes sin postulaciones para eliminar.\n\n";
+        echo "No hay postulaciones para respaldar.\n\n";
     }
 
     // ========================================================================
-    // PASO 3: Crear/Actualizar vacantes desde JSONs
+    // PASO 2: Eliminar TODAS las vacantes de la convocatoria
     // ========================================================================
-    cli_heading("PASO 3: Crear/Actualizar Vacantes desde JSONs");
+    cli_heading("PASO 2: Eliminar TODAS las Vacantes");
 
-    $newVacanciesByCode = []; // Para mapear código → nueva vacante ID
-    $stats['updated'] = 0;
+    if (!empty($existingVacancies)) {
+        if (!$dryrun) {
+            // First, temporarily set vacancyid to NULL in applications (will restore later)
+            $DB->execute(
+                "UPDATE {local_jobboard_application} SET vacancyid = 0
+                 WHERE vacancyid IN (SELECT id FROM {local_jobboard_vacancy} WHERE convocatoriaid = ?)",
+                [$convocatoriaid]
+            );
 
-    // Build index of existing vacancies with apps by key
-    $existingWithAppsByKey = [];
-    foreach ($vacanciesWithApps as $vwa) {
-        $vwaKey = $vwa->code . '|' . $vwa->location . '|' . $vwa->modality;
-        $existingWithAppsByKey[$vwaKey] = $vwa;
+            // Delete all vacancies
+            $DB->delete_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
+            $stats['deleted'] = count($existingVacancies);
+        } else {
+            $stats['deleted'] = count($existingVacancies);
+        }
+        echo "Eliminadas: {$stats['deleted']} vacantes\n\n";
+    } else {
+        echo "No hay vacantes para eliminar.\n\n";
     }
+
+    // ========================================================================
+    // PASO 3: Crear TODAS las vacantes desde JSONs
+    // ========================================================================
+    cli_heading("PASO 3: Crear Vacantes desde JSONs");
+
+    // Index new vacancies by program+profile for matching applications
+    $newVacanciesByProgramProfile = [];
+    $newVacanciesById = [];
 
     foreach ($jsonVacancies as $key => $vac) {
         $code = $vac['code'];
         $location = $vac['location'];
         $modality = $vac['modality'];
-        $vacKey = $code . '|' . $location . '|' . $modality;
+        $program = $vac['program'];
+        $profile = $vac['profile'];
 
         // Build vacancy record.
         $record = new stdClass();
         $record->code = $code;
-        $record->title = $vac['program'] . ' - ' . mb_substr($vac['profile'], 0, 100, 'UTF-8');
+        $record->title = $program . ' - ' . mb_substr($profile, 0, 100, 'UTF-8');
         $record->description = build_vacancy_description_sync($vac);
         $record->contracttype = $contractMapping[$vac['contract_type']] ?? 'catedra';
         $record->duration = $record->contracttype === 'ocasional_tc'
@@ -1000,145 +999,154 @@ if ($options['sync-sedes']) {
             : 'Semestre académico (16 semanas) - Contrato de prestación de servicios por horas';
         $record->location = $location;
         $record->modality = $modality;
-        $record->department = $vac['program'];
+        $record->department = $program;
         $record->convocatoriaid = $convocatoriaid;
         $record->positions = $vac['positions'];
         $record->requirements = build_vacancy_requirements_sync($vac);
         $record->desirable = build_vacancy_desirable_sync();
+        $record->status = $options['status'] ?: 'available';
+        $record->publicationtype = $options['public'] ? 'public' : 'internal';
+        $record->createdby = $adminuser->id;
+        $record->timecreated = $now;
 
-        // Check if this vacancy already exists (has applications)
-        if (isset($existingWithAppsByKey[$vacKey])) {
-            // UPDATE existing vacancy (preserve status and apps)
-            $existingVac = $existingWithAppsByKey[$vacKey];
-            $record->id = $existingVac->id;
-            $record->modifiedby = $adminuser->id;
-            $record->timemodified = $now;
-
-            if (!$dryrun) {
-                try {
-                    $DB->update_record('local_jobboard_vacancy', $record);
-                    $stats['updated']++;
-
-                    // Index by code
-                    if (!isset($newVacanciesByCode[$code])) {
-                        $newVacanciesByCode[$code] = [];
-                    }
-                    $newVacanciesByCode[$code][] = $existingVac->id;
-
-                    if ($verbose) {
-                        echo "~ ACTUALIZADA: $code @ $location ($modality) [ID: {$existingVac->id}] - {$existingVac->app_count} postulación(es)\n";
-                    }
-                } catch (Exception $e) {
-                    echo "✗ ERROR actualizando $code: " . $e->getMessage() . "\n";
-                    $stats['errors']++;
-                }
-            } else {
-                $stats['updated']++;
-                if ($verbose) {
-                    echo "[DRY] ~ ACTUALIZADA: $code @ $location ($modality)\n";
-                }
-            }
-            // Remove from pending migration list (already matched)
-            unset($existingWithAppsByKey[$vacKey]);
-        } else {
-            // CREATE new vacancy
-            $record->status = $options['status'] ?: 'available';
-            $record->publicationtype = $options['public'] ? 'public' : 'internal';
-            $record->createdby = $adminuser->id;
-            $record->timecreated = $now;
-
-            if (!$dryrun) {
-                try {
-                    $newid = $DB->insert_record('local_jobboard_vacancy', $record);
-                    $stats['created']++;
-
-                    // Index by code for migration
-                    if (!isset($newVacanciesByCode[$code])) {
-                        $newVacanciesByCode[$code] = [];
-                    }
-                    $newVacanciesByCode[$code][] = $newid;
-
-                    if ($verbose) {
-                        echo "+ CREADA: $code @ $location ($modality) [ID: $newid]\n";
-                    }
-                } catch (Exception $e) {
-                    echo "✗ ERROR creando $code: " . $e->getMessage() . "\n";
-                    $stats['errors']++;
-                }
-            } else {
+        if (!$dryrun) {
+            try {
+                $newid = $DB->insert_record('local_jobboard_vacancy', $record);
                 $stats['created']++;
-                if ($verbose) {
-                    echo "[DRY] + CREADA: $code @ $location ($modality)\n";
+
+                // Store for matching
+                $newVacanciesById[$newid] = (object)[
+                    'id' => $newid,
+                    'code' => $code,
+                    'program' => $program,
+                    'profile' => $profile,
+                    'location' => $location,
+                    'modality' => $modality,
+                ];
+
+                // Index by program+profile (normalized)
+                $matchKey = mb_strtoupper(trim($program), 'UTF-8') . '|' . mb_strtoupper(trim($profile), 'UTF-8');
+                if (!isset($newVacanciesByProgramProfile[$matchKey])) {
+                    $newVacanciesByProgramProfile[$matchKey] = [];
                 }
+                $newVacanciesByProgramProfile[$matchKey][] = $newid;
+
+                // Also index by code for fallback matching
+                $codeKey = $code . '|' . $location . '|' . $modality;
+                $newVacanciesByProgramProfile[$codeKey] = [$newid];
+
+                if ($verbose) {
+                    echo "+ CREADA: $code @ $location ($modality) [ID: $newid]\n";
+                }
+            } catch (Exception $e) {
+                echo "✗ ERROR creando $code: " . $e->getMessage() . "\n";
+                $stats['errors']++;
+            }
+        } else {
+            $stats['created']++;
+            if ($verbose) {
+                echo "[DRY] + CREADA: $code @ $location ($modality)\n";
             }
         }
     }
 
-    echo "\nCreadas: {$stats['created']} | Actualizadas: {$stats['updated']} vacantes\n\n";
-
-    // Vacancies with apps that didn't match any JSON (orphans with apps)
-    $orphansWithApps = $existingWithAppsByKey;
+    echo "\nCreadas: {$stats['created']} vacantes\n\n";
 
     // ========================================================================
-    // PASO 4: Migrar postulaciones de vacantes huérfanas (no en JSONs)
+    // PASO 4: Restaurar postulaciones a vacantes correspondientes
     // ========================================================================
-    if (!empty($orphansWithApps)) {
-        cli_heading("PASO 4: Migrar Postulaciones de Vacantes Huérfanas");
-        echo "Vacantes con postulaciones que no están en JSONs: " . count($orphansWithApps) . "\n\n";
+    if (!empty($applications)) {
+        cli_heading("PASO 4: Restaurar Postulaciones");
 
-        foreach ($orphansWithApps as $key => $oldVac) {
-            $baseCode = preg_replace('/[a-z]$/', '', $oldVac->code); // Remove suffix like 'a', 'b'
+        $orphanedApps = [];
 
-            // Find matching new vacancy by code (in same or different location)
-            $matchingNewId = null;
-            if (isset($newVacanciesByCode[$oldVac->code])) {
-                $matchingNewId = $newVacanciesByCode[$oldVac->code][0];
-            } else if (isset($newVacanciesByCode[$baseCode])) {
-                $matchingNewId = $newVacanciesByCode[$baseCode][0];
-            } else {
-                // Try to find any vacancy starting with base code
-                foreach ($newVacanciesByCode as $code => $ids) {
-                    if (strpos($code, $baseCode) === 0) {
-                        $matchingNewId = $ids[0];
+        foreach ($applications as $app) {
+            // Extract profile from old vacancy title
+            $oldProfile = '';
+            if (strpos($app->vacancy_title, ' - ') !== false) {
+                $parts = explode(' - ', $app->vacancy_title, 2);
+                $oldProfile = $parts[1] ?? '';
+            }
+
+            // Try to find matching vacancy
+            $matchingVacancyId = null;
+            $matchMethod = '';
+
+            // Method 1: Match by program + profile (exact)
+            $matchKey = mb_strtoupper(trim($app->program), 'UTF-8') . '|' . mb_strtoupper(trim($oldProfile), 'UTF-8');
+            if (isset($newVacanciesByProgramProfile[$matchKey])) {
+                $matchingVacancyId = $newVacanciesByProgramProfile[$matchKey][0];
+                $matchMethod = 'programa+perfil';
+            }
+
+            // Method 2: Match by code + location + modality
+            if (!$matchingVacancyId) {
+                $codeKey = $app->code . '|' . $app->location . '|' . $app->modality;
+                if (isset($newVacanciesByProgramProfile[$codeKey])) {
+                    $matchingVacancyId = $newVacanciesByProgramProfile[$codeKey][0];
+                    $matchMethod = 'código+ubicación';
+                }
+            }
+
+            // Method 3: Match by code only (any location)
+            if (!$matchingVacancyId) {
+                foreach ($newVacanciesById as $vid => $vinfo) {
+                    if ($vinfo->code === $app->code) {
+                        $matchingVacancyId = $vid;
+                        $matchMethod = 'código';
                         break;
                     }
                 }
             }
 
-            if ($matchingNewId) {
-                if (!$dryrun) {
-                    // Migrate applications
-                    $DB->execute(
-                        "UPDATE {local_jobboard_application} SET vacancyid = ? WHERE vacancyid = ?",
-                        [$matchingNewId, $oldVac->id]
-                    );
-                    // Delete old vacancy
-                    $DB->delete_records('local_jobboard_vacancy', ['id' => $oldVac->id]);
+            // Method 4: Match by program only (first match)
+            if (!$matchingVacancyId) {
+                foreach ($newVacanciesById as $vid => $vinfo) {
+                    if (mb_strtoupper(trim($vinfo->program), 'UTF-8') === mb_strtoupper(trim($app->program), 'UTF-8')) {
+                        $matchingVacancyId = $vid;
+                        $matchMethod = 'programa';
+                        break;
+                    }
                 }
-                $stats['migrated'] += $oldVac->app_count;
+            }
+
+            if ($matchingVacancyId) {
+                if (!$dryrun) {
+                    $DB->execute(
+                        "UPDATE {local_jobboard_application} SET vacancyid = ? WHERE id = ?",
+                        [$matchingVacancyId, $app->id]
+                    );
+                }
+                $stats['restored']++;
 
                 if ($verbose) {
-                    echo "↪ MIGRADAS {$oldVac->app_count} postulación(es): {$oldVac->code} @ {$oldVac->location} [ID:{$oldVac->id}] → [ID:$matchingNewId]\n";
+                    $matchedVac = $newVacanciesById[$matchingVacancyId];
+                    echo "✓ RESTAURADA App #{$app->id}: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod)\n";
                 }
             } else {
-                // No match found - keep old vacancy (will remain in DB)
-                echo "⚠ SIN MATCH: {$oldVac->code} @ {$oldVac->location} ({$oldVac->modality}) - {$oldVac->app_count} postulación(es) (CONSERVADA)\n";
+                $orphanedApps[] = $app;
+                $stats['orphaned']++;
+                echo "⚠ SIN MATCH App #{$app->id}: {$app->code} @ {$app->location} | Programa: {$app->program}\n";
             }
         }
+
         echo "\n";
-    } else {
-        echo "No hay vacantes huérfanas con postulaciones para migrar.\n\n";
+
+        if (!empty($orphanedApps)) {
+            echo "*** ATENCIÓN: {$stats['orphaned']} postulación(es) quedaron sin vacante asignada ***\n";
+            echo "Estas postulaciones tienen vacancyid = 0 y requieren asignación manual.\n\n";
+        }
     }
 
     // Summary.
     echo "\n";
     cli_heading("Resumen de Sincronización");
     echo "╔════════════════════════════════════════════════════════╗\n";
-    echo "║  Vacantes Creadas       : " . str_pad($stats['created'], 5) . "                      ║\n";
-    echo "║  Vacantes Actualizadas  : " . str_pad($stats['updated'], 5) . "                      ║\n";
-    echo "║  Vacantes Eliminadas    : " . str_pad($stats['deleted'], 5) . "                      ║\n";
-    echo "║  Postulaciones Migradas : " . str_pad($stats['migrated'], 5) . "                      ║\n";
-    echo "║  Errores                : " . str_pad($stats['errors'], 5) . "                      ║\n";
+    echo "║  Vacantes Eliminadas      : " . str_pad($stats['deleted'], 5) . "                    ║\n";
+    echo "║  Vacantes Creadas         : " . str_pad($stats['created'], 5) . "                    ║\n";
+    echo "║  Postulaciones Restauradas: " . str_pad($stats['restored'], 5) . "                    ║\n";
+    echo "║  Postulaciones Huérfanas  : " . str_pad($stats['orphaned'], 5) . "                    ║\n";
+    echo "║  Errores                  : " . str_pad($stats['errors'], 5) . "                    ║\n";
     echo "╚════════════════════════════════════════════════════════╝\n";
 
     if ($dryrun) {
