@@ -972,9 +972,10 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existing, $record);
 
             $record->id = $existing->id;
-            // Preserve existing status and publicationtype
+            // Preserve existing status, publicationtype and positions
             $record->status = $existing->status;
             $record->publicationtype = $existing->publicationtype;
+            $record->positions = $existing->positions;  // Keep manually adjusted positions
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -1013,9 +1014,10 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existingWithApp, $record);
 
             $record->id = $existingWithApp->id;
-            // Preserve existing status and publicationtype
+            // Preserve existing status, publicationtype and positions
             $record->status = $existingWithApp->status;
             $record->publicationtype = $existingWithApp->publicationtype;
+            $record->positions = $existingWithApp->positions;  // Keep manually adjusted positions
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
@@ -1054,9 +1056,10 @@ if ($options['sync-sedes']) {
             $changes = get_vacancy_changes($existingByCodeVac, $record);
 
             $record->id = $existingByCodeVac->id;
-            // Preserve existing status and publicationtype
+            // Preserve existing status, publicationtype and positions
             $record->status = $existingByCodeVac->status;
             $record->publicationtype = $existingByCodeVac->publicationtype;
+            $record->positions = $existingByCodeVac->positions;  // Keep manually adjusted positions
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
 
