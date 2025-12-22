@@ -8,63 +8,46 @@
   "total_vacancies": 6,
   "vacancies": [
     {
-      "code": "FII-1",
+      "code": "FII - 01",
       "contract_type": "CATEDRA",
       "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
       "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
-      "courses": [
-        "MATEMATICAS"
-      ]
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS"
     },
     {
-      "code": "FII-2",
+      "code": "FII - 02",
       "contract_type": "CATEDRA",
       "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
       "profile": "LICENCIADO EN FÍSICA / FISICO O AREAS AFINES",
-      "courses": [
-        "FISICA"
-      ]
+      "courses": "ORIENTAR LOS CURSOS DE FISICA"
     },
     {
-      "code": "FII-3",
+      "code": "FII – 03",
       "contract_type": "CATEDRA",
       "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
       "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
-      "courses": [
-        "QUIMICA"
-      ]
+      "courses": "ORIENTAR LOS CURSOS DE QUIMICA"
     },
     {
-      "code": "FII-4",
+      "code": "FII-04",
       "contract_type": "CATEDRA",
       "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
       "profile": "MICROBIOLOGO",
-      "courses": [
-        "MICROBIOLOGIA"
-      ]
+      "courses": "ORIENTAR LOS CURSOS DE MICROBIOLOGIA"
     },
     {
-      "code": "FII-5",
+      "code": "FII-05",
       "contract_type": "CATEDRA",
       "program": "TODOS LOS PROGRAMAS ACDÉMICOS",
       "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
-      "courses": [
-        "INGLES I",
-        "INGLES II"
-      ]
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II"
     },
     {
-      "code": "FII-6",
+      "code": "FII-06",
       "contract_type": "CATEDRA",
       "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
       "profile": "INGENIERO DE ALIMENTOS O INGENIERO AGROINDUSTRIAL O DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
-      "courses": [
-        "INTRODUCCION A LA AGROINDUSTRIA",
-        "PROCESOS AGROALIMENTARIOS",
-        "PROCESOS NO AGROALIMENTARIOS",
-        "MATERIAS PRIMAS",
-        "POSTCOSECHA"
-      ]
+      "courses": "ORIENTAR LOS CURSOS DE INTRODUCCION A LA AGROINDUSTRIA - PROCESOS AGROALIMENTARIOS- PROCESOS NO AGROALIMENTARIOS- MATERIAS PRIMAS Y POSTCOSECHA"
     }
   ]
 }

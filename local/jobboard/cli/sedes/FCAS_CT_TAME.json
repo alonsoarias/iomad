@@ -1,0 +1,67 @@
+{
+  "sede": "FCAS_CT_TAME",
+  "metadata": {
+    "faculty": "FCAS",
+    "location": "CENTRO TUTORIAL TAME",
+    "modality": "DISTANCIA"
+  },
+  "total_vacancies": 8,
+  "vacancies": [
+    {
+      "code": "FCAS-379",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA"
+    },
+    {
+      "code": "FCAS-380",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN – TECNICA TECNOLOGIA Y CIENCIA"
+    },
+    {
+      "code": "FCAS-381",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ECONOMISTA",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA"
+    },
+    {
+      "code": "FCAS-382",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD",
+      "courses": "ORIENTAR CURSO DE MERCADEO"
+    },
+    {
+      "code": "FCAS-383",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I"
+    },
+    {
+      "code": "FCAS-384",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "COMUNICADOR SOCIAL",
+      "courses": "COMPETENCIAS COMUNICATIVAS"
+    },
+    {
+      "code": "FCAS-385",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "courses": "SOCIEDAD Y RURALIDAD"
+    },
+    {
+      "code": "FCAS-386",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "INGENIERO EN SISTEMAS",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS"
+    }
+  ]
+}

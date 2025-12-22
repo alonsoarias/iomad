@@ -1,0 +1,123 @@
+{
+  "sede": "FCAS_CUCUTA_PRESENCIAL",
+  "metadata": {
+    "faculty": "FCAS",
+    "location": "CUCUTA",
+    "modality": "PRESENCIAL"
+  },
+  "total_vacancies": 16,
+  "vacancies": [
+    {
+      "code": "FCAS-40",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "TRABAJADOR SOCIAL- ESPECIALISTA EN INTERVENCIÓN COMUNITARIA, SOCIOLOGO O AREAS AFINES",
+      "courses": "SUJETO Y FAMILIA DESARROLLO SOCIAL GESTIÒN COMUNITARIA DIAGNÓSTICOS COMUNITARIOS COORDINACIÓN DE PROGRAMA"
+    },
+    {
+      "code": "FCAS-41",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "ADMINISTRADORA DE EMPRESAS MAGISTER EN ÁREAS ORGANIZACIONALES",
+      "courses": "DIRECCIONAMIENTO ESTRATÈGICO ADMINISTRACIÒN GENERAL OPTATIVA 3: SEGMENTACION DE SOCIEDAD COORINACIÓN DE LUGAR DE DESARROLLO"
+    },
+    {
+      "code": "FCAS-42",
+      "contract_type": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "TRABAJADOR SOCIAL, PSICÓLOGO O AFINES",
+      "courses": "CURSOS DE APOYO SOCIEDAD Y RURALIDAD CURSOS DE APOYO EN HABILIDADES INTRAE INTERPERSONALES COORDINACIÓN DE BIENESTAR"
+    },
+    {
+      "code": "FCAS-43",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE FUNDAMENTOS MATEMÀTICOS, ESTADÌSTICA"
+    },
+    {
+      "code": "FCAS-44",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN LENGUA CASTELLANA O COMUNICADOR SOCIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE PRODUCCION, COMPRENSION DE TEXTOS – COMPETENCIAS COMUNICATIVAS – MEDIOS DE COMUNICACIÓN"
+    },
+    {
+      "code": "FCAS-45",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III."
+    },
+    {
+      "code": "FCAS-46",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "INGENIERO AMBIENTAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE GESTION AMBIENTAL – TÉCNICA, TECNOLOGÍA Y CIENCIA"
+    },
+    {
+      "code": "FCAS-47",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "PSICOLOGO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE FUNDAMENTOS DE PSICOLOGÍA - INCLUSIÓN SOCIAL"
+    },
+    {
+      "code": "FCAS-48",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "ADMINISTRADOR DE EMPRESAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE FUNDAMENTOS DE ADMINISTRACION – DIRECCIONAMIENTO ESTRATÉGICO"
+    },
+    {
+      "code": "FCAS-49",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "INGENIERO DE SISTEMAS",
+      "courses": "ORIENTAR EL CURSO DE INFORMÁTICA APLICADA - CURSOS DE INFORMÁTICA TYT"
+    },
+    {
+      "code": "FCAS-50",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE DESARROLLO HUMANO Y TERRITORIO - METODOLOGÌA Y MODELOS DE INTERVENCIÒN CON COMUNIDADES - SISTEMATIZACIÓN DE EXPERIENCIAS -"
+    },
+    {
+      "code": "FCAS-51",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE METODOLOGÍA DE LA INVESTIGACIÓN - METODOLOGÍA DE LA INVESTIGACIÓN - INVESTIGACIÒN EN CIENCIAS SOCIALES"
+    },
+    {
+      "code": "FCAS-52",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE PRÁCTICA II – PRÁCTICA COMUNITARIA – DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS"
+    },
+    {
+      "code": "FCAS-53",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "SOCIOLOGO O TRABAJADOR SOCIAL O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE GESTIÓN COMUNITARIA – ETICA Y ACCIÓN COMUNITARIA - COMUNIDAD"
+    },
+    {
+      "code": "FCAS-54",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN EDUCACION BASICA CON ENFASIS EN EDUCACION FISICA RECREACION Y DEPORTES",
+      "courses": "ORIENTAR LOS CURSOS DE ELECTIVA ÁREA DE DEPORTES"
+    },
+    {
+      "code": "FCAS-55",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADA EN EDUCACIÓN ARTÍSTICA",
+      "courses": "ORIENTAR LOS CURSOS DE ELECTIVA ÁREA DE CULTURA Y SOCIO HUMANÍSTICA"
+    }
+  ]
+}

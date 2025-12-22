@@ -1,0 +1,221 @@
+{
+  "sede": "FCAS_CT_CUCUTA",
+  "metadata": {
+    "faculty": "FCAS",
+    "location": "CENTRO TUTORIAL CUCUTA",
+    "modality": "DISTANCIA"
+  },
+  "total_vacancies": 30,
+  "vacancies": [
+    {
+      "code": "FCAS-89",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO.",
+      "courses": "FUNDAMENTOS MATEMÁTICOS ESTADÍSTICA CABS CURSO DE APOYO"
+    },
+    {
+      "code": "FCAS-90",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "LICENCIADO EN LENGUAS EXTRANJERAS.",
+      "courses": "INGLÉS I INGLÉS II"
+    },
+    {
+      "code": "FCAS-91",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC.",
+      "courses": "INFORMÁTICA APLICADA"
+    },
+    {
+      "code": "FCAS-92",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "COMUNICADOR(A) SOCIAL LICENCIADO EN LENGUA CASTELLANA.",
+      "courses": "COMPETENCIAS COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS MEDIOS DE COMUNICACIÓN"
+    },
+    {
+      "code": "FCAS-93",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "ADMINISTRADOR DE EMPRESAS",
+      "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA. ADMINISTRACIÓN GENERAL"
+    },
+    {
+      "code": "FCAS-94",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "PROFESIONAL EN TRABAJO SOCIAL TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO.",
+      "courses": "SOCIEDAD Y RURALIDAD FUNDAMENTOS DE PSICOLOGÍA DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS FUNDAMENTOS DE SOCIOLOGÍA"
+    },
+    {
+      "code": "FCAS-95",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN COMUNITARIA",
+      "profile": "PROFESIONAL EN TRABAJO SOCIAL",
+      "courses": "SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL"
+    },
+    {
+      "code": "FCAS-96",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS"
+    },
+    {
+      "code": "FCAS-97",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ADMINISTRACIÓN - TÉCNICA, TECNOLOGÍA Y CIENCIA - METODOLOGÍA DE LA INVESTIGACIÓN -"
+    },
+    {
+      "code": "FCAS-98",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "ECONOMISTA",
+      "courses": "ORIENTAR CURSO DE FUNDAMENTOS DE ECONOMIA"
+    },
+    {
+      "code": "FCAS-99",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD O AREAS AFINES",
+      "courses": "ORIENTAR CURSO DE MERCADEO - INVESTIGACIÓN DE MERCADOS - COMERCIALIZACIÓN DE BIENES Y SERVICIOS - LOGÍSTICA Y DISTRIBUCIÓN - MERCADEO ESTRATÉGICO- LIDERAZGO Y GESTIÓN – EMPRENDIMIENTO - - OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+    },
+    {
+      "code": "FCAS-100",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES I - III - IV"
+    },
+    {
+      "code": "FCAS-101",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "COMUNICADOR SOCIAL",
+      "courses": "COMPETENCIAS COMUNICATIVAS - -MEDIOS Y TECNOLOGÍAS DE COMUNICACIÓN"
+    },
+    {
+      "code": "FCAS-102",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "DISEÑADOR GRAFICO – PROFESIONAL EN MERCADEO Y PUBLICIDAD – COMUNICADOR SOCIAL",
+      "courses": "HERRAMIENTAS DE DISEÑO"
+    },
+    {
+      "code": "FCAS-103",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO",
+      "courses": "SOCIEDAD Y RURALIDAD"
+    },
+    {
+      "code": "FCAS-104",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "INGENIERO EN SISTEMAS",
+      "courses": "OFIMÁTICA Y HERRAMIENTAS TECNOLOGICAS"
+    },
+    {
+      "code": "FCAS-105",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "FILÓSOFO, PSICÓLOGO",
+      "courses": "ORIENTAR EL CURSO DE ELECTIVA I"
+    },
+    {
+      "code": "FCAS-106",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "LICENCIADO EN EDUCACIÓN ARTÍSTICA",
+      "courses": "ORIENTAR EL CURSO DE ELECTIVA II"
+    },
+    {
+      "code": "FCAS-107",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN DE MERCADEO",
+      "profile": "INGENIERO AMBIENTAL",
+      "courses": "GESTION AMBIENTAL"
+    },
+    {
+      "code": "FCAS-108",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "ADMINISTRACION GENERAL EMPRENDIMIENTO FUENTES DE FINANCIACION PRÁCTICA EMPRESARIAL PLANEACIÓN Y DIRECCIONAMIENTO ESTRATÉGICO OPTATIA II (ADMINISTRACION)"
+    },
+    {
+      "code": "FCAS-109",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO",
+      "courses": "ECONOMIA MERCADEO E INVESTIGACIÓN DE MERCADOS GESTIÓN DE NEGOCIOS TÉCNICAS DE COMERCIALIZACIÓN"
+    },
+    {
+      "code": "FCAS-110",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION",
+      "courses": "CONTABILIDAD COSTOS Y PRESUPUESTOS CAPACITACIÓN, ENTRENAMIENTO Y EVALUACIÓN DEL PERSONAL CURSO DE APOYO DE CONTABILIDAD"
+    },
+    {
+      "code": "FCAS-111",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN AGRONEGOCIOS O ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS O CIENCIAS AGRARIAS CON POSGRADO EN ADMINISTRACIÓN DE EMPRESAS O EXPERIENCIA EN FORMULACIÓN DE PROYECTOS EN EL ÁREA DE AGRONEGOCIOS",
+      "courses": "OPTATIVA I (AGRONEGOCIOS) SERVICIOS AGRARIOS DESARROLLO EMPRESARIAL RURAL"
+    },
+    {
+      "code": "FCAS-112",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES",
+      "courses": "INFORMÁTICA APLICADA A LA EMPRESA LABORATORIO DE SIMULACIÓN SISTEMAS DE GESTION"
+    },
+    {
+      "code": "FCAS-113",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO O PRFESIONAL EN CIENCIAS NATURALES Y EDUCACIÓN O INGENIERÍA AMBIENTALES O ÁREAS AFINES CON POSGRADO EN EL ÁREA",
+      "courses": "GESTION AMBIENTAL (PARA TRES SEMESTRES)"
+    },
+    {
+      "code": "FCAS-114",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS",
+      "courses": "TÉCNICA, TECNOLOGÍA Y CIENCIA FORMULACIÓN DE PROYECTOS METODOLOGÍA DE LA INVESTIGACIÓN proyectos de INVESTIGACION Y EXTENSION semillero"
+    },
+    {
+      "code": "FCAS-115",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE INGLES II – V"
+    },
+    {
+      "code": "FCAS-116",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES",
+      "courses": "ORIENTAR LOS CURSOS DE MATEMATICAS - ESTADISTICA"
+    },
+    {
+      "code": "FCAS-117",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES",
+      "courses": "HABILIDADES COMUNICATIVAS PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS ELECTIVA I SOCIOHUMANISTICA (CULTURA Y DIVERSIDAD) ELECTIVA II SOCIOHUMANISTICA (historia del arte)"
+    },
+    {
+      "code": "FCAS-118",
+      "contract_type": "CATEDRA",
+      "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+      "profile": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES",
+      "courses": "SOCIEDAD Y RURALIDAD HABILIDADES INTRA E INTERPERSONALES CIUDADANÍA Y CONVIVENCIA BIENESTAR EN EL PROGRAMA (PERMANENCIA, BIENESTAR FORMATIVO)"
+    }
+  ]
+}

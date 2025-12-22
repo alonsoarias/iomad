@@ -1,0 +1,200 @@
+{
+  "sede": "FCAS_CT_SANTA_ROSA_DEL_SUR",
+  "metadata": {
+    "faculty": "FCAS",
+    "location": "CENTRO TUTORIAL SANTA ROSA DEL SUR",
+    "modality": "DISTANCIA"
+  },
+  "total_vacancies": 27,
+  "vacancies": [
+    {
+      "code": "FCAS-268",
+      "contract_type": "FCAS-268",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL CONTADOR O ADMINISTRACIÓN DE EMPRESAS O AREAS AFINES CON POSGRADO EN EL ÁREA"
+    },
+    {
+      "code": "FCAS-269",
+      "contract_type": "FCAS-269",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN MERCADEO Y PUBLICIDAD, IINGENIERÍA DE MERCADOS, ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍA INDUSTRIAL O AFINES CON POSGRADO EN MERCADEO"
+    },
+    {
+      "code": "FCAS-270",
+      "contract_type": "FCAS-270",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN CONTADURÍA O ADMINISTRACIÓN FINANCIERA CON ESPECIALIZACION"
+    },
+    {
+      "code": "FCAS-271",
+      "contract_type": "FCAS-271",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN AGRONEGOCIOS O ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS O CIENCIAS AGRARIAS CON POSGRADO EN ADMINISTRACIÓN DE EMPRESAS O EXPERIENCIA EN FORMULACIÓN DE PROYECTOS EN EL ÁREA DE AGRONEGOCIOS"
+    },
+    {
+      "code": "FCAS-272",
+      "contract_type": "FCAS-272",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, INGENIERÍA DE SISTEMAS, REDES Y SISTEMAS O ÁREAS AFINES"
+    },
+    {
+      "code": "FCAS-273",
+      "contract_type": "FCAS-273",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO O PRFESIONAL EN CIENCIAS NATURALES Y EDUCACIÓN O INGENIERÍA AMBIENTALES O ÁREAS AFINES CON POSGRADO EN EL ÁREA"
+    },
+    {
+      "code": "FCAS-274",
+      "contract_type": "FCAS-274",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN ADMINISTRACIÓN DE EMPRESAS, ECONOMÍA, INGENIERÍAS, CIENCIAS SOCIALES CON POSGRADO O MAESTRÍA O EXPERIENCIA EN INVESTIGACIÓN-PROYECTOS"
+    },
+    {
+      "code": "FCAS-275",
+      "contract_type": "FCAS-275",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES"
+    },
+    {
+      "code": "FCAS-276",
+      "contract_type": "FCAS-276",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN MATEMATICAS O FISICO O AREAS AFINES"
+    },
+    {
+      "code": "FCAS-277",
+      "contract_type": "FCAS-277",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN LENGUA CASTELLANA, COMUNICACIÓN SOCIAL O AFINES"
+    },
+    {
+      "code": "FCAS-278",
+      "contract_type": "FCAS-278",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN FILOSOFÍA, PSICOLOGÍA, SOCIOLOGÍA, GESTIÓN COMUNITARIA, TRABAJO SOCIAL, CIENCIAS SOCIALES O AFINES"
+    },
+    {
+      "code": "FCAS-279",
+      "contract_type": "FCAS-279",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN MATEMATICAS / MATEMÁTICO O AREAS AFINES"
+    },
+    {
+      "code": "FCAS-280",
+      "contract_type": "FCAS-280",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "ADMINISTRADOR DE EMPRESAS – PROFESIONAL EN AREAS AFINES CON ESPECIALIZACION EN INVESTIGACION"
+    },
+    {
+      "code": "FCAS-281",
+      "contract_type": "FCAS-281",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "ECONOMISTA"
+    },
+    {
+      "code": "FCAS-282",
+      "contract_type": "FCAS-282",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN MERCADEO Y PUBLICIDAD O AREAS AFINES"
+    },
+    {
+      "code": "FCAS-283",
+      "contract_type": "FCAS-283",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES"
+    },
+    {
+      "code": "FCAS-284",
+      "contract_type": "FCAS-284",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "COMUNICADOR SOCIAL O AFINES"
+    },
+    {
+      "code": "FCAS-285",
+      "contract_type": "FCAS-285",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "DISEÑADOR GRAFICO – PROFESIONAL EN MERCADEO Y PUBLICIDAD – COMUNICADOR SOCIAL"
+    },
+    {
+      "code": "FCAS-286",
+      "contract_type": "FCAS-286",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN CIENCIAS SOCILES, SOCIOLOGO, PSICOLOGO"
+    },
+    {
+      "code": "FCAS-287",
+      "contract_type": "FCAS-287",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "INGENIERO EN SISTEMAS O AFINES"
+    },
+    {
+      "code": "FCAS-288",
+      "contract_type": "FCAS-288",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "FILÓSOFO, PSICÓLOGO O AFINES"
+    },
+    {
+      "code": "FCAS-289",
+      "contract_type": "FCAS-289",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN EDUCACIÓN ARTÍSTICA"
+    },
+    {
+      "code": "FCAS-290",
+      "contract_type": "FCAS-290",
+      "program": "CÁTEDRA",
+      "profile": "CÁTEDRA",
+      "courses": "INGENIERO AMBIENTAL O AFINES"
+    },
+    {
+      "code": "FCAS-291",
+      "contract_type": "CATEDRA",
+      "program": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO.",
+      "profile": "CÁTEDRA",
+      "courses": "LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO."
+    },
+    {
+      "code": "FCAS-292",
+      "contract_type": "CATEDRA",
+      "program": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC.",
+      "profile": "CÁTEDRA",
+      "courses": "INGENIERO DE SISTEMAS / TECNÓLOGO EN EL ÁREA DE LAS TIC."
+    },
+    {
+      "code": "FCAS-293",
+      "contract_type": "CATEDRA",
+      "program": "COMUNICADOR/A SOCIAL LICENCIADO EN LENGUA CASTELLANA.",
+      "profile": "CÁTEDRA",
+      "courses": "COMUNICADOR/A SOCIAL LICENCIADO EN LENGUA CASTELLANA."
+    },
+    {
+      "code": "FCAS-294",
+      "contract_type": "CATEDRA",
+      "program": "PROFESIONAL EN TRABAJO SOCIAL. TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO.",
+      "profile": "CÁTEDRA",
+      "courses": "PROFESIONAL EN TRABAJO SOCIAL. TECNÓLOGO(A) EN TRABAJO SOCIAL Y COMUNITARIO/GESTOR(A) COMUNITARIO."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "sede": "BIEN_CT_SALAZAR_DE_LAS_PALMAS_DISTANCIA",
+  "metadata": {
+    "faculty": "BIENESTAR",
+    "location": "CENTRO TUTORIAL SALAZAR DE LAS PALMAS",
+    "modality": "DISTANCIA"
+  },
+  "total_vacancies": 1,
+  "vacancies": [
+    {
+      "code": "BIEN-17",
+      "contract_type": "CATEDRA",
+      "profile": "Psicólogo(a) ó Trabajador Social con experiencia en atención psicosocial de 1 año en contextos de Educación superior y 2 años de experiencia general",
+      "positions": "1",
+      "activities": "Acompañamiento psicosocial a estudiantes, docentes y administrativos que requieran los servicios de Bienestar institucional. Brindar atención psicosocial a estudiantes que lo requieran en el marco de la implementación de la política de Permanencia y Graduación. Realizar seguimiento a casos de estudiantes en riesgo de deserción. Orientar curso de electiva sociohumanística. Apoyo para el desarrollo del plan de acción de Bienestar Institucional en los centros tutoriales"
+    }
+  ]
+}
