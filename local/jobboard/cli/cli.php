@@ -632,6 +632,39 @@ if ($options['sync-sedes']) {
             // Remove from vacanciesWithApps to avoid processing again
             unset($vacanciesWithApps[$code]);
 
+        // PRIORITY 3: Check if vacancy with same code exists (no apps) - update it instead of creating new
+        } else if (isset($existingByCode[$code]) && !empty($existingByCode[$code])) {
+            // Update first existing vacancy with this code
+            $existingByCodeVac = array_shift($existingByCode[$code]);
+
+            $record->id = $existingByCodeVac->id;
+            $record->modifiedby = $adminuser->id;
+            $record->timemodified = $now;
+
+            if (!$dryrun) {
+                try {
+                    $DB->update_record('local_jobboard_vacancy', $record);
+                    $stats['updated']++;
+                    if ($verbose) {
+                        echo "UPDATED (BY CODE): $code @ $location ($modality) [ID: {$existingByCodeVac->id}]\n";
+                        echo "  (was @ {$existingByCodeVac->location} ({$existingByCodeVac->modality}))\n";
+                    }
+                } catch (Exception $e) {
+                    echo "ERROR updating $code (by code): " . $e->getMessage() . "\n";
+                    $stats['errors']++;
+                }
+            } else {
+                $stats['updated']++;
+                if ($verbose) {
+                    echo "DRY UPDATE (BY CODE): $code @ $location ($modality)\n";
+                    echo "  (currently @ {$existingByCodeVac->location} ({$existingByCodeVac->modality}))\n";
+                }
+            }
+
+            // Mark the old key as processed
+            $oldKey = $existingByCodeVac->code . '|' . $existingByCodeVac->location . '|' . $existingByCodeVac->modality;
+            unset($existingByKey[$oldKey]);
+
         } else {
             // Create new.
             $record->createdby = $adminuser->id;
