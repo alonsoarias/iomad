@@ -2,7 +2,9 @@
   "sede": "CIMITARRA",
   "total_vacancies": 11,
   "by_faculty": {
-    "FCAS": 11
+    "FII": 0,
+    "FCAS": 11,
+    "BIENESTAR": 0
   },
   "programs": {
     "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11

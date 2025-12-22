@@ -2,13 +2,14 @@
   "sede": "CUCUTA",
   "total_vacancies": 52,
   "by_faculty": {
+    "FII": 0,
     "FCAS": 46,
     "BIENESTAR": 6
   },
   "programs": {
-    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 23,
+    "BIENESTAR": 6,
     "TECNOLOGÍA EN GESTIÓN DE MERCADEO": 12,
-    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11,
-    "BIENESTAR": 6
+    "TECNOLOGÍA EN GESTIÓN COMUNITARIA": 23,
+    "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 11
   }
 }

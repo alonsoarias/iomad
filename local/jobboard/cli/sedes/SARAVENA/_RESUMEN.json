@@ -3,11 +3,12 @@
   "total_vacancies": 35,
   "by_faculty": {
     "FII": 23,
-    "FCAS": 12
+    "FCAS": 12,
+    "BIENESTAR": 0
   },
   "programs": {
-    "TODOS LOS PROGRAMAS ACADÉMICOS": 6,
     "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES": 17,
+    "TODOS LOS PROGRAMAS ACADÉMICOS": 6,
     "TECNOLOGÍA EN GESTIÓN EMPRESARIAL": 12
   }
 }
