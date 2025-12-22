@@ -4084,3 +4084,7 @@ $string['review_period_ended'] = 'Período de revisión finalizado';
 // Errores de validación de fechas de revisión
 $string['error:reviewdatebeforeend'] = 'La fecha de inicio de revisión debe ser posterior a la fecha de cierre de la convocatoria';
 $string['error:hrreviewbeforedean'] = 'La fecha de inicio de validación de Talento Humano debe ser posterior a la fecha de fin de revisión del Decano';
+
+// Mensajes de acciones
+$string['action_deprecated'] = 'Esta acción está obsoleta. Use las nuevas acciones del flujo de trabajo.';
+$string['nopermission'] = 'No tiene permiso para realizar esta acción';

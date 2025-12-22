@@ -35,8 +35,19 @@ use local_jobboard\review_notifier;
 use local_jobboard\helper\iomad_helper;
 use local_jobboard\helper\role_access_helper;
 
-// Require review capability.
-require_capability('local/jobboard:reviewdocuments', $context);
+// Check access - Dean (reviewprofiles) or HR/Reviewer (reviewdocuments) can access.
+$can_review_profiles = has_capability('local/jobboard:reviewprofiles', $context);
+$can_review_documents = has_capability('local/jobboard:reviewdocuments', $context);
+$can_validate_hr = has_capability('local/jobboard:validatehr', $context);
+$can_approve_profile = has_capability('local/jobboard:approveprofile', $context);
+
+if (!$can_review_profiles && !$can_review_documents) {
+    throw new \moodle_exception('nopermission', 'local_jobboard');
+}
+
+// Determine user role for filtering and UI.
+$is_dean = role_access_helper::is_dean();
+$is_hr = role_access_helper::is_hr();
 
 // Parameters.
 $applicationid = optional_param('applicationid', 0, PARAM_INT);
@@ -72,24 +83,31 @@ $PAGE->navbar->add(get_string('reviewdocuments', 'local_jobboard'));
 if ($action && confirm_sesskey()) {
     switch ($action) {
         case 'validate':
-            if ($documentid) {
+            // Only HR/Reviewer can validate individual documents.
+            if ($documentid && $can_review_documents) {
                 $doc = new document($documentid);
                 $doc->validate($USER->id);
                 \core\notification::success(get_string('documentvalidated', 'local_jobboard'));
+            } elseif (!$can_review_documents) {
+                \core\notification::error(get_string('nopermission', 'local_jobboard'));
             }
             break;
 
         case 'reject':
-            if ($documentid) {
+            // Only HR/Reviewer can reject individual documents.
+            if ($documentid && $can_review_documents) {
                 $reason = required_param('reason', PARAM_TEXT);
                 $doc = new document($documentid);
                 $doc->reject($USER->id, $reason);
                 \core\notification::success(get_string('documentrejected', 'local_jobboard'));
+            } elseif (!$can_review_documents) {
+                \core\notification::error(get_string('nopermission', 'local_jobboard'));
             }
             break;
 
         case 'validateall':
-            if ($applicationid) {
+            // Only HR/Reviewer can validate all documents.
+            if ($applicationid && $can_review_documents) {
                 $documents = document::get_by_application($applicationid);
                 $validated = 0;
                 foreach ($documents as $doc) {
@@ -99,11 +117,29 @@ if ($action && confirm_sesskey()) {
                     }
                 }
                 \core\notification::success(get_string('documentvalidated', 'local_jobboard') . " ({$validated})");
+            } elseif (!$can_review_documents) {
+                \core\notification::error(get_string('nopermission', 'local_jobboard'));
             }
             break;
 
         case 'markreviewed':
-            if ($applicationid) {
+            // Only HR/Reviewer can mark as reviewed (legacy action).
+            if ($applicationid && $can_review_documents) {
+                $app = new application($applicationid);
+                $stats = document::get_stats($applicationid);
+                $observations = optional_param('observations', '', PARAM_TEXT);
+
+                // This action is deprecated - use validatehr/rejecthr instead.
+                // Kept for backwards compatibility.
+                \core\notification::warning(get_string('action_deprecated', 'local_jobboard'));
+            } elseif (!$can_review_documents) {
+                \core\notification::error(get_string('nopermission', 'local_jobboard'));
+            }
+            break;
+
+        case 'markreviewed_legacy':
+            // Legacy action - kept for reference but disabled.
+            if ($applicationid && $can_review_documents) {
                 $app = new application($applicationid);
                 $stats = document::get_stats($applicationid);
                 $observations = optional_param('observations', '', PARAM_TEXT);
@@ -516,6 +552,21 @@ if ($applicationid && isset($application) && $application->id) {
     $PAGE->requires->js_call_amd('local_jobboard/document_review', 'init', [[
         'applicationId' => $applicationid,
     ]]);
+}
+
+// Add role-based capability flags to template data.
+$data['can_review_documents'] = $can_review_documents;
+$data['can_review_profiles'] = $can_review_profiles;
+$data['can_validate_hr'] = $can_validate_hr;
+$data['can_approve_profile'] = $can_approve_profile;
+$data['is_dean'] = $is_dean;
+$data['is_hr'] = $is_hr;
+
+// Add status-based action visibility for Dean/HR workflow.
+if (isset($application) && $application->id) {
+    $data['show_dean_actions'] = ($application->status === 'pending_dean_review' && $can_approve_profile);
+    $data['show_hr_actions'] = ($application->status === 'pending_hr_validation' && $can_validate_hr);
+    $data['show_document_actions'] = $can_review_documents && !$is_dean;
 }
 
 // Handle AJAX request - return only results HTML without header/footer.
