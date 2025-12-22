@@ -525,7 +525,6 @@ if ($options['sync-sedes']) {
     $stats = [
         'created' => 0,
         'updated' => 0,
-        'archived' => 0,
         'unchanged' => 0,
         'errors' => 0,
     ];
@@ -543,7 +542,7 @@ if ($options['sync-sedes']) {
         // Build vacancy record.
         $record = new stdClass();
         $record->code = $code;
-        $record->title = $vac['program'] . ' - ' . substr($vac['profile'], 0, 100);
+        $record->title = $vac['program'] . ' - ' . mb_substr($vac['profile'], 0, 100, 'UTF-8');
         $record->description = build_vacancy_description_sync($vac);
         $record->contracttype = $contractMapping[$vac['contract_type']] ?? 'catedra';
         $record->duration = $record->contracttype === 'ocasional_tc'
@@ -690,40 +689,17 @@ if ($options['sync-sedes']) {
         }
     }
 
-    // Archive vacancies not in JSONs.
+    // Vacancies not in JSONs remain unchanged (not archived).
     if (!empty($existingByKey)) {
         echo "\n";
-        cli_heading("Archiving Vacancies Not in JSONs");
+        cli_heading("Vacancies Not in JSONs (Unchanged)");
 
         foreach ($existingByKey as $key => $vac) {
-            // Check for applications.
-            $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vac->id]);
-
-            if ($vac->status === 'archived') {
-                $stats['unchanged']++;
-                continue;
-            }
-
-            if (!$dryrun) {
-                try {
-                    $DB->set_field('local_jobboard_vacancy', 'status', 'archived', ['id' => $vac->id]);
-                    $DB->set_field('local_jobboard_vacancy', 'timemodified', $now, ['id' => $vac->id]);
-                    $DB->set_field('local_jobboard_vacancy', 'modifiedby', $adminuser->id, ['id' => $vac->id]);
-                    $stats['archived']++;
-                    if ($verbose) {
-                        $appNote = $appCount > 0 ? " [PRESERVING $appCount APPLICATIONS]" : "";
-                        echo "ARCHIVED: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
-                    }
-                } catch (Exception $e) {
-                    echo "ERROR archiving {$vac->code}: " . $e->getMessage() . "\n";
-                    $stats['errors']++;
-                }
-            } else {
-                $stats['archived']++;
-                if ($verbose) {
-                    $appNote = $appCount > 0 ? " [WOULD PRESERVE $appCount APPLICATIONS]" : "";
-                    echo "DRY ARCHIVE: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
-                }
+            $stats['unchanged']++;
+            if ($verbose) {
+                $appCount = $DB->count_records('local_jobboard_application', ['vacancyid' => $vac->id]);
+                $appNote = $appCount > 0 ? " [HAS $appCount APPLICATIONS]" : "";
+                echo "UNCHANGED: {$vac->code} @ {$vac->location} ({$vac->modality})$appNote\n";
             }
         }
     }
@@ -733,7 +709,6 @@ if ($options['sync-sedes']) {
     cli_heading("Sync Summary");
     echo "Created: {$stats['created']}\n";
     echo "Updated: {$stats['updated']}\n";
-    echo "Archived: {$stats['archived']}\n";
     echo "Unchanged: {$stats['unchanged']}\n";
     echo "Errors: {$stats['errors']}\n";
 
