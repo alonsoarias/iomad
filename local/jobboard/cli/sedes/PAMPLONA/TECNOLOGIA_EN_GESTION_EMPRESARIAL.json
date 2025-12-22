@@ -68,11 +68,20 @@
             "modality": "PRESENCIAL"
         },
         {
-            "code": "FCAS-20",
+            "code": "FCAS-20a",
             "contract_type": "HORA CÁTEDRA",
             "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
             "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS CON POSGRADO",
             "courses": "ORIENTAR LOS CURSOS DE: INGLES I INGLES II INGLES III.",
+            "faculty": "FCAS",
+            "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FCAS-20b",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN GESTIÓN EMPRESARIAL",
+            "profile": "INGENIERO DE SISTEMAS",
+            "courses": "ORIENTAR LOS CURSOS DE: OFIMATICA SISTEMAS DE INFORMACION.",
             "faculty": "FCAS",
             "modality": "PRESENCIAL"
         },

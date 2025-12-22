@@ -5,13 +5,22 @@
     "total_vacancies": 3,
     "vacancies": [
         {
-            "code": "FII-07",
+            "code": "FII-07a",
             "contract_type": "OCASIONAL TIEMPO COMPLETO",
             "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
             "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
             "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III",
             "faculty": "FII",
             "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FII-07b",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TODOS LOS PROGRAMAS ACADÉMICOS",
+            "profile": "LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS O LENGUAS MODERNAS O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE INGLES I – INGLES II – INGLES III",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
         },
         {
             "code": "FII03",

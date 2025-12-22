@@ -14,11 +14,20 @@
             "modality": "DISTANCIA"
         },
         {
-            "code": "FII03",
+            "code": "FII03a",
             "contract_type": "HORA CÁTEDRA",
             "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
             "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
             "courses": "ORIENTAR LOS CURSOS DE QUIMICA",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
+        },
+        {
+            "code": "FII03b",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
+            "profile": "QUIMICO - INGENIERO QUIMICO O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE QUIMICA – FISICOQUIMICA AGROINDUSTRIAL – PROCESOS DE TRANSFORMACION FISICOQUIMICA",
             "faculty": "FII",
             "modality": "DISTANCIA"
         },
@@ -32,7 +41,7 @@
             "modality": "DISTANCIA"
         },
         {
-            "code": "FII-06",
+            "code": "FII-06a",
             "contract_type": "HORA CÁTEDRA",
             "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
             "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
@@ -41,11 +50,29 @@
             "modality": "DISTANCIA"
         },
         {
-            "code": "FII-07",
+            "code": "FII-06b",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
+            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE INTRODUCCION A LA AGROINDUSTRIA -PROCESOS AGROALIMENTARIOS – MATERIAS PRIMAS Y POSCOSECHA- ORIENTAR LOS CURSOS DE PROCESAMIENTO DE PRODUCTOS",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
+        },
+        {
+            "code": "FII-07a",
             "contract_type": "HORA CÁTEDRA",
             "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
             "profile": "INGENIERO INDUSTRIAL O INGENIERO AGROINDUSTRIAL O DE PRODUCCIÓN AGROINDUSTRIAL- ÁREAS AFINES",
             "courses": "ORIENTAR LOS CURSOS AGROINDUSTRIA NO ALIMENTARIA I (SUBPRODUCTOS DE ORIGEN PECUARIO), AGROINDUSTRIA NO ALIMENTARIA II (SUBPRODUCTOS DE ORIGEN AGRÍCOLA)",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
+        },
+        {
+            "code": "FII-07b",
+            "contract_type": "HORA CÁTEDRA",
+            "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
+            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE OPTATIVA I DE PROFUNDIZACIÓN, AGROINDUSTRIA NO ALIMENTARIA I (SUBPRODUCTOS DE ORIGEN PECUARIO), AGROINDUSTRIA NO ALIMENTARIA II (SUBPRODUCTOS DE ORIGEN AGRÍCOLA).",
             "faculty": "FII",
             "modality": "DISTANCIA"
         },

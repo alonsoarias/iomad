@@ -5,7 +5,7 @@
     "total_vacancies": 11,
     "vacancies": [
         {
-            "code": "FII-01",
+            "code": "FII-01a",
             "contract_type": "OCASIONAL TIEMPO COMPLETO",
             "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
             "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
@@ -14,13 +14,31 @@
             "modality": "PRESENCIAL"
         },
         {
-            "code": "FII-02",
+            "code": "FII-01b",
+            "contract_type": "OCASIONAL TIEMPO COMPLETO",
+            "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
+            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+            "courses": "ORIENTAR LOS CURSOS DE INTRODUCCION A LA AGROINDUSTRIA - PROCESOS AGROALIMENTARIOS I Y II –",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
+        },
+        {
+            "code": "FII-02a",
             "contract_type": "OCASIONAL TIEMPO COMPLETO",
             "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
             "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
             "courses": "ORIENTAR LOS CURSOS DE GESTION AGROINDUSTRIAL – PROYECTOS PRODUCTIVOS – MATERIAS PRIMAS Y POSCOSECHA.",
             "faculty": "FII",
             "modality": "PRESENCIAL"
+        },
+        {
+            "code": "FII-02b",
+            "contract_type": "OCASIONAL TIEMPO COMPLETO",
+            "program": "TECNOLOGÍA EN PROCESOS AGROINDUSTRIALES",
+            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+            "courses": "GESTION AGROINDUSTRIAL – PROYECTOS PRODUCTIVOS – MATERIAS PRIMAS Y POSCOSECHA.",
+            "faculty": "FII",
+            "modality": "DISTANCIA"
         },
         {
             "code": "FII-04",
