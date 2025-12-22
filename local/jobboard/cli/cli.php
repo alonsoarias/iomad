@@ -595,7 +595,7 @@ if ($options['sync-metadata']) {
         echo "\n*** DRY RUN - No changes were made ***\n";
     }
 
-    exit($stats['errors'] > 0 ? 1 : 0);
+    // Continue to next operation instead of exiting
 }
 
 /**
@@ -741,7 +741,7 @@ if ($options['normalize-programs']) {
         echo "Vacancies updated: " . $stats['vacancies_updated'] . "\n";
     }
 
-    exit(0);
+    // Continue to next operation instead of exiting
 }
 
 // ============================================================
@@ -1145,7 +1145,7 @@ if ($options['sync-sedes']) {
         echo "\n*** DRY RUN - No changes were made ***\n";
     }
 
-    exit($stats['errors'] > 0 ? 1 : 0);
+    // Continue to next operation instead of exiting
 }
 
 /**
