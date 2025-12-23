@@ -100,7 +100,8 @@ class audit {
     ) {
         global $DB, $USER;
 
-        $actualuserid = $userid ?? ($USER->id ?? 0);
+        // Ensure userid is always an integer (Moodle sometimes stores IDs as strings).
+        $actualuserid = (int) ($userid ?? ($USER->id ?? 0));
 
         $record = new \stdClass();
         $record->userid = $actualuserid;
