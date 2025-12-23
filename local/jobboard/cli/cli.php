@@ -120,6 +120,7 @@ list($options, $unrecognized) = cli_get_params([
     'userid' => null,
     'new-vacancyid' => null,
     'source-applicationid' => null,
+    'from-orphaned' => null,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -151,6 +152,7 @@ list($options, $unrecognized) = cli_get_params([
     'U' => 'userid',
     'W' => 'new-vacancyid',
     'X' => 'source-applicationid',
+    'O' => 'from-orphaned',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -316,11 +318,15 @@ APPLICATION RESTORATION:
   -U, --userid=ID            User ID (from mdl_user.id)
   -W, --new-vacancyid=ID     New vacancy ID to assign the application to
   -X, --source-applicationid=ID  (Optional) Copy documents from this application ID
+  -O, --from-orphaned=INDEX  Restore from orphaned_applications.json (0-based index)
 
   Use this to restore applications that were orphaned during sync
   (e.g., when vacancy codes changed from FII-07 to FII-07a/FII-07b)
 
   RESTORE EXAMPLES:
+    # Restore from orphaned file (RECOMMENDED after sync)
+    php cli.php --restore-application --from-orphaned=0 --new-vacancyid=793 --verbose
+
     # Restore application for user 3064 to vacancy 793 (empty, no documents)
     php cli.php --restore-application --userid=3064 --new-vacancyid=793 --verbose
 
@@ -1298,6 +1304,64 @@ if ($options['sync-sedes']) {
         if (!empty($orphanedApps)) {
             echo "*** ATENCIÓN: {$stats['orphaned']} postulación(es) no encontraron vacante correspondiente ***\n";
             echo "Estas postulaciones NO fueron restauradas. Revise los programas/perfiles.\n\n";
+
+            // Save orphaned applications to JSON file for later restoration
+            $orphanedData = [];
+            foreach ($orphanedApps as $app) {
+                $appData = [
+                    'id' => $app->id,
+                    'userid' => $app->userid,
+                    'vacancyid' => $app->vacancyid,
+                    'code' => $app->code,
+                    'location' => $app->location,
+                    'modality' => $app->modality ?? '',
+                    'program' => $app->program,
+                    'status' => $app->status,
+                    'statusnotes' => $app->statusnotes ?? '',
+                    'isexemption' => $app->isexemption ?? 0,
+                    'exemptionreason' => $app->exemptionreason ?? '',
+                    'consentgiven' => $app->consentgiven ?? 1,
+                    'consenttimestamp' => $app->consenttimestamp ?? null,
+                    'consentip' => $app->consentip ?? '',
+                    'consentuseragent' => $app->consentuseragent ?? '',
+                    'digitalsignature' => $app->digitalsignature ?? '',
+                    'coverletter' => $app->coverletter ?? '',
+                    'applicationdata' => $app->applicationdata ?? '',
+                    'reviewerid' => $app->reviewerid ?? null,
+                    'timecreated' => $app->timecreated,
+                    'timemodified' => $app->timemodified ?? null,
+                    'documents' => []
+                ];
+
+                // Add documents for this application
+                if (isset($applicationDocuments[$app->id])) {
+                    foreach ($applicationDocuments[$app->id] as $doc) {
+                        $appData['documents'][] = [
+                            'id' => $doc->id,
+                            'documenttype' => $doc->documenttype,
+                            'filename' => $doc->filename,
+                            'contenthash' => $doc->contenthash,
+                            'filesize' => $doc->filesize,
+                            'mimetype' => $doc->mimetype,
+                            'issuedate' => $doc->issuedate ?? null,
+                            'expirydate' => $doc->expirydate ?? null,
+                            'isencrypted' => $doc->isencrypted ?? 0,
+                            'issuperseded' => $doc->issuperseded ?? 0,
+                            'uploadedby' => $doc->uploadedby,
+                            'timecreated' => $doc->timecreated
+                        ];
+                    }
+                }
+
+                $orphanedData[] = $appData;
+            }
+
+            // Save to JSON file
+            $orphanedFile = __DIR__ . '/orphaned_applications.json';
+            $jsonContent = json_encode($orphanedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            file_put_contents($orphanedFile, $jsonContent);
+            echo "📁 Archivo de huérfanas guardado: $orphanedFile\n";
+            echo "   Use: php cli.php --restore-application --from-orphaned=<index> --new-vacancyid=<ID> --verbose\n\n";
         }
     }
 
@@ -1739,15 +1803,61 @@ if ($options['restore-application']) {
         cli_error("Application restoration requires Moodle. Run from Moodle installation.");
     }
 
+    $fromOrphaned = $options['from-orphaned'];
     $userid = $options['userid'] ? (int) $options['userid'] : null;
     $newvacancyid = $options['new-vacancyid'] ? (int) $options['new-vacancyid'] : null;
     $sourceappid = $options['source-applicationid'] ? (int) $options['source-applicationid'] : null;
     $verbose = $options['verbose'];
     $dryrun = $options['dryrun'];
 
+    // Source data from orphaned file or database
+    $sourceApp = null;
+    $sourceDocs = [];
+    $fromOrphanedFile = false;
+
+    // If --from-orphaned is specified, load from JSON file
+    if ($fromOrphaned !== null && $fromOrphaned !== false) {
+        $orphanedFile = __DIR__ . '/orphaned_applications.json';
+        if (!file_exists($orphanedFile)) {
+            cli_error("Orphaned applications file not found: $orphanedFile\nRun --sync-sedes first to generate this file.");
+        }
+
+        $orphanedData = json_decode(file_get_contents($orphanedFile), false);
+        if ($orphanedData === null) {
+            cli_error("Failed to parse orphaned applications JSON file.");
+        }
+
+        $orphanedIndex = (int) $fromOrphaned;
+        if (!isset($orphanedData[$orphanedIndex])) {
+            echo "Available orphaned applications:\n";
+            foreach ($orphanedData as $idx => $app) {
+                echo "  [$idx] User ID: {$app->userid} | {$app->code} @ {$app->location} | Docs: " . count($app->documents) . "\n";
+            }
+            cli_error("Index $orphanedIndex not found. Use one of the indices above.");
+        }
+
+        $orphanedApp = $orphanedData[$orphanedIndex];
+        $userid = $orphanedApp->userid;
+        $fromOrphanedFile = true;
+
+        // Convert orphaned app to sourceApp format
+        $sourceApp = $orphanedApp;
+
+        // Convert documents array to objects
+        $sourceDocs = [];
+        foreach ($orphanedApp->documents as $doc) {
+            $sourceDocs[] = (object) $doc;
+        }
+
+        echo "📁 Loading from orphaned_applications.json (index: $orphanedIndex)\n\n";
+    }
+
     // Validate parameters.
-    if (empty($userid) || empty($newvacancyid)) {
-        cli_error("You must specify --userid and --new-vacancyid");
+    if (empty($newvacancyid)) {
+        cli_error("You must specify --new-vacancyid");
+    }
+    if (empty($userid) && !$fromOrphanedFile) {
+        cli_error("You must specify --userid or --from-orphaned");
     }
 
     cli_heading('Restoring Orphaned Application');
@@ -1769,10 +1879,8 @@ if ($options['restore-application']) {
     echo "  Modality: {$vacancy->modality}\n";
     echo "  Program: {$vacancy->department}\n\n";
 
-    // Get source application info if provided.
-    $sourceApp = null;
-    $sourceDocs = [];
-    if ($sourceappid) {
+    // Get source application info if provided (and not already loaded from orphaned file)
+    if ($sourceappid && !$fromOrphanedFile) {
         $sourceApp = $DB->get_record('local_jobboard_application', ['id' => $sourceappid]);
         if (!$sourceApp) {
             echo "WARNING: Source application ID '$sourceappid' not found. Will create empty application.\n\n";
@@ -1781,6 +1889,12 @@ if ($options['restore-application']) {
             echo "Source Application: ID {$sourceApp->id}\n";
             echo "  Documents to copy: " . count($sourceDocs) . "\n\n";
         }
+    }
+
+    if ($fromOrphanedFile && $sourceApp) {
+        echo "Source (from orphaned file): {$sourceApp->code} @ {$sourceApp->location}\n";
+        echo "  Original App ID: {$sourceApp->id}\n";
+        echo "  Documents to restore: " . count($sourceDocs) . "\n\n";
     }
 
     // Check if user already has an application for this vacancy.
