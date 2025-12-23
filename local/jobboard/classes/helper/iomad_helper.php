@@ -120,15 +120,27 @@ class iomad_helper {
      * @return bool True if user can view the vacancy.
      */
     public static function can_user_view_vacancy(\stdClass $vacancy, ?int $userid = null): bool {
-        global $USER;
+        global $USER, $DB;
 
         $userid = $userid ?? $USER->id;
         $context = \context_system::instance();
 
+        // Admins/managers can always view.
         if (has_capability('local/jobboard:viewallvacancies', $context, $userid)) {
             return true;
         }
 
+        // Users with an existing application can always view the vacancy
+        // (even if closed) to check their application status.
+        $hasapplication = $DB->record_exists('local_jobboard_application', [
+            'vacancyid' => $vacancy->id,
+            'userid' => $userid,
+        ]);
+        if ($hasapplication) {
+            return true;
+        }
+
+        // For users without applications, vacancy must be published.
         if ($vacancy->status !== 'published') {
             return false;
         }

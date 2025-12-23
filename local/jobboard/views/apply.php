@@ -52,16 +52,6 @@ if (!$vacancy) {
 // STEP 2: Validate user eligibility
 // ============================================================================
 
-// Check vacancy is open.
-if (!$vacancy->is_open()) {
-    redirect(
-        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]),
-        get_string('vacancyclosed', 'local_jobboard'),
-        null,
-        \core\output\notification::NOTIFY_ERROR
-    );
-}
-
 // Check user hasn't already submitted (non-draft) application.
 if (application::user_has_submitted_application($vacancyid, $USER->id)) {
     redirect(
@@ -75,6 +65,27 @@ if (application::user_has_submitted_application($vacancyid, $USER->id)) {
 // Check for existing draft application.
 $draftapplication = application::get_draft($vacancyid, $USER->id);
 $isresuming = ($draftapplication !== null);
+
+// Check vacancy is open.
+// If user has a draft, redirect to application view instead of error.
+if (!$vacancy->is_open()) {
+    if ($draftapplication) {
+        // User has a draft but vacancy is closed - redirect to view their application.
+        redirect(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $draftapplication->id]),
+            get_string('vacancyclosed_draft', 'local_jobboard'),
+            null,
+            \core\output\notification::NOTIFY_WARNING
+        );
+    } else {
+        redirect(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]),
+            get_string('vacancyclosed', 'local_jobboard'),
+            null,
+            \core\output\notification::NOTIFY_ERROR
+        );
+    }
+}
 
 // Check convocatoria application limits.
 // Skip this check if user is resuming an existing draft application.

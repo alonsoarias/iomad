@@ -392,6 +392,7 @@ $string['vacancydeleted'] = 'Vacancy deleted successfully';
 $string['vacancypublished'] = 'Vacancy published successfully';
 $string['vacancyclosed'] = 'Vacancy closed successfully';
 $string['vacancyclosed_desc'] = 'This vacancy is no longer accepting applications';
+$string['vacancyclosed_draft'] = 'The vacancy has closed. Your application was saved as a draft but can no longer be submitted.';
 $string['confirmdeletevacancy'] = 'Are you sure you want to delete this vacancy? This action cannot be undone.';
 $string['vacancyhasapplications'] = 'This vacancy has applications and cannot be deleted';
 $string['vacancyactions'] = 'Actions';
