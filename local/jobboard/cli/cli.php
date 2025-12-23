@@ -119,6 +119,7 @@ list($options, $unrecognized) = cli_get_params([
     'restore-application' => false,
     'userid' => null,
     'new-vacancyid' => null,
+    'source-applicationid' => null,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -149,6 +150,7 @@ list($options, $unrecognized) = cli_get_params([
     'R' => 'restore-application',
     'U' => 'userid',
     'W' => 'new-vacancyid',
+    'X' => 'source-applicationid',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -313,13 +315,17 @@ APPLICATION RESTORATION:
   -R, --restore-application  RESTORE an orphaned application to a new vacancy
   -U, --userid=ID            User ID (from mdl_user.id)
   -W, --new-vacancyid=ID     New vacancy ID to assign the application to
+  -X, --source-applicationid=ID  (Optional) Copy documents from this application ID
 
   Use this to restore applications that were orphaned during sync
   (e.g., when vacancy codes changed from FII-07 to FII-07a/FII-07b)
 
   RESTORE EXAMPLES:
-    # Restore application for user 3064 to vacancy 793
+    # Restore application for user 3064 to vacancy 793 (empty, no documents)
     php cli.php --restore-application --userid=3064 --new-vacancyid=793 --verbose
+
+    # Restore WITH documents from a previous application (ID 25)
+    php cli.php --restore-application --userid=3064 --new-vacancyid=793 --source-applicationid=25 --verbose
 
     # Preview what would be created (dry run)
     php cli.php --restore-application --userid=3064 --new-vacancyid=793 --dryrun --verbose
@@ -1193,55 +1199,64 @@ if ($options['sync-sedes']) {
                         $newAppId = $DB->insert_record('local_jobboard_application', $newApp);
                         $stats['restored']++;
 
-                        // Copy files from old application to new application in Moodle file storage
+                        // Restore documents and create mdl_files entries using contenthash
                         $fs = get_file_storage();
                         $context = \context_system::instance();
-                        $oldFiles = $fs->get_area_files(
-                            $context->id,
-                            'local_jobboard',
-                            'application_documents',
-                            $app->id,  // Old application ID
-                            'id',
-                            false  // Exclude directories
-                        );
-
-                        $filesCopied = 0;
-                        foreach ($oldFiles as $oldFile) {
-                            // Create new file record with new application ID
-                            $newFileRecord = [
-                                'contextid' => $context->id,
-                                'component' => 'local_jobboard',
-                                'filearea' => 'application_documents',
-                                'itemid' => $newAppId,  // NEW application ID
-                                'filepath' => $oldFile->get_filepath(),
-                                'filename' => $oldFile->get_filename(),
-                            ];
-
-                            try {
-                                // Check if file already exists
-                                if (!$fs->file_exists($context->id, 'local_jobboard', 'application_documents',
-                                    $newAppId, $oldFile->get_filepath(), $oldFile->get_filename())) {
-                                    $fs->create_file_from_storedfile($newFileRecord, $oldFile);
-                                    $filesCopied++;
-                                }
-                            } catch (Exception $e) {
-                                if ($verbose) {
-                                    echo "  ⚠ Error copiando archivo: " . $e->getMessage() . "\n";
-                                }
-                            }
-                        }
-
-                        // Restore documents for this application
                         $docsRestored = 0;
+                        $filesCopied = 0;
+
                         if (isset($applicationDocuments[$app->id])) {
                             foreach ($applicationDocuments[$app->id] as $doc) {
+                                // 1. Restore document record with new applicationid
                                 $newDoc = clone $doc;
-                                unset($newDoc->id); // Remove old ID
-                                $newDoc->applicationid = $newAppId; // Set new application ID
+                                unset($newDoc->id);
+                                $newDoc->applicationid = $newAppId;
                                 try {
                                     $DB->insert_record('local_jobboard_document', $newDoc);
                                     $docsRestored++;
                                     $stats['docs_restored']++;
+
+                                    // 2. Create mdl_files entry using contenthash (Opción A)
+                                    if (!empty($doc->contenthash)) {
+                                        // Check if file already exists for new application
+                                        $existingFile = $fs->get_file(
+                                            $context->id,
+                                            'local_jobboard',
+                                            'application_documents',
+                                            $newAppId,
+                                            '/',
+                                            $doc->filename
+                                        );
+
+                                        if (!$existingFile) {
+                                            // Find any existing file with same contenthash
+                                            $sourceFile = $DB->get_record_sql(
+                                                "SELECT * FROM {files}
+                                                 WHERE contenthash = ?
+                                                   AND filename <> '.'
+                                                   AND filesize > 0
+                                                 LIMIT 1",
+                                                [$doc->contenthash]
+                                            );
+
+                                            if ($sourceFile) {
+                                                // Get the stored_file object
+                                                $storedFile = $fs->get_file_by_id($sourceFile->id);
+                                                if ($storedFile) {
+                                                    $newFileRecord = [
+                                                        'contextid' => $context->id,
+                                                        'component' => 'local_jobboard',
+                                                        'filearea' => 'application_documents',
+                                                        'itemid' => $newAppId,
+                                                        'filepath' => '/',
+                                                        'filename' => $doc->filename,
+                                                    ];
+                                                    $fs->create_file_from_storedfile($newFileRecord, $storedFile);
+                                                    $filesCopied++;
+                                                }
+                                            }
+                                        }
+                                    }
                                 } catch (Exception $e) {
                                     if ($verbose) {
                                         echo "  ⚠ Error restaurando documento: " . $e->getMessage() . "\n";
@@ -1723,6 +1738,7 @@ if ($options['restore-application']) {
 
     $userid = $options['userid'] ? (int) $options['userid'] : null;
     $newvacancyid = $options['new-vacancyid'] ? (int) $options['new-vacancyid'] : null;
+    $sourceappid = $options['source-applicationid'] ? (int) $options['source-applicationid'] : null;
     $verbose = $options['verbose'];
     $dryrun = $options['dryrun'];
 
@@ -1750,6 +1766,20 @@ if ($options['restore-application']) {
     echo "  Modality: {$vacancy->modality}\n";
     echo "  Program: {$vacancy->department}\n\n";
 
+    // Get source application info if provided.
+    $sourceApp = null;
+    $sourceDocs = [];
+    if ($sourceappid) {
+        $sourceApp = $DB->get_record('local_jobboard_application', ['id' => $sourceappid]);
+        if (!$sourceApp) {
+            echo "WARNING: Source application ID '$sourceappid' not found. Will create empty application.\n\n";
+        } else {
+            $sourceDocs = $DB->get_records('local_jobboard_document', ['applicationid' => $sourceappid]);
+            echo "Source Application: ID {$sourceApp->id}\n";
+            echo "  Documents to copy: " . count($sourceDocs) . "\n\n";
+        }
+    }
+
     // Check if user already has an application for this vacancy.
     $existing = $DB->get_record('local_jobboard_application', [
         'userid' => $userid,
@@ -1763,36 +1793,109 @@ if ($options['restore-application']) {
         echo "*** DRY RUN MODE - No changes will be made ***\n\n";
     }
 
-    // Create application.
+    // Create application - copy data from source if available.
     $now = time();
     $application = new stdClass();
     $application->vacancyid = $newvacancyid;
     $application->userid = $userid;
-    $application->status = 'submitted';
-    $application->statusnotes = '';
-    $application->isexemption = 0;
-    $application->exemptionreason = '';
-    $application->consentgiven = 1;
-    $application->consenttimestamp = $now;
-    $application->consentip = '127.0.0.1';
-    $application->consentuseragent = 'CLI Restore Tool';
-    $application->digitalsignature = trim($user->firstname . ' ' . $user->lastname);
-    $application->coverletter = '';
-    $application->applicationdata = '{}';
-    $application->reviewerid = null;
-    $application->timecreated = $now;
-    $application->timemodified = null;
+    $application->status = $sourceApp ? $sourceApp->status : 'submitted';
+    $application->statusnotes = $sourceApp ? $sourceApp->statusnotes : '';
+    $application->isexemption = $sourceApp ? $sourceApp->isexemption : 0;
+    $application->exemptionreason = $sourceApp ? $sourceApp->exemptionreason : '';
+    $application->consentgiven = $sourceApp ? $sourceApp->consentgiven : 1;
+    $application->consenttimestamp = $sourceApp ? $sourceApp->consenttimestamp : $now;
+    $application->consentip = $sourceApp ? $sourceApp->consentip : '127.0.0.1';
+    $application->consentuseragent = $sourceApp ? $sourceApp->consentuseragent : 'CLI Restore Tool';
+    $application->digitalsignature = $sourceApp ? $sourceApp->digitalsignature : trim($user->firstname . ' ' . $user->lastname);
+    $application->coverletter = $sourceApp ? $sourceApp->coverletter : '';
+    $application->applicationdata = $sourceApp ? $sourceApp->applicationdata : '{}';
+    $application->reviewerid = $sourceApp ? $sourceApp->reviewerid : null;
+    $application->timecreated = $sourceApp ? $sourceApp->timecreated : $now;
+    $application->timemodified = $now;
 
     if (!$dryrun) {
         $newid = $DB->insert_record('local_jobboard_application', $application);
         echo "SUCCESS: Created application ID: $newid\n";
         echo "  Vacancy: {$vacancy->code} ({$vacancy->location}, {$vacancy->modality})\n";
         echo "  User: {$user->firstname} {$user->lastname}\n";
+
+        // Copy documents if source application was provided.
+        if (!empty($sourceDocs)) {
+            echo "\nRestoring documents...\n";
+            $fs = get_file_storage();
+            $context = \context_system::instance();
+            $docsRestored = 0;
+            $filesCopied = 0;
+
+            foreach ($sourceDocs as $doc) {
+                // 1. Create document record with new applicationid.
+                $newDoc = clone $doc;
+                unset($newDoc->id);
+                $newDoc->applicationid = $newid;
+                try {
+                    $DB->insert_record('local_jobboard_document', $newDoc);
+                    $docsRestored++;
+
+                    // 2. Create mdl_files entry using contenthash (Opción A).
+                    if (!empty($doc->contenthash)) {
+                        $existingFile = $fs->get_file(
+                            $context->id,
+                            'local_jobboard',
+                            'application_documents',
+                            $newid,
+                            '/',
+                            $doc->filename
+                        );
+
+                        if (!$existingFile) {
+                            // Find any existing file with same contenthash.
+                            $sourceFile = $DB->get_record_sql(
+                                "SELECT * FROM {files}
+                                 WHERE contenthash = ?
+                                   AND filename <> '.'
+                                   AND filesize > 0
+                                 LIMIT 1",
+                                [$doc->contenthash]
+                            );
+
+                            if ($sourceFile) {
+                                $storedFile = $fs->get_file_by_id($sourceFile->id);
+                                if ($storedFile) {
+                                    $newFileRecord = [
+                                        'contextid' => $context->id,
+                                        'component' => 'local_jobboard',
+                                        'filearea' => 'application_documents',
+                                        'itemid' => $newid,
+                                        'filepath' => '/',
+                                        'filename' => $doc->filename,
+                                    ];
+                                    $fs->create_file_from_storedfile($newFileRecord, $storedFile);
+                                    $filesCopied++;
+                                    if ($verbose) {
+                                        echo "  ✓ {$doc->documenttype}: {$doc->filename}\n";
+                                    }
+                                }
+                            } else {
+                                if ($verbose) {
+                                    echo "  ⚠ {$doc->documenttype}: archivo físico no encontrado (hash: {$doc->contenthash})\n";
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+                    echo "  ✗ Error: " . $e->getMessage() . "\n";
+                }
+            }
+            echo "\nDocuments restored: $docsRestored, Files copied: $filesCopied\n";
+        }
     } else {
         echo "Would CREATE application:\n";
         echo "  Vacancy ID: $newvacancyid ({$vacancy->code})\n";
         echo "  User ID: $userid ({$user->firstname} {$user->lastname})\n";
-        echo "  Status: submitted\n";
+        echo "  Status: " . ($sourceApp ? $sourceApp->status : 'submitted') . "\n";
+        if (!empty($sourceDocs)) {
+            echo "  Documents to copy: " . count($sourceDocs) . "\n";
+        }
     }
 
     echo "\n=== RESTORATION COMPLETE ===\n";
