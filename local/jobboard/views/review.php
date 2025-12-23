@@ -589,6 +589,8 @@ if (!$applicationid) {
 if ($applicationid && isset($application) && $application->id) {
     $PAGE->requires->js_call_amd('local_jobboard/document_review', 'init', [[
         'applicationId' => $applicationid,
+        'isAdmin' => $is_admin,
+        'bypassSequentialReview' => $is_admin,
     ]]);
 }
 

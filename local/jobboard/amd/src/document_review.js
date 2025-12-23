@@ -33,6 +33,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
      */
     var state = {
         applicationId: 0,
+        isAdmin: false,
+        bypassSequentialReview: false,
         strings: {},
         initialized: false,
         processing: false
@@ -527,10 +529,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         currentDocItem.classList.remove('active', 'bg-primary-subtle');
                     }
 
-                    // 2. Remove all action divs (including editor wrappers created by Atto/TinyMCE).
-                    document.querySelectorAll('.jb-doc-actions, .editor_atto_wrap[data-document-id]').forEach(function(el) {
-                        el.remove();
-                    });
+                    // 2. Remove action divs.
+                    // For admins: only remove the current document's actions.
+                    // For regular users: remove all actions (sequential review).
+                    if (state.bypassSequentialReview) {
+                        // Admin mode: only remove actions from the just-approved document.
+                        var currentApproveActions = currentDocItem ? currentDocItem.querySelector('.jb-doc-actions') : null;
+                        if (currentApproveActions) {
+                            currentApproveActions.remove();
+                        }
+                    } else {
+                        // Sequential mode: remove all action divs.
+                        document.querySelectorAll('.jb-doc-actions, .editor_atto_wrap[data-document-id]').forEach(function(el) {
+                            el.remove();
+                        });
+                    }
 
                     // 3. Update stats and progress.
                     var stats = response.stats;
@@ -748,10 +761,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         currentDocItem.classList.remove('active', 'bg-primary-subtle');
                     }
 
-                    // 2. Remove all action divs (including editor wrappers created by Atto/TinyMCE).
-                    document.querySelectorAll('.jb-doc-actions, .editor_atto_wrap[data-document-id]').forEach(function(el) {
-                        el.remove();
-                    });
+                    // 2. Remove action divs.
+                    // For admins: only remove the current document's actions.
+                    // For regular users: remove all actions (sequential review).
+                    if (state.bypassSequentialReview) {
+                        // Admin mode: only remove actions from the just-rejected document.
+                        var currentRejectActions = currentDocItem ? currentDocItem.querySelector('.jb-doc-actions') : null;
+                        if (currentRejectActions) {
+                            currentRejectActions.remove();
+                        }
+                    } else {
+                        // Sequential mode: remove all action divs.
+                        document.querySelectorAll('.jb-doc-actions, .editor_atto_wrap[data-document-id]').forEach(function(el) {
+                            el.remove();
+                        });
+                    }
 
                     // 3. Update stats and progress.
                     var stats = response.stats;
@@ -945,6 +969,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
         config = config || {};
         state.applicationId = config.applicationId || 0;
+        state.isAdmin = config.isAdmin || false;
+        state.bypassSequentialReview = config.bypassSequentialReview || false;
 
         // Set up event handlers immediately (don't wait for strings).
         setupEventHandlers();
