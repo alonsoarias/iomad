@@ -138,30 +138,8 @@ trait admin_renderer {
         global $DB;
 
         // Define the plugin roles.
+        // Only Dean and HR roles are used in the current workflow.
         $pluginroles = [
-            'jobboard_reviewer' => [
-                'name' => get_string('role_reviewer', 'local_jobboard'),
-                'description' => get_string('role_reviewer_desc', 'local_jobboard'),
-                'icon' => 'clipboard-check',
-                'color' => 'warning',
-                'capspreview' => [
-                    get_string('cap_review', 'local_jobboard'),
-                    get_string('cap_validate', 'local_jobboard'),
-                    get_string('cap_download', 'local_jobboard'),
-                ],
-            ],
-            'jobboard_coordinator' => [
-                'name' => get_string('role_coordinator', 'local_jobboard'),
-                'description' => get_string('role_coordinator_desc', 'local_jobboard'),
-                'icon' => 'user-tie',
-                'color' => 'primary',
-                'capspreview' => [
-                    get_string('cap_manage', 'local_jobboard'),
-                    get_string('cap_createvacancy', 'local_jobboard'),
-                    get_string('cap_assignreviewers', 'local_jobboard'),
-                    get_string('cap_viewreports', 'local_jobboard'),
-                ],
-            ],
             'jobboard_dean' => [
                 'name' => get_string('role_dean', 'local_jobboard'),
                 'description' => get_string('role_dean_desc', 'local_jobboard'),

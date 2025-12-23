@@ -704,10 +704,11 @@ function local_jobboard_install_tours(): void {
  * Create custom roles for the Job Board plugin.
  *
  * Creates specialized roles:
- * - jobboard_reviewer: Can review and validate applicant documents
- * - jobboard_coordinator: Can manage vacancies and coordinate selection
- * - jobboard_dean: Can review profiles and approve/reject applicants
- * - jobboard_hr: Can validate documents for final HR approval
+ * - jobboard_dean: Can review profiles and approve/reject applicants (preselection)
+ * - jobboard_hr: Can validate documents for dean-approved applicants
+ *
+ * Note: Previous roles (jobboard_reviewer and jobboard_coordinator) have been removed.
+ * Only Dean and HR roles are used in the current workflow.
  *
  * @return void
  */
@@ -719,67 +720,6 @@ function local_jobboard_create_roles(): void {
     update_capabilities('local_jobboard');
 
     $systemcontext = context_system::instance();
-
-    // Role: Document Reviewer.
-    $reviewerrole = $DB->get_record('role', ['shortname' => 'jobboard_reviewer']);
-    if (!$reviewerrole) {
-        $reviewerroleid = create_role(
-            get_string('role_reviewer', 'local_jobboard'),
-            'jobboard_reviewer',
-            get_string('role_reviewer_desc', 'local_jobboard'),
-            'teacher'
-        );
-
-        // Assign capabilities for reviewer role.
-        $reviewercaps = [
-            'local/jobboard:view',
-            'local/jobboard:viewinternal',
-            'local/jobboard:review',
-            'local/jobboard:validatedocuments',
-            'local/jobboard:reviewdocuments',
-            'local/jobboard:downloadanydocument',
-        ];
-
-        foreach ($reviewercaps as $cap) {
-            assign_capability($cap, CAP_ALLOW, $reviewerroleid, $systemcontext->id);
-        }
-
-        // Set contexts where this role can be assigned.
-        set_role_contextlevels($reviewerroleid, [CONTEXT_SYSTEM]);
-    }
-
-    // Role: Selection Coordinator.
-    $coordinatorrole = $DB->get_record('role', ['shortname' => 'jobboard_coordinator']);
-    if (!$coordinatorrole) {
-        $coordinatorroleid = create_role(
-            get_string('role_coordinator', 'local_jobboard'),
-            'jobboard_coordinator',
-            get_string('role_coordinator_desc', 'local_jobboard'),
-            'editingteacher'
-        );
-
-        // Assign capabilities for coordinator role.
-        $coordinatorcaps = [
-            'local/jobboard:view',
-            'local/jobboard:viewinternal',
-            'local/jobboard:manage',
-            'local/jobboard:createvacancy',
-            'local/jobboard:editvacancy',
-            'local/jobboard:publishvacancy',
-            'local/jobboard:viewallvacancies',
-            'local/jobboard:viewallapplications',
-            'local/jobboard:changeapplicationstatus',
-            'local/jobboard:assignreviewers',
-            'local/jobboard:viewreports',
-            'local/jobboard:manageworkflow',
-        ];
-
-        foreach ($coordinatorcaps as $cap) {
-            assign_capability($cap, CAP_ALLOW, $coordinatorroleid, $systemcontext->id);
-        }
-
-        set_role_contextlevels($coordinatorroleid, [CONTEXT_SYSTEM]);
-    }
 
     // Role: Dean Reviewer.
     $deanrole = $DB->get_record('role', ['shortname' => 'jobboard_dean']);

@@ -20,10 +20,10 @@
  * Uses renderer + Mustache template for clean separation of concerns.
  *
  * Allows administrators to assign users to the plugin's custom roles:
- * - jobboard_reviewer: Document reviewers
- * - jobboard_coordinator: Selection coordinators
- * - jobboard_dean: Dean reviewers (profile approval)
+ * - jobboard_dean: Dean reviewers (profile approval/preselection)
  * - jobboard_hr: HR validators (document validation)
+ *
+ * Note: Previous roles (jobboard_reviewer, jobboard_coordinator) have been removed.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -57,7 +57,8 @@ $PAGE->navbar->add(get_string('administration', 'local_jobboard'),
 $PAGE->navbar->add(get_string('manageroles', 'local_jobboard'));
 
 // Define the plugin roles for action handling.
-$pluginroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_dean', 'jobboard_hr'];
+// Only Dean and HR roles are used now.
+$pluginroles = ['jobboard_dean', 'jobboard_hr'];
 
 // Handle actions.
 if ($action === 'assign' && confirm_sesskey()) {

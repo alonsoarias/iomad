@@ -34,7 +34,10 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     var state = {
         applicationId: 0,
         isAdmin: false,
+        isDean: false,
+        isHr: false,
         bypassSequentialReview: false,
+        canValidateDocuments: false,
         strings: {},
         initialized: false,
         processing: false
@@ -354,6 +357,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
         // Add current styling to this item.
         docItem.classList.add('active', 'bg-primary-subtle');
+
+        // Only add action buttons if user can validate documents (HR or Admin, not Dean).
+        if (!state.canValidateDocuments) {
+            return;
+        }
 
         // Get application ID.
         var appId = state.applicationId;
@@ -970,7 +978,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         config = config || {};
         state.applicationId = config.applicationId || 0;
         state.isAdmin = config.isAdmin || false;
+        state.isDean = config.isDean || false;
+        state.isHr = config.isHr || false;
         state.bypassSequentialReview = config.bypassSequentialReview || false;
+        // Only HR and Admin can validate documents. Dean cannot.
+        state.canValidateDocuments = config.canValidateDocuments || false;
 
         // Set up event handlers immediately (don't wait for strings).
         setupEventHandlers();

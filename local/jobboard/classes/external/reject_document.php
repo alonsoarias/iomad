@@ -25,9 +25,12 @@ use core_external\external_function_parameters;
 use core_external\external_single_structure;
 use core_external\external_value;
 use local_jobboard\document;
+use local_jobboard\helper\role_access_helper;
 
 /**
  * External API for rejecting a document.
+ *
+ * Only HR and Admin can reject documents. Dean role cannot.
  *
  * @package   local_jobboard
  * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
@@ -77,6 +80,24 @@ class reject_document extends external_api {
         $canmanage = has_capability('local/jobboard:manageworkflow', $context);
         if (!$canreview && !$canmanage) {
             throw new \required_capability_exception($context, 'local/jobboard:reviewdocuments', 'nopermissions', '');
+        }
+
+        // Dean role cannot reject individual documents - only approve/reject entire applications.
+        if (role_access_helper::is_dean() && !$canmanage) {
+            return [
+                'success' => false,
+                'message' => get_string('error:dean_cannot_validate_docs', 'local_jobboard'),
+                'documentid' => $params['documentid'],
+                'newstatus' => '',
+                'nextdocumentid' => 0,
+                'stats' => [
+                    'approved' => 0,
+                    'rejected' => 0,
+                    'pending' => 0,
+                    'total' => 0,
+                ],
+                'allreviewed' => false,
+            ];
         }
 
         // Reason is required for rejection.

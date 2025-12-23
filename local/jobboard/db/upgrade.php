@@ -799,6 +799,15 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025122100, 'local', 'jobboard');
     }
 
+    // Version 4.0.1 - Remove obsolete roles (reviewer and coordinator).
+    // Only Dean and HR roles are used now in the workflow.
+    if ($oldversion < 2025122300) {
+        local_jobboard_upgrade_remove_obsolete_roles();
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025122300, 'local', 'jobboard');
+    }
+
     return true;
 }
 
@@ -1127,5 +1136,33 @@ function local_jobboard_upgrade_create_dean_hr_roles(): void {
         }
 
         set_role_contextlevels($hrroleid, [CONTEXT_SYSTEM]);
+    }
+}
+
+/**
+ * Remove obsolete roles (reviewer and coordinator) from the system.
+ *
+ * This function is called during upgrade to remove roles that are no longer
+ * used in the current Dean/HR workflow.
+ *
+ * @return void
+ */
+function local_jobboard_upgrade_remove_obsolete_roles(): void {
+    global $DB;
+
+    $obsoleteroles = ['jobboard_reviewer', 'jobboard_coordinator'];
+
+    foreach ($obsoleteroles as $shortname) {
+        $role = $DB->get_record('role', ['shortname' => $shortname]);
+        if ($role) {
+            // Remove role assignments first.
+            $DB->delete_records('role_assignments', ['roleid' => $role->id]);
+
+            // Remove role capabilities.
+            $DB->delete_records('role_capabilities', ['roleid' => $role->id]);
+
+            // Delete the role itself.
+            delete_role($role->id);
+        }
     }
 }
