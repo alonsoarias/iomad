@@ -1199,7 +1199,7 @@ if ($options['sync-sedes']) {
                         $oldFiles = $fs->get_area_files(
                             $context->id,
                             'local_jobboard',
-                            'document',
+                            'application_documents',
                             $app->id,  // Old application ID
                             'id',
                             false  // Exclude directories
@@ -1211,7 +1211,7 @@ if ($options['sync-sedes']) {
                             $newFileRecord = [
                                 'contextid' => $context->id,
                                 'component' => 'local_jobboard',
-                                'filearea' => 'document',
+                                'filearea' => 'application_documents',
                                 'itemid' => $newAppId,  // NEW application ID
                                 'filepath' => $oldFile->get_filepath(),
                                 'filename' => $oldFile->get_filename(),
@@ -1219,7 +1219,7 @@ if ($options['sync-sedes']) {
 
                             try {
                                 // Check if file already exists
-                                if (!$fs->file_exists($context->id, 'local_jobboard', 'document',
+                                if (!$fs->file_exists($context->id, 'local_jobboard', 'application_documents',
                                     $newAppId, $oldFile->get_filepath(), $oldFile->get_filename())) {
                                     $fs->create_file_from_storedfile($newFileRecord, $oldFile);
                                     $filesCopied++;
