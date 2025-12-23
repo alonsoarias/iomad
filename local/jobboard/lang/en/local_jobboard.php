@@ -2876,6 +2876,24 @@ $string['select_faculty'] = 'Select faculty';
 $string['dean_assignment_success'] = 'Dean assignment saved successfully';
 $string['confirm_remove_dean'] = 'Are you sure you want to remove this dean from the faculty?';
 
+// Dean/HR Dashboard
+$string['role_dean'] = 'Dean';
+$string['role_hr'] = 'Human Resources';
+$string['dashboard_dean_welcome'] = 'Welcome to the application review panel. Here you can review and approve/reject applications from your faculty.';
+$string['dashboard_hr_welcome'] = 'Welcome to the document validation panel. Here you can validate the documentation of applicants approved by deans.';
+$string['dean_dashboard_title'] = 'Application Review';
+$string['dean_dashboard_desc'] = 'Review pending applications and make decisions on candidate profiles.';
+$string['hr_dashboard_title'] = 'Document Validation';
+$string['hr_dashboard_desc'] = 'Validate the documentation of applicants who have been approved by deans.';
+$string['pending_dean_review'] = 'Pending review';
+$string['dean_approved'] = 'Approved by Dean';
+$string['dean_rejected'] = 'Rejected by Dean';
+$string['total_reviewed'] = 'Total reviewed';
+$string['pending_hr_validation'] = 'Pending validation';
+$string['hr_validated'] = 'Validated by HR';
+$string['hr_rejected'] = 'Rejected by HR';
+$string['total_validated'] = 'Total validated';
+
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
 $string['selectstatus'] = 'Select status';

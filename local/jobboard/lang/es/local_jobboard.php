@@ -4114,6 +4114,24 @@ $string['hr_reject_reason_placeholder'] = 'Indique el motivo del rechazo...';
 $string['hr_reject_reason_help'] = 'El motivo del rechazo será notificado al postulante.';
 $string['hr_reject_reason_required'] = 'Debe indicar el motivo del rechazo.';
 
+// Dashboard Decano
+$string['role_dean'] = 'Decano';
+$string['role_hr'] = 'Talento Humano';
+$string['dashboard_dean_welcome'] = 'Bienvenido al panel de revisión de postulaciones. Aquí puede revisar y aprobar/rechazar las postulaciones de su facultad.';
+$string['dashboard_hr_welcome'] = 'Bienvenido al panel de validación de documentos. Aquí puede validar la documentación de los postulantes aprobados por los decanos.';
+$string['dean_dashboard_title'] = 'Revisión de Postulaciones';
+$string['dean_dashboard_desc'] = 'Revise las postulaciones pendientes y tome decisiones sobre los perfiles de los candidatos.';
+$string['hr_dashboard_title'] = 'Validación de Documentos';
+$string['hr_dashboard_desc'] = 'Valide la documentación de los postulantes que han sido aprobados por los decanos.';
+$string['pending_dean_review'] = 'Pendientes de revisión';
+$string['dean_approved'] = 'Aprobados por Decano';
+$string['dean_rejected'] = 'Rechazados por Decano';
+$string['total_reviewed'] = 'Total revisados';
+$string['pending_hr_validation'] = 'Pendientes de validación';
+$string['hr_validated'] = 'Validados por T.H.';
+$string['hr_rejected'] = 'Rechazados por T.H.';
+$string['total_validated'] = 'Total validados';
+
 // Estados del período de revisión
 $string['review_period_not_configured'] = 'Período de revisión no configurado';
 $string['review_period_pending'] = 'Período de revisión pendiente';

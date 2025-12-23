@@ -65,6 +65,11 @@ $caps = [
     'viewallapplications' => has_capability('local/jobboard:viewallapplications', $context),
     'changeapplicationstatus' => has_capability('local/jobboard:changeapplicationstatus', $context),
 
+    // Dean/HR workflow capabilities.
+    'reviewprofiles' => has_capability('local/jobboard:reviewprofiles', $context),
+    'approveprofile' => has_capability('local/jobboard:approveprofile', $context),
+    'validatehr' => has_capability('local/jobboard:validatehr', $context),
+
     // Reports and data.
     'viewreports' => has_capability('local/jobboard:viewreports', $context),
     'exportreports' => has_capability('local/jobboard:exportreports', $context),
@@ -83,6 +88,8 @@ $caps = [
 $isAdmin = $caps['configure'];
 $isManager = $caps['createvacancy'] || $caps['manageconvocatorias'];
 $isReviewer = $caps['reviewdocuments'] || $caps['validatedocuments'];
+$isDean = $caps['approveprofile'] || $caps['reviewprofiles'];
+$isHR = $caps['validatehr'] || $caps['validatedocuments'];
 $canManageContent = $isAdmin || $isManager;
 
 // Get statistics.

@@ -60,6 +60,8 @@ trait dashboard_renderer {
         $isadmin = $caps['configure'] ?? false;
         $ismanager = ($caps['createvacancy'] ?? false) || ($caps['manageconvocatorias'] ?? false);
         $isreviewer = ($caps['reviewdocuments'] ?? false) || ($caps['validatedocuments'] ?? false);
+        $isdean = ($caps['approveprofile'] ?? false) || ($caps['reviewprofiles'] ?? false);
+        $ishr = ($caps['validatehr'] ?? false) || ($caps['validatedocuments'] ?? false);
         $isapplicant = $caps['apply'] ?? false;
         $canmanagecontent = $isadmin || $ismanager;
 
@@ -72,6 +74,12 @@ trait dashboard_renderer {
         } else if ($ismanager) {
             $rolelabel = get_string('role_manager', 'local_jobboard');
             $welcomemsg = get_string('dashboard_manager_welcome', 'local_jobboard');
+        } else if ($isdean) {
+            $rolelabel = get_string('role_dean', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_dean_welcome', 'local_jobboard');
+        } else if ($ishr) {
+            $rolelabel = get_string('role_hr', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_hr_welcome', 'local_jobboard');
         } else if ($isreviewer) {
             $rolelabel = get_string('role_reviewer', 'local_jobboard');
             $welcomemsg = get_string('dashboard_reviewer_welcome', 'local_jobboard');
@@ -86,8 +94,10 @@ trait dashboard_renderer {
         $data = [
             'isadmin' => $canmanagecontent,
             'isreviewer' => $isreviewer && !$canmanagecontent,
-            'isapplicant' => $isapplicant && !$canmanagecontent && !$isreviewer,
-            'isvieweronly' => !$canmanagecontent && !$isreviewer && !$isapplicant && ($caps['view'] ?? false),
+            'isdean' => $isdean && !$canmanagecontent,
+            'ishr' => $ishr && !$canmanagecontent && !$isdean,
+            'isapplicant' => $isapplicant && !$canmanagecontent && !$isreviewer && !$isdean && !$ishr,
+            'isvieweronly' => !$canmanagecontent && !$isreviewer && !$isdean && !$ishr && !$isapplicant && ($caps['view'] ?? false),
             'welcome' => [
                 'rolelabel' => $rolelabel,
                 'message' => $welcomemsg,
@@ -102,6 +112,8 @@ trait dashboard_renderer {
             'reportsections' => [],
             'configsections' => [],
             'reviewersection' => null,
+            'deansection' => null,
+            'hrsection' => null,
             'applicantstats' => [],
             'applicantsections' => [],
             'alerts' => [],
@@ -162,6 +174,90 @@ trait dashboard_renderer {
                 'completedcount' => $stats['my_completed_reviews'] ?? 0,
                 'haspendingreview' => ($stats['my_pending_reviews'] ?? 0) > 0,
                 'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']))->out(false),
+            ];
+        }
+
+        // Dean section - Review profiles in assigned faculties.
+        if ($isdean && !$canmanagecontent) {
+            $deanstats = $this->get_dean_stats($userid);
+            $data['deansection'] = [
+                'title' => get_string('dean_dashboard_title', 'local_jobboard'),
+                'description' => get_string('dean_dashboard_desc', 'local_jobboard'),
+                'pendingcount' => $deanstats['pending_dean_review'] ?? 0,
+                'approvedcount' => $deanstats['dean_approved'] ?? 0,
+                'rejectedcount' => $deanstats['dean_rejected'] ?? 0,
+                'haspendingreview' => ($deanstats['pending_dean_review'] ?? 0) > 0,
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'status' => 'pending_dean_review']))->out(false),
+                'faculties' => $deanstats['faculties'] ?? [],
+                'hasfaculties' => !empty($deanstats['faculties']),
+            ];
+            $data['stats'] = [
+                [
+                    'value' => (string)($deanstats['pending_dean_review'] ?? 0),
+                    'label' => get_string('pending_dean_review', 'local_jobboard'),
+                    'icon' => 'clock',
+                    'color' => 'warning',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'status' => 'pending_dean_review']))->out(false),
+                ],
+                [
+                    'value' => (string)($deanstats['dean_approved'] ?? 0),
+                    'label' => get_string('dean_approved', 'local_jobboard'),
+                    'icon' => 'check-circle',
+                    'color' => 'success',
+                ],
+                [
+                    'value' => (string)($deanstats['dean_rejected'] ?? 0),
+                    'label' => get_string('dean_rejected', 'local_jobboard'),
+                    'icon' => 'times-circle',
+                    'color' => 'danger',
+                ],
+                [
+                    'value' => (string)($deanstats['total_reviewed'] ?? 0),
+                    'label' => get_string('total_reviewed', 'local_jobboard'),
+                    'icon' => 'clipboard-check',
+                    'color' => 'info',
+                ],
+            ];
+        }
+
+        // HR section - Validate documents after dean approval.
+        if ($ishr && !$canmanagecontent && !$isdean) {
+            $hrstats = $this->get_hr_stats($userid);
+            $data['hrsection'] = [
+                'title' => get_string('hr_dashboard_title', 'local_jobboard'),
+                'description' => get_string('hr_dashboard_desc', 'local_jobboard'),
+                'pendingcount' => $hrstats['pending_hr_validation'] ?? 0,
+                'validatedcount' => $hrstats['hr_validated'] ?? 0,
+                'rejectedcount' => $hrstats['hr_rejected'] ?? 0,
+                'haspendingreview' => ($hrstats['pending_hr_validation'] ?? 0) > 0,
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'status' => 'pending_hr_validation']))->out(false),
+            ];
+            $data['stats'] = [
+                [
+                    'value' => (string)($hrstats['pending_hr_validation'] ?? 0),
+                    'label' => get_string('pending_hr_validation', 'local_jobboard'),
+                    'icon' => 'clock',
+                    'color' => 'warning',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'status' => 'pending_hr_validation']))->out(false),
+                ],
+                [
+                    'value' => (string)($hrstats['hr_validated'] ?? 0),
+                    'label' => get_string('hr_validated', 'local_jobboard'),
+                    'icon' => 'check-double',
+                    'color' => 'success',
+                ],
+                [
+                    'value' => (string)($hrstats['hr_rejected'] ?? 0),
+                    'label' => get_string('hr_rejected', 'local_jobboard'),
+                    'icon' => 'times-circle',
+                    'color' => 'danger',
+                ],
+                [
+                    'value' => (string)($hrstats['total_validated'] ?? 0),
+                    'label' => get_string('total_validated', 'local_jobboard'),
+                    'icon' => 'clipboard-check',
+                    'color' => 'info',
+                ],
             ];
         }
 
@@ -786,5 +882,67 @@ trait dashboard_renderer {
         ];
 
         return $sections;
+    }
+
+    /**
+     * Get statistics for Dean dashboard.
+     *
+     * @param int $userid Dean user ID.
+     * @return array Statistics for dean.
+     */
+    protected function get_dean_stats(int $userid): array {
+        global $DB;
+
+        // Get faculties assigned to this dean.
+        $facultyids = \local_jobboard\faculty_dean::get_faculties_for_dean($userid);
+
+        // Get application counts by status for dean review.
+        $pending = $DB->count_records('local_jobboard_application', ['status' => 'pending_dean_review']);
+        $approved = $DB->count_records('local_jobboard_application', ['status' => 'dean_approved']);
+        $rejected = $DB->count_records('local_jobboard_application', ['status' => 'dean_rejected']);
+
+        // Get faculty details.
+        $faculties = [];
+        if (!empty($facultyids)) {
+            list($insql, $params) = $DB->get_in_or_equal($facultyids, SQL_PARAMS_NAMED);
+            $facultyrecords = $DB->get_records_select('local_jobboard_faculty', "id $insql", $params);
+            foreach ($facultyrecords as $faculty) {
+                $faculties[] = [
+                    'id' => $faculty->id,
+                    'name' => $faculty->name,
+                    'code' => $faculty->code,
+                ];
+            }
+        }
+
+        return [
+            'pending_dean_review' => $pending,
+            'dean_approved' => $approved,
+            'dean_rejected' => $rejected,
+            'total_reviewed' => $approved + $rejected,
+            'faculties' => $faculties,
+        ];
+    }
+
+    /**
+     * Get statistics for HR dashboard.
+     *
+     * @param int $userid HR user ID.
+     * @return array Statistics for HR.
+     */
+    protected function get_hr_stats(int $userid): array {
+        global $DB;
+
+        // Get application counts by status for HR validation.
+        $pending = $DB->count_records('local_jobboard_application', ['status' => 'pending_hr_validation']);
+        $validated = $DB->count_records('local_jobboard_application', ['status' => 'hr_validated']);
+        $rejected = $DB->count_records('local_jobboard_application', ['status' => 'hr_rejected']);
+
+        return [
+            'pending_hr_validation' => $pending,
+            'hr_validated' => $validated,
+            'hr_rejected' => $rejected,
+            'total_validated' => $validated + $rejected,
+        ];
     }
 }
