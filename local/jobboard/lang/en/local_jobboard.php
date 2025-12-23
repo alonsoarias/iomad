@@ -4070,7 +4070,7 @@ $string['faq_q4'] = 'What should I do if my document is rejected?';
 $string['faq_a4'] = 'If a document is rejected, you\'ll receive a notification explaining why. You can upload a corrected document while the call is active. Make sure to review the reviewer\'s comments before resubmitting.';
 
 $string['faq_q5'] = 'Can I apply to multiple vacancies?';
-$string['faq_a5'] = 'Yes, you can apply to multiple vacancies within the same call, as long as you meet each one\'s requirements. Common documents are shared across applications.';
+$string['faq_a5'] = 'It depends on each call\'s conditions. Before applying, read the terms and conditions in the call details to verify if multiple applications are allowed. Generally, only one application per call is permitted.';
 
 $string['faq_q6'] = 'I forgot my password, what should I do?';
 $string['faq_a6'] = 'On the login page, click "Forgot password?". Enter your registered email and you\'ll receive instructions to reset your password.';
@@ -4080,6 +4080,9 @@ $string['faq_a7'] = 'Each call has specific opening and closing dates. Check the
 
 $string['faq_q8'] = 'How will I be contacted if selected?';
 $string['faq_a8'] = 'All communications are sent to the email registered in your account. Make sure to keep your email updated and regularly check your inbox, including the spam folder.';
+
+$string['faq_q9'] = 'What if I don\'t receive the confirmation email?';
+$string['faq_a9'] = 'After registering, you will receive an email to confirm your account. If you don\'t receive it within a few minutes, check your spam or junk folder. If you still can\'t find it, you can request a resend from the login page or contact technical support.';
 
 // =============================================================================
 // ACCOUNT CONFIRMATION EMAIL

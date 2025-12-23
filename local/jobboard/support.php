@@ -374,7 +374,7 @@ echo '<p class="jb-faq__subtitle">' . get_string('faq_subtitle', 'local_jobboard
 echo '<div class="jb-faq__list">';
 
 // FAQ items - using accordion pattern.
-for ($i = 1; $i <= 8; $i++) {
+for ($i = 1; $i <= 9; $i++) {
     $question = get_string("faq_q{$i}", 'local_jobboard');
     $answer = get_string("faq_a{$i}", 'local_jobboard');
     echo '<div class="jb-faq__item">';

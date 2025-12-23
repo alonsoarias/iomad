@@ -4115,7 +4115,7 @@ $string['faq_q4'] = '¿Qué hago si rechazan uno de mis documentos?';
 $string['faq_a4'] = 'Si un documento es rechazado, recibirá una notificación indicando el motivo. Puede subir un nuevo documento corregido mientras la convocatoria esté activa. Asegúrese de revisar los comentarios del revisor antes de reenviar.';
 
 $string['faq_q5'] = '¿Puedo postularme a varias vacantes?';
-$string['faq_a5'] = 'Sí, puede postularse a múltiples vacantes dentro de la misma convocatoria, siempre que cumpla con los requisitos de cada una. Los documentos comunes se comparten entre postulaciones.';
+$string['faq_a5'] = 'Depende de las condiciones de cada convocatoria. Antes de postularse, lea los términos y condiciones en los detalles de la convocatoria para verificar si se permite aplicar a más de una vacante. Por lo general, solo se permite una postulación por convocatoria.';
 
 $string['faq_q6'] = '¿Olvidé mi contraseña, qué hago?';
 $string['faq_a6'] = 'En la página de inicio de sesión, haga clic en "¿Olvidó su contraseña?". Ingrese su correo electrónico registrado y recibirá instrucciones para restablecer su contraseña.';
@@ -4125,6 +4125,9 @@ $string['faq_a7'] = 'Cada convocatoria tiene fechas específicas de apertura y c
 
 $string['faq_q8'] = '¿Cómo me contactan si soy seleccionado?';
 $string['faq_a8'] = 'Todas las comunicaciones se envían al correo electrónico registrado en su cuenta. Asegúrese de mantener actualizado su correo y revisar regularmente su bandeja de entrada, incluyendo la carpeta de spam.';
+
+$string['faq_q9'] = '¿Qué hago si no recibo el correo de confirmación?';
+$string['faq_a9'] = 'Después de registrarse, recibirá un correo para confirmar su cuenta. Si no lo recibe en unos minutos, revise su carpeta de spam o correo no deseado. Si aún no lo encuentra, puede solicitar el reenvío desde la página de inicio de sesión o contactar a soporte técnico.';
 
 // =============================================================================
 // CORREO DE CONFIRMACIÓN DE CUENTA
