@@ -271,15 +271,23 @@ $string['docstatus:rejected'] = 'Rejected';
 $string['docstatus:resubmitted'] = 'Resubmitted';
 
 // Dynamic status strings (used with get_string('status_' . $status))
-// Application statuses
+// Application statuses - New workflow v4.0
 $string['status_submitted'] = 'Submitted';
+$string['status_pending_dean_review'] = 'Pending Dean Review';
+$string['status_dean_approved'] = 'Approved by Dean';
+$string['status_dean_rejected'] = 'Rejected by Dean';
+$string['status_pending_hr_validation'] = 'Pending HR Validation';
+$string['status_pending_hr_review'] = 'Pending HR Review';
+$string['status_hr_validated'] = 'Validated by HR';
+$string['status_hr_rejected'] = 'Rejected by HR';
+$string['status_withdrawn'] = 'Withdrawn';
+// Legacy application statuses (for backwards compatibility)
 $string['status_under_review'] = 'Under review';
 $string['status_docs_validated'] = 'Documents validated';
 $string['status_docs_rejected'] = 'Documents rejected';
 $string['status_interview'] = 'Interview';
 $string['status_selected'] = 'Selected';
 $string['status_rejected'] = 'Rejected';
-$string['status_withdrawn'] = 'Withdrawn';
 $string['status_waitlist'] = 'Waitlist';
 // Vacancy statuses
 $string['status_draft'] = 'Draft';
@@ -293,6 +301,9 @@ $string['status_pending'] = 'Pending';
 $string['status_validated'] = 'Validated';
 $string['status_approved'] = 'Approved';
 $string['status_reupload'] = 'Reupload Required';
+
+// Review actions
+$string['startreview'] = 'Start Review';
 
 // Vacancy status labels (used with get_string('vacancystatus:' . $status))
 $string['vacancystatus:draft'] = 'Draft';

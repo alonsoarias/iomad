@@ -280,6 +280,8 @@ $string['status_pending_hr_validation'] = 'Pendiente validación T. Humano';
 $string['status_hr_validated'] = 'Validado por Talento Humano';
 $string['status_hr_rejected'] = 'Rechazado por Talento Humano';
 $string['status_withdrawn'] = 'Retirada';
+// Acciones de revisión
+$string['startreview'] = 'Iniciar Revisión';
 // Estados de vacante
 $string['status_draft'] = 'Borrador';
 $string['status_published'] = 'Publicada';
