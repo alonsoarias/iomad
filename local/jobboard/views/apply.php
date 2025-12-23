@@ -67,24 +67,16 @@ $draftapplication = application::get_draft($vacancyid, $USER->id);
 $isresuming = ($draftapplication !== null);
 
 // Check vacancy is open.
-// If user has a draft, redirect to application view instead of error.
-if (!$vacancy->is_open()) {
-    if ($draftapplication) {
-        // User has a draft but vacancy is closed - redirect to view their application.
-        redirect(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $draftapplication->id]),
-            get_string('vacancyclosed_draft', 'local_jobboard'),
-            null,
-            \core\output\notification::NOTIFY_WARNING
-        );
-    } else {
-        redirect(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]),
-            get_string('vacancyclosed', 'local_jobboard'),
-            null,
-            \core\output\notification::NOTIFY_ERROR
-        );
-    }
+// Users with existing drafts can continue and submit their application
+// even if the vacancy has closed (they started before the deadline).
+// Only block new applications.
+if (!$vacancy->is_open() && !$isresuming) {
+    redirect(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]),
+        get_string('vacancyclosed', 'local_jobboard'),
+        null,
+        \core\output\notification::NOTIFY_ERROR
+    );
 }
 
 // Check convocatoria application limits.
