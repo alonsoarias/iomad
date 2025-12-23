@@ -186,25 +186,86 @@ class application_form extends \moodleform {
 
         $buttonarray = [];
 
-        // Primary action: Submit Application (green, prominent)
+        // Primary action: Submit Application.
         $buttonarray[] = $mform->createElement(
             'submit',
             'submitbutton',
-            '✓ ' . get_string('submitapplication', 'local_jobboard'),
-            ['class' => 'btn-success btn-lg']
+            get_string('submitapplication', 'local_jobboard')
         );
 
-        // Secondary action: Save Draft (outline, less prominent)
+        // Secondary action: Save Draft.
         $buttonarray[] = $mform->createElement(
             'submit',
             'savedraft',
-            get_string('savedraft', 'local_jobboard'),
-            ['class' => 'btn-outline-secondary']
+            get_string('savedraft', 'local_jobboard')
         );
 
-        $buttonarray[] = $mform->createElement('cancel');
+        // Cancel button with explicit attributes to ensure it works.
+        $buttonarray[] = $mform->createElement(
+            'cancel',
+            'cancel',
+            get_string('cancel'),
+            [
+                'data-skip-validation' => '1',
+                'data-cancel' => '1',
+                'formnovalidate' => 'formnovalidate',
+            ]
+        );
 
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+
+        // Add CSS to style buttons uniformly.
+        $buttoncss = '<style>
+        /* Uniform button styling for application form */
+        .jb-application-form #fgroup_id_buttonar .felement {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .jb-application-form #fgroup_id_buttonar .inner-reverse {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .jb-application-form #fgroup_id_buttonar .fitem {
+            margin-bottom: 0 !important;
+        }
+        .jb-application-form #id_submitbutton {
+            background-color: #198754 !important;
+            border-color: #198754 !important;
+            color: #fff !important;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+        }
+        .jb-application-form #id_submitbutton:hover {
+            background-color: #157347 !important;
+            border-color: #146c43 !important;
+        }
+        .jb-application-form #id_savedraft {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: #fff !important;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+        }
+        .jb-application-form #id_savedraft:hover {
+            background-color: #0b5ed7 !important;
+            border-color: #0a58ca !important;
+        }
+        .jb-application-form #id_cancel {
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+            color: #fff !important;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+        }
+        .jb-application-form #id_cancel:hover {
+            background-color: #5c636a !important;
+            border-color: #565e64 !important;
+        }
+        </style>';
+        $mform->addElement('html', $buttoncss);
     }
 
     /**
