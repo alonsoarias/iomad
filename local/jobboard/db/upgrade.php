@@ -1069,6 +1069,11 @@ function local_jobboard_upgrade_doctypes(): void {
 function local_jobboard_upgrade_create_dean_hr_roles(): void {
     global $DB;
 
+    // First, ensure all new capabilities are registered in the database.
+    // This is required because we're adding new capabilities (reviewprofiles,
+    // approveprofile, validatehr) that need to exist before we can assign them.
+    update_capabilities('local_jobboard');
+
     $systemcontext = context_system::instance();
 
     // Role: Dean Reviewer.
