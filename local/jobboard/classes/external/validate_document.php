@@ -67,7 +67,14 @@ class validate_document extends external_api {
         // Context validation.
         $context = \context_system::instance();
         self::validate_context($context);
-        require_capability('local/jobboard:reviewdocuments', $context);
+
+        // Check for either reviewdocuments or manageworkflow capability.
+        // Admins with manageworkflow can review all documents.
+        $canreview = has_capability('local/jobboard:reviewdocuments', $context);
+        $canmanage = has_capability('local/jobboard:manageworkflow', $context);
+        if (!$canreview && !$canmanage) {
+            throw new \required_capability_exception($context, 'local/jobboard:reviewdocuments', 'nopermissions', '');
+        }
 
         try {
             // Get and validate the document.
