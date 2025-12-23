@@ -35,19 +35,30 @@ use local_jobboard\review_notifier;
 use local_jobboard\helper\iomad_helper;
 use local_jobboard\helper\role_access_helper;
 
-// Check access - Dean (reviewprofiles) or HR/Reviewer (reviewdocuments) can access.
+// Check access - Admin, Dean (reviewprofiles) or HR/Reviewer (reviewdocuments) can access.
+$can_manage_workflow = has_capability('local/jobboard:manageworkflow', $context);
 $can_review_profiles = has_capability('local/jobboard:reviewprofiles', $context);
 $can_review_documents = has_capability('local/jobboard:reviewdocuments', $context);
 $can_validate_hr = has_capability('local/jobboard:validatehr', $context);
 $can_approve_profile = has_capability('local/jobboard:approveprofile', $context);
 
-if (!$can_review_profiles && !$can_review_documents) {
+// Administrators with manageworkflow can do everything.
+if ($can_manage_workflow) {
+    $can_review_profiles = true;
+    $can_review_documents = true;
+    $can_validate_hr = true;
+    $can_approve_profile = true;
+}
+
+if (!$can_review_profiles && !$can_review_documents && !$can_manage_workflow) {
     throw new \moodle_exception('nopermission', 'local_jobboard');
 }
 
 // Determine user role for filtering and UI.
-$is_dean = role_access_helper::is_dean();
-$is_hr = role_access_helper::is_hr();
+// Administrators are NOT restricted by role-specific limitations.
+$is_dean = !$can_manage_workflow && role_access_helper::is_dean();
+$is_hr = !$can_manage_workflow && role_access_helper::is_hr();
+$is_admin = $can_manage_workflow;
 
 // Parameters.
 $applicationid = optional_param('applicationid', 0, PARAM_INT);
@@ -184,80 +195,104 @@ if ($action && confirm_sesskey()) {
             break;
 
         case 'approveprofile':
-            // Dean approves a profile.
+            // Dean approves a profile. Admins bypass date restrictions.
             if ($applicationid) {
                 require_capability('local/jobboard:approveprofile', $context);
                 $comments = optional_param('comments', '', PARAM_TEXT);
 
                 $app = new application($applicationid);
                 if ($app->id && $app->status === 'pending_dean_review') {
-                    // Check if dean has access (date-based).
-                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
-                    if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
+                    // Admins bypass date-based restrictions.
+                    if ($is_admin) {
                         $app->approve_profile($comments);
                         \core\notification::success(get_string('profile_approved', 'local_jobboard'));
                     } else {
-                        \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
+                        // Check if dean has access (date-based).
+                        $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                        if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
+                            $app->approve_profile($comments);
+                            \core\notification::success(get_string('profile_approved', 'local_jobboard'));
+                        } else {
+                            \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
+                        }
                     }
                 }
             }
             break;
 
         case 'rejectprofile':
-            // Dean rejects a profile.
+            // Dean rejects a profile. Admins bypass date restrictions.
             if ($applicationid) {
                 require_capability('local/jobboard:approveprofile', $context);
                 $reason = required_param('reason', PARAM_TEXT);
 
                 $app = new application($applicationid);
                 if ($app->id && $app->status === 'pending_dean_review') {
-                    // Check if dean has access (date-based).
-                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
-                    if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
+                    // Admins bypass date-based restrictions.
+                    if ($is_admin) {
                         $app->reject_profile($reason);
                         \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
                     } else {
-                        \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
+                        // Check if dean has access (date-based).
+                        $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                        if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
+                            $app->reject_profile($reason);
+                            \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
+                        } else {
+                            \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
+                        }
                     }
                 }
             }
             break;
 
         case 'validatehr':
-            // HR validates final.
+            // HR validates final. Admins bypass date restrictions.
             if ($applicationid) {
                 require_capability('local/jobboard:validatehr', $context);
                 $comments = optional_param('comments', '', PARAM_TEXT);
 
                 $app = new application($applicationid);
                 if ($app->id && $app->status === 'pending_hr_validation') {
-                    // Check if HR has access (date-based).
-                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
-                    if ($convocatoria && role_access_helper::can_hr_access($convocatoria)) {
+                    // Admins bypass date-based restrictions.
+                    if ($is_admin) {
                         $app->validate_hr($comments);
                         \core\notification::success(get_string('hr_validation_complete', 'local_jobboard'));
                     } else {
-                        \core\notification::error(get_string('error:hr_access_dates', 'local_jobboard'));
+                        // Check if HR has access (date-based).
+                        $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                        if ($convocatoria && role_access_helper::can_hr_access($convocatoria)) {
+                            $app->validate_hr($comments);
+                            \core\notification::success(get_string('hr_validation_complete', 'local_jobboard'));
+                        } else {
+                            \core\notification::error(get_string('error:hr_access_dates', 'local_jobboard'));
+                        }
                     }
                 }
             }
             break;
 
         case 'rejecthr':
-            // HR rejects.
+            // HR rejects. Admins bypass date restrictions.
             if ($applicationid) {
                 require_capability('local/jobboard:validatehr', $context);
                 $reason = required_param('reason', PARAM_TEXT);
 
                 $app = new application($applicationid);
                 if ($app->id && $app->status === 'pending_hr_validation') {
-                    // Check if HR has access (date-based).
-                    $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
-                    if ($convocatoria && role_access_helper::can_hr_access($convocatoria)) {
+                    // Admins bypass date-based restrictions.
+                    if ($is_admin) {
                         $app->reject_hr($reason);
                         \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
                     } else {
-                        \core\notification::error(get_string('error:hr_access_dates', 'local_jobboard'));
+                        // Check if HR has access (date-based).
+                        $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
+                        if ($convocatoria && role_access_helper::can_hr_access($convocatoria)) {
+                            $app->reject_hr($reason);
+                            \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
+                        } else {
+                            \core\notification::error(get_string('error:hr_access_dates', 'local_jobboard'));
+                        }
                     }
                 }
             }
@@ -337,6 +372,9 @@ $params = [
     'search' => $search,
     'datefrom' => $datefrom,
     'dateto' => $dateto,
+    // Admin flags - admins bypass sequential review and date restrictions.
+    'is_admin' => $is_admin,
+    'bypass_sequential_review' => $is_admin,
 ];
 
 // If no application selected, show list of applications pending review.
@@ -559,14 +597,22 @@ $data['can_review_documents'] = $can_review_documents;
 $data['can_review_profiles'] = $can_review_profiles;
 $data['can_validate_hr'] = $can_validate_hr;
 $data['can_approve_profile'] = $can_approve_profile;
+$data['can_manage_workflow'] = $can_manage_workflow;
 $data['is_dean'] = $is_dean;
 $data['is_hr'] = $is_hr;
+$data['is_admin'] = $is_admin;
 
 // Add status-based action visibility for Dean/HR workflow.
 if (isset($application) && $application->id) {
-    $data['show_dean_actions'] = ($application->status === 'pending_dean_review' && $can_approve_profile);
-    $data['show_hr_actions'] = ($application->status === 'pending_hr_validation' && $can_validate_hr);
-    $data['show_document_actions'] = $can_review_documents && !$is_dean;
+    // Admins can always see all actions regardless of status.
+    // Dean sees actions only for pending_dean_review status.
+    // HR sees actions only for pending_hr_validation status.
+    $data['show_dean_actions'] = $is_admin || ($application->status === 'pending_dean_review' && $can_approve_profile);
+    $data['show_hr_actions'] = $is_admin || ($application->status === 'pending_hr_validation' && $can_validate_hr);
+    // Admins can always review documents. Dean role only reviews profiles, not individual docs.
+    $data['show_document_actions'] = $is_admin || ($can_review_documents && !$is_dean);
+    // Admins bypass sequential review - can review any document.
+    $data['bypass_sequential_review'] = $is_admin;
 }
 
 // Handle AJAX request - return only results HTML without header/footer.

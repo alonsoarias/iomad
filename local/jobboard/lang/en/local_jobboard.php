@@ -2818,6 +2818,7 @@ $string['reviewingdocument'] = 'Reviewing document';
 $string['of'] = 'of';
 $string['current'] = 'Current';
 $string['locked'] = 'Locked';
+$string['admin_review_mode'] = 'Admin mode: You can review any document without order or date restrictions';
 
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';

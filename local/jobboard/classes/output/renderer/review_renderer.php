@@ -1078,14 +1078,20 @@ trait review_renderer {
             $documents = \local_jobboard\document::get_by_application($applicationid);
         }
 
+        // Check if user is admin (bypasses sequential review).
+        $bypasssequentialreview = $params['bypass_sequential_review'] ?? false;
+        $isadmin = $params['is_admin'] ?? false;
+
         // Prepare documents with preview info.
         // Sequential review: find the first pending document (current) and mark others as locked.
+        // Admins bypass this restriction and can review any document.
         $docsdata = [];
         $currentdocid = null;
         $currentdocindex = null;
         $docindex = 0;
 
         // First pass: find the current document (first pending one).
+        // For admins, we don't enforce sequential order.
         foreach ($documents as $doc) {
             $status = $doc->status ?? 'pending';
             if ($status === 'pending' && $currentdocid === null) {
@@ -1145,11 +1151,19 @@ trait review_renderer {
             $observation = $doc->observation ?? '';
 
             // Sequential review flags.
-            $iscurrent = ($doc->id == $currentdocid);
-            $islocked = ($status === 'pending' && !$iscurrent);
+            // Admins bypass sequential review - all pending docs are accessible.
+            if ($bypasssequentialreview) {
+                // For admins: all pending documents are "current" (can be reviewed).
+                $iscurrent = ($status === 'pending');
+                $islocked = false;  // Never locked for admins.
+            } else {
+                // For regular users: only the first pending document is current.
+                $iscurrent = ($doc->id == $currentdocid);
+                $islocked = ($status === 'pending' && !$iscurrent);
+            }
             $isreviewed = ($status !== 'pending');
 
-            // Only initialize editor for the current document being reviewed.
+            // Initialize editor for documents that can be reviewed.
             if ($iscurrent) {
                 $editorid = 'doc_observation_' . $doc->id;
                 $editoroptions = [
@@ -1332,9 +1346,20 @@ trait review_renderer {
         $data['totaldocs'] = $totaldocs;
         $data['hascurrentdoc'] = ($currentdocid !== null);
 
-        // Remove "validate all" in sequential mode - documents must be reviewed one by one.
-        $data['canvalidateall'] = false;
-        $data['validateallurl'] = '';
+        // Admin flags for template.
+        $data['is_admin'] = $isadmin;
+        $data['bypass_sequential_review'] = $bypasssequentialreview;
+
+        // Admins can use "validate all", regular users must review one by one.
+        $data['canvalidateall'] = $bypasssequentialreview;
+        $data['validateallurl'] = $bypasssequentialreview
+            ? (new moodle_url('/local/jobboard/index.php', [
+                'view' => 'review',
+                'applicationid' => $applicationid,
+                'action' => 'validateall',
+                'sesskey' => sesskey(),
+            ]))->out(false)
+            : '';
 
         $data['submitreviewurl'] = (new moodle_url('/local/jobboard/index.php'))->out(false);
         $data['sesskey'] = sesskey();

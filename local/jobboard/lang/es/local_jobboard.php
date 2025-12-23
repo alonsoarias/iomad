@@ -2833,6 +2833,7 @@ $string['reviewingdocument'] = 'Revisando documento';
 $string['of'] = 'de';
 $string['current'] = 'Actual';
 $string['locked'] = 'Bloqueado';
+$string['admin_review_mode'] = 'Modo administrador: Puede revisar cualquier documento sin restricciones de orden ni fechas';
 
 // Cadenas de aplicación y consentimiento
 $string['consentgiven'] = 'Consentimiento otorgado';

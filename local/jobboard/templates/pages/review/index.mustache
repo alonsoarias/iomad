@@ -49,12 +49,22 @@
     </div>
 
     {{! Alerts }}
+    {{#bypass_sequential_review}}
+    {{#haspending}}
+    <div class="jb-alert jb-alert--warning">
+        <i class="fa fa-shield-halved"></i>
+        <span>{{#str}}admin_review_mode, local_jobboard{{/str}}</span>
+    </div>
+    {{/haspending}}
+    {{/bypass_sequential_review}}
+    {{^bypass_sequential_review}}
     {{#haspending}}
     <div class="jb-alert jb-alert--info">
         <i class="fa fa-list-check"></i>
         <span>{{#str}}sequentialreview, local_jobboard{{/str}}: {{currentdocposition}}/{{totaldocs}}</span>
     </div>
     {{/haspending}}
+    {{/bypass_sequential_review}}
 
     {{#allreviewed}}
     <div class="jb-alert jb-alert--success">
@@ -210,9 +220,16 @@
                 </div>
                 <div class="jb-card__footer">
                     <a href="{{downloadzipurl}}" class="jb-link"><i class="fa fa-file-zipper"></i> {{#str}}downloadzip, local_jobboard{{/str}}</a>
-                    <button type="button" class="jb-btn jb-btn--primary jb-btn--sm" id="saveAndSendBtn">
-                        <i class="fa fa-paper-plane"></i> {{#str}}saveandsend, local_jobboard{{/str}}
-                    </button>
+                    <div class="jb-footer-actions">
+                        {{#canvalidateall}}
+                        <a href="{{validateallurl}}" class="jb-btn jb-btn--success jb-btn--sm">
+                            <i class="fa fa-check-double"></i> {{#str}}validateall, local_jobboard{{/str}}
+                        </a>
+                        {{/canvalidateall}}
+                        <button type="button" class="jb-btn jb-btn--primary jb-btn--sm" id="saveAndSendBtn">
+                            <i class="fa fa-paper-plane"></i> {{#str}}saveandsend, local_jobboard{{/str}}
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -570,6 +587,9 @@
     justify-content: space-between;
     align-items: center;
 }
+
+/* Footer Actions */
+.jb-footer-actions { display: flex; gap: 0.5rem; align-items: center; }
 
 /* Header Actions */
 .jb-header-actions { display: flex; gap: 0.25rem; }
