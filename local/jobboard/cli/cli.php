@@ -948,18 +948,21 @@ if ($options['sync-sedes']) {
     }
 
     // ========================================================================
-    // PASO 2: Eliminar TODAS las vacantes de la convocatoria
+    // PASO 2: Eliminar postulaciones y vacantes (datos ya respaldados en memoria)
     // ========================================================================
-    cli_heading("PASO 2: Eliminar TODAS las Vacantes");
+    cli_heading("PASO 2: Eliminar Postulaciones y Vacantes");
 
     if (!empty($existingVacancies)) {
         if (!$dryrun) {
-            // First, temporarily set vacancyid to NULL in applications (will restore later)
-            $DB->execute(
-                "UPDATE {local_jobboard_application} SET vacancyid = 0
-                 WHERE vacancyid IN (SELECT id FROM {local_jobboard_vacancy} WHERE convocatoriaid = ?)",
-                [$convocatoriaid]
-            );
+            // Get all vacancy IDs for this convocatoria
+            $vacancyIds = array_keys($existingVacancies);
+
+            // Delete applications for these vacancies (data is already in $applications)
+            if (!empty($applications)) {
+                list($inSql, $params) = $DB->get_in_or_equal($vacancyIds, SQL_PARAMS_NAMED);
+                $DB->execute("DELETE FROM {local_jobboard_application} WHERE vacancyid $inSql", $params);
+                echo "Postulaciones eliminadas: " . count($applications) . " (respaldadas en memoria)\n";
+            }
 
             // Delete all vacancies
             $DB->delete_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
@@ -967,7 +970,7 @@ if ($options['sync-sedes']) {
         } else {
             $stats['deleted'] = count($existingVacancies);
         }
-        echo "Eliminadas: {$stats['deleted']} vacantes\n\n";
+        echo "Vacantes eliminadas: {$stats['deleted']}\n\n";
     } else {
         echo "No hay vacantes para eliminar.\n\n";
     }
@@ -1053,7 +1056,7 @@ if ($options['sync-sedes']) {
     echo "\nCreadas: {$stats['created']} vacantes\n\n";
 
     // ========================================================================
-    // PASO 4: Restaurar postulaciones a vacantes correspondientes
+    // PASO 4: Re-crear postulaciones con nuevas vacantes
     // ========================================================================
     if (!empty($applications)) {
         cli_heading("PASO 4: Restaurar Postulaciones");
@@ -1112,29 +1115,49 @@ if ($options['sync-sedes']) {
 
             if ($matchingVacancyId) {
                 if (!$dryrun) {
-                    $DB->execute(
-                        "UPDATE {local_jobboard_application} SET vacancyid = ? WHERE id = ?",
-                        [$matchingVacancyId, $app->id]
-                    );
-                }
-                $stats['restored']++;
+                    // Re-create application with new vacancy ID
+                    $newApp = new stdClass();
+                    $newApp->vacancyid = $matchingVacancyId;
+                    $newApp->userid = $app->userid;
+                    $newApp->status = $app->status;
+                    $newApp->timecreated = $app->timecreated;
+                    $newApp->timemodified = $app->timemodified;
+                    // Copy other fields if they exist
+                    if (isset($app->coverletter)) $newApp->coverletter = $app->coverletter;
+                    if (isset($app->resume)) $newApp->resume = $app->resume;
+                    if (isset($app->notes)) $newApp->notes = $app->notes;
 
-                if ($verbose) {
-                    $matchedVac = $newVacanciesById[$matchingVacancyId];
-                    echo "✓ RESTAURADA App #{$app->id}: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod)\n";
+                    try {
+                        $DB->insert_record('local_jobboard_application', $newApp);
+                        $stats['restored']++;
+
+                        if ($verbose) {
+                            $matchedVac = $newVacanciesById[$matchingVacancyId];
+                            echo "✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod)\n";
+                        }
+                    } catch (Exception $e) {
+                        echo "✗ ERROR restaurando App #{$app->id}: " . $e->getMessage() . "\n";
+                        $stats['errors']++;
+                    }
+                } else {
+                    $stats['restored']++;
+                    if ($verbose) {
+                        $matchedVac = $newVacanciesById[$matchingVacancyId];
+                        echo "[DRY] ✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod)\n";
+                    }
                 }
             } else {
                 $orphanedApps[] = $app;
                 $stats['orphaned']++;
-                echo "⚠ SIN MATCH App #{$app->id}: {$app->code} @ {$app->location} | Programa: {$app->program}\n";
+                echo "⚠ SIN MATCH: {$app->code} @ {$app->location} | Programa: {$app->program} | Perfil: " . mb_substr($oldProfile, 0, 40, 'UTF-8') . "\n";
             }
         }
 
         echo "\n";
 
         if (!empty($orphanedApps)) {
-            echo "*** ATENCIÓN: {$stats['orphaned']} postulación(es) quedaron sin vacante asignada ***\n";
-            echo "Estas postulaciones tienen vacancyid = 0 y requieren asignación manual.\n\n";
+            echo "*** ATENCIÓN: {$stats['orphaned']} postulación(es) no encontraron vacante correspondiente ***\n";
+            echo "Estas postulaciones NO fueron restauradas. Revise los programas/perfiles.\n\n";
         }
     }
 
