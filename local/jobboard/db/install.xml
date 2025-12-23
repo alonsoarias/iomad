@@ -634,6 +634,30 @@
       </INDEXES>
     </TABLE>
 
+    <!-- Table: Faculty Dean - Assigns deans to faculties for review workflow -->
+    <TABLE NAME="local_jobboard_faculty_dean" COMMENT="Links deans (users) to faculties for application review workflow">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="facultyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Faculty ID"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Dean user ID"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active" SEQUENCE="false" COMMENT="active or inactive"/>
+        <FIELD NAME="addedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who assigned the dean"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="facultyid_fk" TYPE="foreign" FIELDS="facultyid" REFTABLE="local_jobboard_faculty" REFFIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="addedby_fk" TYPE="foreign" FIELDS="addedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="faculty_user_unique" UNIQUE="true" FIELDS="facultyid, userid" COMMENT="User can only be dean once per faculty"/>
+        <INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+
     <!-- Table: Email template language strings (following IOMAD pattern) -->
     <TABLE NAME="local_jobboard_email_strings" COMMENT="Language-specific content for email templates">
       <FIELDS>

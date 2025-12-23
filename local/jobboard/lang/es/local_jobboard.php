@@ -4071,6 +4071,20 @@ $string['error:dean_access_dates'] = 'El período de revisión del Decano no est
 $string['error:hr_access_dates'] = 'El período de validación de Talento Humano no está activo para esta convocatoria';
 $string['error:invalidtransition'] = 'Transición de estado no permitida';
 $string['error:dean_cannot_validate_docs'] = 'Los Decanos no pueden aprobar/rechazar documentos individuales. Solo pueden aprobar/rechazar la postulación completa.';
+$string['error:dean_already_assigned'] = 'Este usuario ya está asignado como decano de esta facultad';
+
+// Gestión de decanos por facultad
+$string['faculty_deans'] = 'Decanos por Facultad';
+$string['faculty_deans_desc'] = 'Asigne decanos a las facultades para la revisión de postulaciones';
+$string['assign_dean'] = 'Asignar Decano';
+$string['remove_dean'] = 'Remover Decano';
+$string['dean_assigned'] = 'Decano asignado correctamente';
+$string['dean_removed'] = 'Decano removido correctamente';
+$string['no_deans_assigned'] = 'Sin decanos asignados';
+$string['select_dean'] = 'Seleccionar decano';
+$string['select_faculty'] = 'Seleccionar facultad';
+$string['dean_assignment_success'] = 'Asignación de decano guardada correctamente';
+$string['confirm_remove_dean'] = '¿Está seguro de que desea remover a este decano de la facultad?';
 
 // Capabilities
 $string['jobboard:reviewprofiles'] = 'Revisar perfiles de postulantes';

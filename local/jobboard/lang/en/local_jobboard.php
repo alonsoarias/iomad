@@ -2860,6 +2860,22 @@ $string['hr_reject_reason_required'] = 'You must indicate the reason for rejecti
 $string['validate_hr'] = 'Validate (HR)';
 $string['reject_hr'] = 'Reject (HR)';
 
+// Errors
+$string['error:dean_already_assigned'] = 'This user is already assigned as dean for this faculty';
+
+// Faculty dean management
+$string['faculty_deans'] = 'Faculty Deans';
+$string['faculty_deans_desc'] = 'Assign deans to faculties for application review';
+$string['assign_dean'] = 'Assign Dean';
+$string['remove_dean'] = 'Remove Dean';
+$string['dean_assigned'] = 'Dean assigned successfully';
+$string['dean_removed'] = 'Dean removed successfully';
+$string['no_deans_assigned'] = 'No deans assigned';
+$string['select_dean'] = 'Select dean';
+$string['select_faculty'] = 'Select faculty';
+$string['dean_assignment_success'] = 'Dean assignment saved successfully';
+$string['confirm_remove_dean'] = 'Are you sure you want to remove this dean from the faculty?';
+
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
 $string['selectstatus'] = 'Select status';
