@@ -632,6 +632,7 @@ $data['can_manage_workflow'] = $can_manage_workflow;
 $data['is_dean'] = $is_dean;
 $data['is_hr'] = $is_hr;
 $data['is_admin'] = $is_admin;
+$data['vacancyid'] = $vacancyid;
 
 // Add status-based action visibility for Dean/HR workflow.
 if (isset($application) && $application->id) {

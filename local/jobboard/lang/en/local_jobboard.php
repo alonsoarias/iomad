@@ -2836,6 +2836,30 @@ $string['locked'] = 'Locked';
 $string['admin_review_mode'] = 'Admin mode: You can review any document without order or date restrictions';
 $string['dean_review_mode'] = 'Dean mode: You can view all documents but can only approve or reject the complete application, not individual documents';
 
+// Dean actions
+$string['dean_actions'] = 'Dean Actions';
+$string['dean_actions_desc'] = 'Review the applicant\'s documentation and make a decision on the application.';
+$string['dean_approve_comments_placeholder'] = 'Optional comments on the approval...';
+$string['dean_reject_reason_placeholder'] = 'Indicate the reason for rejecting the application...';
+$string['dean_reject_reason_help'] = 'The rejection reason will be notified to the applicant.';
+$string['dean_reject_reason_required'] = 'You must indicate the reason for rejecting the application.';
+$string['rejection_reason'] = 'Rejection reason';
+$string['approve_profile'] = 'Approve profile';
+$string['reject_profile'] = 'Reject profile';
+$string['profile_approved'] = 'Profile approved';
+$string['profile_rejected'] = 'Profile rejected';
+$string['profile_approved_advancing'] = 'Profile approved by Dean, advancing to HR validation';
+
+// HR actions
+$string['hr_actions'] = 'HR Actions';
+$string['hr_actions_desc'] = 'Final validation of the applicant\'s documentation.';
+$string['hr_validate_comments_placeholder'] = 'Optional comments on the validation...';
+$string['hr_reject_reason_placeholder'] = 'Indicate the reason for rejection...';
+$string['hr_reject_reason_help'] = 'The rejection reason will be notified to the applicant.';
+$string['hr_reject_reason_required'] = 'You must indicate the reason for rejection.';
+$string['validate_hr'] = 'Validate (HR)';
+$string['reject_hr'] = 'Reject (HR)';
+
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
 $string['selectstatus'] = 'Select status';

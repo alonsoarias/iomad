@@ -4083,6 +4083,23 @@ $string['reject_profile'] = 'Rechazar perfil';
 $string['validate_hr'] = 'Validar (Talento Humano)';
 $string['reject_hr'] = 'Rechazar (Talento Humano)';
 
+// Acciones del Decano
+$string['dean_actions'] = 'Acciones del Decano';
+$string['dean_actions_desc'] = 'Revise la documentación del postulante y tome una decisión sobre la postulación.';
+$string['dean_approve_comments_placeholder'] = 'Comentarios opcionales sobre la aprobación...';
+$string['dean_reject_reason_placeholder'] = 'Indique el motivo del rechazo de la postulación...';
+$string['dean_reject_reason_help'] = 'El motivo del rechazo será notificado al postulante.';
+$string['dean_reject_reason_required'] = 'Debe indicar el motivo del rechazo de la postulación.';
+$string['rejection_reason'] = 'Motivo del rechazo';
+
+// Acciones de Talento Humano
+$string['hr_actions'] = 'Acciones de Talento Humano';
+$string['hr_actions_desc'] = 'Validación final de la documentación del postulante.';
+$string['hr_validate_comments_placeholder'] = 'Comentarios opcionales sobre la validación...';
+$string['hr_reject_reason_placeholder'] = 'Indique el motivo del rechazo...';
+$string['hr_reject_reason_help'] = 'El motivo del rechazo será notificado al postulante.';
+$string['hr_reject_reason_required'] = 'Debe indicar el motivo del rechazo.';
+
 // Estados del período de revisión
 $string['review_period_not_configured'] = 'Período de revisión no configurado';
 $string['review_period_pending'] = 'Período de revisión pendiente';

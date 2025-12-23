@@ -261,6 +261,98 @@
                 </div>
             </div>
             {{/allreviewed}}
+
+            {{! Dean Actions - Approve/Reject Profile }}
+            {{#show_dean_actions}}
+            <div class="jb-card jb-dean-actions-card">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-user-tie"></i>
+                    {{#str}}dean_actions, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <p class="jb-text-muted jb-mb-3">{{#str}}dean_actions_desc, local_jobboard{{/str}}</p>
+
+                    {{! Approve Profile Form }}
+                    <form method="post" action="{{submitreviewurl}}" class="jb-mb-3">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="approveprofile">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+                        <textarea name="comments" class="jb-textarea jb-mb-2" rows="2" placeholder="{{#str}}dean_approve_comments_placeholder, local_jobboard{{/str}}"></textarea>
+                        <button type="submit" class="jb-btn jb-btn--success jb-btn--full">
+                            <i class="fa fa-check"></i> {{#str}}approve_profile, local_jobboard{{/str}}
+                        </button>
+                    </form>
+
+                    <hr class="jb-divider">
+
+                    {{! Reject Profile Form }}
+                    <form method="post" action="{{submitreviewurl}}" id="dean-reject-form" onsubmit="return validateDeanRejectForm()">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="rejectprofile">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+                        <label for="dean-reject-reason" class="jb-label">
+                            {{#str}}rejection_reason, local_jobboard{{/str}} <span class="jb-text-danger">*</span>
+                        </label>
+                        <textarea name="reason" id="dean-reject-reason" class="jb-textarea jb-mb-2" rows="3"
+                                  placeholder="{{#str}}dean_reject_reason_placeholder, local_jobboard{{/str}}" required></textarea>
+                        <small class="jb-text-muted jb-mb-2 d-block">{{#str}}dean_reject_reason_help, local_jobboard{{/str}}</small>
+                        <button type="submit" class="jb-btn jb-btn--danger jb-btn--full">
+                            <i class="fa fa-times"></i> {{#str}}reject_profile, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {{/show_dean_actions}}
+
+            {{! HR Actions - Validate/Reject }}
+            {{#show_hr_actions}}
+            <div class="jb-card jb-hr-actions-card">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-user-check"></i>
+                    {{#str}}hr_actions, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <p class="jb-text-muted jb-mb-3">{{#str}}hr_actions_desc, local_jobboard{{/str}}</p>
+
+                    {{! Validate HR Form }}
+                    <form method="post" action="{{submitreviewurl}}" class="jb-mb-3">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="validatehr">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+                        <textarea name="comments" class="jb-textarea jb-mb-2" rows="2" placeholder="{{#str}}hr_validate_comments_placeholder, local_jobboard{{/str}}"></textarea>
+                        <button type="submit" class="jb-btn jb-btn--success jb-btn--full">
+                            <i class="fa fa-check-double"></i> {{#str}}validate_hr, local_jobboard{{/str}}
+                        </button>
+                    </form>
+
+                    <hr class="jb-divider">
+
+                    {{! Reject HR Form }}
+                    <form method="post" action="{{submitreviewurl}}" id="hr-reject-form" onsubmit="return validateHrRejectForm()">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="rejecthr">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+                        <label for="hr-reject-reason" class="jb-label">
+                            {{#str}}rejection_reason, local_jobboard{{/str}} <span class="jb-text-danger">*</span>
+                        </label>
+                        <textarea name="reason" id="hr-reject-reason" class="jb-textarea jb-mb-2" rows="3"
+                                  placeholder="{{#str}}hr_reject_reason_placeholder, local_jobboard{{/str}}" required></textarea>
+                        <small class="jb-text-muted jb-mb-2 d-block">{{#str}}hr_reject_reason_help, local_jobboard{{/str}}</small>
+                        <button type="submit" class="jb-btn jb-btn--danger jb-btn--full">
+                            <i class="fa fa-times"></i> {{#str}}reject_hr, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {{/show_hr_actions}}
         </aside>
     </div>
 
@@ -848,6 +940,14 @@
 /* Utilities */
 .jb-text-danger { color: #dc3545 !important; }
 .jb-text-muted { color: var(--iser-gris-medio, #666); }
+.jb-mb-2 { margin-bottom: 0.5rem; }
+.jb-mb-3 { margin-bottom: 1rem; }
+.jb-label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); margin-bottom: 0.25rem; }
+.jb-divider { border: none; border-top: 1px solid #e5e5e5; margin: 1rem 0; }
+
+/* Dean/HR Actions Cards */
+.jb-dean-actions-card, .jb-hr-actions-card { border-color: var(--iser-verde, #1b9e88); }
+.jb-dean-actions-card .jb-card__header, .jb-hr-actions-card .jb-card__header { background: rgba(27, 158, 136, 0.1); }
 
 /* Mobile */
 @media (max-width: 768px) {
@@ -864,3 +964,69 @@
     .jb-review-content { display: block; }
 }
 </style>
+
+<script>
+/**
+ * Validate the dean rejection form - ensure reason is provided.
+ * @returns {boolean} True if valid, false otherwise.
+ */
+function validateDeanRejectForm() {
+    var reasonField = document.getElementById('dean-reject-reason');
+    if (!reasonField) return true;
+
+    var reason = reasonField.value.trim();
+    if (!reason) {
+        reasonField.classList.add('is-invalid');
+        reasonField.style.borderColor = '#dc3545';
+        reasonField.focus();
+        alert('{{#str}}dean_reject_reason_required, local_jobboard{{/str}}');
+        return false;
+    }
+
+    reasonField.classList.remove('is-invalid');
+    reasonField.style.borderColor = '';
+    return true;
+}
+
+/**
+ * Validate the HR rejection form - ensure reason is provided.
+ * @returns {boolean} True if valid, false otherwise.
+ */
+function validateHrRejectForm() {
+    var reasonField = document.getElementById('hr-reject-reason');
+    if (!reasonField) return true;
+
+    var reason = reasonField.value.trim();
+    if (!reason) {
+        reasonField.classList.add('is-invalid');
+        reasonField.style.borderColor = '#dc3545';
+        reasonField.focus();
+        alert('{{#str}}hr_reject_reason_required, local_jobboard{{/str}}');
+        return false;
+    }
+
+    reasonField.classList.remove('is-invalid');
+    reasonField.style.borderColor = '';
+    return true;
+}
+
+// Clear validation styling on input
+document.addEventListener('DOMContentLoaded', function() {
+    var deanReason = document.getElementById('dean-reject-reason');
+    var hrReason = document.getElementById('hr-reject-reason');
+
+    if (deanReason) {
+        deanReason.addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+            this.style.borderColor = '';
+        });
+    }
+
+    if (hrReason) {
+        hrReason.addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+            this.style.borderColor = '';
+        });
+    }
+});
+</script>
