@@ -1078,13 +1078,18 @@ trait review_renderer {
             $documents = \local_jobboard\document::get_by_application($applicationid);
         }
 
-        // Check if user is admin (bypasses sequential review).
+        // Check user roles and document validation permissions.
         $bypasssequentialreview = $params['bypass_sequential_review'] ?? false;
         $isadmin = $params['is_admin'] ?? false;
+        $isdean = $params['is_dean'] ?? false;
+        $ishr = $params['is_hr'] ?? false;
+        // Only HR and Admin can validate/reject individual documents.
+        // Dean can only approve/reject the full application.
+        $canvalidatedocuments = $params['can_validate_documents'] ?? false;
 
         // Prepare documents with preview info.
         // Sequential review: find the first pending document (current) and mark others as locked.
-        // Admins bypass this restriction and can review any document.
+        // Admin and Dean bypass sequential review. HR must review sequentially.
         $docsdata = [];
         $currentdocid = null;
         $currentdocindex = null;
@@ -1223,6 +1228,11 @@ trait review_renderer {
                 'iscurrent' => $iscurrent,
                 'islocked' => $islocked,
                 'isreviewed' => $isreviewed,
+                // Document validation permission - only HR and Admin can validate/reject docs.
+                // Dean can view all docs but cannot validate/reject individual documents.
+                'canvalidatedocuments' => $canvalidatedocuments,
+                // Show action buttons only if current AND user can validate documents.
+                'showactions' => $iscurrent && $canvalidatedocuments,
             ];
 
             $docindex++;
@@ -1346,13 +1356,18 @@ trait review_renderer {
         $data['totaldocs'] = $totaldocs;
         $data['hascurrentdoc'] = ($currentdocid !== null);
 
-        // Admin flags for template.
+        // Role flags for template.
         $data['is_admin'] = $isadmin;
+        $data['is_dean'] = $isdean;
+        $data['is_hr'] = $ishr;
         $data['bypass_sequential_review'] = $bypasssequentialreview;
+        // Only HR and Admin can validate/reject individual documents.
+        // Dean can see all docs but cannot validate/reject them.
+        $data['can_validate_documents'] = $canvalidatedocuments;
 
-        // Admins can use "validate all", regular users must review one by one.
-        $data['canvalidateall'] = $bypasssequentialreview;
-        $data['validateallurl'] = $bypasssequentialreview
+        // Only HR and Admin can use "validate all" (not Dean).
+        $data['canvalidateall'] = $canvalidatedocuments && $bypasssequentialreview;
+        $data['validateallurl'] = ($canvalidatedocuments && $bypasssequentialreview)
             ? (new moodle_url('/local/jobboard/index.php', [
                 'view' => 'review',
                 'applicationid' => $applicationid,

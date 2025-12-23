@@ -2835,6 +2835,7 @@ $string['of'] = 'de';
 $string['current'] = 'Actual';
 $string['locked'] = 'Bloqueado';
 $string['admin_review_mode'] = 'Modo administrador: Puede revisar cualquier documento sin restricciones de orden ni fechas';
+$string['dean_review_mode'] = 'Modo Decano: Puede ver todos los documentos pero solo aprobar o rechazar la postulación completa, no documentos individuales';
 
 // Cadenas de aplicación y consentimiento
 $string['consentgiven'] = 'Consentimiento otorgado';
@@ -4067,6 +4068,7 @@ $string['hr_validation_complete'] = 'Validación de Talento Humano completada';
 $string['error:dean_access_dates'] = 'El período de revisión del Decano no está activo para esta convocatoria';
 $string['error:hr_access_dates'] = 'El período de validación de Talento Humano no está activo para esta convocatoria';
 $string['error:invalidtransition'] = 'Transición de estado no permitida';
+$string['error:dean_cannot_validate_docs'] = 'Los Decanos no pueden aprobar/rechazar documentos individuales. Solo pueden aprobar/rechazar la postulación completa.';
 
 // Capabilities
 $string['jobboard:reviewprofiles'] = 'Revisar perfiles de postulantes';

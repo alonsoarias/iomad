@@ -94,31 +94,41 @@ $PAGE->navbar->add(get_string('reviewdocuments', 'local_jobboard'));
 if ($action && confirm_sesskey()) {
     switch ($action) {
         case 'validate':
-            // Only HR/Reviewer can validate individual documents.
-            if ($documentid && $can_review_documents) {
+            // Only HR or Admin can validate individual documents.
+            // Dean can ONLY approve/reject applications, NOT individual documents.
+            $can_validate_docs = ($is_hr || $is_admin) && $can_review_documents;
+            if ($documentid && $can_validate_docs) {
                 $doc = new document($documentid);
                 $doc->validate($USER->id);
                 \core\notification::success(get_string('documentvalidated', 'local_jobboard'));
-            } elseif (!$can_review_documents) {
+            } elseif ($is_dean) {
+                \core\notification::error(get_string('error:dean_cannot_validate_docs', 'local_jobboard'));
+            } else {
                 \core\notification::error(get_string('nopermission', 'local_jobboard'));
             }
             break;
 
         case 'reject':
-            // Only HR/Reviewer can reject individual documents.
-            if ($documentid && $can_review_documents) {
+            // Only HR or Admin can reject individual documents.
+            // Dean can ONLY approve/reject applications, NOT individual documents.
+            $can_reject_docs = ($is_hr || $is_admin) && $can_review_documents;
+            if ($documentid && $can_reject_docs) {
                 $reason = required_param('reason', PARAM_TEXT);
                 $doc = new document($documentid);
                 $doc->reject($USER->id, $reason);
                 \core\notification::success(get_string('documentrejected', 'local_jobboard'));
-            } elseif (!$can_review_documents) {
+            } elseif ($is_dean) {
+                \core\notification::error(get_string('error:dean_cannot_validate_docs', 'local_jobboard'));
+            } else {
                 \core\notification::error(get_string('nopermission', 'local_jobboard'));
             }
             break;
 
         case 'validateall':
-            // Only HR/Reviewer can validate all documents.
-            if ($applicationid && $can_review_documents) {
+            // Only HR or Admin can validate all documents.
+            // Dean cannot use this action.
+            $can_validate_all = ($is_hr || $is_admin) && $can_review_documents;
+            if ($applicationid && $can_validate_all) {
                 $documents = document::get_by_application($applicationid);
                 $validated = 0;
                 foreach ($documents as $doc) {
@@ -128,7 +138,9 @@ if ($action && confirm_sesskey()) {
                     }
                 }
                 \core\notification::success(get_string('documentvalidated', 'local_jobboard') . " ({$validated})");
-            } elseif (!$can_review_documents) {
+            } elseif ($is_dean) {
+                \core\notification::error(get_string('error:dean_cannot_validate_docs', 'local_jobboard'));
+            } else {
                 \core\notification::error(get_string('nopermission', 'local_jobboard'));
             }
             break;
@@ -372,9 +384,17 @@ $params = [
     'search' => $search,
     'datefrom' => $datefrom,
     'dateto' => $dateto,
-    // Admin flags - admins bypass sequential review and date restrictions.
+    // Role flags.
     'is_admin' => $is_admin,
-    'bypass_sequential_review' => $is_admin,
+    'is_dean' => $is_dean,
+    'is_hr' => $is_hr,
+    // Sequential review bypass:
+    // - Admin: bypasses all restrictions
+    // - Dean: bypasses sequential review (can see all docs) but cannot validate/reject individual docs
+    // - HR: must review documents sequentially
+    'bypass_sequential_review' => $is_admin || $is_dean,
+    // Document validation permission (only HR and Admin can validate/reject individual docs).
+    'can_validate_documents' => $is_admin || $is_hr,
 ];
 
 // If no application selected, show list of applications pending review.
@@ -587,10 +607,19 @@ if (!$applicationid) {
 
 // Initialize document review module if viewing a single application.
 if ($applicationid && isset($application) && $application->id) {
+    // Dean bypasses sequential review (can see all docs) but cannot validate/reject docs.
+    // HR has sequential review restriction.
+    // Admin bypasses all restrictions.
     $PAGE->requires->js_call_amd('local_jobboard/document_review', 'init', [[
         'applicationId' => $applicationid,
         'isAdmin' => $is_admin,
-        'bypassSequentialReview' => $is_admin,
+        'isDean' => $is_dean,
+        'isHr' => $is_hr,
+        // Dean and Admin bypass sequential review (can see all docs).
+        // HR must review documents sequentially.
+        'bypassSequentialReview' => $is_admin || $is_dean,
+        // Only HR and Admin can validate/reject individual documents.
+        'canValidateDocuments' => $is_admin || $is_hr,
     ]]);
 }
 

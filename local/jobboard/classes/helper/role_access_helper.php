@@ -234,11 +234,10 @@ class role_access_helper {
         $roles = get_user_roles($context, $userid);
 
         // Priority order for jobboard roles.
+        // Only Dean and HR roles exist now.
         $jobboardroles = [
             'jobboard_dean',
             'jobboard_hr',
-            'jobboard_coordinator',
-            'jobboard_reviewer',
         ];
 
         foreach ($roles as $role) {

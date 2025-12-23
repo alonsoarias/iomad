@@ -2175,6 +2175,9 @@ $string['error:publicpagedisabled_title'] = 'Page not available';
 $string['error:publicpagedisabled_desc'] = 'Public access to convocatorias and vacancies has been temporarily disabled by the system administrator.';
 $string['error:publicpagedisabled_action'] = 'If you are a registered user, please log in to access available convocatorias.';
 $string['error:convocatorianotfound'] = 'Convocatoria not found';
+$string['error:dean_access_dates'] = 'The Dean review period is not active for this convocatoria';
+$string['error:hr_access_dates'] = 'The HR validation period is not active for this convocatoria';
+$string['error:dean_cannot_validate_docs'] = 'Deans cannot approve/reject individual documents. They can only approve/reject the complete application.';
 $string['invalidemail'] = 'Invalid email address';
 $string['emailexists'] = 'Email already exists';
 $string['emailagain'] = 'Email (again)';
@@ -2820,6 +2823,7 @@ $string['of'] = 'of';
 $string['current'] = 'Current';
 $string['locked'] = 'Locked';
 $string['admin_review_mode'] = 'Admin mode: You can review any document without order or date restrictions';
+$string['dean_review_mode'] = 'Dean mode: You can view all documents but can only approve or reject the complete application, not individual documents';
 
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';

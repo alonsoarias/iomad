@@ -49,22 +49,28 @@
     </div>
 
     {{! Alerts }}
-    {{#bypass_sequential_review}}
+    {{#is_admin}}
     {{#haspending}}
     <div class="jb-alert jb-alert--warning">
         <i class="fa fa-shield-halved"></i>
         <span>{{#str}}admin_review_mode, local_jobboard{{/str}}</span>
     </div>
     {{/haspending}}
-    {{/bypass_sequential_review}}
-    {{^bypass_sequential_review}}
+    {{/is_admin}}
+    {{#is_dean}}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-user-tie"></i>
+        <span>{{#str}}dean_review_mode, local_jobboard{{/str}}</span>
+    </div>
+    {{/is_dean}}
+    {{#is_hr}}
     {{#haspending}}
     <div class="jb-alert jb-alert--info">
         <i class="fa fa-list-check"></i>
         <span>{{#str}}sequentialreview, local_jobboard{{/str}}: {{currentdocposition}}/{{totaldocs}}</span>
     </div>
     {{/haspending}}
-    {{/bypass_sequential_review}}
+    {{/is_hr}}
 
     {{#allreviewed}}
     <div class="jb-alert jb-alert--success">
@@ -193,7 +199,8 @@
                             </span>
                         </div>
 
-                        {{#iscurrent}}
+                        {{! Show document action buttons only if user can validate documents (HR/Admin, not Dean) }}
+                        {{#showactions}}
                         <div class="jb-doc-item__actions" data-document-id="{{id}}" data-application-id="{{applicationid}}">
                             <textarea name="doc_observation_{{id}}" id="doc_observation_{{id}}"
                                       class="jb-textarea jb-doc-observation"
@@ -210,7 +217,7 @@
                                 </button>
                             </div>
                         </div>
-                        {{/iscurrent}}
+                        {{/showactions}}
 
                         {{#rejectreason}}
                         <div class="jb-doc-item__reason"><i class="fa fa-exclamation-circle"></i> {{rejectreason}}</div>
