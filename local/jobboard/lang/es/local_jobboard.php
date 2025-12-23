@@ -4094,3 +4094,54 @@ $string['error:hrreviewbeforedean'] = 'La fecha de inicio de validación de Tale
 // Mensajes de acciones
 $string['action_deprecated'] = 'Esta acción está obsoleta. Use las nuevas acciones del flujo de trabajo.';
 $string['nopermission'] = 'No tiene permiso para realizar esta acción';
+
+// =============================================================================
+// FAQ - PREGUNTAS FRECUENTES
+// =============================================================================
+
+$string['faq_title'] = 'Preguntas Frecuentes';
+$string['faq_subtitle'] = 'Respuestas a las consultas más comunes sobre el proceso de postulación';
+
+$string['faq_q1'] = '¿Cómo puedo postularme a una vacante?';
+$string['faq_a1'] = 'Para postularse: 1) Cree una cuenta usando su número de identificación. 2) Inicie sesión y vaya a "Vacantes". 3) Seleccione la vacante de su interés y haga clic en "Postularse". 4) Complete todos los pasos del formulario y suba los documentos requeridos.';
+
+$string['faq_q2'] = '¿Qué documentos necesito para postularme?';
+$string['faq_a2'] = 'Los documentos varían según la vacante, pero generalmente incluyen: documento de identidad, hoja de vida, títulos académicos, certificados laborales y antecedentes. Cada vacante especifica los documentos obligatorios y opcionales.';
+
+$string['faq_q3'] = '¿Cómo puedo ver el estado de mi postulación?';
+$string['faq_a3'] = 'Inicie sesión con su cuenta y vaya a "Mis Postulaciones" en el panel lateral. Allí verá el estado actual de cada postulación, los documentos pendientes de validación y las observaciones de los revisores.';
+
+$string['faq_q4'] = '¿Qué hago si rechazan uno de mis documentos?';
+$string['faq_a4'] = 'Si un documento es rechazado, recibirá una notificación indicando el motivo. Puede subir un nuevo documento corregido mientras la convocatoria esté activa. Asegúrese de revisar los comentarios del revisor antes de reenviar.';
+
+$string['faq_q5'] = '¿Puedo postularme a varias vacantes?';
+$string['faq_a5'] = 'Sí, puede postularse a múltiples vacantes dentro de la misma convocatoria, siempre que cumpla con los requisitos de cada una. Los documentos comunes se comparten entre postulaciones.';
+
+$string['faq_q6'] = '¿Olvidé mi contraseña, qué hago?';
+$string['faq_a6'] = 'En la página de inicio de sesión, haga clic en "¿Olvidó su contraseña?". Ingrese su correo electrónico registrado y recibirá instrucciones para restablecer su contraseña.';
+
+$string['faq_q7'] = '¿Hasta cuándo puedo postularme?';
+$string['faq_a7'] = 'Cada convocatoria tiene fechas específicas de apertura y cierre. Verifique las fechas en la página de la convocatoria. Las postulaciones no se aceptan después de la fecha de cierre.';
+
+$string['faq_q8'] = '¿Cómo me contactan si soy seleccionado?';
+$string['faq_a8'] = 'Todas las comunicaciones se envían al correo electrónico registrado en su cuenta. Asegúrese de mantener actualizado su correo y revisar regularmente su bandeja de entrada, incluyendo la carpeta de spam.';
+
+// =============================================================================
+// CORREO DE CONFIRMACIÓN DE CUENTA
+// =============================================================================
+
+$string['confirm_email_subject'] = 'Confirme su cuenta - Bolsa de Empleo';
+$string['confirm_email_greeting'] = '¡Bienvenido/a, {$a}!';
+$string['confirm_email_intro'] = 'Gracias por registrarse en la Bolsa de Empleo. Su cuenta ha sido creada exitosamente.';
+$string['confirm_email_action'] = 'Para activar su cuenta y comenzar a postularse a vacantes, haga clic en el siguiente botón:';
+$string['confirm_email_button'] = 'Confirmar mi cuenta';
+$string['confirm_email_link_alt'] = 'Si el botón no funciona, copie y pegue el siguiente enlace en su navegador:';
+$string['confirm_email_expires'] = 'Este enlace de confirmación expirará en 24 horas.';
+$string['confirm_email_next_steps_title'] = '¿Qué sigue después de confirmar?';
+$string['confirm_email_step1'] = 'Complete su perfil profesional';
+$string['confirm_email_step2'] = 'Explore las vacantes disponibles';
+$string['confirm_email_step3'] = 'Prepare sus documentos';
+$string['confirm_email_step4'] = 'Postúlese a las vacantes de su interés';
+$string['confirm_email_help'] = 'Si tiene alguna duda, visite nuestra página de soporte o contáctenos.';
+$string['confirm_email_ignore'] = 'Si usted no solicitó esta cuenta, puede ignorar este correo de forma segura.';
+$string['confirm_email_footer'] = 'Este es un mensaje automático. Por favor no responda a este correo.';

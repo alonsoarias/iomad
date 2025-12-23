@@ -468,20 +468,157 @@ function send_confirmation_email_to_user($user) {
 
     // Build the email subject.
     $site = get_site();
-    $subject = get_string('emailconfirmationsubject', '', format_string($site->fullname));
+    $subject = get_string('confirm_email_subject', 'local_jobboard') . ' - ' . format_string($site->fullname);
 
-    // Build the email body.
-    $a = new stdClass();
-    $a->firstname = fullname($user, true);
-    $a->sitename = format_string($site->fullname);
-    $a->admin = generate_email_signoff();
-    $a->link = $confirmurl->out(false);
+    // Build plain text version.
+    $username = fullname($user, true);
+    $messagetext = get_string('confirm_email_greeting', 'local_jobboard', $username) . "\n\n";
+    $messagetext .= get_string('confirm_email_intro', 'local_jobboard') . "\n\n";
+    $messagetext .= get_string('confirm_email_action', 'local_jobboard') . "\n\n";
+    $messagetext .= $confirmurl->out(false) . "\n\n";
+    $messagetext .= get_string('confirm_email_expires', 'local_jobboard') . "\n\n";
+    $messagetext .= get_string('confirm_email_next_steps_title', 'local_jobboard') . "\n";
+    $messagetext .= "1. " . get_string('confirm_email_step1', 'local_jobboard') . "\n";
+    $messagetext .= "2. " . get_string('confirm_email_step2', 'local_jobboard') . "\n";
+    $messagetext .= "3. " . get_string('confirm_email_step3', 'local_jobboard') . "\n";
+    $messagetext .= "4. " . get_string('confirm_email_step4', 'local_jobboard') . "\n\n";
+    $messagetext .= get_string('confirm_email_ignore', 'local_jobboard') . "\n\n";
+    $messagetext .= "---\n" . format_string($site->fullname) . "\n";
+    $messagetext .= get_string('confirm_email_footer', 'local_jobboard');
 
-    // Use a custom message that includes the jobboard confirmation link.
-    $messagetext = get_string('emailconfirmation', '', $a);
+    // Build HTML version with professional styling.
+    $messagehtml = '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+            <tr>
+                <td align="center">
+                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <!-- Header -->
+                        <tr>
+                            <td style="background: linear-gradient(135deg, #1b9e88 0%, #157a6a 100%); padding: 30px 40px; text-align: center;">
+                                <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                                    📋 ' . get_string('jobboard', 'local_jobboard') . '
+                                </h1>
+                                <p style="margin: 8px 0 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">
+                                    ' . htmlspecialchars(format_string($site->fullname)) . '
+                                </p>
+                            </td>
+                        </tr>
 
-    // Also build HTML version.
-    $messagehtml = text_to_html($messagetext, false, false, true);
+                        <!-- Main Content -->
+                        <tr>
+                            <td style="padding: 40px;">
+                                <h2 style="margin: 0 0 20px 0; color: #1a1a1a; font-size: 22px;">
+                                    ' . get_string('confirm_email_greeting', 'local_jobboard', htmlspecialchars($username)) . '
+                                </h2>
+
+                                <p style="margin: 0 0 20px 0; color: #555555; font-size: 16px; line-height: 1.6;">
+                                    ' . get_string('confirm_email_intro', 'local_jobboard') . '
+                                </p>
+
+                                <p style="margin: 0 0 25px 0; color: #555555; font-size: 16px; line-height: 1.6;">
+                                    ' . get_string('confirm_email_action', 'local_jobboard') . '
+                                </p>
+
+                                <!-- CTA Button -->
+                                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 25px;">
+                                    <tr>
+                                        <td align="center">
+                                            <a href="' . htmlspecialchars($confirmurl->out(false)) . '"
+                                               style="display: inline-block; background: #1b9e88; color: #ffffff; text-decoration: none;
+                                                      padding: 14px 40px; border-radius: 6px; font-size: 16px; font-weight: 600;
+                                                      box-shadow: 0 2px 4px rgba(27, 158, 136, 0.3);">
+                                                ✓ ' . get_string('confirm_email_button', 'local_jobboard') . '
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- Alternative Link -->
+                                <div style="background: #f8f9fa; border-radius: 6px; padding: 15px; margin-bottom: 25px;">
+                                    <p style="margin: 0 0 8px 0; color: #666666; font-size: 13px;">
+                                        ' . get_string('confirm_email_link_alt', 'local_jobboard') . '
+                                    </p>
+                                    <p style="margin: 0; word-break: break-all;">
+                                        <a href="' . htmlspecialchars($confirmurl->out(false)) . '"
+                                           style="color: #1b9e88; font-size: 12px; text-decoration: underline;">
+                                            ' . htmlspecialchars($confirmurl->out(false)) . '
+                                        </a>
+                                    </p>
+                                </div>
+
+                                <!-- Expiry Notice -->
+                                <p style="margin: 0 0 25px 0; color: #856404; background: #fff3cd; padding: 12px 15px;
+                                          border-radius: 6px; font-size: 14px; border-left: 4px solid #ffc107;">
+                                    ⏰ ' . get_string('confirm_email_expires', 'local_jobboard') . '
+                                </p>
+
+                                <!-- Next Steps -->
+                                <div style="border-top: 1px solid #e9ecef; padding-top: 25px;">
+                                    <h3 style="margin: 0 0 15px 0; color: #1a1a1a; font-size: 16px;">
+                                        ' . get_string('confirm_email_next_steps_title', 'local_jobboard') . '
+                                    </h3>
+                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #555555; font-size: 14px;">
+                                                <span style="display: inline-block; width: 24px; height: 24px; background: #1b9e88;
+                                                             color: white; border-radius: 50%; text-align: center; line-height: 24px;
+                                                             font-size: 12px; margin-right: 10px;">1</span>
+                                                ' . get_string('confirm_email_step1', 'local_jobboard') . '
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #555555; font-size: 14px;">
+                                                <span style="display: inline-block; width: 24px; height: 24px; background: #1b9e88;
+                                                             color: white; border-radius: 50%; text-align: center; line-height: 24px;
+                                                             font-size: 12px; margin-right: 10px;">2</span>
+                                                ' . get_string('confirm_email_step2', 'local_jobboard') . '
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #555555; font-size: 14px;">
+                                                <span style="display: inline-block; width: 24px; height: 24px; background: #1b9e88;
+                                                             color: white; border-radius: 50%; text-align: center; line-height: 24px;
+                                                             font-size: 12px; margin-right: 10px;">3</span>
+                                                ' . get_string('confirm_email_step3', 'local_jobboard') . '
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; color: #555555; font-size: 14px;">
+                                                <span style="display: inline-block; width: 24px; height: 24px; background: #1b9e88;
+                                                             color: white; border-radius: 50%; text-align: center; line-height: 24px;
+                                                             font-size: 12px; margin-right: 10px;">4</span>
+                                                ' . get_string('confirm_email_step4', 'local_jobboard') . '
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Footer -->
+                        <tr>
+                            <td style="background: #f8f9fa; padding: 20px 40px; border-top: 1px solid #e9ecef;">
+                                <p style="margin: 0 0 10px 0; color: #666666; font-size: 13px; text-align: center;">
+                                    ' . get_string('confirm_email_ignore', 'local_jobboard') . '
+                                </p>
+                                <p style="margin: 0; color: #999999; font-size: 12px; text-align: center;">
+                                    ' . get_string('confirm_email_footer', 'local_jobboard') . '
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>';
 
     // Send the email.
     $result = email_to_user(

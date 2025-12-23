@@ -4049,3 +4049,54 @@ $string['tour_convocatoria_manage_terms_title'] = 'Terms and Conditions';
 $string['tour_convocatoria_manage_terms_content'] = 'Define the terms applicants must accept when applying. This can include privacy policies and data handling agreements.';
 $string['tour_convocatoria_manage_save_title'] = 'Save Convocatoria';
 $string['tour_convocatoria_manage_save_content'] = 'Click Save to create or update the convocatoria. You can add vacancies after saving.';
+
+// =============================================================================
+// FAQ - FREQUENTLY ASKED QUESTIONS
+// =============================================================================
+
+$string['faq_title'] = 'Frequently Asked Questions';
+$string['faq_subtitle'] = 'Answers to common questions about the application process';
+
+$string['faq_q1'] = 'How do I apply for a vacancy?';
+$string['faq_a1'] = 'To apply: 1) Create an account using your ID number. 2) Log in and go to "Vacancies". 3) Select the vacancy you\'re interested in and click "Apply". 4) Complete all form steps and upload the required documents.';
+
+$string['faq_q2'] = 'What documents do I need to apply?';
+$string['faq_a2'] = 'Documents vary by vacancy but generally include: ID document, CV, academic degrees, work certificates, and background checks. Each vacancy specifies mandatory and optional documents.';
+
+$string['faq_q3'] = 'How can I check my application status?';
+$string['faq_a3'] = 'Log in to your account and go to "My Applications" in the sidebar. There you\'ll see the current status of each application, pending document validations, and reviewer comments.';
+
+$string['faq_q4'] = 'What should I do if my document is rejected?';
+$string['faq_a4'] = 'If a document is rejected, you\'ll receive a notification explaining why. You can upload a corrected document while the call is active. Make sure to review the reviewer\'s comments before resubmitting.';
+
+$string['faq_q5'] = 'Can I apply to multiple vacancies?';
+$string['faq_a5'] = 'Yes, you can apply to multiple vacancies within the same call, as long as you meet each one\'s requirements. Common documents are shared across applications.';
+
+$string['faq_q6'] = 'I forgot my password, what should I do?';
+$string['faq_a6'] = 'On the login page, click "Forgot password?". Enter your registered email and you\'ll receive instructions to reset your password.';
+
+$string['faq_q7'] = 'What is the application deadline?';
+$string['faq_a7'] = 'Each call has specific opening and closing dates. Check the dates on the call page. Applications are not accepted after the closing date.';
+
+$string['faq_q8'] = 'How will I be contacted if selected?';
+$string['faq_a8'] = 'All communications are sent to the email registered in your account. Make sure to keep your email updated and regularly check your inbox, including the spam folder.';
+
+// =============================================================================
+// ACCOUNT CONFIRMATION EMAIL
+// =============================================================================
+
+$string['confirm_email_subject'] = 'Confirm your account - Job Board';
+$string['confirm_email_greeting'] = 'Welcome, {$a}!';
+$string['confirm_email_intro'] = 'Thank you for registering with our Job Board. Your account has been created successfully.';
+$string['confirm_email_action'] = 'To activate your account and start applying for vacancies, click the button below:';
+$string['confirm_email_button'] = 'Confirm my account';
+$string['confirm_email_link_alt'] = 'If the button doesn\'t work, copy and paste the following link into your browser:';
+$string['confirm_email_expires'] = 'This confirmation link will expire in 24 hours.';
+$string['confirm_email_next_steps_title'] = 'What\'s next after confirming?';
+$string['confirm_email_step1'] = 'Complete your professional profile';
+$string['confirm_email_step2'] = 'Browse available vacancies';
+$string['confirm_email_step3'] = 'Prepare your documents';
+$string['confirm_email_step4'] = 'Apply to vacancies that interest you';
+$string['confirm_email_help'] = 'If you have any questions, visit our support page or contact us.';
+$string['confirm_email_ignore'] = 'If you did not request this account, you can safely ignore this email.';
+$string['confirm_email_footer'] = 'This is an automated message. Please do not reply to this email.';

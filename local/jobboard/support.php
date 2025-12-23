@@ -364,6 +364,34 @@ echo '</ul>';
 echo '</div>';
 echo '</div>';
 
+// FAQ section.
+echo '<div class="jb-card jb-faq">';
+echo '<div class="jb-card__header jb-card__header--info">';
+echo '<i class="fa fa-question-circle"></i> ' . get_string('faq_title', 'local_jobboard');
+echo '</div>';
+echo '<div class="jb-card__body">';
+echo '<p class="jb-faq__subtitle">' . get_string('faq_subtitle', 'local_jobboard') . '</p>';
+echo '<div class="jb-faq__list">';
+
+// FAQ items - using accordion pattern.
+for ($i = 1; $i <= 8; $i++) {
+    $question = get_string("faq_q{$i}", 'local_jobboard');
+    $answer = get_string("faq_a{$i}", 'local_jobboard');
+    echo '<div class="jb-faq__item">';
+    echo '<button class="jb-faq__question" type="button" aria-expanded="false" onclick="this.classList.toggle(\'jb-faq__question--active\'); this.setAttribute(\'aria-expanded\', this.classList.contains(\'jb-faq__question--active\'));">';
+    echo '<span>' . $question . '</span>';
+    echo '<i class="fa fa-chevron-down jb-faq__icon"></i>';
+    echo '</button>';
+    echo '<div class="jb-faq__answer">';
+    echo '<p>' . $answer . '</p>';
+    echo '</div>';
+    echo '</div>';
+}
+
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
 // Form section.
 echo '<div class="jb-card jb-support-form">';
 echo '<div class="jb-card__header">';
@@ -547,6 +575,89 @@ echo '<style>
 .jb-support-info__list li i {
     color: var(--iser-verde, #1b9e88);
     margin-top: 0.125rem;
+}
+
+/* FAQ Section */
+.jb-card__header--info {
+    background: #17a2b8;
+    color: #fff;
+}
+
+.jb-card__header--info i {
+    color: #fff;
+}
+
+.jb-faq__subtitle {
+    color: var(--iser-gris-medio, #666);
+    font-size: 0.875rem;
+    margin: 0 0 1rem 0;
+}
+
+.jb-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.jb-faq__item {
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.jb-faq__question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: #f9fafb;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--iser-gris-oscuro, #333);
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.jb-faq__question:hover {
+    background: #f0f0f0;
+}
+
+.jb-faq__question span {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.jb-faq__icon {
+    color: var(--iser-verde, #1b9e88);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.jb-faq__question--active .jb-faq__icon {
+    transform: rotate(180deg);
+}
+
+.jb-faq__answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #fff;
+}
+
+.jb-faq__question--active + .jb-faq__answer {
+    max-height: 500px;
+}
+
+.jb-faq__answer p {
+    padding: 1rem;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--iser-gris-oscuro, #333);
+    line-height: 1.6;
+    border-top: 1px solid #e5e5e5;
 }
 
 /* Footer Nav */
