@@ -62,8 +62,6 @@ $caps = [
     'reviewdocuments' => has_capability('local/jobboard:reviewdocuments', $context),
     'validatedocuments' => has_capability('local/jobboard:validatedocuments', $context),
     'assignreviewers' => has_capability('local/jobboard:assignreviewers', $context),
-    'evaluate' => has_capability('local/jobboard:evaluate', $context),
-    'viewevaluations' => has_capability('local/jobboard:viewevaluations', $context),
     'viewallapplications' => has_capability('local/jobboard:viewallapplications', $context),
     'changeapplicationstatus' => has_capability('local/jobboard:changeapplicationstatus', $context),
 

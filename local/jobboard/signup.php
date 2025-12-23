@@ -470,6 +470,9 @@ function send_confirmation_email_to_user($user) {
     $site = get_site();
     $subject = get_string('confirm_email_subject', 'local_jobboard') . ' - ' . format_string($site->fullname);
 
+    // Build support URL for the jobboard.
+    $supporturl = new moodle_url('/local/jobboard/support.php');
+
     // Build plain text version.
     $username = fullname($user, true);
     $messagetext = get_string('confirm_email_greeting', 'local_jobboard', $username) . "\n\n";
@@ -482,6 +485,8 @@ function send_confirmation_email_to_user($user) {
     $messagetext .= "2. " . get_string('confirm_email_step2', 'local_jobboard') . "\n";
     $messagetext .= "3. " . get_string('confirm_email_step3', 'local_jobboard') . "\n";
     $messagetext .= "4. " . get_string('confirm_email_step4', 'local_jobboard') . "\n\n";
+    $messagetext .= get_string('confirm_email_help', 'local_jobboard') . "\n";
+    $messagetext .= $supporturl->out(false) . "\n\n";
     $messagetext .= get_string('confirm_email_ignore', 'local_jobboard') . "\n\n";
     $messagetext .= "---\n" . format_string($site->fullname) . "\n";
     $messagetext .= get_string('confirm_email_footer', 'local_jobboard');
@@ -605,6 +610,13 @@ function send_confirmation_email_to_user($user) {
                         <!-- Footer -->
                         <tr>
                             <td style="background: #f8f9fa; padding: 20px 40px; border-top: 1px solid #e9ecef;">
+                                <p style="margin: 0 0 12px 0; color: #555555; font-size: 13px; text-align: center;">
+                                    ' . get_string('confirm_email_help', 'local_jobboard') . '
+                                    <a href="' . htmlspecialchars($supporturl->out(false)) . '"
+                                       style="color: #1b9e88; text-decoration: underline;">
+                                       ' . get_string('support_page_title', 'local_jobboard') . '
+                                    </a>
+                                </p>
                                 <p style="margin: 0 0 10px 0; color: #666666; font-size: 13px; text-align: center;">
                                     ' . get_string('confirm_email_ignore', 'local_jobboard') . '
                                 </p>
