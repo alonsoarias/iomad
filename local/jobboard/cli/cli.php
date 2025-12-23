@@ -935,14 +935,15 @@ if ($options['sync-sedes']) {
         'created' => 0,
         'deleted' => 0,
         'restored' => 0,
+        'docs_restored' => 0,
         'orphaned' => 0,
         'errors' => 0,
     ];
 
     // ========================================================================
-    // PASO 1: Respaldar TODAS las postulaciones con info de vacante
+    // PASO 1: Respaldar TODAS las postulaciones con info de vacante Y DOCUMENTOS
     // ========================================================================
-    cli_heading("PASO 1: Respaldar Postulaciones");
+    cli_heading("PASO 1: Respaldar Postulaciones y Documentos");
 
     $sql = "SELECT a.*, v.code, v.department as program, v.title as vacancy_title,
                    v.location, v.modality
@@ -951,8 +952,27 @@ if ($options['sync-sedes']) {
             WHERE v.convocatoriaid = ?";
     $applications = $DB->get_records_sql($sql, [$convocatoriaid]);
 
+    // Backup documents for each application
+    $applicationDocuments = [];
+    $totalDocs = 0;
+    if (!empty($applications)) {
+        $appIds = array_keys($applications);
+        list($inSql, $params) = $DB->get_in_or_equal($appIds, SQL_PARAMS_NAMED);
+        $documents = $DB->get_records_select('local_jobboard_document', "applicationid $inSql", $params);
+
+        // Group documents by application ID
+        foreach ($documents as $doc) {
+            if (!isset($applicationDocuments[$doc->applicationid])) {
+                $applicationDocuments[$doc->applicationid] = [];
+            }
+            $applicationDocuments[$doc->applicationid][] = $doc;
+            $totalDocs++;
+        }
+    }
+
     if (!empty($applications)) {
         echo "Postulaciones respaldadas: " . count($applications) . "\n";
+        echo "Documentos respaldados: " . $totalDocs . "\n";
         if ($verbose) {
             foreach ($applications as $app) {
                 // Extract profile from title (format: "PROGRAM - PROFILE")
@@ -961,7 +981,8 @@ if ($options['sync-sedes']) {
                     $parts = explode(' - ', $app->vacancy_title, 2);
                     $profile = $parts[1] ?? '';
                 }
-                echo "  - App #{$app->id}: {$app->code} @ {$app->location} | Programa: {$app->program} | Perfil: " . mb_substr($profile, 0, 50, 'UTF-8') . "\n";
+                $docCount = isset($applicationDocuments[$app->id]) ? count($applicationDocuments[$app->id]) : 0;
+                echo "  - App #{$app->id}: {$app->code} @ {$app->location} | Docs: {$docCount} | Programa: {$app->program} | Perfil: " . mb_substr($profile, 0, 40, 'UTF-8') . "\n";
             }
         }
         echo "\n";
@@ -970,14 +991,22 @@ if ($options['sync-sedes']) {
     }
 
     // ========================================================================
-    // PASO 2: Eliminar postulaciones y vacantes (datos ya respaldados en memoria)
+    // PASO 2: Eliminar documentos, postulaciones y vacantes (datos ya respaldados en memoria)
     // ========================================================================
-    cli_heading("PASO 2: Eliminar Postulaciones y Vacantes");
+    cli_heading("PASO 2: Eliminar Documentos, Postulaciones y Vacantes");
 
     if (!empty($existingVacancies)) {
         if (!$dryrun) {
             // Get all vacancy IDs for this convocatoria
             $vacancyIds = array_keys($existingVacancies);
+
+            // Delete documents for applications (data is already in $applicationDocuments)
+            if (!empty($applications)) {
+                $appIds = array_keys($applications);
+                list($docInSql, $docParams) = $DB->get_in_or_equal($appIds, SQL_PARAMS_NAMED);
+                $DB->execute("DELETE FROM {local_jobboard_document} WHERE applicationid $docInSql", $docParams);
+                echo "Documentos eliminados: " . $totalDocs . " (respaldados en memoria)\n";
+            }
 
             // Delete applications for these vacancies (data is already in $applications)
             if (!empty($applications)) {
@@ -1148,14 +1177,45 @@ if ($options['sync-sedes']) {
                     if (isset($app->coverletter)) $newApp->coverletter = $app->coverletter;
                     if (isset($app->resume)) $newApp->resume = $app->resume;
                     if (isset($app->notes)) $newApp->notes = $app->notes;
+                    // Copy all application fields
+                    if (isset($app->statusnotes)) $newApp->statusnotes = $app->statusnotes;
+                    if (isset($app->isexemption)) $newApp->isexemption = $app->isexemption;
+                    if (isset($app->exemptionreason)) $newApp->exemptionreason = $app->exemptionreason;
+                    if (isset($app->consentgiven)) $newApp->consentgiven = $app->consentgiven;
+                    if (isset($app->consenttimestamp)) $newApp->consenttimestamp = $app->consenttimestamp;
+                    if (isset($app->consentip)) $newApp->consentip = $app->consentip;
+                    if (isset($app->consentuseragent)) $newApp->consentuseragent = $app->consentuseragent;
+                    if (isset($app->digitalsignature)) $newApp->digitalsignature = $app->digitalsignature;
+                    if (isset($app->applicationdata)) $newApp->applicationdata = $app->applicationdata;
+                    if (isset($app->reviewerid)) $newApp->reviewerid = $app->reviewerid;
 
                     try {
-                        $DB->insert_record('local_jobboard_application', $newApp);
+                        $newAppId = $DB->insert_record('local_jobboard_application', $newApp);
                         $stats['restored']++;
+
+                        // Restore documents for this application
+                        $docsRestored = 0;
+                        if (isset($applicationDocuments[$app->id])) {
+                            foreach ($applicationDocuments[$app->id] as $doc) {
+                                $newDoc = clone $doc;
+                                unset($newDoc->id); // Remove old ID
+                                $newDoc->applicationid = $newAppId; // Set new application ID
+                                try {
+                                    $DB->insert_record('local_jobboard_document', $newDoc);
+                                    $docsRestored++;
+                                    $stats['docs_restored']++;
+                                } catch (Exception $e) {
+                                    if ($verbose) {
+                                        echo "  ⚠ Error restaurando documento: " . $e->getMessage() . "\n";
+                                    }
+                                }
+                            }
+                        }
 
                         if ($verbose) {
                             $matchedVac = $newVacanciesById[$matchingVacancyId];
-                            echo "✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod)\n";
+                            $docInfo = $docsRestored > 0 ? " [+{$docsRestored} docs]" : "";
+                            echo "✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod){$docInfo}\n";
                         }
                     } catch (Exception $e) {
                         echo "✗ ERROR restaurando App #{$app->id}: " . $e->getMessage() . "\n";
@@ -1165,7 +1225,9 @@ if ($options['sync-sedes']) {
                     $stats['restored']++;
                     if ($verbose) {
                         $matchedVac = $newVacanciesById[$matchingVacancyId];
-                        echo "[DRY] ✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod)\n";
+                        $docCount = isset($applicationDocuments[$app->id]) ? count($applicationDocuments[$app->id]) : 0;
+                        $docInfo = $docCount > 0 ? " [+{$docCount} docs]" : "";
+                        echo "[DRY] ✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod){$docInfo}\n";
                     }
                 }
             } else {
@@ -1190,6 +1252,7 @@ if ($options['sync-sedes']) {
     echo "║  Vacantes Eliminadas      : " . str_pad($stats['deleted'], 5) . "                    ║\n";
     echo "║  Vacantes Creadas         : " . str_pad($stats['created'], 5) . "                    ║\n";
     echo "║  Postulaciones Restauradas: " . str_pad($stats['restored'], 5) . "                    ║\n";
+    echo "║  Documentos Restaurados   : " . str_pad($stats['docs_restored'], 5) . "                    ║\n";
     echo "║  Postulaciones Huérfanas  : " . str_pad($stats['orphaned'], 5) . "                    ║\n";
     echo "║  Errores                  : " . str_pad($stats['errors'], 5) . "                    ║\n";
     echo "╚════════════════════════════════════════════════════════╝\n";
