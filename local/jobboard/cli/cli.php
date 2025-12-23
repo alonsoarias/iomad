@@ -1193,6 +1193,44 @@ if ($options['sync-sedes']) {
                         $newAppId = $DB->insert_record('local_jobboard_application', $newApp);
                         $stats['restored']++;
 
+                        // Copy files from old application to new application in Moodle file storage
+                        $fs = get_file_storage();
+                        $context = \context_system::instance();
+                        $oldFiles = $fs->get_area_files(
+                            $context->id,
+                            'local_jobboard',
+                            'document',
+                            $app->id,  // Old application ID
+                            'id',
+                            false  // Exclude directories
+                        );
+
+                        $filesCopied = 0;
+                        foreach ($oldFiles as $oldFile) {
+                            // Create new file record with new application ID
+                            $newFileRecord = [
+                                'contextid' => $context->id,
+                                'component' => 'local_jobboard',
+                                'filearea' => 'document',
+                                'itemid' => $newAppId,  // NEW application ID
+                                'filepath' => $oldFile->get_filepath(),
+                                'filename' => $oldFile->get_filename(),
+                            ];
+
+                            try {
+                                // Check if file already exists
+                                if (!$fs->file_exists($context->id, 'local_jobboard', 'document',
+                                    $newAppId, $oldFile->get_filepath(), $oldFile->get_filename())) {
+                                    $fs->create_file_from_storedfile($newFileRecord, $oldFile);
+                                    $filesCopied++;
+                                }
+                            } catch (Exception $e) {
+                                if ($verbose) {
+                                    echo "  ⚠ Error copiando archivo: " . $e->getMessage() . "\n";
+                                }
+                            }
+                        }
+
                         // Restore documents for this application
                         $docsRestored = 0;
                         if (isset($applicationDocuments[$app->id])) {
@@ -1214,7 +1252,7 @@ if ($options['sync-sedes']) {
 
                         if ($verbose) {
                             $matchedVac = $newVacanciesById[$matchingVacancyId];
-                            $docInfo = $docsRestored > 0 ? " [+{$docsRestored} docs]" : "";
+                            $docInfo = $docsRestored > 0 ? " [+{$docsRestored} docs, {$filesCopied} files]" : "";
                             echo "✓ RESTAURADA: {$app->code} → {$matchedVac->code} @ {$matchedVac->location} (match: $matchMethod){$docInfo}\n";
                         }
                     } catch (Exception $e) {
