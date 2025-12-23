@@ -181,6 +181,63 @@ if ($isresuming && $draftapplication) {
         'coverletter' => $draftapplication->coverletter,
         'consentaccepted' => $draftapplication->consentgiven,
     ];
+
+    // Load existing documents and copy them back to draft areas for the filemanager.
+    $existingdocs = document::get_by_application($draftapplication->id);
+    $fs = get_file_storage();
+
+    foreach ($existingdocs as $doc) {
+        // Skip text documents - they don't need file pre-population.
+        if ($doc->is_text_document()) {
+            continue;
+        }
+
+        $fieldname = 'doc_' . $doc->documenttype;
+
+        // Get the stored file for this document.
+        $storedfile = $doc->get_stored_file();
+        if (!$storedfile) {
+            continue;
+        }
+
+        // Create a new draft area and copy the file into it.
+        $draftitemid = file_get_unused_draft_itemid();
+        $usercontext = \context_user::instance($USER->id);
+
+        // Copy the file to the user's draft area.
+        $filerecord = [
+            'contextid' => $usercontext->id,
+            'component' => 'user',
+            'filearea' => 'draft',
+            'itemid' => $draftitemid,
+            'filepath' => '/',
+            'filename' => $storedfile->get_filename(),
+        ];
+
+        try {
+            $fs->create_file_from_storedfile($filerecord, $storedfile);
+            // Set the draft item ID for this document field.
+            $draftdata[$fieldname] = $draftitemid;
+        } catch (Exception $e) {
+            debugging('Failed to copy document ' . $doc->documenttype . ' to draft area: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        }
+    }
+
+    // Also pre-populate text documents from applicationdata.
+    $appdata = $draftapplication->get_application_data();
+    if (!empty($appdata['text_documents'])) {
+        foreach ($appdata['text_documents'] as $doccode => $docinfo) {
+            $fieldname = 'doc_' . $doccode;
+            if ($docinfo['type'] === 'editor') {
+                // Editor fields expect an array with 'text' key.
+                $draftdata[$fieldname . '_editor'] = ['text' => $docinfo['value'], 'format' => FORMAT_HTML];
+            } else {
+                // Text/textarea fields.
+                $draftdata[$fieldname] = $docinfo['value'];
+            }
+        }
+    }
+
     $mform->set_data($draftdata);
 }
 
