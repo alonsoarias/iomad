@@ -346,6 +346,12 @@ echo '<span>' . get_string('support_warning_message', 'local_jobboard') . '</spa
 echo '</div>';
 echo '</div>';
 
+// Two column layout: Form (left col-8) + FAQ (right col-4).
+echo '<div class="jb-support-layout">';
+
+// Left column - Form section.
+echo '<div class="jb-support-layout__main">';
+
 // Information card.
 echo '<div class="jb-card jb-support-info">';
 echo '<div class="jb-card__header jb-card__header--primary">';
@@ -364,7 +370,24 @@ echo '</ul>';
 echo '</div>';
 echo '</div>';
 
-// FAQ section.
+// Form section.
+echo '<div class="jb-card jb-support-form">';
+echo '<div class="jb-card__header">';
+echo '<i class="fa fa-edit"></i> ' . get_string('support_form_title', 'local_jobboard');
+echo '</div>';
+echo '<div class="jb-card__body">';
+
+// Display the form.
+$mform->display();
+
+echo '</div>';
+echo '</div>';
+
+echo '</div>'; // End left column.
+
+// Right column - FAQ section.
+echo '<div class="jb-support-layout__sidebar">';
+
 echo '<div class="jb-card jb-faq">';
 echo '<div class="jb-card__header jb-card__header--info">';
 echo '<i class="fa fa-question-circle"></i> ' . get_string('faq_title', 'local_jobboard');
@@ -392,18 +415,9 @@ echo '</div>';
 echo '</div>';
 echo '</div>';
 
-// Form section.
-echo '<div class="jb-card jb-support-form">';
-echo '<div class="jb-card__header">';
-echo '<i class="fa fa-edit"></i> ' . get_string('support_form_title', 'local_jobboard');
-echo '</div>';
-echo '<div class="jb-card__body">';
+echo '</div>'; // End right column.
 
-// Display the form.
-$mform->display();
-
-echo '</div>';
-echo '</div>';
+echo '</div>'; // End two column layout.
 
 // Footer navigation.
 echo '<div class="jb-footer-nav">';
@@ -421,8 +435,39 @@ echo '<style>
    Following jb-* pattern
    ================================================================ */
 .jb-support {
-    max-width: 1200px;
+    max-width: 1400px;
     padding: 1rem;
+}
+
+/* Two column layout */
+.jb-support-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.jb-support-layout__main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.jb-support-layout__sidebar {
+    position: sticky;
+    top: 1rem;
+}
+
+/* Responsive: Stack on mobile */
+@media (max-width: 992px) {
+    .jb-support-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-support-layout__sidebar {
+        position: static;
+        order: -1;
+    }
 }
 
 /* Header */
