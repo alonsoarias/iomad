@@ -115,6 +115,10 @@ list($options, $unrecognized) = cli_get_params([
     'companyid' => null,
     // Normalize programs in database.
     'normalize-programs' => false,
+    // Restore orphaned application.
+    'restore-application' => false,
+    'userid' => null,
+    'new-vacancyid' => null,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -142,6 +146,9 @@ list($options, $unrecognized) = cli_get_params([
     'Y' => 'sync-sedes',
     'M' => 'sync-metadata',
     'N' => 'normalize-programs',
+    'R' => 'restore-application',
+    'U' => 'userid',
+    'W' => 'new-vacancyid',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -301,6 +308,21 @@ APPLICATION DELETION EXAMPLES:
 
   # Dry run (preview what would be deleted)
   php cli.php --delete-application --idnumber=1234567890 --dryrun --verbose
+
+APPLICATION RESTORATION:
+  -R, --restore-application  RESTORE an orphaned application to a new vacancy
+  -U, --userid=ID            User ID (from mdl_user.id)
+  -W, --new-vacancyid=ID     New vacancy ID to assign the application to
+
+  Use this to restore applications that were orphaned during sync
+  (e.g., when vacancy codes changed from FII-07 to FII-07a/FII-07b)
+
+  RESTORE EXAMPLES:
+    # Restore application for user 3064 to vacancy 793
+    php cli.php --restore-application --userid=3064 --new-vacancyid=793 --verbose
+
+    # Preview what would be created (dry run)
+    php cli.php --restore-application --userid=3064 --new-vacancyid=793 --dryrun --verbose
 
 STRUCTURE CREATED (IOMAD Hierarchy):
   LEVEL 1 - Companies (16 Centros Tutoriales):
@@ -1587,6 +1609,92 @@ if ($options['delete-application'] || $options['list-applications']) {
         echo "\n=== DELETION COMPLETE ===\n";
     }
 
+    exit(0);
+}
+
+// ============================================================
+// APPLICATION RESTORATION (from sync orphans)
+// ============================================================
+if ($options['restore-application']) {
+    if (!$moodleavailable) {
+        cli_error("Application restoration requires Moodle. Run from Moodle installation.");
+    }
+
+    $userid = $options['userid'] ? (int) $options['userid'] : null;
+    $newvacancyid = $options['new-vacancyid'] ? (int) $options['new-vacancyid'] : null;
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+
+    // Validate parameters.
+    if (empty($userid) || empty($newvacancyid)) {
+        cli_error("You must specify --userid and --new-vacancyid");
+    }
+
+    cli_heading('Restoring Orphaned Application');
+
+    // Get user info.
+    $user = $DB->get_record('user', ['id' => $userid]);
+    if (!$user) {
+        cli_error("User with ID '$userid' not found");
+    }
+    echo "User: {$user->firstname} {$user->lastname} (ID: {$user->id}, email: {$user->email})\n";
+
+    // Get vacancy info.
+    $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $newvacancyid]);
+    if (!$vacancy) {
+        cli_error("Vacancy with ID '$newvacancyid' not found");
+    }
+    echo "Vacancy: {$vacancy->code} - {$vacancy->title}\n";
+    echo "  Location: {$vacancy->location}\n";
+    echo "  Modality: {$vacancy->modality}\n";
+    echo "  Program: {$vacancy->department}\n\n";
+
+    // Check if user already has an application for this vacancy.
+    $existing = $DB->get_record('local_jobboard_application', [
+        'userid' => $userid,
+        'vacancyid' => $newvacancyid
+    ]);
+    if ($existing) {
+        cli_error("User already has an application (ID: {$existing->id}) for this vacancy");
+    }
+
+    if ($dryrun) {
+        echo "*** DRY RUN MODE - No changes will be made ***\n\n";
+    }
+
+    // Create application.
+    $now = time();
+    $application = new stdClass();
+    $application->vacancyid = $newvacancyid;
+    $application->userid = $userid;
+    $application->status = 'submitted';
+    $application->statusnotes = '';
+    $application->isexemption = 0;
+    $application->exemptionreason = '';
+    $application->consentgiven = 1;
+    $application->consenttimestamp = $now;
+    $application->consentip = '127.0.0.1';
+    $application->consentuseragent = 'CLI Restore Tool';
+    $application->digitalsignature = trim($user->firstname . ' ' . $user->lastname);
+    $application->coverletter = '';
+    $application->applicationdata = '{}';
+    $application->reviewerid = null;
+    $application->timecreated = $now;
+    $application->timemodified = null;
+
+    if (!$dryrun) {
+        $newid = $DB->insert_record('local_jobboard_application', $application);
+        echo "SUCCESS: Created application ID: $newid\n";
+        echo "  Vacancy: {$vacancy->code} ({$vacancy->location}, {$vacancy->modality})\n";
+        echo "  User: {$user->firstname} {$user->lastname}\n";
+    } else {
+        echo "Would CREATE application:\n";
+        echo "  Vacancy ID: $newvacancyid ({$vacancy->code})\n";
+        echo "  User ID: $userid ({$user->firstname} {$user->lastname})\n";
+        echo "  Status: submitted\n";
+    }
+
+    echo "\n=== RESTORATION COMPLETE ===\n";
     exit(0);
 }
 
