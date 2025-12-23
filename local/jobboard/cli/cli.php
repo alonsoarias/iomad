@@ -1218,13 +1218,16 @@ if ($options['sync-sedes']) {
 
                                     // 2. Create mdl_files entry using contenthash (Opción A)
                                     if (!empty($doc->contenthash)) {
+                                        // Use documenttype as filepath to match document.php expectations
+                                        $filepath = '/' . $doc->documenttype . '/';
+
                                         // Check if file already exists for new application
                                         $existingFile = $fs->get_file(
                                             $context->id,
                                             'local_jobboard',
                                             'application_documents',
                                             $newAppId,
-                                            '/',
+                                            $filepath,
                                             $doc->filename
                                         );
 
@@ -1248,7 +1251,7 @@ if ($options['sync-sedes']) {
                                                         'component' => 'local_jobboard',
                                                         'filearea' => 'application_documents',
                                                         'itemid' => $newAppId,
-                                                        'filepath' => '/',
+                                                        'filepath' => $filepath,
                                                         'filename' => $doc->filename,
                                                     ];
                                                     $fs->create_file_from_storedfile($newFileRecord, $storedFile);
@@ -1838,12 +1841,15 @@ if ($options['restore-application']) {
 
                     // 2. Create mdl_files entry using contenthash (Opción A).
                     if (!empty($doc->contenthash)) {
+                        // Use documenttype as filepath to match document.php expectations
+                        $filepath = '/' . $doc->documenttype . '/';
+
                         $existingFile = $fs->get_file(
                             $context->id,
                             'local_jobboard',
                             'application_documents',
                             $newid,
-                            '/',
+                            $filepath,
                             $doc->filename
                         );
 
@@ -1866,7 +1872,7 @@ if ($options['restore-application']) {
                                         'component' => 'local_jobboard',
                                         'filearea' => 'application_documents',
                                         'itemid' => $newid,
-                                        'filepath' => '/',
+                                        'filepath' => $filepath,
                                         'filename' => $doc->filename,
                                     ];
                                     $fs->create_file_from_storedfile($newFileRecord, $storedFile);
