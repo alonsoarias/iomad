@@ -217,6 +217,745 @@
       }
     }
   },
+  "classes": {
+    "document": {
+      "namespace": "local_jobboard",
+      "file": "classes/document.php",
+      "description": "Represents an uploaded document with validation tracking",
+      "constants": {
+        "COMPONENT": "local_jobboard",
+        "FILEAREA": "application_documents",
+        "FILENAME_PREFIXES": {
+          "description": "Mapping of document types to standardized filename prefixes",
+          "examples": {
+            "rut": "Rut",
+            "sigep": "Hv",
+            "cedula": "Di",
+            "diploma_pregrado": "Preg",
+            "experiencia_docente": "Edoc"
+          }
+        }
+      },
+      "properties": [
+        {"name": "id", "type": "int", "description": "Document ID"},
+        {"name": "applicationid", "type": "int", "description": "Parent application ID"},
+        {"name": "documenttype", "type": "string", "description": "Document type code"},
+        {"name": "filename", "type": "string", "description": "Original filename"},
+        {"name": "contenthash", "type": "string", "description": "Moodle file contenthash"},
+        {"name": "filesize", "type": "int", "description": "File size in bytes"},
+        {"name": "mimetype", "type": "string", "description": "MIME type"},
+        {"name": "issuedate", "type": "int|null", "description": "Document issue date"},
+        {"name": "expirydate", "type": "int|null", "description": "Document expiry date"},
+        {"name": "isencrypted", "type": "int", "description": "Whether file is encrypted"},
+        {"name": "issuperseded", "type": "int", "description": "Whether document is superseded"}
+      ],
+      "methods": [
+        {
+          "name": "get",
+          "visibility": "public static",
+          "params": [{"name": "id", "type": "int"}],
+          "returns": "self|null",
+          "description": "Get document by ID"
+        },
+        {
+          "name": "create_from_file",
+          "visibility": "public static",
+          "params": [
+            {"name": "applicationid", "type": "int"},
+            {"name": "documenttype", "type": "string"},
+            {"name": "file", "type": "stored_file"},
+            {"name": "issuedate", "type": "int|null"}
+          ],
+          "returns": "self",
+          "description": "Create new document from uploaded file, marks previous as superseded"
+        },
+        {
+          "name": "create_text_document",
+          "visibility": "public static",
+          "params": [
+            {"name": "applicationid", "type": "int"},
+            {"name": "documenttype", "type": "string"},
+            {"name": "textcontent", "type": "string"}
+          ],
+          "returns": "self",
+          "description": "Create document record for text content (textarea fields)"
+        },
+        {
+          "name": "store_from_draft",
+          "visibility": "public static",
+          "params": [
+            {"name": "applicationid", "type": "int"},
+            {"name": "documenttype", "type": "string"},
+            {"name": "draftitemid", "type": "int"},
+            {"name": "issuedate", "type": "int|null"}
+          ],
+          "returns": "self|null",
+          "description": "Store uploaded file from form draft area"
+        },
+        {
+          "name": "validate",
+          "visibility": "public",
+          "params": [{"name": "userid", "type": "int"}],
+          "returns": "bool",
+          "description": "Approve document validation"
+        },
+        {
+          "name": "reject",
+          "visibility": "public",
+          "params": [
+            {"name": "userid", "type": "int"},
+            {"name": "reason", "type": "string"}
+          ],
+          "returns": "bool",
+          "description": "Reject document with reason"
+        },
+        {
+          "name": "get_by_application",
+          "visibility": "public static",
+          "params": [
+            {"name": "applicationid", "type": "int"},
+            {"name": "includesuperseded", "type": "bool"}
+          ],
+          "returns": "array",
+          "description": "Get all documents for an application"
+        },
+        {
+          "name": "get_stats",
+          "visibility": "public static",
+          "params": [{"name": "applicationid", "type": "int"}],
+          "returns": "array",
+          "description": "Get document statistics (total, pending, approved, rejected)"
+        },
+        {
+          "name": "get_required_types",
+          "visibility": "public static",
+          "params": [
+            {"name": "vacancyid", "type": "int"},
+            {"name": "userid", "type": "int|null"}
+          ],
+          "returns": "array",
+          "description": "Get required document types for vacancy considering exemptions"
+        },
+        {
+          "name": "get_download_url",
+          "visibility": "public",
+          "params": [{"name": "forcedownload", "type": "bool"}],
+          "returns": "moodle_url|null",
+          "description": "Get file download URL"
+        },
+        {
+          "name": "is_text_document",
+          "visibility": "public",
+          "params": [],
+          "returns": "bool",
+          "description": "Check if document is text-based (not a file)"
+        },
+        {
+          "name": "generate_standardized_filename",
+          "visibility": "public static",
+          "params": [
+            {"name": "documenttype", "type": "string"},
+            {"name": "userid", "type": "int"},
+            {"name": "originalfilename", "type": "string"}
+          ],
+          "returns": "string",
+          "description": "Generate standardized filename (Prefix_Lastname.ext)"
+        }
+      ]
+    },
+    "audit": {
+      "namespace": "local_jobboard",
+      "file": "classes/audit.php",
+      "description": "Enhanced audit logging with before/after value tracking",
+      "constants": {
+        "actions": [
+          "ACTION_CREATE",
+          "ACTION_UPDATE",
+          "ACTION_DELETE",
+          "ACTION_VIEW",
+          "ACTION_DOWNLOAD",
+          "ACTION_VALIDATE",
+          "ACTION_REJECT",
+          "ACTION_SUBMIT",
+          "ACTION_TRANSITION",
+          "ACTION_EMAIL_SENT",
+          "ACTION_UPLOAD",
+          "ACTION_APPROVE",
+          "ACTION_REVOKE",
+          "ACTION_ASSIGN",
+          "ACTION_PUBLISH",
+          "ACTION_CLOSE",
+          "ACTION_REUPLOAD",
+          "ACTION_IMPORT"
+        ],
+        "entities": [
+          "ENTITY_VACANCY",
+          "ENTITY_APPLICATION",
+          "ENTITY_DOCUMENT",
+          "ENTITY_EXEMPTION",
+          "ENTITY_CONVOCATORIA",
+          "ENTITY_CONFIG",
+          "ENTITY_USER",
+          "ENTITY_EMAIL_TEMPLATE",
+          "ENTITY_INTERVIEW",
+          "ENTITY_CONSENT",
+          "ENTITY_PROFILE",
+          "ENTITY_DOCTYPE",
+          "ENTITY_NOTIFICATION"
+        ]
+      },
+      "methods": [
+        {
+          "name": "log",
+          "visibility": "public static",
+          "params": [
+            {"name": "action", "type": "string"},
+            {"name": "entitytype", "type": "string"},
+            {"name": "entityid", "type": "int|null"},
+            {"name": "extradata", "type": "mixed"},
+            {"name": "previousvalue", "type": "mixed"},
+            {"name": "newvalue", "type": "mixed"},
+            {"name": "userid", "type": "int|null"}
+          ],
+          "returns": "int|bool",
+          "description": "Log action with optional before/after values (JSON encoded)"
+        },
+        {
+          "name": "log_transition",
+          "visibility": "public static",
+          "params": [
+            {"name": "entitytype", "type": "string"},
+            {"name": "entityid", "type": "int"},
+            {"name": "field", "type": "string"},
+            {"name": "oldvalue", "type": "mixed"},
+            {"name": "newvalue", "type": "mixed"},
+            {"name": "extradata", "type": "array"}
+          ],
+          "returns": "int|bool",
+          "description": "Log state transition with field change tracking"
+        },
+        {
+          "name": "log_email",
+          "visibility": "public static",
+          "params": [
+            {"name": "templatekey", "type": "string"},
+            {"name": "recipientid", "type": "int"},
+            {"name": "entityid", "type": "int|null"},
+            {"name": "entitytype", "type": "string"}
+          ],
+          "returns": "int|bool",
+          "description": "Log email sent event"
+        },
+        {
+          "name": "get_trail",
+          "visibility": "public static",
+          "params": [
+            {"name": "entitytype", "type": "string"},
+            {"name": "entityid", "type": "int"},
+            {"name": "limit", "type": "int"}
+          ],
+          "returns": "array",
+          "description": "Get complete audit trail for an entity"
+        },
+        {
+          "name": "get_user_activity",
+          "visibility": "public static",
+          "params": [
+            {"name": "userid", "type": "int"},
+            {"name": "limit", "type": "int"}
+          ],
+          "returns": "array",
+          "description": "Get user activity log"
+        },
+        {
+          "name": "cleanup",
+          "visibility": "public static",
+          "params": [{"name": "daystokeep", "type": "int"}],
+          "returns": "int",
+          "description": "Delete old audit records"
+        }
+      ]
+    },
+    "notification": {
+      "namespace": "local_jobboard",
+      "file": "classes/notification.php",
+      "description": "Notification queue and email sending",
+      "constants": {
+        "templates": [
+          "TEMPLATE_APPLICATION_RECEIVED",
+          "TEMPLATE_UNDER_REVIEW",
+          "TEMPLATE_DOCS_VALIDATED",
+          "TEMPLATE_DOCS_REJECTED",
+          "TEMPLATE_INTERVIEW",
+          "TEMPLATE_SELECTED",
+          "TEMPLATE_REJECTED",
+          "TEMPLATE_CLOSING_SOON",
+          "TEMPLATE_NEW_VACANCY"
+        ]
+      },
+      "methods": [
+        {
+          "name": "queue",
+          "visibility": "public static",
+          "params": [
+            {"name": "userid", "type": "int"},
+            {"name": "templatecode", "type": "string"},
+            {"name": "data", "type": "array"}
+          ],
+          "returns": "int",
+          "description": "Queue notification for background sending"
+        },
+        {
+          "name": "queue_status_change",
+          "visibility": "public static",
+          "params": [
+            {"name": "application", "type": "application"},
+            {"name": "newstatus", "type": "string"},
+            {"name": "notes", "type": "string|null"}
+          ],
+          "returns": "void",
+          "description": "Queue notification for application status change"
+        },
+        {
+          "name": "queue_application_received",
+          "visibility": "public static",
+          "params": [{"name": "application", "type": "application"}],
+          "returns": "void",
+          "description": "Queue confirmation for new application"
+        },
+        {
+          "name": "send_immediate",
+          "visibility": "public static",
+          "params": [
+            {"name": "userid", "type": "int"},
+            {"name": "templatecode", "type": "string"},
+            {"name": "data", "type": "array"}
+          ],
+          "returns": "bool",
+          "description": "Send notification immediately (bypass queue)"
+        },
+        {
+          "name": "retry_failed",
+          "visibility": "public static",
+          "params": [],
+          "returns": "int",
+          "description": "Reset failed notifications for retry"
+        }
+      ]
+    },
+    "exemption": {
+      "namespace": "local_jobboard",
+      "file": "classes/exemption.php",
+      "description": "ISER historic personnel exemption management",
+      "constants": {
+        "types": [
+          {"code": "TYPE_HISTORICO_ISER", "description": "Historic ISER personnel"},
+          {"code": "TYPE_DOCUMENTOS_RECIENTES", "description": "Recently approved documents"},
+          {"code": "TYPE_TRASLADO_INTERNO", "description": "Internal transfer"},
+          {"code": "TYPE_RECONTRATACION", "description": "Priority rehire"}
+        ]
+      },
+      "methods": [
+        {
+          "name": "get",
+          "visibility": "public static",
+          "params": [{"name": "id", "type": "int"}],
+          "returns": "self|null",
+          "description": "Get exemption by ID"
+        },
+        {
+          "name": "get_active_for_user",
+          "visibility": "public static",
+          "params": [{"name": "userid", "type": "int"}],
+          "returns": "self|null",
+          "description": "Get active exemption for user"
+        },
+        {
+          "name": "user_has_active_exemption",
+          "visibility": "public static",
+          "params": [{"name": "userid", "type": "int"}],
+          "returns": "bool",
+          "description": "Check if user has active exemption"
+        },
+        {
+          "name": "create",
+          "visibility": "public static",
+          "params": [
+            {"name": "userid", "type": "int"},
+            {"name": "type", "type": "string"},
+            {"name": "data", "type": "array"}
+          ],
+          "returns": "self",
+          "description": "Create new exemption"
+        },
+        {
+          "name": "revoke",
+          "visibility": "public",
+          "params": [{"name": "reason", "type": "string"}],
+          "returns": "bool",
+          "description": "Revoke this exemption"
+        },
+        {
+          "name": "is_active",
+          "visibility": "public",
+          "params": [],
+          "returns": "bool",
+          "description": "Check if exemption is currently active"
+        },
+        {
+          "name": "get_required_document_codes",
+          "visibility": "public",
+          "params": [],
+          "returns": "array",
+          "description": "Get reduced document requirements for exemption type"
+        },
+        {
+          "name": "import_from_csv",
+          "visibility": "public static",
+          "params": [{"name": "content", "type": "string"}],
+          "returns": "array",
+          "description": "Bulk import exemptions from CSV"
+        }
+      ]
+    }
+  },
+  "lib_functions": {
+    "navigation": [
+      {
+        "name": "local_jobboard_extend_navigation",
+        "params": [{"name": "navigation", "type": "global_navigation"}],
+        "description": "Adds Job Board menu to Moodle navigation drawer and main menu based on user capabilities and convocatoria status"
+      },
+      {
+        "name": "local_jobboard_should_show_menu",
+        "returns": "bool",
+        "description": "Check if menu should be visible (open convocatorias, custom roles, or admin)"
+      },
+      {
+        "name": "local_jobboard_user_has_custom_role",
+        "params": [{"name": "userid", "type": "int|null"}],
+        "returns": "bool",
+        "description": "Check if user has jobboard_reviewer, jobboard_coordinator, jobboard_dean, or jobboard_hr role"
+      }
+    ],
+    "file_serving": [
+      {
+        "name": "local_jobboard_pluginfile",
+        "params": ["course", "cm", "context", "filearea", "args", "forcedownload", "options"],
+        "description": "Serves files for convocatoria PDFs and application documents with access control"
+      }
+    ],
+    "status_management": [
+      {
+        "name": "local_jobboard_get_application_statuses",
+        "returns": "array",
+        "description": "Get list of application statuses (submitted, under_review, docs_validated, docs_rejected, interview, selected, rejected, withdrawn)"
+      },
+      {
+        "name": "local_jobboard_get_document_statuses",
+        "returns": "array",
+        "description": "Get list of document validation statuses (pending, approved, rejected)"
+      },
+      {
+        "name": "local_jobboard_get_allowed_transitions",
+        "returns": "array",
+        "description": "Get allowed state transitions for applications"
+      },
+      {
+        "name": "local_jobboard_is_transition_allowed",
+        "params": [
+          {"name": "from", "type": "string"},
+          {"name": "to", "type": "string"}
+        ],
+        "returns": "bool",
+        "description": "Check if status transition is allowed"
+      }
+    ],
+    "convocatoria_management": [
+      {
+        "name": "local_jobboard_has_open_convocatorias",
+        "returns": "bool",
+        "description": "Check if any convocatorias are open"
+      },
+      {
+        "name": "local_jobboard_get_convocatorias",
+        "params": [
+          {"name": "companyid", "type": "int"},
+          {"name": "status", "type": "string"},
+          {"name": "includeall", "type": "bool"}
+        ],
+        "returns": "array",
+        "description": "Get convocatorias for dropdown selection"
+      },
+      {
+        "name": "local_jobboard_get_convocatoria",
+        "params": [{"name": "convocatoriaid", "type": "int"}],
+        "returns": "stdClass|false",
+        "description": "Get convocatoria by ID"
+      }
+    ],
+    "application_validation": [
+      {
+        "name": "local_jobboard_can_user_apply_to_vacancy",
+        "params": [
+          {"name": "userid", "type": "int"},
+          {"name": "vacancyid", "type": "int"}
+        ],
+        "returns": "array",
+        "description": "Check if user can apply based on convocatoria restrictions (single application, max limit)"
+      },
+      {
+        "name": "local_jobboard_check_experience_requirements",
+        "params": [
+          {"name": "userid", "type": "int"},
+          {"name": "vacancyid", "type": "int"}
+        ],
+        "returns": "array",
+        "description": "Check if user meets experience requirements (occasional contracts require 2+ years)"
+      }
+    ],
+    "exemption_management": [
+      {
+        "name": "local_jobboard_get_iser_exempted_doctypes",
+        "returns": "array",
+        "description": "Get default exempted document types for ISER historic personnel"
+      },
+      {
+        "name": "local_jobboard_get_user_exemption",
+        "params": [{"name": "userid", "type": "int|null"}],
+        "returns": "stdClass|false",
+        "description": "Get user's active ISER exemption"
+      },
+      {
+        "name": "local_jobboard_get_user_age",
+        "params": [{"name": "userid", "type": "int|null"}],
+        "returns": "int|null",
+        "description": "Get user's age from profile for age-based exemptions"
+      }
+    ],
+    "document_types": [
+      {
+        "name": "local_jobboard_get_all_doctypes",
+        "returns": "array",
+        "description": "Get all enabled document types"
+      },
+      {
+        "name": "local_jobboard_get_required_doctypes_for_applicant",
+        "params": [
+          {"name": "gender", "type": "string|null"},
+          {"name": "educationlevel", "type": "string|null"},
+          {"name": "isiserexempted", "type": "bool"},
+          {"name": "userage", "type": "int|null"}
+        ],
+        "returns": "array",
+        "description": "Get required documents filtered by gender, age exemption, and ISER status"
+      },
+      {
+        "name": "local_jobboard_get_doctypes_by_category",
+        "params": ["gender", "educationlevel", "isiserexempted", "userage"],
+        "returns": "array",
+        "description": "Get documents grouped by category (identification, academic, employment, etc.)"
+      },
+      {
+        "name": "local_jobboard_is_document_required",
+        "params": ["doccode", "gender", "educationlevel", "isiserexempted", "userage"],
+        "returns": "bool",
+        "description": "Check if specific document is required for applicant"
+      }
+    ],
+    "lookup_data": [
+      {
+        "name": "local_jobboard_get_contract_types",
+        "returns": "array",
+        "description": "Get contract types (catedra, ocasional_tc, ocasional_mt, temporal, etc.)"
+      },
+      {
+        "name": "local_jobboard_get_modalities",
+        "returns": "array",
+        "description": "Get educational modalities (presencial, distancia, virtual, hibrida)"
+      }
+    ],
+    "dashboard": [
+      {
+        "name": "local_jobboard_get_dashboard_stats",
+        "params": [
+          {"name": "userid", "type": "int"},
+          {"name": "isadmin", "type": "bool"},
+          {"name": "isreviewer", "type": "bool"}
+        ],
+        "returns": "array",
+        "description": "Get statistics for dashboard (active convocatorias, vacancies, applications, pending reviews)"
+      }
+    ]
+  },
+  "workflows": {
+    "vacancy_workflow": {
+      "description": "Lifecycle of a job vacancy from creation to closure",
+      "states": ["draft", "published", "closed", "assigned"],
+      "transitions": [
+        {"from": "draft", "to": "published", "action": "publish", "capability": "local/jobboard:publishvacancy"},
+        {"from": "published", "to": "closed", "action": "close", "triggers": ["manual", "closedate_reached"]},
+        {"from": "closed", "to": "published", "action": "reopen", "capability": "local/jobboard:editvacancy"},
+        {"from": "closed", "to": "assigned", "action": "assign", "description": "All positions filled"}
+      ],
+      "flow": [
+        {
+          "step": 1,
+          "name": "Create Convocatoria",
+          "description": "Admin creates convocatoria with dates, terms, and PDF",
+          "actor": "Manager"
+        },
+        {
+          "step": 2,
+          "name": "Create Vacancies",
+          "description": "Add vacancies to convocatoria with requirements",
+          "actor": "Manager/Coordinator"
+        },
+        {
+          "step": 3,
+          "name": "Open Convocatoria",
+          "description": "Change status to 'open', vacancies inherit publicationtype and become published",
+          "actor": "Manager"
+        },
+        {
+          "step": 4,
+          "name": "Close",
+          "description": "Manual close or automatic via scheduled task when enddate reached",
+          "actor": "System/Manager"
+        }
+      ]
+    },
+    "application_workflow": {
+      "description": "Job application lifecycle from submission to selection",
+      "states": {
+        "submitted": "Initial state after applicant submits",
+        "under_review": "Documents being reviewed by assigned reviewer",
+        "docs_validated": "All documents approved",
+        "docs_rejected": "One or more documents rejected (can be corrected)",
+        "interview": "Scheduled for interview",
+        "selected": "Applicant selected for position",
+        "rejected": "Application rejected",
+        "withdrawn": "Applicant withdrew application"
+      },
+      "transitions": [
+        {"from": "submitted", "to": "under_review", "action": "start_review"},
+        {"from": "submitted", "to": "rejected", "action": "reject"},
+        {"from": "under_review", "to": "docs_validated", "action": "validate_all_docs"},
+        {"from": "under_review", "to": "docs_rejected", "action": "reject_document"},
+        {"from": "docs_rejected", "to": "under_review", "action": "reupload_document"},
+        {"from": "docs_validated", "to": "interview", "action": "schedule_interview"},
+        {"from": "docs_validated", "to": "rejected", "action": "reject"},
+        {"from": "interview", "to": "selected", "action": "select"},
+        {"from": "interview", "to": "rejected", "action": "reject"}
+      ],
+      "flow": [
+        {
+          "step": 1,
+          "name": "Browse & Apply",
+          "description": "Applicant browses convocatorias, selects vacancy, uploads required documents",
+          "actor": "Applicant",
+          "checks": ["convocatoria_open", "not_already_applied", "application_limit"]
+        },
+        {
+          "step": 2,
+          "name": "Document Submission",
+          "description": "Upload all required documents based on profile (gender, age exemptions)",
+          "actor": "Applicant",
+          "documents_filtered_by": ["gender_condition", "age_exemption_threshold", "iser_exemption"]
+        },
+        {
+          "step": 3,
+          "name": "Consent & Submit",
+          "description": "Accept terms, provide digital signature, submit application",
+          "actor": "Applicant",
+          "records": ["consent_timestamp", "ip_address", "user_agent", "digital_signature"]
+        },
+        {
+          "step": 4,
+          "name": "Reviewer Assignment",
+          "description": "Application assigned to reviewer based on program",
+          "actor": "Coordinator"
+        },
+        {
+          "step": 5,
+          "name": "Document Review",
+          "description": "Reviewer validates each document against checklist",
+          "actor": "Reviewer",
+          "actions": ["approve", "reject_with_reason", "add_observations"]
+        },
+        {
+          "step": 6,
+          "name": "Correction Cycle",
+          "description": "If documents rejected, applicant can reupload, reviewer re-validates",
+          "actor": "Applicant/Reviewer",
+          "documents_superseded": true
+        },
+        {
+          "step": 7,
+          "name": "Interview (optional)",
+          "description": "Schedule and conduct interview if required",
+          "actor": "Interview Panel",
+          "records": ["rating", "feedback", "recommendation"]
+        },
+        {
+          "step": 8,
+          "name": "Final Decision",
+          "description": "Select or reject applicant",
+          "actor": "HR/Manager"
+        }
+      ]
+    },
+    "document_validation_workflow": {
+      "description": "Individual document validation process",
+      "states": ["pending", "approved", "rejected"],
+      "transitions": [
+        {"from": "pending", "to": "approved", "action": "validate"},
+        {"from": "pending", "to": "rejected", "action": "reject_with_reason"},
+        {"from": "rejected", "to": "pending", "action": "reupload", "creates_new_document": true}
+      ],
+      "validation_criteria": {
+        "issue_date": "Document not older than maxagedays",
+        "format": "PDF only by default",
+        "size": "Configurable max file size",
+        "checklist": "Doctype-specific validation checklist items"
+      }
+    },
+    "dean_hr_review_workflow": {
+      "description": "Two-phase review by Faculty Dean and HR",
+      "phases": [
+        {
+          "name": "Dean Review",
+          "period": "dean_review_startdate to dean_review_enddate",
+          "capability": "local/jobboard:approveprofile",
+          "actions": ["review_profile", "add_observations", "approve", "reject"]
+        },
+        {
+          "name": "HR Validation",
+          "period": "hr_review_startdate to hr_review_enddate",
+          "capability": "local/jobboard:validatehr",
+          "actions": ["final_validation", "approve", "reject"]
+        }
+      ]
+    }
+  },
+  "custom_roles": {
+    "jobboard_reviewer": {
+      "description": "Document reviewer for applications",
+      "capabilities": ["local/jobboard:reviewdocuments", "local/jobboard:downloadanydocument"]
+    },
+    "jobboard_coordinator": {
+      "description": "Application coordinator, assigns reviewers",
+      "capabilities": ["local/jobboard:assignreviewers", "local/jobboard:viewallapplications"]
+    },
+    "jobboard_dean": {
+      "description": "Faculty dean for profile review",
+      "capabilities": ["local/jobboard:reviewprofiles", "local/jobboard:approveprofile"]
+    },
+    "jobboard_hr": {
+      "description": "HR for final validation",
+      "capabilities": ["local/jobboard:validatehr", "local/jobboard:manageworkflow"]
+    }
+  },
   "database_tables": [
     {
       "name": "local_jobboard_vacancy",
@@ -262,28 +1001,6 @@
         {"name": "company_status_idx", "unique": false, "fields": ["companyid", "status"]},
         {"name": "publicationtype_idx", "unique": false, "fields": ["publicationtype"]},
         {"name": "status_pubtype_idx", "unique": false, "fields": ["status", "publicationtype"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_vacancy_field",
-      "description": "Custom fields for vacancies",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "vacancyid", "type": "int", "length": 10, "notnull": true},
-        {"name": "fieldname", "type": "char", "length": 100, "notnull": true},
-        {"name": "fieldtype", "type": "char", "length": 20, "notnull": true, "default": "text", "values": ["text", "list", "date", "boolean"]},
-        {"name": "fieldvalue", "type": "text", "notnull": false},
-        {"name": "required", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "vacancyid", "type": "foreign", "fields": ["vacancyid"], "reftable": "local_jobboard_vacancy", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "vacancy_field_idx", "unique": false, "fields": ["vacancyid", "fieldname"]}
       ]
     },
     {
@@ -352,376 +1069,6 @@
       ]
     },
     {
-      "name": "local_jobboard_doc_validation",
-      "description": "Document validation records",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "documentid", "type": "int", "length": 10, "notnull": true},
-        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "pending", "values": ["pending", "approved", "rejected"]},
-        {"name": "isvalid", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "validatedby", "type": "int", "length": 10, "notnull": false},
-        {"name": "rejectreason", "type": "char", "length": 100, "notnull": false},
-        {"name": "notes", "type": "text", "notnull": false},
-        {"name": "checklistitems", "type": "text", "notnull": false, "description": "Checklist items completed (JSON)"},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "documentid", "type": "foreign", "fields": ["documentid"], "reftable": "local_jobboard_document", "reffields": ["id"]},
-        {"name": "validatedby", "type": "foreign", "fields": ["validatedby"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "doc_unique", "unique": true, "fields": ["documentid"]},
-        {"name": "status_idx", "unique": false, "fields": ["status"]},
-        {"name": "isvalid_idx", "unique": false, "fields": ["isvalid"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_doc_requirement",
-      "description": "Document requirements configuration per vacancy",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "vacancyid", "type": "int", "length": 10, "notnull": true},
-        {"name": "documenttype", "type": "char", "length": 100, "notnull": true},
-        {"name": "required", "type": "int", "length": 1, "notnull": true, "default": 1},
-        {"name": "acceptedformats", "type": "char", "length": 255, "notnull": false, "default": "pdf"},
-        {"name": "maxsize", "type": "int", "length": 10, "notnull": false},
-        {"name": "requiresissuedate", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "maxagedays", "type": "int", "length": 5, "notnull": false},
-        {"name": "validationrules", "type": "text", "notnull": false, "description": "Specific validation rules (JSON)"},
-        {"name": "instructions", "type": "text", "notnull": false},
-        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "vacancyid", "type": "foreign", "fields": ["vacancyid"], "reftable": "local_jobboard_vacancy", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "vacancy_doctype_unique", "unique": true, "fields": ["vacancyid", "documenttype"]},
-        {"name": "doctype_idx", "unique": false, "fields": ["documenttype"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_workflow_log",
-      "description": "Workflow state change log",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "applicationid", "type": "int", "length": 10, "notnull": true},
-        {"name": "previousstatus", "type": "char", "length": 30, "notnull": false},
-        {"name": "newstatus", "type": "char", "length": 30, "notnull": true},
-        {"name": "changedby", "type": "int", "length": 10, "notnull": true},
-        {"name": "comments", "type": "text", "notnull": false},
-        {"name": "notificationsent", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "applicationid", "type": "foreign", "fields": ["applicationid"], "reftable": "local_jobboard_application", "reffields": ["id"]},
-        {"name": "changedby", "type": "foreign", "fields": ["changedby"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "app_time_idx", "unique": false, "fields": ["applicationid", "timecreated"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_audit",
-      "description": "General audit log for all actions",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "userrole", "type": "char", "length": 50, "notnull": false},
-        {"name": "action", "type": "char", "length": 100, "notnull": true},
-        {"name": "entitytype", "type": "char", "length": 50, "notnull": true, "values": ["vacancy", "application", "document"]},
-        {"name": "entityid", "type": "int", "length": 10, "notnull": false},
-        {"name": "ipaddress", "type": "char", "length": 45, "notnull": false},
-        {"name": "useragent", "type": "char", "length": 512, "notnull": false},
-        {"name": "extradata", "type": "text", "notnull": false, "description": "Additional data (JSON)"},
-        {"name": "previousvalue", "type": "text", "notnull": false, "description": "Previous value before change (JSON)"},
-        {"name": "newvalue", "type": "text", "notnull": false, "description": "New value after change (JSON)"},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "entity_idx", "unique": false, "fields": ["entitytype", "entityid"]},
-        {"name": "user_time_idx", "unique": false, "fields": ["userid", "timecreated"]},
-        {"name": "action_idx", "unique": false, "fields": ["action"]},
-        {"name": "time_idx", "unique": false, "fields": ["timecreated"]},
-        {"name": "userrole_idx", "unique": false, "fields": ["userrole"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_exemption",
-      "description": "ISER historic personnel exemptions",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "exemptiontype", "type": "char", "length": 50, "notnull": true, "default": "historico_iser"},
-        {"name": "documentref", "type": "char", "length": 255, "notnull": false},
-        {"name": "exempteddocs", "type": "text", "notnull": false, "description": "Exempted document types (JSON array)"},
-        {"name": "validfrom", "type": "int", "length": 10, "notnull": true},
-        {"name": "validuntil", "type": "int", "length": 10, "notnull": false},
-        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
-        {"name": "notes", "type": "text", "notnull": false},
-        {"name": "timerevoked", "type": "int", "length": 10, "notnull": false},
-        {"name": "revokedby", "type": "int", "length": 10, "notnull": false},
-        {"name": "revokereason", "type": "text", "notnull": false},
-        {"name": "modifiedby", "type": "int", "length": 10, "notnull": false},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
-        {"name": "createdby", "type": "foreign", "fields": ["createdby"], "reftable": "user", "reffields": ["id"]},
-        {"name": "revokedby", "type": "foreign", "fields": ["revokedby"], "reftable": "user", "reffields": ["id"]},
-        {"name": "modifiedby", "type": "foreign", "fields": ["modifiedby"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "user_type_idx", "unique": false, "fields": ["userid", "exemptiontype"]},
-        {"name": "validity_idx", "unique": false, "fields": ["validfrom", "validuntil"]},
-        {"name": "active_idx", "unique": false, "fields": ["timerevoked"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_notification",
-      "description": "Notification queue and history",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "templatecode", "type": "char", "length": 50, "notnull": true},
-        {"name": "data", "type": "text", "notnull": false, "description": "Placeholder data (JSON)"},
-        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "pending", "values": ["pending", "sent", "failed"]},
-        {"name": "attempts", "type": "int", "length": 3, "notnull": true, "default": 0},
-        {"name": "lasterror", "type": "text", "notnull": false},
-        {"name": "timesent", "type": "int", "length": 10, "notnull": false},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "user_status_idx", "unique": false, "fields": ["userid", "status"]},
-        {"name": "status_idx", "unique": false, "fields": ["status"]},
-        {"name": "template_idx", "unique": false, "fields": ["templatecode"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_config",
-      "description": "Plugin configuration settings",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "name", "type": "char", "length": 100, "notnull": true},
-        {"name": "value", "type": "text", "notnull": false},
-        {"name": "description", "type": "text", "notnull": false},
-        {"name": "category", "type": "char", "length": 50, "notnull": false, "default": "general"},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "name_unique", "unique": true, "fields": ["name"]},
-        {"name": "category_idx", "unique": false, "fields": ["category"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_doctype",
-      "description": "Predefined document types",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "code", "type": "char", "length": 50, "notnull": true},
-        {"name": "name", "type": "char", "length": 255, "notnull": true},
-        {"name": "description", "type": "text", "notnull": false},
-        {"name": "requirements", "type": "text", "notnull": false},
-        {"name": "checklistitems", "type": "text", "notnull": false, "description": "Default checklist items (JSON array)"},
-        {"name": "externalurl", "type": "char", "length": 512, "notnull": false},
-        {"name": "isrequired", "type": "int", "length": 1, "notnull": true, "default": 1},
-        {"name": "iserexempted", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "gender_condition", "type": "char", "length": 1, "notnull": false, "values": ["M", "F", null]},
-        {"name": "age_exemption_threshold", "type": "int", "length": 3, "notnull": false},
-        {"name": "profession_exempt", "type": "text", "notnull": false, "description": "JSON array of education types exempt"},
-        {"name": "conditional_note", "type": "text", "notnull": false},
-        {"name": "input_type", "type": "char", "length": 20, "notnull": true, "default": "file", "values": ["file", "text", "textarea", "select"]},
-        {"name": "category", "type": "char", "length": 50, "notnull": false},
-        {"name": "defaultmaxagedays", "type": "int", "length": 5, "notnull": false},
-        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
-        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "code_unique", "unique": true, "fields": ["code"]},
-        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]},
-        {"name": "isrequired_idx", "unique": false, "fields": ["isrequired"]},
-        {"name": "iserexempted_idx", "unique": false, "fields": ["iserexempted"]},
-        {"name": "gender_idx", "unique": false, "fields": ["gender_condition"]},
-        {"name": "category_idx", "unique": false, "fields": ["category"]},
-        {"name": "input_type_idx", "unique": false, "fields": ["input_type"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_email_template",
-      "description": "Email notification templates with multi-tenant support",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "code", "type": "char", "length": 50, "notnull": true},
-        {"name": "companyid", "type": "int", "length": 10, "notnull": true, "default": 0, "description": "IOMAD Company ID (0 = global template)"},
-        {"name": "category", "type": "char", "length": 30, "notnull": true, "default": "application", "values": ["application", "documents", "interview", "selection", "system"]},
-        {"name": "name", "type": "char", "length": 255, "notnull": true},
-        {"name": "description", "type": "text", "notnull": false},
-        {"name": "subject", "type": "char", "length": 255, "notnull": true},
-        {"name": "body", "type": "text", "notnull": true},
-        {"name": "bodyformat", "type": "int", "length": 2, "notnull": true, "default": 1, "values": [0, 1, 2]},
-        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
-        {"name": "is_default", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "priority", "type": "int", "length": 3, "notnull": true, "default": 0},
-        {"name": "createdby", "type": "int", "length": 10, "notnull": false},
-        {"name": "modifiedby", "type": "int", "length": 10, "notnull": false},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "companyid_fk", "type": "foreign", "fields": ["companyid"], "reftable": "company", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "code_company_unique", "unique": true, "fields": ["code", "companyid"]},
-        {"name": "category_idx", "unique": false, "fields": ["category"]},
-        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]},
-        {"name": "companyid_idx", "unique": false, "fields": ["companyid"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_interview",
-      "description": "Scheduled interviews for applications",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "applicationid", "type": "int", "length": 10, "notnull": true},
-        {"name": "scheduledtime", "type": "int", "length": 10, "notnull": true},
-        {"name": "duration", "type": "int", "length": 4, "notnull": true, "default": 30},
-        {"name": "interviewtype", "type": "char", "length": 20, "notnull": true, "default": "inperson"},
-        {"name": "location", "type": "text", "notnull": false},
-        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "scheduled"},
-        {"name": "notes", "type": "text", "notnull": false},
-        {"name": "rating", "type": "int", "length": 1, "notnull": false},
-        {"name": "feedback", "type": "text", "notnull": false},
-        {"name": "recommendation", "type": "char", "length": 20, "notnull": false},
-        {"name": "completedby", "type": "int", "length": 10, "notnull": false},
-        {"name": "timecompleted", "type": "int", "length": 10, "notnull": false},
-        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "applicationid_fk", "type": "foreign", "fields": ["applicationid"], "reftable": "local_jobboard_application", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "scheduledtime_idx", "unique": false, "fields": ["scheduledtime"]},
-        {"name": "status_idx", "unique": false, "fields": ["status"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_interviewer",
-      "description": "Interview panel members",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "interviewid", "type": "int", "length": 10, "notnull": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "interviewid_fk", "type": "foreign", "fields": ["interviewid"], "reftable": "local_jobboard_interview", "reffields": ["id"]},
-        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "interview_user_idx", "unique": true, "fields": ["interviewid", "userid"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_consent",
-      "description": "User consent records for data treatment and terms",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "consenttype", "type": "char", "length": 50, "notnull": true, "values": ["datatreatment", "terms", "privacy"]},
-        {"name": "consentgiven", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "consentversion", "type": "char", "length": 20, "notnull": false},
-        {"name": "ipaddress", "type": "char", "length": 45, "notnull": false},
-        {"name": "useragent", "type": "char", "length": 512, "notnull": false},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "user_type_idx", "unique": false, "fields": ["userid", "consenttype"]},
-        {"name": "consenttype_idx", "unique": false, "fields": ["consenttype"]},
-        {"name": "time_idx", "unique": false, "fields": ["timecreated"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_applicant_profile",
-      "description": "Extended profile data for job applicants registered through jobboard",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "doctype", "type": "char", "length": 20, "notnull": false, "values": ["cc", "ce", "passport", "ti", "pep", "ppt"]},
-        {"name": "birthdate", "type": "int", "length": 10, "notnull": false},
-        {"name": "gender", "type": "char", "length": 1, "notnull": false, "values": ["M", "F", "O", "N"]},
-        {"name": "education_level", "type": "char", "length": 30, "notnull": false},
-        {"name": "degree_title", "type": "char", "length": 255, "notnull": false},
-        {"name": "expertise_area", "type": "char", "length": 255, "notnull": false},
-        {"name": "experience_years", "type": "char", "length": 10, "notnull": false},
-        {"name": "profile_complete", "type": "int", "length": 1, "notnull": true, "default": 0},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "userid_fk", "type": "foreign-unique", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "education_idx", "unique": false, "fields": ["education_level"]},
-        {"name": "experience_idx", "unique": false, "fields": ["experience_years"]},
-        {"name": "profile_complete_idx", "unique": false, "fields": ["profile_complete"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_conv_docexempt",
-      "description": "Document types exempted at convocatoria level",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "convocatoriaid", "type": "int", "length": 10, "notnull": true},
-        {"name": "doctypeid", "type": "int", "length": 10, "notnull": true},
-        {"name": "exemptionreason", "type": "text", "notnull": false},
-        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "convocatoriaid_fk", "type": "foreign", "fields": ["convocatoriaid"], "reftable": "local_jobboard_convocatoria", "reffields": ["id"]},
-        {"name": "doctypeid_fk", "type": "foreign", "fields": ["doctypeid"], "reftable": "local_jobboard_doctype", "reffields": ["id"]},
-        {"name": "createdby_fk", "type": "foreign", "fields": ["createdby"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "conv_doctype_unique", "unique": true, "fields": ["convocatoriaid", "doctypeid"]}
-      ]
-    },
-    {
       "name": "local_jobboard_convocatoria",
       "description": "Job calls/campaigns that group related vacancies",
       "fields": [
@@ -762,132 +1109,6 @@
         {"name": "dates_idx", "unique": false, "fields": ["startdate", "enddate"]},
         {"name": "publicationtype_idx", "unique": false, "fields": ["publicationtype"]}
       ]
-    },
-    {
-      "name": "local_jobboard_program_reviewer",
-      "description": "Document reviewers assigned to academic programs",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "programid", "type": "int", "length": 10, "notnull": false},
-        {"name": "categoryid", "type": "int", "length": 10, "notnull": false},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "role", "type": "char", "length": 20, "notnull": true, "default": "reviewer", "values": ["lead_reviewer", "reviewer"]},
-        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "active", "values": ["active", "inactive"]},
-        {"name": "addedby", "type": "int", "length": 10, "notnull": true},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "programid_fk", "type": "foreign", "fields": ["programid"], "reftable": "local_jobboard_program", "reffields": ["id"]},
-        {"name": "categoryid_fk", "type": "foreign", "fields": ["categoryid"], "reftable": "course_categories", "reffields": ["id"]},
-        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
-        {"name": "addedby_fk", "type": "foreign", "fields": ["addedby"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "program_user_idx", "unique": true, "fields": ["programid", "userid"]},
-        {"name": "category_user_idx", "unique": false, "fields": ["categoryid", "userid"]},
-        {"name": "status_idx", "unique": false, "fields": ["status"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_faculty",
-      "description": "Faculties within each IOMAD company (FCAS, FII per centro)",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "companyid", "type": "int", "length": 10, "notnull": true},
-        {"name": "code", "type": "char", "length": 20, "notnull": true},
-        {"name": "name", "type": "char", "length": 255, "notnull": true},
-        {"name": "shortname", "type": "char", "length": 50, "notnull": false},
-        {"name": "description", "type": "text", "notnull": false},
-        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
-        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "companyid_idx", "unique": false, "fields": ["companyid"]},
-        {"name": "company_code_unique", "unique": true, "fields": ["companyid", "code"]},
-        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_program",
-      "description": "Academic programs within faculties",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "facultyid", "type": "int", "length": 10, "notnull": true},
-        {"name": "categoryid", "type": "int", "length": 10, "notnull": false},
-        {"name": "code", "type": "char", "length": 50, "notnull": true},
-        {"name": "name", "type": "char", "length": 255, "notnull": true},
-        {"name": "shortname", "type": "char", "length": 100, "notnull": false},
-        {"name": "description", "type": "text", "notnull": false},
-        {"name": "modality", "type": "char", "length": 50, "notnull": false, "values": ["presencial", "virtual", "hibrida"]},
-        {"name": "level", "type": "char", "length": 50, "notnull": false, "values": ["pregrado", "posgrado", "tecnico"]},
-        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
-        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "facultyid_fk", "type": "foreign", "fields": ["facultyid"], "reftable": "local_jobboard_faculty", "reffields": ["id"]},
-        {"name": "categoryid_fk", "type": "foreign", "fields": ["categoryid"], "reftable": "course_categories", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "faculty_code_unique", "unique": true, "fields": ["facultyid", "code"]},
-        {"name": "categoryid_idx", "unique": false, "fields": ["categoryid"]},
-        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]},
-        {"name": "modality_idx", "unique": false, "fields": ["modality"]},
-        {"name": "level_idx", "unique": false, "fields": ["level"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_faculty_dean",
-      "description": "Links deans (users) to faculties for application review workflow",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "facultyid", "type": "int", "length": 10, "notnull": true},
-        {"name": "userid", "type": "int", "length": 10, "notnull": true},
-        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "active", "values": ["active", "inactive"]},
-        {"name": "addedby", "type": "int", "length": 10, "notnull": false},
-        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
-        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "facultyid_fk", "type": "foreign", "fields": ["facultyid"], "reftable": "local_jobboard_faculty", "reffields": ["id"]},
-        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
-        {"name": "addedby_fk", "type": "foreign", "fields": ["addedby"], "reftable": "user", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "faculty_user_unique", "unique": true, "fields": ["facultyid", "userid"]},
-        {"name": "userid_idx", "unique": false, "fields": ["userid"]},
-        {"name": "status_idx", "unique": false, "fields": ["status"]}
-      ]
-    },
-    {
-      "name": "local_jobboard_email_strings",
-      "description": "Language-specific content for email templates",
-      "fields": [
-        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
-        {"name": "templateid", "type": "int", "length": 10, "notnull": true},
-        {"name": "lang", "type": "char", "length": 20, "notnull": true},
-        {"name": "subject", "type": "text", "notnull": false},
-        {"name": "body", "type": "text", "notnull": false},
-        {"name": "signature", "type": "text", "notnull": false}
-      ],
-      "keys": [
-        {"name": "primary", "type": "primary", "fields": ["id"]},
-        {"name": "templateid_fk", "type": "foreign", "fields": ["templateid"], "reftable": "local_jobboard_email_template", "reffields": ["id"]}
-      ],
-      "indexes": [
-        {"name": "template_lang_idx", "unique": true, "fields": ["templateid", "lang"]},
-        {"name": "lang_idx", "unique": false, "fields": ["lang"]}
-      ]
     }
   ],
   "capabilities": [
@@ -900,71 +1121,6 @@
       "description": "General view capability for the job board"
     },
     {
-      "name": "local/jobboard:viewinternal",
-      "category": "General view",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["user", "student", "teacher", "editingteacher", "manager"],
-      "description": "View internal (non-public) vacancies"
-    },
-    {
-      "name": "local/jobboard:manage",
-      "category": "Vacancy management",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "General management capability for the job board"
-    },
-    {
-      "name": "local/jobboard:createvacancy",
-      "category": "Vacancy management",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "Create new vacancies"
-    },
-    {
-      "name": "local/jobboard:editvacancy",
-      "category": "Vacancy management",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "Edit existing vacancies"
-    },
-    {
-      "name": "local/jobboard:deletevacancy",
-      "category": "Vacancy management",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "riskbitmask": "RISK_DATALOSS",
-      "description": "Delete vacancies"
-    },
-    {
-      "name": "local/jobboard:publishvacancy",
-      "category": "Vacancy management",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "Publish vacancies"
-    },
-    {
-      "name": "local/jobboard:viewallvacancies",
-      "category": "Vacancy management",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "View all vacancies including drafts"
-    },
-    {
-      "name": "local/jobboard:manageconvocatorias",
-      "category": "Convocatoria management",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "description": "Manage convocatorias (job calls/campaigns)"
-    },
-    {
       "name": "local/jobboard:apply",
       "category": "Application",
       "type": "write",
@@ -973,76 +1129,12 @@
       "description": "Apply to vacancies"
     },
     {
-      "name": "local/jobboard:viewownapplications",
-      "category": "Application",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["user", "student", "teacher", "editingteacher"],
-      "description": "View own applications"
-    },
-    {
-      "name": "local/jobboard:viewallapplications",
-      "category": "Application",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "View all applications"
-    },
-    {
-      "name": "local/jobboard:changeapplicationstatus",
-      "category": "Application",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "Change application status"
-    },
-    {
-      "name": "local/jobboard:review",
-      "category": "Document review",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["teacher", "editingteacher", "manager"],
-      "description": "Review applications"
-    },
-    {
-      "name": "local/jobboard:validatedocuments",
-      "category": "Document review",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["teacher", "editingteacher", "manager"],
-      "description": "Validate documents"
-    },
-    {
       "name": "local/jobboard:reviewdocuments",
       "category": "Document review",
       "type": "write",
       "contextlevel": "CONTEXT_SYSTEM",
       "archetypes": ["teacher", "editingteacher", "manager"],
       "description": "Review documents"
-    },
-    {
-      "name": "local/jobboard:assignreviewers",
-      "category": "Document review",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "Assign reviewers to applications"
-    },
-    {
-      "name": "local/jobboard:downloadanydocument",
-      "category": "Document review",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["teacher", "editingteacher", "manager"],
-      "description": "Download any document from applications"
-    },
-    {
-      "name": "local/jobboard:reviewprofiles",
-      "category": "Dean review",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": [],
-      "description": "Review applicant profiles (read-only access to documents)"
     },
     {
       "name": "local/jobboard:approveprofile",
@@ -1061,36 +1153,12 @@
       "description": "Final HR validation of documents"
     },
     {
-      "name": "local/jobboard:manageworkflow",
-      "category": "Workflow management",
+      "name": "local/jobboard:manageconvocatorias",
+      "category": "Convocatoria management",
       "type": "write",
       "contextlevel": "CONTEXT_SYSTEM",
       "archetypes": ["manager"],
-      "description": "Manage workflow states"
-    },
-    {
-      "name": "local/jobboard:viewreports",
-      "category": "Reporting",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["editingteacher", "manager"],
-      "description": "View reports"
-    },
-    {
-      "name": "local/jobboard:exportreports",
-      "category": "Reporting",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "description": "Export reports"
-    },
-    {
-      "name": "local/jobboard:exportdata",
-      "category": "Reporting",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "description": "Export data"
+      "description": "Manage convocatorias (job calls/campaigns)"
     },
     {
       "name": "local/jobboard:manageexemptions",
@@ -1099,56 +1167,6 @@
       "contextlevel": "CONTEXT_SYSTEM",
       "archetypes": ["manager"],
       "description": "Manage ISER historic personnel exemptions"
-    },
-    {
-      "name": "local/jobboard:configure",
-      "category": "Configuration and administration",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "riskbitmask": "RISK_CONFIG",
-      "description": "Configure plugin settings"
-    },
-    {
-      "name": "local/jobboard:managedoctypes",
-      "category": "Configuration and administration",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "description": "Manage document types"
-    },
-    {
-      "name": "local/jobboard:manageemailtemplates",
-      "category": "Configuration and administration",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "description": "Manage email templates"
-    },
-    {
-      "name": "local/jobboard:viewpublicvacancies",
-      "category": "Visibility",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["guest", "user", "student", "teacher", "editingteacher", "manager"],
-      "description": "View public vacancies (available to guests)"
-    },
-    {
-      "name": "local/jobboard:viewinternalvacancies",
-      "category": "Visibility",
-      "type": "read",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["user", "student", "teacher", "editingteacher", "manager"],
-      "description": "View internal vacancies (authenticated users only)"
-    },
-    {
-      "name": "local/jobboard:unlimitedapplications",
-      "category": "Application",
-      "type": "write",
-      "contextlevel": "CONTEXT_SYSTEM",
-      "archetypes": ["manager"],
-      "clonepermissionsfrom": "moodle/site:config",
-      "description": "Unlimited applications (bypass application limit)"
     }
   ],
   "webservices": {
@@ -1217,17 +1235,29 @@
     "vacancy_updated"
   ],
   "scheduled_tasks": [
-    "check_closing_vacancies",
-    "cleanup_old_data",
-    "send_notifications"
+    {
+      "name": "check_closing_vacancies",
+      "description": "Check for vacancies closing soon and auto-close expired convocatorias"
+    },
+    {
+      "name": "cleanup_old_data",
+      "description": "Clean up old audit logs and expired data"
+    },
+    {
+      "name": "send_notifications",
+      "description": "Process notification queue and send pending emails"
+    }
   ],
   "metadata": {
-    "generated_at": "2025-12-29",
+    "generated_at": "2025-12-29T12:00:00Z",
     "tables_count": 24,
     "capabilities_count": 28,
     "webservice_functions_count": 5,
     "events_count": 9,
     "scheduled_tasks_count": 3,
-    "amd_modules_count": 22
+    "amd_modules_count": 22,
+    "core_classes_documented": 4,
+    "lib_functions_documented": 22,
+    "workflows_documented": 4
   }
 }
