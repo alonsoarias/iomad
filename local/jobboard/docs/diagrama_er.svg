@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" font-family="Arial, sans-serif">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B9E88;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#158a76;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+    <marker id="crowfoot" markerWidth="12" markerHeight="12" refX="0" refY="6" orient="auto">
+      <path d="M0,6 L12,0 M0,6 L12,6 M0,6 L12,12" stroke="#646363" stroke-width="1.5" fill="none"/>
+    </marker>
+    <marker id="one" markerWidth="12" markerHeight="12" refX="12" refY="6" orient="auto">
+      <line x1="10" y1="0" x2="10" y2="12" stroke="#646363" stroke-width="2"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="1000" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="1400" height="60" fill="url(#headerGrad)"/>
+  <text x="700" y="38" text-anchor="middle" fill="white" font-size="24" font-weight="bold">
+    Diagrama Entidad-Relación - local_jobboard
+  </text>
+
+  <!-- Legend -->
+  <g transform="translate(1150, 80)">
+    <rect x="0" y="0" width="220" height="100" fill="white" stroke="#ddd" rx="5" filter="url(#shadow)"/>
+    <text x="110" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#646363">Leyenda</text>
+    <text x="10" y="40" font-size="10" fill="#646363">PK = Primary Key</text>
+    <text x="10" y="55" font-size="10" fill="#646363">FK = Foreign Key</text>
+    <line x1="10" y1="70" x2="50" y2="70" stroke="#646363" stroke-width="2"/>
+    <text x="60" y="74" font-size="10" fill="#646363">1:1</text>
+    <line x1="10" y1="85" x2="50" y2="85" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+    <text x="60" y="89" font-size="10" fill="#646363">1:N</text>
+  </g>
+
+  <!-- CONVOCATORIA -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="0" width="200" height="180" fill="white" stroke="#1B9E88" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="200" height="30" fill="#1B9E88" rx="5"/>
+    <rect x="0" y="20" width="200" height="10" fill="#1B9E88"/>
+    <text x="100" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">convocatoria</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#333">code (unique)</text>
+    <text x="10" y="80" font-size="10" fill="#333">name</text>
+    <text x="10" y="95" font-size="10" fill="#333">startdate, enddate</text>
+    <text x="10" y="110" font-size="10" fill="#333">status [draft|open|closed]</text>
+    <text x="10" y="125" font-size="10" fill="#333">publicationtype</text>
+    <text x="10" y="140" font-size="10" fill="#333">companyid, departmentid</text>
+    <text x="10" y="155" font-size="10" fill="#333">dean_review_dates</text>
+    <text x="10" y="170" font-size="10" fill="#333">hr_review_dates</text>
+  </g>
+
+  <!-- VACANCY -->
+  <g transform="translate(350, 100)">
+    <rect x="0" y="0" width="200" height="200" fill="white" stroke="#1B9E88" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="200" height="30" fill="#1B9E88" rx="5"/>
+    <rect x="0" y="20" width="200" height="10" fill="#1B9E88"/>
+    <text x="100" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">vacancy</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> convocatoriaid</text>
+    <text x="10" y="80" font-size="10" fill="#333">code, title</text>
+    <text x="10" y="95" font-size="10" fill="#333">location, modality</text>
+    <text x="10" y="110" font-size="10" fill="#333">contracttype, duration</text>
+    <text x="10" y="125" font-size="10" fill="#333">positions</text>
+    <text x="10" y="140" font-size="10" fill="#333">status [draft|published|closed]</text>
+    <text x="10" y="155" font-size="10" fill="#333">publicationtype [public|internal]</text>
+    <text x="10" y="170" font-size="10" fill="#333">opendate, closedate</text>
+    <text x="10" y="185" font-size="10" fill="#333">companyid, departmentid</text>
+  </g>
+
+  <!-- APPLICATION -->
+  <g transform="translate(650, 100)">
+    <rect x="0" y="0" width="200" height="200" fill="white" stroke="#FCBD05" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="200" height="30" fill="#FCBD05" rx="5"/>
+    <rect x="0" y="20" width="200" height="10" fill="#FCBD05"/>
+    <text x="100" y="20" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">application</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> vacancyid</text>
+    <text x="10" y="80" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid</text>
+    <text x="10" y="95" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> reviewerid</text>
+    <text x="10" y="110" font-size="10" fill="#333">status [8 states]</text>
+    <text x="10" y="125" font-size="10" fill="#333">isexemption</text>
+    <text x="10" y="140" font-size="10" fill="#333">consentgiven</text>
+    <text x="10" y="155" font-size="10" fill="#333">digitalsignature</text>
+    <text x="10" y="170" font-size="10" fill="#333">coverletter</text>
+    <text x="10" y="185" font-size="10" fill="#646363">UNIQUE(vacancyid, userid)</text>
+  </g>
+
+  <!-- DOCUMENT -->
+  <g transform="translate(950, 100)">
+    <rect x="0" y="0" width="180" height="180" fill="white" stroke="#EB4335" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#EB4335" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#EB4335"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">document</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> applicationid</text>
+    <text x="10" y="80" font-size="10" fill="#333">documenttype</text>
+    <text x="10" y="95" font-size="10" fill="#333">filename</text>
+    <text x="10" y="110" font-size="10" fill="#333">contenthash</text>
+    <text x="10" y="125" font-size="10" fill="#333">filesize, mimetype</text>
+    <text x="10" y="140" font-size="10" fill="#333">issuedate, expirydate</text>
+    <text x="10" y="155" font-size="10" fill="#333">issuperseded</text>
+    <text x="10" y="170" font-size="10" fill="#333">uploadedby</text>
+  </g>
+
+  <!-- DOC_VALIDATION -->
+  <g transform="translate(1150, 100)">
+    <rect x="0" y="0" width="170" height="150" fill="white" stroke="#EB4335" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="170" height="30" fill="#EB4335" rx="5"/>
+    <rect x="0" y="20" width="170" height="10" fill="#EB4335"/>
+    <text x="85" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">doc_validation</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> documentid (unique)</text>
+    <text x="10" y="80" font-size="10" fill="#333">status [pending|approved|rejected]</text>
+    <text x="10" y="95" font-size="10" fill="#333">isvalid</text>
+    <text x="10" y="110" font-size="10" fill="#333">validatedby</text>
+    <text x="10" y="125" font-size="10" fill="#333">rejectreason</text>
+    <text x="10" y="140" font-size="10" fill="#333">checklistitems (JSON)</text>
+  </g>
+
+  <!-- FACULTY -->
+  <g transform="translate(50, 350)">
+    <rect x="0" y="0" width="180" height="140" fill="white" stroke="#646363" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#646363" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#646363"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">faculty</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#333">companyid</text>
+    <text x="10" y="80" font-size="10" fill="#333">code, name</text>
+    <text x="10" y="95" font-size="10" fill="#333">shortname</text>
+    <text x="10" y="110" font-size="10" fill="#333">enabled</text>
+    <text x="10" y="125" font-size="10" fill="#646363">UNIQUE(companyid, code)</text>
+  </g>
+
+  <!-- PROGRAM -->
+  <g transform="translate(280, 350)">
+    <rect x="0" y="0" width="180" height="160" fill="white" stroke="#646363" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#646363" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#646363"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">program</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> facultyid</text>
+    <text x="10" y="80" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> categoryid</text>
+    <text x="10" y="95" font-size="10" fill="#333">code, name</text>
+    <text x="10" y="110" font-size="10" fill="#333">modality [presencial|virtual]</text>
+    <text x="10" y="125" font-size="10" fill="#333">level [pregrado|posgrado]</text>
+    <text x="10" y="140" font-size="10" fill="#333">enabled</text>
+  </g>
+
+  <!-- FACULTY_DEAN -->
+  <g transform="translate(50, 530)">
+    <rect x="0" y="0" width="180" height="120" fill="white" stroke="#646363" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#646363" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#646363"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">faculty_dean</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> facultyid</text>
+    <text x="10" y="80" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid</text>
+    <text x="10" y="95" font-size="10" fill="#333">status [active|inactive]</text>
+    <text x="10" y="110" font-size="10" fill="#646363">UNIQUE(facultyid, userid)</text>
+  </g>
+
+  <!-- PROGRAM_REVIEWER -->
+  <g transform="translate(280, 530)">
+    <rect x="0" y="0" width="180" height="140" fill="white" stroke="#646363" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#646363" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#646363"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">program_reviewer</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> programid</text>
+    <text x="10" y="80" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> categoryid</text>
+    <text x="10" y="95" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid</text>
+    <text x="10" y="110" font-size="10" fill="#333">role [lead_reviewer|reviewer]</text>
+    <text x="10" y="125" font-size="10" fill="#333">status [active|inactive]</text>
+  </g>
+
+  <!-- EXEMPTION -->
+  <g transform="translate(510, 350)">
+    <rect x="0" y="0" width="180" height="180" fill="white" stroke="#1B9E88" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#1B9E88" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#1B9E88"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">exemption</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid</text>
+    <text x="10" y="80" font-size="10" fill="#333">exemptiontype</text>
+    <text x="10" y="95" font-size="10" fill="#333">documentref</text>
+    <text x="10" y="110" font-size="10" fill="#333">validfrom, validuntil</text>
+    <text x="10" y="125" font-size="10" fill="#333">notes</text>
+    <text x="10" y="140" font-size="10" fill="#333">timerevoked</text>
+    <text x="10" y="155" font-size="10" fill="#333">revokedby, revokereason</text>
+    <text x="10" y="170" font-size="10" fill="#333">createdby</text>
+  </g>
+
+  <!-- DOCTYPE -->
+  <g transform="translate(510, 560)">
+    <rect x="0" y="0" width="180" height="180" fill="white" stroke="#FCBD05" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#FCBD05" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#FCBD05"/>
+    <text x="90" y="20" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">doctype</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#333">code (unique)</text>
+    <text x="10" y="80" font-size="10" fill="#333">name, description</text>
+    <text x="10" y="95" font-size="10" fill="#333">checklistitems (JSON)</text>
+    <text x="10" y="110" font-size="10" fill="#333">isrequired</text>
+    <text x="10" y="125" font-size="10" fill="#333">iserexempted</text>
+    <text x="10" y="140" font-size="10" fill="#333">gender_condition</text>
+    <text x="10" y="155" font-size="10" fill="#333">age_exemption_threshold</text>
+    <text x="10" y="170" font-size="10" fill="#333">input_type, category</text>
+  </g>
+
+  <!-- AUDIT -->
+  <g transform="translate(740, 350)">
+    <rect x="0" y="0" width="180" height="170" fill="white" stroke="#646363" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#646363" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#646363"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">audit</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid</text>
+    <text x="10" y="80" font-size="10" fill="#333">userrole</text>
+    <text x="10" y="95" font-size="10" fill="#333">action</text>
+    <text x="10" y="110" font-size="10" fill="#333">entitytype, entityid</text>
+    <text x="10" y="125" font-size="10" fill="#333">ipaddress, useragent</text>
+    <text x="10" y="140" font-size="10" fill="#333">previousvalue (JSON)</text>
+    <text x="10" y="155" font-size="10" fill="#333">newvalue (JSON)</text>
+  </g>
+
+  <!-- WORKFLOW_LOG -->
+  <g transform="translate(740, 550)">
+    <rect x="0" y="0" width="180" height="140" fill="white" stroke="#646363" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#646363" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#646363"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">workflow_log</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> applicationid</text>
+    <text x="10" y="80" font-size="10" fill="#333">previousstatus</text>
+    <text x="10" y="95" font-size="10" fill="#333">newstatus</text>
+    <text x="10" y="110" font-size="10" fill="#333">changedby</text>
+    <text x="10" y="125" font-size="10" fill="#333">comments</text>
+  </g>
+
+  <!-- INTERVIEW -->
+  <g transform="translate(970, 350)">
+    <rect x="0" y="0" width="180" height="180" fill="white" stroke="#FCBD05" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#FCBD05" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#FCBD05"/>
+    <text x="90" y="20" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">interview</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> applicationid</text>
+    <text x="10" y="80" font-size="10" fill="#333">scheduledtime</text>
+    <text x="10" y="95" font-size="10" fill="#333">duration</text>
+    <text x="10" y="110" font-size="10" fill="#333">interviewtype</text>
+    <text x="10" y="125" font-size="10" fill="#333">location</text>
+    <text x="10" y="140" font-size="10" fill="#333">status</text>
+    <text x="10" y="155" font-size="10" fill="#333">rating, feedback</text>
+    <text x="10" y="170" font-size="10" fill="#333">recommendation</text>
+  </g>
+
+  <!-- EMAIL_TEMPLATE -->
+  <g transform="translate(970, 560)">
+    <rect x="0" y="0" width="180" height="160" fill="white" stroke="#1B9E88" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="180" height="30" fill="#1B9E88" rx="5"/>
+    <rect x="0" y="20" width="180" height="10" fill="#1B9E88"/>
+    <text x="90" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">email_template</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#333">code</text>
+    <text x="10" y="80" font-size="10" fill="#333">companyid (multi-tenant)</text>
+    <text x="10" y="95" font-size="10" fill="#333">category</text>
+    <text x="10" y="110" font-size="10" fill="#333">name, subject</text>
+    <text x="10" y="125" font-size="10" fill="#333">body</text>
+    <text x="10" y="140" font-size="10" fill="#333">enabled, is_default</text>
+  </g>
+
+  <!-- NOTIFICATION -->
+  <g transform="translate(1180, 350)">
+    <rect x="0" y="0" width="170" height="150" fill="white" stroke="#EB4335" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="170" height="30" fill="#EB4335" rx="5"/>
+    <rect x="0" y="20" width="170" height="10" fill="#EB4335"/>
+    <text x="85" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">notification</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid</text>
+    <text x="10" y="80" font-size="10" fill="#333">templatecode</text>
+    <text x="10" y="95" font-size="10" fill="#333">data (JSON)</text>
+    <text x="10" y="110" font-size="10" fill="#333">status [pending|sent|failed]</text>
+    <text x="10" y="125" font-size="10" fill="#333">attempts</text>
+    <text x="10" y="140" font-size="10" fill="#333">timesent</text>
+  </g>
+
+  <!-- APPLICANT_PROFILE -->
+  <g transform="translate(1180, 530)">
+    <rect x="0" y="0" width="170" height="160" fill="white" stroke="#FCBD05" stroke-width="2" rx="5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="170" height="30" fill="#FCBD05" rx="5"/>
+    <rect x="0" y="20" width="170" height="10" fill="#FCBD05"/>
+    <text x="85" y="20" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">applicant_profile</text>
+    <text x="10" y="50" font-size="10" fill="#333"><tspan font-weight="bold">PK</tspan> id</text>
+    <text x="10" y="65" font-size="10" fill="#EB4335"><tspan font-weight="bold">FK</tspan> userid (unique)</text>
+    <text x="10" y="80" font-size="10" fill="#333">doctype</text>
+    <text x="10" y="95" font-size="10" fill="#333">birthdate, gender</text>
+    <text x="10" y="110" font-size="10" fill="#333">education_level</text>
+    <text x="10" y="125" font-size="10" fill="#333">degree_title</text>
+    <text x="10" y="140" font-size="10" fill="#333">experience_years</text>
+  </g>
+
+  <!-- Relationships -->
+  <!-- convocatoria -> vacancy (1:N) -->
+  <line x1="250" y1="165" x2="350" y2="165" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- vacancy -> application (1:N) -->
+  <line x1="550" y1="200" x2="650" y2="200" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- application -> document (1:N) -->
+  <line x1="850" y1="200" x2="950" y2="180" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- document -> doc_validation (1:1) -->
+  <line x1="1130" y1="175" x2="1150" y2="175" stroke="#646363" stroke-width="2"/>
+
+  <!-- faculty -> program (1:N) -->
+  <line x1="230" y1="420" x2="280" y2="420" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- faculty -> faculty_dean (1:N) -->
+  <line x1="140" y1="490" x2="140" y2="530" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- program -> program_reviewer (1:N) -->
+  <line x1="370" y1="510" x2="370" y2="530" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- application -> workflow_log (1:N) -->
+  <line x1="750" y1="300" x2="830" y2="550" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- application -> interview (1:N) -->
+  <line x1="850" y1="250" x2="970" y2="400" stroke="#646363" stroke-width="2" marker-end="url(#crowfoot)"/>
+
+  <!-- Summary Box -->
+  <g transform="translate(50, 780)">
+    <rect x="0" y="0" width="1300" height="180" fill="white" stroke="#1B9E88" stroke-width="2" rx="10" filter="url(#shadow)"/>
+    <text x="650" y="25" text-anchor="middle" font-size="14" font-weight="bold" fill="#1B9E88">Resumen del Modelo de Datos</text>
+
+    <text x="30" y="55" font-size="12" font-weight="bold" fill="#333">Entidades Principales:</text>
+    <text x="30" y="75" font-size="11" fill="#646363">convocatoria (Convocatorias) -> vacancy (Vacantes) -> application (Postulaciones) -> document (Documentos)</text>
+
+    <text x="30" y="100" font-size="12" font-weight="bold" fill="#333">Estructura Académica:</text>
+    <text x="30" y="120" font-size="11" fill="#646363">faculty (Facultades) -> program (Programas) | faculty_dean (Decanos) | program_reviewer (Revisores)</text>
+
+    <text x="30" y="145" font-size="12" font-weight="bold" fill="#333">Configuración y Auditoría:</text>
+    <text x="30" y="165" font-size="11" fill="#646363">doctype (Tipos Doc) | email_template (Plantillas) | audit (Auditoría) | workflow_log (Flujo) | exemption (Exenciones)</text>
+
+    <text x="700" y="55" font-size="12" font-weight="bold" fill="#333">Total: 24 Tablas</text>
+    <text x="700" y="75" font-size="11" fill="#646363">Multi-tenant via IOMAD (companyid, departmentid)</text>
+    <text x="700" y="95" font-size="11" fill="#646363">Soporte para flujo Dean -> HR Review</text>
+    <text x="700" y="115" font-size="11" fill="#646363">Exenciones ISER para personal histórico</text>
+    <text x="700" y="135" font-size="11" fill="#646363">Auditoría completa con before/after tracking</text>
+  </g>
+</svg>

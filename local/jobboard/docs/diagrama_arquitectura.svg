@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="Arial, sans-serif">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B9E88;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#158a76;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="1200" height="60" fill="url(#headerGrad)"/>
+  <text x="600" y="38" text-anchor="middle" fill="white" font-size="24" font-weight="bold">
+    Arquitectura del Plugin local_jobboard
+  </text>
+
+  <!-- Legend -->
+  <g transform="translate(950, 80)">
+    <rect x="0" y="0" width="220" height="120" fill="white" stroke="#ddd" rx="5" filter="url(#shadow)"/>
+    <text x="110" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#646363">Leyenda</text>
+    <rect x="10" y="35" width="20" height="15" fill="#1B9E88" rx="2"/>
+    <text x="40" y="47" font-size="11" fill="#646363">Componente Core</text>
+    <rect x="10" y="55" width="20" height="15" fill="#FCBD05" rx="2"/>
+    <text x="40" y="67" font-size="11" fill="#646363">Base de Datos</text>
+    <rect x="10" y="75" width="20" height="15" fill="#EB4335" rx="2"/>
+    <text x="40" y="87" font-size="11" fill="#646363">Interfaz Usuario</text>
+    <rect x="10" y="95" width="20" height="15" fill="#646363" rx="2"/>
+    <text x="40" y="107" font-size="11" fill="#646363">Servicios Externos</text>
+  </g>
+
+  <!-- Main Plugin Box -->
+  <rect x="50" y="80" width="880" height="800" fill="white" stroke="#1B9E88" stroke-width="3" rx="10" filter="url(#shadow)"/>
+  <rect x="50" y="80" width="880" height="40" fill="#1B9E88" rx="10"/>
+  <rect x="50" y="100" width="880" height="20" fill="#1B9E88"/>
+  <text x="490" y="108" text-anchor="middle" fill="white" font-size="16" font-weight="bold">
+    local_jobboard v4.0.2
+  </text>
+
+  <!-- Entry Points Layer -->
+  <g transform="translate(70, 140)">
+    <rect x="0" y="0" width="840" height="80" fill="#EB4335" fill-opacity="0.1" stroke="#EB4335" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#EB4335">Puntos de Entrada (UI)</text>
+
+    <rect x="10" y="30" width="90" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="55" y="55" text-anchor="middle" fill="white" font-size="10">public.php</text>
+
+    <rect x="110" y="30" width="90" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="155" y="55" text-anchor="middle" fill="white" font-size="10">signup.php</text>
+
+    <rect x="210" y="30" width="90" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="255" y="55" text-anchor="middle" fill="white" font-size="10">index.php</text>
+
+    <rect x="310" y="30" width="120" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="370" y="55" text-anchor="middle" fill="white" font-size="10">updateprofile.php</text>
+
+    <rect x="440" y="30" width="130" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="505" y="55" text-anchor="middle" fill="white" font-size="10">reupload_document.php</text>
+
+    <rect x="580" y="30" width="110" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="635" y="55" text-anchor="middle" fill="white" font-size="10">admin/*.php</text>
+
+    <rect x="700" y="30" width="130" height="40" fill="#EB4335" rx="5" filter="url(#shadow)"/>
+    <text x="765" y="55" text-anchor="middle" fill="white" font-size="10">ajax/*.php</text>
+  </g>
+
+  <!-- Core Classes Layer -->
+  <g transform="translate(70, 240)">
+    <rect x="0" y="0" width="840" height="200" fill="#1B9E88" fill-opacity="0.1" stroke="#1B9E88" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#1B9E88">Clases Core (classes/)</text>
+
+    <!-- Row 1 -->
+    <rect x="10" y="35" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="75" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold">vacancy</text>
+    <text x="75" y="70" text-anchor="middle" fill="white" font-size="9">create, publish</text>
+    <text x="75" y="82" text-anchor="middle" fill="white" font-size="9">close, get_list</text>
+    <text x="75" y="94" text-anchor="middle" fill="white" font-size="9">check_status</text>
+
+    <rect x="150" y="35" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="215" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold">application</text>
+    <text x="215" y="70" text-anchor="middle" fill="white" font-size="9">submit, change_status</text>
+    <text x="215" y="82" text-anchor="middle" fill="white" font-size="9">assign_reviewer</text>
+    <text x="215" y="94" text-anchor="middle" fill="white" font-size="9">get_documents</text>
+
+    <rect x="290" y="35" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="355" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold">document</text>
+    <text x="355" y="70" text-anchor="middle" fill="white" font-size="9">create, validate</text>
+    <text x="355" y="82" text-anchor="middle" fill="white" font-size="9">reject, get_stats</text>
+    <text x="355" y="94" text-anchor="middle" fill="white" font-size="9">store_from_draft</text>
+
+    <rect x="430" y="35" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="495" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold">audit</text>
+    <text x="495" y="70" text-anchor="middle" fill="white" font-size="9">log, log_transition</text>
+    <text x="495" y="82" text-anchor="middle" fill="white" font-size="9">log_email</text>
+    <text x="495" y="94" text-anchor="middle" fill="white" font-size="9">get_trail, cleanup</text>
+
+    <rect x="570" y="35" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="635" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold">notification</text>
+    <text x="635" y="70" text-anchor="middle" fill="white" font-size="9">queue, send</text>
+    <text x="635" y="82" text-anchor="middle" fill="white" font-size="9">queue_status_change</text>
+    <text x="635" y="94" text-anchor="middle" fill="white" font-size="9">retry_failed</text>
+
+    <rect x="710" y="35" width="120" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="770" y="55" text-anchor="middle" fill="white" font-size="11" font-weight="bold">exemption</text>
+    <text x="770" y="70" text-anchor="middle" fill="white" font-size="9">create, revoke</text>
+    <text x="770" y="82" text-anchor="middle" fill="white" font-size="9">is_active</text>
+    <text x="770" y="94" text-anchor="middle" fill="white" font-size="9">import_from_csv</text>
+
+    <!-- Row 2 -->
+    <rect x="10" y="115" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="75" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">interview</text>
+    <text x="75" y="150" text-anchor="middle" fill="white" font-size="9">schedule, complete</text>
+    <text x="75" y="162" text-anchor="middle" fill="white" font-size="9">add_feedback</text>
+    <text x="75" y="174" text-anchor="middle" fill="white" font-size="9">get_panel</text>
+
+    <rect x="150" y="115" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="215" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">faculty_dean</text>
+    <text x="215" y="150" text-anchor="middle" fill="white" font-size="9">get_for_faculty</text>
+    <text x="215" y="162" text-anchor="middle" fill="white" font-size="9">assign, remove</text>
+    <text x="215" y="174" text-anchor="middle" fill="white" font-size="9">is_dean</text>
+
+    <rect x="290" y="115" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="355" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">program_reviewer</text>
+    <text x="355" y="150" text-anchor="middle" fill="white" font-size="9">get_for_program</text>
+    <text x="355" y="162" text-anchor="middle" fill="white" font-size="9">assign, deactivate</text>
+    <text x="355" y="174" text-anchor="middle" fill="white" font-size="9">is_reviewer</text>
+
+    <rect x="430" y="115" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="495" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">email_template</text>
+    <text x="495" y="150" text-anchor="middle" fill="white" font-size="9">get, render</text>
+    <text x="495" y="162" text-anchor="middle" fill="white" font-size="9">get_for_company</text>
+    <text x="495" y="174" text-anchor="middle" fill="white" font-size="9">save, delete</text>
+
+    <rect x="570" y="115" width="130" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="635" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">bulk_validator</text>
+    <text x="635" y="150" text-anchor="middle" fill="white" font-size="9">validate_batch</text>
+    <text x="635" y="162" text-anchor="middle" fill="white" font-size="9">get_progress</text>
+    <text x="635" y="174" text-anchor="middle" fill="white" font-size="9">export_results</text>
+
+    <rect x="710" y="115" width="120" height="70" fill="#1B9E88" rx="5" filter="url(#shadow)"/>
+    <text x="770" y="135" text-anchor="middle" fill="white" font-size="11" font-weight="bold">data_export</text>
+    <text x="770" y="150" text-anchor="middle" fill="white" font-size="9">export_applications</text>
+    <text x="770" y="162" text-anchor="middle" fill="white" font-size="9">export_documents</text>
+    <text x="770" y="174" text-anchor="middle" fill="white" font-size="9">generate_zip</text>
+  </g>
+
+  <!-- Helpers & Forms Layer -->
+  <g transform="translate(70, 460)">
+    <rect x="0" y="0" width="410" height="100" fill="#646363" fill-opacity="0.1" stroke="#646363" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#646363">Helpers (classes/helper/)</text>
+
+    <rect x="10" y="35" width="90" height="50" fill="#646363" rx="5" filter="url(#shadow)"/>
+    <text x="55" y="55" text-anchor="middle" fill="white" font-size="9">date_helper</text>
+    <text x="55" y="70" text-anchor="middle" fill="white" font-size="8">format, compare</text>
+
+    <rect x="110" y="35" width="90" height="50" fill="#646363" rx="5" filter="url(#shadow)"/>
+    <text x="155" y="55" text-anchor="middle" fill="white" font-size="9">file_helper</text>
+    <text x="155" y="70" text-anchor="middle" fill="white" font-size="8">validate, convert</text>
+
+    <rect x="210" y="35" width="90" height="50" fill="#646363" rx="5" filter="url(#shadow)"/>
+    <text x="255" y="55" text-anchor="middle" fill="white" font-size="9">iomad_helper</text>
+    <text x="255" y="70" text-anchor="middle" fill="white" font-size="8">company, dept</text>
+
+    <rect x="310" y="35" width="90" height="50" fill="#646363" rx="5" filter="url(#shadow)"/>
+    <text x="355" y="55" text-anchor="middle" fill="white" font-size="9">status_helper</text>
+    <text x="355" y="70" text-anchor="middle" fill="white" font-size="8">transitions</text>
+  </g>
+
+  <!-- Forms -->
+  <g transform="translate(500, 460)">
+    <rect x="0" y="0" width="410" height="100" fill="#FCBD05" fill-opacity="0.1" stroke="#FCBD05" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#FCBD05">Formularios (classes/forms/)</text>
+
+    <rect x="10" y="35" width="90" height="50" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="55" y="55" text-anchor="middle" fill="#333" font-size="9">vacancy_form</text>
+
+    <rect x="110" y="35" width="90" height="50" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="155" y="55" text-anchor="middle" fill="#333" font-size="9">application_form</text>
+
+    <rect x="210" y="35" width="90" height="50" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="255" y="55" text-anchor="middle" fill="#333" font-size="9">signup_form</text>
+
+    <rect x="310" y="35" width="90" height="50" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="355" y="55" text-anchor="middle" fill="#333" font-size="9">exemption_form</text>
+  </g>
+
+  <!-- Database Layer -->
+  <g transform="translate(70, 580)">
+    <rect x="0" y="0" width="840" height="130" fill="#FCBD05" fill-opacity="0.1" stroke="#FCBD05" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#FCBD05">Base de Datos (24 tablas)</text>
+
+    <rect x="10" y="35" width="110" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="65" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">convocatoria</text>
+    <text x="65" y="70" text-anchor="middle" fill="#333" font-size="8">code, name</text>
+    <text x="65" y="82" text-anchor="middle" fill="#333" font-size="8">startdate, enddate</text>
+    <text x="65" y="94" text-anchor="middle" fill="#333" font-size="8">status, terms</text>
+
+    <rect x="130" y="35" width="110" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="185" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">vacancy</text>
+    <text x="185" y="70" text-anchor="middle" fill="#333" font-size="8">code, title</text>
+    <text x="185" y="82" text-anchor="middle" fill="#333" font-size="8">location, modality</text>
+    <text x="185" y="94" text-anchor="middle" fill="#333" font-size="8">status, positions</text>
+
+    <rect x="250" y="35" width="110" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="305" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">application</text>
+    <text x="305" y="70" text-anchor="middle" fill="#333" font-size="8">vacancyid, userid</text>
+    <text x="305" y="82" text-anchor="middle" fill="#333" font-size="8">status, consent</text>
+    <text x="305" y="94" text-anchor="middle" fill="#333" font-size="8">reviewerid</text>
+
+    <rect x="370" y="35" width="110" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="425" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">document</text>
+    <text x="425" y="70" text-anchor="middle" fill="#333" font-size="8">applicationid</text>
+    <text x="425" y="82" text-anchor="middle" fill="#333" font-size="8">documenttype</text>
+    <text x="425" y="94" text-anchor="middle" fill="#333" font-size="8">contenthash</text>
+
+    <rect x="490" y="35" width="110" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="545" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">doc_validation</text>
+    <text x="545" y="70" text-anchor="middle" fill="#333" font-size="8">documentid</text>
+    <text x="545" y="82" text-anchor="middle" fill="#333" font-size="8">status, isvalid</text>
+    <text x="545" y="94" text-anchor="middle" fill="#333" font-size="8">checklist</text>
+
+    <rect x="610" y="35" width="100" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="660" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">audit</text>
+    <text x="660" y="70" text-anchor="middle" fill="#333" font-size="8">action, entity</text>
+    <text x="660" y="82" text-anchor="middle" fill="#333" font-size="8">previousvalue</text>
+    <text x="660" y="94" text-anchor="middle" fill="#333" font-size="8">newvalue</text>
+
+    <rect x="720" y="35" width="110" height="80" fill="#FCBD05" rx="5" filter="url(#shadow)"/>
+    <text x="775" y="55" text-anchor="middle" fill="#333" font-size="10" font-weight="bold">+18 tablas</text>
+    <text x="775" y="70" text-anchor="middle" fill="#333" font-size="8">exemption, faculty</text>
+    <text x="775" y="82" text-anchor="middle" fill="#333" font-size="8">program, interview</text>
+    <text x="775" y="94" text-anchor="middle" fill="#333" font-size="8">notification...</text>
+  </g>
+
+  <!-- External Services Layer -->
+  <g transform="translate(70, 730)">
+    <rect x="0" y="0" width="840" height="60" fill="#646363" fill-opacity="0.1" stroke="#646363" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#646363">Servicios Externos e Integraciones</text>
+
+    <rect x="10" y="30" width="120" height="25" fill="#646363" rx="3" filter="url(#shadow)"/>
+    <text x="70" y="47" text-anchor="middle" fill="white" font-size="10">IOMAD Multi-tenant</text>
+
+    <rect x="140" y="30" width="120" height="25" fill="#646363" rx="3" filter="url(#shadow)"/>
+    <text x="200" y="47" text-anchor="middle" fill="white" font-size="10">Moodle File API</text>
+
+    <rect x="270" y="30" width="120" height="25" fill="#646363" rx="3" filter="url(#shadow)"/>
+    <text x="330" y="47" text-anchor="middle" fill="white" font-size="10">Email System</text>
+
+    <rect x="400" y="30" width="120" height="25" fill="#646363" rx="3" filter="url(#shadow)"/>
+    <text x="460" y="47" text-anchor="middle" fill="white" font-size="10">Event System</text>
+
+    <rect x="530" y="30" width="120" height="25" fill="#646363" rx="3" filter="url(#shadow)"/>
+    <text x="590" y="47" text-anchor="middle" fill="white" font-size="10">Web Services API</text>
+
+    <rect x="660" y="30" width="120" height="25" fill="#646363" rx="3" filter="url(#shadow)"/>
+    <text x="720" y="47" text-anchor="middle" fill="white" font-size="10">Scheduled Tasks</text>
+  </g>
+
+  <!-- AMD Modules Box -->
+  <g transform="translate(70, 800)">
+    <rect x="0" y="0" width="840" height="70" fill="#EB4335" fill-opacity="0.1" stroke="#EB4335" stroke-dasharray="5,5" rx="5"/>
+    <text x="10" y="20" font-size="12" font-weight="bold" fill="#EB4335">Módulos AMD JavaScript (22 módulos)</text>
+    <text x="10" y="40" font-size="10" fill="#646363">
+      dashboard | document_review | vacancy_form | signup_form | public_filters | bulk_actions | grading_panel | ...
+    </text>
+    <text x="10" y="55" font-size="10" fill="#646363">
+      Templates Mustache: admin, application, convocatoria, dashboard, exemption, public, reports, review, vacancy
+    </text>
+  </g>
+</svg>

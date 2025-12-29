@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" font-family="Arial, sans-serif">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B9E88;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#158a76;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1B9E88"/>
+    </marker>
+    <marker id="arrowYellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#FCBD05"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#EB4335"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="700" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <rect x="0" y="0" width="1000" height="60" fill="url(#headerGrad)"/>
+  <text x="500" y="38" text-anchor="middle" fill="white" font-size="24" font-weight="bold">
+    Flujo de Estados de Vacante
+  </text>
+
+  <!-- Legend -->
+  <g transform="translate(750, 80)">
+    <rect x="0" y="0" width="220" height="140" fill="white" stroke="#ddd" rx="5" filter="url(#shadow)"/>
+    <text x="110" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#646363">Leyenda</text>
+    <rect x="10" y="35" width="60" height="20" fill="#646363" rx="10"/>
+    <text x="80" y="50" font-size="10" fill="#646363">Borrador</text>
+    <rect x="10" y="60" width="60" height="20" fill="#1B9E88" rx="10"/>
+    <text x="80" y="75" font-size="10" fill="#646363">Publicada</text>
+    <rect x="10" y="85" width="60" height="20" fill="#EB4335" rx="10"/>
+    <text x="80" y="100" font-size="10" fill="#646363">Cerrada</text>
+    <rect x="10" y="110" width="60" height="20" fill="#FCBD05" rx="10"/>
+    <text x="80" y="125" font-size="10" fill="#646363">Asignada</text>
+  </g>
+
+  <!-- Convocatoria Context -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="0" width="680" height="550" fill="white" stroke="#1B9E88" stroke-width="2" stroke-dasharray="10,5" rx="10" filter="url(#shadow)"/>
+    <text x="340" y="25" text-anchor="middle" font-size="14" font-weight="bold" fill="#1B9E88">
+      Contexto: Convocatoria (local_jobboard_convocatoria)
+    </text>
+  </g>
+
+  <!-- Start -->
+  <g transform="translate(100, 180)">
+    <circle cx="30" cy="30" r="25" fill="#333" stroke="#333" stroke-width="2"/>
+    <text x="30" y="35" text-anchor="middle" fill="white" font-size="12" font-weight="bold">IN</text>
+    <text x="30" y="75" text-anchor="middle" font-size="10" fill="#646363">Crear vacante</text>
+  </g>
+
+  <!-- DRAFT State -->
+  <g transform="translate(220, 160)">
+    <rect x="0" y="0" width="140" height="80" fill="#646363" rx="10" filter="url(#shadow)"/>
+    <text x="70" y="35" text-anchor="middle" fill="white" font-size="14" font-weight="bold">DRAFT</text>
+    <text x="70" y="55" text-anchor="middle" fill="white" font-size="10">Borrador</text>
+    <text x="70" y="70" text-anchor="middle" fill="white" font-size="9">Editable</text>
+  </g>
+
+  <!-- Arrow: Start -> Draft -->
+  <line x1="155" y1="210" x2="218" y2="200" stroke="#646363" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+  <!-- PUBLISHED State -->
+  <g transform="translate(450, 160)">
+    <rect x="0" y="0" width="160" height="100" fill="#1B9E88" rx="10" filter="url(#shadow)"/>
+    <text x="80" y="35" text-anchor="middle" fill="white" font-size="14" font-weight="bold">PUBLISHED</text>
+    <text x="80" y="55" text-anchor="middle" fill="white" font-size="10">Publicada</text>
+    <text x="80" y="75" text-anchor="middle" fill="white" font-size="9">Recibe postulaciones</text>
+    <text x="80" y="90" text-anchor="middle" fill="white" font-size="9">Visible según tipo</text>
+  </g>
+
+  <!-- Arrow: Draft -> Published -->
+  <g>
+    <line x1="360" y1="200" x2="448" y2="200" stroke="#1B9E88" stroke-width="3" marker-end="url(#arrowGreen)"/>
+    <rect x="375" y="175" width="60" height="20" fill="white" stroke="#1B9E88" rx="3"/>
+    <text x="405" y="189" text-anchor="middle" font-size="9" fill="#1B9E88">publish()</text>
+  </g>
+
+  <!-- CLOSED State -->
+  <g transform="translate(450, 350)">
+    <rect x="0" y="0" width="160" height="80" fill="#EB4335" rx="10" filter="url(#shadow)"/>
+    <text x="80" y="35" text-anchor="middle" fill="white" font-size="14" font-weight="bold">CLOSED</text>
+    <text x="80" y="55" text-anchor="middle" fill="white" font-size="10">Cerrada</text>
+    <text x="80" y="70" text-anchor="middle" fill="white" font-size="9">No recibe más</text>
+  </g>
+
+  <!-- Arrow: Published -> Closed -->
+  <g>
+    <line x1="530" y1="260" x2="530" y2="348" stroke="#EB4335" stroke-width="3" marker-end="url(#arrowRed)"/>
+    <rect x="540" y="290" width="90" height="30" fill="white" stroke="#EB4335" rx="3"/>
+    <text x="585" y="302" text-anchor="middle" font-size="9" fill="#EB4335">close()</text>
+    <text x="585" y="314" text-anchor="middle" font-size="8" fill="#646363">manual o auto</text>
+  </g>
+
+  <!-- ASSIGNED State -->
+  <g transform="translate(450, 510)">
+    <rect x="0" y="0" width="160" height="80" fill="#FCBD05" rx="10" filter="url(#shadow)"/>
+    <text x="80" y="35" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">ASSIGNED</text>
+    <text x="80" y="55" text-anchor="middle" fill="#333" font-size="10">Asignada</text>
+    <text x="80" y="70" text-anchor="middle" fill="#333" font-size="9">Posiciones cubiertas</text>
+  </g>
+
+  <!-- Arrow: Closed -> Assigned -->
+  <g>
+    <line x1="530" y1="430" x2="530" y2="508" stroke="#FCBD05" stroke-width="3" marker-end="url(#arrowYellow)"/>
+    <rect x="540" y="455" width="100" height="30" fill="white" stroke="#FCBD05" rx="3"/>
+    <text x="590" y="467" text-anchor="middle" font-size="9" fill="#333">assign()</text>
+    <text x="590" y="479" text-anchor="middle" font-size="8" fill="#646363">todas posiciones</text>
+  </g>
+
+  <!-- Arrow: Closed -> Published (reopen) -->
+  <g>
+    <path d="M 450,390 C 350,390 350,250 450,250" stroke="#1B9E88" stroke-width="2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+    <rect x="320" y="305" width="70" height="20" fill="white" stroke="#1B9E88" rx="3"/>
+    <text x="355" y="319" text-anchor="middle" font-size="9" fill="#1B9E88">reopen()</text>
+  </g>
+
+  <!-- End state -->
+  <g transform="translate(660, 530)">
+    <circle cx="30" cy="30" r="25" fill="white" stroke="#333" stroke-width="4"/>
+    <circle cx="30" cy="30" r="18" fill="#333"/>
+    <text x="30" y="80" text-anchor="middle" font-size="10" fill="#646363">Fin</text>
+  </g>
+
+  <!-- Arrow: Assigned -> End -->
+  <line x1="610" y1="550" x2="658" y2="555" stroke="#646363" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+  <!-- Automatic triggers box -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="280" height="200" fill="#FCBD05" fill-opacity="0.1" stroke="#FCBD05" stroke-width="2" rx="10"/>
+    <text x="140" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#FCBD05">Triggers Automáticos</text>
+
+    <rect x="15" y="40" width="250" height="45" fill="white" stroke="#646363" rx="5"/>
+    <text x="140" y="58" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">check_closing_vacancies</text>
+    <text x="140" y="73" text-anchor="middle" font-size="9" fill="#646363">Tarea programada diaria</text>
+
+    <rect x="15" y="95" width="250" height="45" fill="white" stroke="#646363" rx="5"/>
+    <text x="140" y="113" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">Cierre por fecha</text>
+    <text x="140" y="128" text-anchor="middle" font-size="9" fill="#646363">closedate alcanzada</text>
+
+    <rect x="15" y="150" width="250" height="40" fill="white" stroke="#646363" rx="5"/>
+    <text x="140" y="168" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">Herencia de Convocatoria</text>
+    <text x="140" y="183" text-anchor="middle" font-size="9" fill="#646363">Abrir conv. → publicar vacantes</text>
+  </g>
+
+  <!-- Publication Type Box -->
+  <g transform="translate(750, 250)">
+    <rect x="0" y="0" width="200" height="180" fill="white" stroke="#1B9E88" stroke-width="2" rx="10" filter="url(#shadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#1B9E88">Tipo de Publicación</text>
+
+    <rect x="20" y="45" width="160" height="50" fill="#1B9E88" fill-opacity="0.1" stroke="#1B9E88" rx="5"/>
+    <text x="100" y="65" text-anchor="middle" font-size="11" font-weight="bold" fill="#1B9E88">PUBLIC</text>
+    <text x="100" y="82" text-anchor="middle" font-size="9" fill="#646363">Visible para invitados</text>
+
+    <rect x="20" y="105" width="160" height="50" fill="#646363" fill-opacity="0.1" stroke="#646363" rx="5"/>
+    <text x="100" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#646363">INTERNAL</text>
+    <text x="100" y="142" text-anchor="middle" font-size="9" fill="#646363">Solo usuarios autenticados</text>
+
+    <text x="100" y="170" text-anchor="middle" font-size="9" fill="#646363">Heredado de convocatoria</text>
+  </g>
+
+  <!-- Capabilities Box -->
+  <g transform="translate(750, 450)">
+    <rect x="0" y="0" width="200" height="160" fill="white" stroke="#646363" stroke-width="2" rx="10" filter="url(#shadow)"/>
+    <text x="100" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#646363">Capabilities Requeridos</text>
+
+    <text x="15" y="50" font-size="10" fill="#333">
+      <tspan font-weight="bold">Crear:</tspan> createvacancy
+    </text>
+    <text x="15" y="70" font-size="10" fill="#333">
+      <tspan font-weight="bold">Editar:</tspan> editvacancy
+    </text>
+    <text x="15" y="90" font-size="10" fill="#333">
+      <tspan font-weight="bold">Publicar:</tspan> publishvacancy
+    </text>
+    <text x="15" y="110" font-size="10" fill="#333">
+      <tspan font-weight="bold">Eliminar:</tspan> deletevacancy
+    </text>
+    <text x="15" y="130" font-size="10" fill="#333">
+      <tspan font-weight="bold">Ver todas:</tspan> viewallvacancies
+    </text>
+    <text x="15" y="150" font-size="10" fill="#646363">Roles: manager, editingteacher</text>
+  </g>
+</svg>
