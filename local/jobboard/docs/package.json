@@ -1,0 +1,21 @@
+{
+  "name": "jobboard-technical-report",
+  "version": "1.0.0",
+  "description": "Generador de informe técnico para el plugin local_jobboard",
+  "main": "generate_report.js",
+  "scripts": {
+    "generate": "node generate_report.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jobboard",
+    "moodle",
+    "technical-report",
+    "docx"
+  ],
+  "author": "ISER - Instituto Superior de Educación Rural",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "officegen": "^0.6.5"
+  }
+}
