@@ -895,6 +895,55 @@ def generate_jobboard_section(doc):
                 ])
             add_table_with_caption(doc, tpl_data, 'Categorías de templates Mustache del plugin local_jobboard')
 
+    # Configuraciones del plugin
+    add_heading(doc, '5.14 Configuraciones del Plugin', 2)
+    if 'settings' in data:
+        settings = data['settings']
+        summary = settings.get('summary', {})
+        add_paragraph_text(doc,
+            f'El plugin ofrece {summary.get("total_settings", 0)} configuraciones organizadas en '
+            f'{summary.get("total_sections", 0)} secciones, además de '
+            f'{summary.get("total_external_pages", 0)} páginas de administración externas.')
+
+        if 'settings_sections' in settings:
+            settings_data = [['Sección', 'Configuraciones', 'Propósito']]
+            for section in settings['settings_sections'][:8]:
+                section_name = section.get('section', 'N/A')
+                setting_list = section.get('settings', [])
+                num_settings = len(setting_list)
+                purpose = ''
+                if setting_list:
+                    purpose = setting_list[0].get('purpose', 'N/A')[:35] + '...' if len(setting_list[0].get('purpose', '')) > 35 else setting_list[0].get('purpose', 'N/A')
+                settings_data.append([section_name, str(num_settings), purpose])
+            add_table_with_caption(doc, settings_data, 'Secciones de configuración del plugin local_jobboard')
+
+        if 'external_pages' in settings:
+            ext_pages_data = [['Página', 'URL', 'Descripción']]
+            for page in settings['external_pages']:
+                ext_pages_data.append([
+                    page.get('name', 'N/A').replace('local_jobboard_', ''),
+                    page.get('url', 'N/A'),
+                    page.get('description', 'N/A')[:40] + '...' if len(page.get('description', '')) > 40 else page.get('description', 'N/A')
+                ])
+            add_table_with_caption(doc, ext_pages_data, 'Páginas de administración externas del plugin local_jobboard')
+
+    # Resumen del plugin
+    add_heading(doc, '5.15 Resumen Técnico', 2)
+    if 'summary' in data:
+        summary = data['summary']
+        add_paragraph_text(doc,
+            'El siguiente resumen proporciona una visión general de las métricas y '
+            'características técnicas del plugin local_jobboard:')
+
+        if 'metrics' in summary:
+            metrics = summary['metrics']
+            metrics_list = []
+            for key, value in metrics.items():
+                if isinstance(value, (int, str)):
+                    metrics_list.append(f'{key.replace("_", " ").title()}: {value}')
+            if metrics_list:
+                add_bullet_list(doc, metrics_list[:10])
+
     doc.add_page_break()
 
 
@@ -1098,6 +1147,112 @@ def generate_platform_usage_section(doc):
             if 'funcionalidad' in iomad:
                 add_bullet_list(doc, iomad['funcionalidad'])
 
+    # Interfaz de usuario
+    add_heading(doc, '6.15 Interfaz de Usuario', 2)
+    if 'interfaz_usuario' in data:
+        ui = data['interfaz_usuario']
+        if 'paginas' in ui:
+            add_paragraph_text(doc,
+                'El plugin proporciona varias páginas web para la interacción con el usuario:')
+
+            pages_data = [['Página', 'Propósito', 'Componentes']]
+            for page in ui['paginas']:
+                components = page.get('componentes', [])
+                comp_str = ', '.join(components[:2]) if components else 'N/A'
+                if len(comp_str) > 40:
+                    comp_str = comp_str[:37] + '...'
+                pages_data.append([
+                    page.get('archivo', 'N/A'),
+                    page.get('proposito', 'N/A')[:35] + '...' if len(page.get('proposito', '')) > 35 else page.get('proposito', 'N/A'),
+                    comp_str
+                ])
+            add_table_with_caption(doc, pages_data, 'Páginas de interfaz del plugin report_platform_usage')
+
+        if 'tecnologias_frontend' in ui:
+            add_paragraph_text(doc, 'Tecnologías utilizadas en el frontend:')
+            add_bullet_list(doc, ui['tecnologias_frontend'])
+
+    # Configuración de administración
+    add_heading(doc, '6.16 Configuración de Administración', 2)
+    if 'configuracion_administracion' in data:
+        config = data['configuracion_administracion']
+        add_paragraph_text(doc,
+            f'El plugin se configura desde: {config.get("ubicacion_menu", "Administración del sitio")}')
+
+        if 'parametros_configurables' in config:
+            params_data = [['Parámetro', 'Tipo', 'Defecto', 'Impacto']]
+            for param in config['parametros_configurables']:
+                params_data.append([
+                    param.get('nombre', 'N/A'),
+                    param.get('tipo', 'N/A'),
+                    str(param.get('defecto', 'N/A')),
+                    param.get('impacto', 'N/A')
+                ])
+            add_table_with_caption(doc, params_data, 'Parámetros configurables del plugin report_platform_usage')
+
+    # Rendimiento y escalabilidad
+    add_heading(doc, '6.17 Rendimiento y Escalabilidad', 2)
+    if 'rendimiento_escalabilidad' in data:
+        rend = data['rendimiento_escalabilidad']
+        add_paragraph_text(doc,
+            'El plugin implementa diversas optimizaciones para garantizar un buen rendimiento:')
+
+        if 'optimizaciones' in rend:
+            add_bullet_list(doc, rend['optimizaciones'][:6])
+
+        if 'tiempos_cache' in rend:
+            tc = rend['tiempos_cache']
+            cache_info = [
+                f'Datos del informe: {tc.get("datos_informe", "N/A")}',
+                f'Listas de usuarios: {tc.get("listas_usuarios", "N/A")}',
+                f'Razón: {tc.get("razon", "N/A")}'
+            ]
+            add_bullet_list(doc, cache_info)
+
+    # Internacionalización
+    add_heading(doc, '6.18 Internacionalización', 2)
+    if 'internacionalizacion' in data:
+        i18n = data['internacionalizacion']
+        add_paragraph_text(doc,
+            f'El plugin soporta {len(i18n.get("idiomas_soportados", []))} idiomas: '
+            f'{", ".join(i18n.get("idiomas_soportados", ["N/A"]))}. '
+            f'Contiene aproximadamente {i18n.get("total_cadenas", "N/A")} cadenas de texto '
+            f'con facilidad de traducción {i18n.get("facilidad_traduccion", "alta")}.')
+
+    # Limitaciones conocidas
+    add_heading(doc, '6.19 Limitaciones Conocidas', 2)
+    if 'limitaciones_conocidas' in data:
+        add_paragraph_text(doc,
+            'El plugin tiene las siguientes limitaciones que deben considerarse:')
+        add_bullet_list(doc, data['limitaciones_conocidas'][:6])
+
+    # Mejores prácticas
+    add_heading(doc, '6.20 Mejores Prácticas', 2)
+    if 'mejores_practicas' in data:
+        mp = data['mejores_practicas']
+        if 'configuracion' in mp:
+            add_paragraph_text(doc, 'Configuración recomendada:', bold=True)
+            add_bullet_list(doc, mp['configuracion'][:4])
+        if 'uso' in mp:
+            add_paragraph_text(doc, 'Uso óptimo del plugin:', bold=True)
+            add_bullet_list(doc, mp['uso'][:4])
+        if 'rendimiento' in mp:
+            add_paragraph_text(doc, 'Optimización del rendimiento:', bold=True)
+            add_bullet_list(doc, mp['rendimiento'][:4])
+
+    # Conclusiones del plugin
+    add_heading(doc, '6.21 Conclusiones del Plugin', 2)
+    if 'conclusiones' in data:
+        conc = data['conclusiones']
+        if 'fortalezas' in conc:
+            add_paragraph_text(doc, 'Fortalezas principales:', bold=True)
+            add_bullet_list(doc, conc['fortalezas'][:5])
+        if 'areas_mejora' in conc:
+            add_paragraph_text(doc, 'Áreas de mejora identificadas:', bold=True)
+            add_bullet_list(doc, conc['areas_mejora'][:4])
+        if 'recomendacion_uso' in conc:
+            add_paragraph_text(doc, f'Recomendación: {conc["recomendacion_uso"]}')
+
     doc.add_page_break()
 
 
@@ -1244,6 +1399,113 @@ def generate_platform_access_section(doc):
 
         add_paragraph_text(doc,
             f'{iomad.get("compatibilidad", "Compatible con Moodle estándar.")}')
+
+    # Páginas de interfaz
+    add_heading(doc, '7.12 Páginas de Interfaz', 2)
+    if 'paginas_interfaz' in data:
+        add_paragraph_text(doc,
+            'El plugin proporciona las siguientes páginas de interfaz:')
+
+        pages_data = [['Archivo', 'URL', 'Propósito']]
+        for page in data['paginas_interfaz']:
+            pages_data.append([
+                page.get('archivo', 'N/A'),
+                page.get('url', 'N/A'),
+                page.get('proposito', 'N/A')
+            ])
+        add_table_with_caption(doc, pages_data, 'Páginas de interfaz del plugin local_platform_access')
+
+    # Funcionalidades principales
+    add_heading(doc, '7.13 Funcionalidades Principales', 2)
+    if 'funcionalidades_principales' in data:
+        func = data['funcionalidades_principales']
+
+        if 'generacion_accesos' in func:
+            gen = func['generacion_accesos']
+            add_paragraph_text(doc, 'Generación de accesos:', bold=True)
+            if 'tipos_soportados' in gen:
+                add_bullet_list(doc, gen['tipos_soportados'])
+            if 'eventos_generados' in gen:
+                add_paragraph_text(doc, 'Eventos generados:')
+                add_bullet_list(doc, gen['eventos_generados'][:6])
+
+        if 'eventos_avanzados' in func:
+            ev = func['eventos_avanzados']
+            add_paragraph_text(doc, 'Eventos avanzados:', bold=True)
+            ev_list = []
+            for key, val in ev.items():
+                ev_list.append(f'{key.title()}: {val}')
+            add_bullet_list(doc, ev_list)
+
+    # Estadísticas generadas
+    add_heading(doc, '7.14 Estadísticas Generadas', 2)
+    if 'estadisticas_generadas' in data:
+        add_paragraph_text(doc,
+            'El plugin proporciona estadísticas detalladas después de cada ejecución:')
+        add_bullet_list(doc, data['estadisticas_generadas'][:10])
+
+    # Seguridad y privacidad
+    add_heading(doc, '7.15 Seguridad y Privacidad', 2)
+    if 'seguridad_privacidad' in data:
+        seg = data['seguridad_privacidad']
+        add_paragraph_text(doc,
+            f'GDPR Compliance: {"Sí" if seg.get("gdpr_compliance") else "No"}. '
+            f'Almacena datos personales: {"Sí" if seg.get("almacena_datos_personales") else "No"}.')
+
+        if 'controles_seguridad' in seg:
+            add_paragraph_text(doc, 'Controles de seguridad implementados:')
+            add_bullet_list(doc, seg['controles_seguridad'])
+
+        if 'capacidades_riesgo' in seg:
+            add_paragraph_text(doc, 'Riesgos asociados a las capacidades:')
+            add_bullet_list(doc, seg['capacidades_riesgo'])
+
+    # Limitaciones y consideraciones
+    add_heading(doc, '7.16 Limitaciones y Consideraciones', 2)
+    if 'limitaciones_consideraciones' in data:
+        add_paragraph_text(doc,
+            'Es importante considerar las siguientes limitaciones del plugin:')
+        add_bullet_list(doc, data['limitaciones_consideraciones'])
+
+    # Métricas de código
+    add_heading(doc, '7.17 Métricas de Código', 2)
+    if 'metricas_codigo' in data:
+        mc = data['metricas_codigo']
+        metrics_data = [['Métrica', 'Valor']]
+        for key, val in mc.items():
+            metrics_data.append([key.replace('_', ' ').title(), str(val)])
+        add_table_with_caption(doc, metrics_data, 'Métricas de código del plugin local_platform_access')
+
+    # Flujo completo
+    add_heading(doc, '7.18 Flujo Completo de Ejecución', 2)
+    if 'flujo_completo' in data:
+        fc = data['flujo_completo']
+        add_paragraph_text(doc,
+            'El siguiente flujo describe el proceso completo de generación de datos:')
+        flujo_list = []
+        for key, val in sorted(fc.items()):
+            flujo_list.append(f'{key.replace("paso_", "Paso ")}: {val}')
+        add_bullet_list(doc, flujo_list[:12])
+
+    # Dependencias
+    add_heading(doc, '7.19 Dependencias', 2)
+    if 'dependencias' in data:
+        dep = data['dependencias']
+        add_paragraph_text(doc,
+            f'Versión mínima de Moodle requerida: {dep.get("moodle_version", "N/A")}')
+
+        if 'plugins_opcionales' in dep:
+            add_paragraph_text(doc, 'Plugins opcionales para funcionalidad extendida:')
+            add_bullet_list(doc, dep['plugins_opcionales'])
+
+    # Conclusión del plugin
+    add_heading(doc, '7.20 Conclusión', 2)
+    if 'conclusion' in data:
+        conc = data['conclusion']
+        conc_list = []
+        for key, val in conc.items():
+            conc_list.append(f'{key.replace("_", " ").title()}: {val}')
+        add_bullet_list(doc, conc_list)
 
     doc.add_page_break()
 
