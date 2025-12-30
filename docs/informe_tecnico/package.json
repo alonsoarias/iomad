@@ -1,0 +1,20 @@
+{
+  "name": "informe-tecnico-plugins-iser",
+  "version": "1.0.0",
+  "description": "Generador de informe técnico para plugins Moodle ISER",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate_report.js",
+    "generate:portada": "node generate_report.js --section=portada",
+    "generate:tablas": "node generate_report.js --section=tablas",
+    "generate:jobboard": "node generate_report.js --section=jobboard",
+    "generate:platform_usage": "node generate_report.js --section=platform_usage",
+    "generate:platform_access": "node generate_report.js --section=platform_access"
+  },
+  "dependencies": {
+    "docx": "^8.5.0",
+    "sharp": "^0.33.0"
+  },
+  "author": "ISER - Instituto Superior de Educación Rural",
+  "license": "GPL-3.0"
+}
