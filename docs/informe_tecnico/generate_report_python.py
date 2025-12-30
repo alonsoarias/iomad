@@ -692,10 +692,11 @@ def generate_jobboard_section(doc):
 
     add_heading(doc, '5. PLUGIN LOCAL_JOBBOARD', 1)
 
-    # Descripción
-    add_heading(doc, '5.1 Descripción General', 2)
+    # Resumen Ejecutivo
+    add_heading(doc, '5.1 Resumen Ejecutivo', 2)
     if 'version' in data:
-        desc = data['version'].get('description', '')
+        v = data['version']
+        desc = v.get('description', '')
         if desc:
             add_paragraph_text(doc, desc)
 
@@ -703,6 +704,23 @@ def generate_jobboard_section(doc):
         'Este plugin proporciona un sistema completo para la publicación de vacantes docentes, '
         'gestión de postulaciones, revisión de documentos y seguimiento de todo el proceso de '
         'selección de personal académico.')
+
+    # Métricas clave del resumen
+    if 'summary' in data:
+        summary = data['summary']
+        resumen_items = [
+            f'Tablas de base de datos: {summary.get("total_tables", 0)}',
+            f'Capabilities de seguridad: {summary.get("total_capabilities", 0)}',
+            f'Servicios web disponibles: {summary.get("total_services", 0)}',
+            f'Funciones PHP implementadas: {summary.get("total_functions", 0)}'
+        ]
+        add_paragraph_text(doc, 'Métricas principales del plugin:', bold=True)
+        add_bullet_list(doc, resumen_items)
+
+    if 'templates' in data:
+        tpl = data['templates'].get('metadata', {})
+        if tpl.get('total_templates'):
+            add_paragraph_text(doc, f'El plugin incluye {tpl["total_templates"]} plantillas Mustache para la interfaz de usuario.')
 
     # Información de versión
     add_heading(doc, '5.2 Información de Versión', 2)
@@ -948,23 +966,34 @@ def generate_jobboard_section(doc):
         if summary_list:
             add_bullet_list(doc, summary_list)
 
-    # Clases principales
-    add_heading(doc, '5.16 Clases Principales', 2)
+    # Clases principales - Tabla detallada
+    add_heading(doc, '5.16 Detalle de Clases PHP', 2)
     if 'classes' in data:
         classes = data['classes']
         add_paragraph_text(doc,
-            'El plugin implementa las siguientes clases PHP principales:')
+            'A continuación se detallan las clases PHP principales implementadas en el plugin:')
 
-        classes_data = [['Clase', 'Namespace', 'Descripción']]
+        classes_data = [['Clase', 'Archivo', 'Descripción']]
         for cls_name, cls_info in classes.items():
             if isinstance(cls_info, dict):
-                classes_data.append([
-                    cls_info.get('clase', cls_name),
-                    cls_info.get('namespace', 'local_jobboard'),
-                    cls_info.get('descripcion', 'N/A')[:50] + '...' if len(cls_info.get('descripcion', '')) > 50 else cls_info.get('descripcion', 'N/A')
-                ])
+                # Manejar clases con estructura estándar
+                if 'clase' in cls_info:
+                    classes_data.append([
+                        cls_info.get('clase', cls_name),
+                        cls_info.get('archivo', 'N/A').replace('local/jobboard/', ''),
+                        cls_info.get('descripcion', 'N/A')[:45] + '...' if len(cls_info.get('descripcion', '')) > 45 else cls_info.get('descripcion', 'N/A')
+                    ])
+                # Manejar clase "additional" que tiene subclases
+                elif 'clases' in cls_info:
+                    for subclass in cls_info.get('clases', []):
+                        if isinstance(subclass, dict):
+                            classes_data.append([
+                                subclass.get('clase', 'N/A'),
+                                subclass.get('archivo', 'N/A').replace('local/jobboard/', ''),
+                                subclass.get('descripcion', 'N/A')[:45] + '...' if len(subclass.get('descripcion', '')) > 45 else subclass.get('descripcion', 'N/A')
+                            ])
         if len(classes_data) > 1:
-            add_table_with_caption(doc, classes_data, 'Clases principales del plugin local_jobboard')
+            add_table_with_caption(doc, classes_data, 'Detalle de clases PHP del plugin local_jobboard')
 
     # Funciones PHP
     add_heading(doc, '5.17 Funciones PHP', 2)
@@ -994,6 +1023,40 @@ def generate_jobboard_section(doc):
                 'de texto para soporte multiidioma:')
             if 'key_features' in summary:
                 add_bullet_list(doc, summary['key_features'][:6])
+
+    # Seguridad y Privacidad
+    add_heading(doc, '5.19 Seguridad y Privacidad', 2)
+
+    # Información de GDPR desde la estructura de base de datos
+    add_paragraph_text(doc, 'Cumplimiento GDPR:', bold=True)
+    gdpr_features = [
+        'Sistema de consentimiento explícito con registro de timestamp, IP y user agent',
+        'Firma digital del usuario al dar consentimiento',
+        'Encriptación opcional de datos sensibles',
+        'Retención de datos configurable (5 años por defecto)',
+        'Campos para almacenar evidencia legal del consentimiento'
+    ]
+    add_bullet_list(doc, gdpr_features)
+
+    # Settings de seguridad desde el JSON
+    if 'settings' in data:
+        settings = data['settings']
+        security_settings = []
+        for section in settings.get('settings_sections', []):
+            if 'security' in section.get('section', '').lower():
+                for s in section.get('settings', []):
+                    security_settings.append(f'{s.get("label", s.get("name", ""))}: {s.get("purpose", "")}')
+
+        if security_settings:
+            add_paragraph_text(doc, 'Configuraciones de seguridad disponibles:', bold=True)
+            add_bullet_list(doc, security_settings)
+
+    # Capabilities de seguridad
+    if 'capabilities' in data:
+        caps = data['capabilities']
+        add_paragraph_text(doc,
+            f'El plugin define {len(caps)} capabilities para control granular de permisos, '
+            'siguiendo el modelo RBAC (Role-Based Access Control) de Moodle.')
 
     doc.add_page_break()
 
@@ -1080,12 +1143,24 @@ def generate_platform_usage_section(doc):
                 ]
                 add_table_with_caption(doc, tabla_data, f'Estructura de la tabla {tabla.get("nombre", "de datos")}')
 
-    # Capabilities
-    add_heading(doc, '6.7 Capabilities y Seguridad', 2)
+    # Seguridad y Privacidad
+    add_heading(doc, '6.7 Seguridad y Privacidad', 2)
     add_paragraph_text(doc,
-        'El plugin define capabilities específicas para controlar el acceso a los reportes '
-        'y la visualización de información sensible.')
+        'El plugin implementa medidas de seguridad y privacidad acordes con los estándares de Moodle:')
 
+    # Información de GDPR
+    add_paragraph_text(doc, 'Cumplimiento GDPR:', bold=True)
+    gdpr_info = [
+        'No almacena datos personales adicionales (usa logs existentes de Moodle)',
+        'Los datos mostrados son agregados y estadísticos',
+        'Acceso restringido mediante capabilities específicas',
+        'Exportación controlada por permisos de usuario',
+        'Respeta la política de retención de datos de Moodle'
+    ]
+    add_bullet_list(doc, gdpr_info)
+
+    # Capabilities
+    add_paragraph_text(doc, 'Control de acceso mediante capabilities:', bold=True)
     if 'seguridad_permisos' in data and 'capabilities' in data['seguridad_permisos']:
         caps = data['seguridad_permisos']['capabilities']
         caps_data = [['Capability', 'Tipo', 'Propósito']]
