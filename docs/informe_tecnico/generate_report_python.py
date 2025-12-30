@@ -932,17 +932,39 @@ def generate_jobboard_section(doc):
     if 'summary' in data:
         summary = data['summary']
         add_paragraph_text(doc,
-            'El siguiente resumen proporciona una visión general de las métricas y '
-            'características técnicas del plugin local_jobboard:')
+            'El siguiente resumen proporciona una visión general de las métricas técnicas '
+            'del plugin local_jobboard:')
 
-        if 'metrics' in summary:
-            metrics = summary['metrics']
-            metrics_list = []
-            for key, value in metrics.items():
-                if isinstance(value, (int, str)):
-                    metrics_list.append(f'{key.replace("_", " ").title()}: {value}')
-            if metrics_list:
-                add_bullet_list(doc, metrics_list[:10])
+        # El summary tiene total_tables, total_capabilities, etc.
+        summary_list = []
+        if 'total_tables' in summary:
+            summary_list.append(f'Total de tablas en base de datos: {summary["total_tables"]}')
+        if 'total_capabilities' in summary:
+            summary_list.append(f'Capabilities definidas: {summary["total_capabilities"]}')
+        if 'total_services' in summary:
+            summary_list.append(f'Servicios web: {summary["total_services"]}')
+        if 'total_functions' in summary:
+            summary_list.append(f'Funciones PHP: {summary["total_functions"]}')
+        if summary_list:
+            add_bullet_list(doc, summary_list)
+
+    # Clases principales
+    add_heading(doc, '5.16 Clases Principales', 2)
+    if 'classes' in data:
+        classes = data['classes']
+        add_paragraph_text(doc,
+            'El plugin implementa las siguientes clases PHP principales:')
+
+        classes_data = [['Clase', 'Namespace', 'Descripción']]
+        for cls_name, cls_info in classes.items():
+            if isinstance(cls_info, dict):
+                classes_data.append([
+                    cls_info.get('clase', cls_name),
+                    cls_info.get('namespace', 'local_jobboard'),
+                    cls_info.get('descripcion', 'N/A')[:50] + '...' if len(cls_info.get('descripcion', '')) > 50 else cls_info.get('descripcion', 'N/A')
+                ])
+        if len(classes_data) > 1:
+            add_table_with_caption(doc, classes_data, 'Clases principales del plugin local_jobboard')
 
     doc.add_page_break()
 
