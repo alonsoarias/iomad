@@ -270,14 +270,11 @@ def add_figure(doc, svg_path: Path, title: str, width_inches: float = 5.5):
 
 
 def add_table_with_caption(doc, data: list, title: str, col_widths: list = None):
-    """Agrega una tabla con su título y formato corporativo."""
+    """Agrega una tabla con su título DEBAJO y formato corporativo."""
     if not data:
         return
 
-    # Título de la tabla (antes de la tabla)
-    add_table_caption(doc, title)
-
-    # Crear tabla
+    # Crear tabla PRIMERO
     table = doc.add_table(rows=len(data), cols=len(data[0]))
     table.style = 'Table Grid'
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -313,7 +310,10 @@ def add_table_with_caption(doc, data: list, title: str, col_widths: list = None)
                 if i < len(row.cells):
                     row.cells[i].width = Inches(width)
 
-    doc.add_paragraph()  # Espacio después de la tabla
+    # Título de la tabla DESPUÉS de la tabla
+    add_table_caption(doc, title)
+
+    doc.add_paragraph()  # Espacio después del título
 
 
 def load_json_data(plugin_name: str) -> dict:
@@ -1687,6 +1687,8 @@ def generate_back_cover(doc):
     run.font.name = 'Arial'
     run.font.color.rgb = COLORS['VERDE']
 
+    doc.add_page_break()
+
 
 def main():
     """Función principal."""
@@ -1710,6 +1712,9 @@ def main():
     print('  📝 Generando portada...')
     generate_cover_page(doc)
 
+    print('  📄 Generando contraportada...')
+    generate_back_cover(doc)
+
     print('  📑 Generando tablas de contenido...')
     generate_toc_pages(doc)
 
@@ -1727,9 +1732,6 @@ def main():
 
     print('  📋 Generando conclusiones...')
     generate_conclusions(doc)
-
-    print('  📄 Generando contraportada...')
-    generate_back_cover(doc)
 
     # Guardar documento
     print(f'  💾 Guardando documento: {OUTPUT_PATH.name}')
