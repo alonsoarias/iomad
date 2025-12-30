@@ -74,7 +74,7 @@
   <text x="675" y="373" class="text-small" text-anchor="middle">desde caché</text>
 
   <!-- Flecha desde caché a renderizar -->
-  <line x1="675" y1="385" x2="675" y2="650" x2="500" y2="650" class="line" marker-end="url(#arrowhead)"/>
+  <path d="M 675 385 L 675 620 L 500 620 L 500 670" class="line" marker-end="url(#arrowhead)"/>
 
   <!-- 6. Consultas SQL -->
   <rect x="300" y="430" width="200" height="50" rx="5" ry="5" class="box-action"/>
@@ -134,7 +134,7 @@
   <text x="150" y="428" class="text-small" text-anchor="middle">report_platform_usage_ded</text>
 
   <!-- Flecha desde tarea a BD -->
-  <line x1="150" y1="440" x2="150" y2="770" x2="300" y2="770" class="line" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <path d="M 150 440 L 150 770 L 300 770" class="line" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
 
   <!-- Base de datos -->
   <rect x="300" y="750" width="200" height="80" rx="5" ry="5" class="box-filled-green"/>

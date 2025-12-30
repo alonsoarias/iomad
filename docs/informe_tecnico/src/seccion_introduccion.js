@@ -1,6 +1,6 @@
 /**
  * Módulo para generar las secciones introductorias del documento
- * Incluye: Introducción, Objetivos, Metodología, Alcance
+ * Incluye: Introducción, Objetivos, Alcance, Tecnologías
  */
 
 import {
@@ -30,13 +30,10 @@ export async function generarSeccionesIntroductorias() {
     // 2. Objetivos
     elementos.push(...generarObjetivos());
 
-    // 3. Metodología
-    elementos.push(...generarMetodologia());
-
-    // 4. Alcance
+    // 3. Alcance
     elementos.push(...generarAlcance());
 
-    // 5. Tecnologías utilizadas
+    // 4. Tecnologías utilizadas
     elementos.push(...generarTecnologias());
 
     return elementos;
@@ -218,124 +215,6 @@ function generarObjetivos() {
 }
 
 /**
- * Genera la sección de metodología
- */
-function generarMetodologia() {
-    const elementos = [];
-
-    elementos.push(
-        new Paragraph({
-            text: '3. METODOLOGÍA',
-            heading: HeadingLevel.HEADING_1,
-            spacing: { before: 400, after: 200 }
-        })
-    );
-
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: 'La elaboración de este informe técnico siguió una metodología sistemática de análisis de código y documentación que garantiza la precisión y completitud de la información presentada.',
-                    size: 24
-                })
-            ],
-            alignment: AlignmentType.JUSTIFIED,
-            spacing: { after: 200 }
-        })
-    );
-
-    // Fases de la metodología
-    elementos.push(
-        new Paragraph({
-            text: '3.1 Fases del Proceso',
-            heading: HeadingLevel.HEADING_2,
-            spacing: { before: 300, after: 150 }
-        })
-    );
-
-    const fases = [
-        {
-            nombre: 'Análisis de Código Fuente',
-            descripcion: 'Revisión sistemática de todos los archivos PHP, JavaScript, XML y CSS de cada plugin, extrayendo información sobre clases, funciones, constantes y configuraciones.',
-            herramientas: 'Análisis estático de código, parsing de archivos XML'
-        },
-        {
-            nombre: 'Extracción de Esquemas',
-            descripcion: 'Análisis de archivos install.xml y access.php para documentar la estructura de base de datos y el sistema de permisos.',
-            herramientas: 'Parsing XML, análisis de definiciones de capabilities'
-        },
-        {
-            nombre: 'Generación de Diagramas',
-            descripcion: 'Creación de diagramas técnicos en formato SVG que ilustran la arquitectura, flujos de trabajo y relaciones entre componentes.',
-            herramientas: 'Diseño vectorial SVG con colores corporativos ISER'
-        },
-        {
-            nombre: 'Consolidación de Datos',
-            descripcion: 'Integración de toda la información extraída en estructuras JSON que sirven como fuente de datos para el documento.',
-            herramientas: 'Procesamiento JSON, validación de datos'
-        },
-        {
-            nombre: 'Generación del Documento',
-            descripcion: 'Producción automatizada del documento Word (.docx) utilizando plantillas y estilos ICONTEC.',
-            herramientas: 'Librería docx para Node.js, Sharp para procesamiento de imágenes'
-        }
-    ];
-
-    for (let i = 0; i < fases.length; i++) {
-        elementos.push(
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: `Fase ${i + 1}: ${fases[i].nombre}`,
-                        size: 24,
-                        bold: true,
-                        color: COLORS.VERDE
-                    })
-                ],
-                spacing: { before: 200, after: 100 }
-            })
-        );
-
-        elementos.push(
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: fases[i].descripcion,
-                        size: 24
-                    })
-                ],
-                alignment: AlignmentType.JUSTIFIED,
-                spacing: { after: 50 },
-                indent: { left: 360 }
-            })
-        );
-
-        elementos.push(
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: 'Herramientas: ',
-                        size: 22,
-                        bold: true,
-                        italics: true
-                    }),
-                    new TextRun({
-                        text: fases[i].herramientas,
-                        size: 22,
-                        italics: true,
-                        color: COLORS.GRIS
-                    })
-                ],
-                spacing: { after: 100 },
-                indent: { left: 360 }
-            })
-        );
-    }
-
-    return elementos;
-}
-
-/**
  * Genera la sección de alcance
  */
 function generarAlcance() {
@@ -343,7 +222,7 @@ function generarAlcance() {
 
     elementos.push(
         new Paragraph({
-            text: '4. ALCANCE',
+            text: '3. ALCANCE',
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 400, after: 200 }
         })
@@ -448,7 +327,7 @@ function generarTecnologias() {
 
     elementos.push(
         new Paragraph({
-            text: '5. TECNOLOGÍAS UTILIZADAS',
+            text: '4. TECNOLOGÍAS UTILIZADAS',
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 400, after: 200 }
         })

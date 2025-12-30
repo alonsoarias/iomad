@@ -104,7 +104,7 @@
   <text x="750" y="725" class="text-normal" text-anchor="middle">TRUNCATE tablas</text>
   <text x="750" y="743" class="text-small" text-anchor="middle">Limpieza rápida</text>
 
-  <line x1="750" y1="755" x2="750" y2="800" x2="450" y2="800" class="line-yellow" marker-end="url(#arrowhead-yellow)"/>
+  <path d="M 750 755 L 750 790 L 550 790 L 550 820" class="line-yellow" marker-end="url(#arrowhead-yellow)"/>
 
   <line x1="450" y1="770" x2="450" y2="820" class="line-green" marker-end="url(#arrowhead-green)"/>
   <text x="460" y="790" class="text-small">No</text>
@@ -186,15 +186,15 @@
   <polygon points="175,880 255,915 175,950 95,915" class="box-decision"/>
   <text x="175" y="915" class="text-small" text-anchor="middle">¿Más usuarios?</text>
 
-  <line x1="255" y1="915" x2="280" y2="915" x2="280" y2="100" x2="280" y2="100" class="line" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
-  <text x="285" y="500" class="text-small">Sí</text>
+  <path d="M 255 915 L 295 915 L 295 70 L 175 70 L 175 80" class="line" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <text x="302" y="500" class="text-small">Sí</text>
 
   <!-- TERCERA COLUMNA: Finalización -->
   <rect x="600" y="80" width="250" height="40" rx="5" ry="5" class="box-filled-green"/>
   <text x="725" y="105" class="text-white" text-anchor="middle" font-size="14">Finalización</text>
 
-  <line x1="175" y1="950" x2="725" y2="150" class="line-green" marker-end="url(#arrowhead-green)"/>
-  <text x="450" y="950" class="text-small">No</text>
+  <path d="M 95 915 L 40 915 L 40 130 L 600 130 L 600 150" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="60" y="500" class="text-small">No</text>
 
   <rect x="620" y="150" width="210" height="50" rx="5" ry="5" class="box-main"/>
   <text x="725" y="170" class="text-title" text-anchor="middle">Flush final buffer</text>
