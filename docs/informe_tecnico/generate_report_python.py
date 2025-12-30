@@ -966,6 +966,35 @@ def generate_jobboard_section(doc):
         if len(classes_data) > 1:
             add_table_with_caption(doc, classes_data, 'Clases principales del plugin local_jobboard')
 
+    # Funciones PHP
+    add_heading(doc, '5.17 Funciones PHP', 2)
+    if 'functions' in data:
+        functions = data['functions']
+        add_paragraph_text(doc,
+            f'El plugin define {len(functions)} funciones PHP en el archivo lib.php para '
+            'integración con el sistema de navegación y hooks de Moodle:')
+
+        func_data = [['Función', 'Descripción', 'Retorno']]
+        for func in functions[:12]:  # Primeras 12 funciones
+            func_data.append([
+                func.get('name', 'N/A').replace('local_jobboard_', '')[:25],
+                func.get('description', 'N/A')[:40] + '...' if len(func.get('description', '')) > 40 else func.get('description', 'N/A'),
+                func.get('return_type', 'void')
+            ])
+        add_table_with_caption(doc, func_data, 'Funciones PHP principales del plugin local_jobboard')
+
+    # Internacionalización
+    add_heading(doc, '5.18 Internacionalización', 2)
+    if 'lang_strings' in data:
+        lang = data['lang_strings']
+        if 'summary' in lang:
+            summary = lang['summary']
+            add_paragraph_text(doc,
+                f'El plugin incluye {summary.get("total_categories", 0)} categorías de cadenas '
+                'de texto para soporte multiidioma:')
+            if 'key_features' in summary:
+                add_bullet_list(doc, summary['key_features'][:6])
+
     doc.add_page_break()
 
 
@@ -1262,8 +1291,42 @@ def generate_platform_usage_section(doc):
             add_paragraph_text(doc, 'Optimización del rendimiento:', bold=True)
             add_bullet_list(doc, mp['rendimiento'][:4])
 
+    # Flujo de datos
+    add_heading(doc, '6.21 Flujo de Datos', 2)
+    if 'flujo_datos' in data:
+        flujo = data['flujo_datos']
+        add_paragraph_text(doc,
+            'El plugin sigue un flujo de datos estructurado para el procesamiento de informes:')
+
+        if 'etapas' in flujo:
+            etapas_data = [['Etapa', 'Descripción']]
+            for etapa in flujo['etapas']:
+                etapas_data.append([
+                    etapa.get('nombre', 'N/A'),
+                    etapa.get('descripcion', 'N/A')[:50] + '...' if len(etapa.get('descripcion', '')) > 50 else etapa.get('descripcion', 'N/A')
+                ])
+            add_table_with_caption(doc, etapas_data, 'Etapas del flujo de datos del plugin report_platform_usage')
+
+    # Mantenimiento y desarrollo
+    add_heading(doc, '6.22 Mantenimiento y Desarrollo', 2)
+    if 'mantenimiento_desarrollo' in data:
+        mant = data['mantenimiento_desarrollo']
+        if 'tareas_periodicas' in mant:
+            add_paragraph_text(doc, 'Tareas de mantenimiento periódicas:', bold=True)
+            add_bullet_list(doc, mant['tareas_periodicas'][:5])
+        if 'herramientas_desarrollo' in mant:
+            add_paragraph_text(doc, 'Herramientas de desarrollo recomendadas:', bold=True)
+            add_bullet_list(doc, mant['herramientas_desarrollo'][:5])
+
+    # Roadmap y sugerencias
+    add_heading(doc, '6.23 Roadmap y Sugerencias', 2)
+    if 'roadmap_sugerencias' in data:
+        add_paragraph_text(doc,
+            'Sugerencias para futuras mejoras del plugin:')
+        add_bullet_list(doc, data['roadmap_sugerencias'][:8])
+
     # Conclusiones del plugin
-    add_heading(doc, '6.21 Conclusiones del Plugin', 2)
+    add_heading(doc, '6.24 Conclusiones del Plugin', 2)
     if 'conclusiones' in data:
         conc = data['conclusiones']
         if 'fortalezas' in conc:
@@ -1520,8 +1583,50 @@ def generate_platform_access_section(doc):
             add_paragraph_text(doc, 'Plugins opcionales para funcionalidad extendida:')
             add_bullet_list(doc, dep['plugins_opcionales'])
 
+    # Configuración
+    add_heading(doc, '7.20 Configuración', 2)
+    if 'configuracion' in data:
+        config = data['configuracion']
+        if 'parametros' in config:
+            config_data = [['Parámetro', 'Tipo', 'Descripción']]
+            for param in config['parametros']:
+                config_data.append([
+                    param.get('nombre', 'N/A'),
+                    param.get('tipo', 'N/A'),
+                    param.get('descripcion', 'N/A')[:40] + '...' if len(param.get('descripcion', '')) > 40 else param.get('descripcion', 'N/A')
+                ])
+            add_table_with_caption(doc, config_data, 'Parámetros de configuración del plugin local_platform_access')
+
+    # Internacionalización
+    add_heading(doc, '7.21 Internacionalización', 2)
+    if 'internacionalizacion' in data:
+        i18n = data['internacionalizacion']
+        add_paragraph_text(doc,
+            f'El plugin soporta {len(i18n.get("idiomas", []))} idiomas. '
+            f'Contiene aproximadamente {i18n.get("total_cadenas", "N/A")} cadenas de texto.')
+        if 'categorias_cadenas' in i18n:
+            add_paragraph_text(doc, 'Categorías de cadenas:')
+            add_bullet_list(doc, i18n['categorias_cadenas'][:6])
+
+    # Archivos principales
+    add_heading(doc, '7.22 Archivos Principales', 2)
+    if 'archivos_principales' in data:
+        add_paragraph_text(doc,
+            'Los archivos principales del plugin son:')
+        archivos_data = [['Archivo', 'Propósito']]
+        for archivo in data['archivos_principales']:
+            if isinstance(archivo, dict):
+                archivos_data.append([
+                    archivo.get('archivo', 'N/A'),
+                    archivo.get('proposito', 'N/A')[:45] + '...' if len(archivo.get('proposito', '')) > 45 else archivo.get('proposito', 'N/A')
+                ])
+            elif isinstance(archivo, str):
+                archivos_data.append([archivo, 'Archivo del plugin'])
+        if len(archivos_data) > 1:
+            add_table_with_caption(doc, archivos_data, 'Archivos principales del plugin local_platform_access')
+
     # Conclusión del plugin
-    add_heading(doc, '7.20 Conclusión', 2)
+    add_heading(doc, '7.23 Conclusión', 2)
     if 'conclusion' in data:
         conc = data['conclusion']
         conc_list = []
