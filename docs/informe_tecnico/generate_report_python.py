@@ -436,9 +436,28 @@ def add_bullet_list(doc, items: list):
 
 
 def generate_cover_page(doc):
-    """Genera la portada del documento."""
+    """Genera la portada del documento con información del contrato."""
     # Espacio inicial
-    for _ in range(4):
+    for _ in range(2):
+        doc.add_paragraph()
+
+    # Institución
+    inst = doc.add_paragraph()
+    inst.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = inst.add_run('INSTITUTO SUPERIOR DE EDUCACIÓN RURAL - ISER')
+    run.bold = True
+    run.font.size = Pt(14)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['VERDE']
+
+    vice = doc.add_paragraph()
+    vice.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = vice.add_run('Vicerrectoría Académica')
+    run.font.size = Pt(12)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
+    for _ in range(2):
         doc.add_paragraph()
 
     # Título principal
@@ -447,6 +466,7 @@ def generate_cover_page(doc):
     run = title.add_run('INFORME TÉCNICO')
     run.bold = True
     run.font.size = Pt(28)
+    run.font.name = 'Arial'
     run.font.color.rgb = COLORS['VERDE']
 
     doc.add_paragraph()
@@ -457,12 +477,14 @@ def generate_cover_page(doc):
     run = subtitle.add_run('Documentación de Plugins Moodle')
     run.bold = True
     run.font.size = Pt(18)
+    run.font.name = 'Arial'
 
     # Plataforma
     platform = doc.add_paragraph()
     platform.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = platform.add_run('Plataforma Virtual ISER')
     run.font.size = Pt(14)
+    run.font.name = 'Arial'
     run.font.color.rgb = COLORS['GRIS']
 
     for _ in range(2):
@@ -474,49 +496,72 @@ def generate_cover_page(doc):
     run = plugins_title.add_run('Plugins documentados:')
     run.bold = True
     run.font.size = Pt(12)
+    run.font.name = 'Arial'
 
     plugins = ['local_jobboard', 'report_platform_usage', 'local_platform_access']
     for plugin in plugins:
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p.add_run(f'▪ {plugin}')
+        run = p.add_run(f'• {plugin}')
         run.font.size = Pt(12)
+        run.font.name = 'Arial'
         run.font.color.rgb = COLORS['VERDE']
 
-    # Espacio
     for _ in range(3):
         doc.add_paragraph()
 
-    # Autor
+    # Información del contrato
+    contract_title = doc.add_paragraph()
+    contract_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = contract_title.add_run('Contrato de Prestación de Servicios No. CD-CPS-066 de 2025')
+    run.bold = True
+    run.font.size = Pt(11)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
+    for _ in range(2):
+        doc.add_paragraph()
+
+    # Autor/Contratista
     author_label = doc.add_paragraph()
     author_label.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = author_label.add_run('Elaborado por:')
-    run.font.size = Pt(11)
+    run.font.size = Pt(10)
+    run.font.name = 'Arial'
     run.font.color.rgb = COLORS['GRIS']
 
     author_name = doc.add_paragraph()
     author_name.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = author_name.add_run('Alonso Arias')
+    run = author_name.add_run('PEDRO ALONSO ARIAS BALCUCHO')
     run.bold = True
     run.font.size = Pt(14)
+    run.font.name = 'Arial'
     run.font.color.rgb = COLORS['VERDE']
 
-    author_email = doc.add_paragraph()
-    author_email.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = author_email.add_run('soporteplataformas@iser.edu.co')
+    author_cc = doc.add_paragraph()
+    author_cc.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = author_cc.add_run('C.C. 1.094.277.917')
     run.font.size = Pt(10)
+    run.font.name = 'Arial'
     run.font.color.rgb = COLORS['GRIS']
 
-    # Espacio
+    author_contract = doc.add_paragraph()
+    author_contract.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = author_contract.add_run('Contratista - Contrato CD-CPS-066-2025')
+    run.font.size = Pt(10)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
     for _ in range(2):
         doc.add_paragraph()
 
     # Año
     year = doc.add_paragraph()
     year.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = year.add_run('2025')
+    run = year.add_run('Pamplona, 2025')
     run.bold = True
-    run.font.size = Pt(20)
+    run.font.size = Pt(14)
+    run.font.name = 'Arial'
     run.font.color.rgb = COLORS['VERDE']
 
     doc.add_page_break()
@@ -1197,6 +1242,98 @@ def generate_conclusions(doc):
     add_bullet_list(doc, recommendations)
 
 
+def generate_back_cover(doc):
+    """Genera la contraportada del documento."""
+    doc.add_page_break()
+
+    # Espacio inicial
+    for _ in range(8):
+        doc.add_paragraph()
+
+    # Información del contratista
+    info_title = doc.add_paragraph()
+    info_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = info_title.add_run('INFORMACIÓN DE CONTACTO')
+    run.bold = True
+    run.font.size = Pt(14)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['VERDE']
+
+    for _ in range(2):
+        doc.add_paragraph()
+
+    # Nombre
+    name = doc.add_paragraph()
+    name.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = name.add_run('PEDRO ALONSO ARIAS BALCUCHO')
+    run.bold = True
+    run.font.size = Pt(16)
+    run.font.name = 'Arial'
+
+    # CC
+    cc = doc.add_paragraph()
+    cc.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = cc.add_run('C.C. 1.094.277.917')
+    run.font.size = Pt(11)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
+    doc.add_paragraph()
+
+    # Contrato
+    contract = doc.add_paragraph()
+    contract.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = contract.add_run('Contratista - Contrato CD-CPS-066-2025')
+    run.font.size = Pt(11)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
+    for _ in range(2):
+        doc.add_paragraph()
+
+    # Teléfono
+    phone = doc.add_paragraph()
+    phone.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = phone.add_run('Tel: 3112243871')
+    run.font.size = Pt(11)
+    run.font.name = 'Arial'
+
+    # Email
+    email = doc.add_paragraph()
+    email.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = email.add_run('Correo: alonsoariasb@gmail.com')
+    run.font.size = Pt(11)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['VERDE']
+
+    for _ in range(4):
+        doc.add_paragraph()
+
+    # Institución
+    inst = doc.add_paragraph()
+    inst.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = inst.add_run('INSTITUTO SUPERIOR DE EDUCACIÓN RURAL - ISER')
+    run.bold = True
+    run.font.size = Pt(12)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['VERDE']
+
+    location = doc.add_paragraph()
+    location.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = location.add_run('Pamplona, Norte de Santander - Colombia')
+    run.font.size = Pt(10)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
+    year = doc.add_paragraph()
+    year.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = year.add_run('2025')
+    run.bold = True
+    run.font.size = Pt(12)
+    run.font.name = 'Arial'
+    run.font.color.rgb = COLORS['GRIS']
+
+
 def main():
     """Función principal."""
     print('=' * 60)
@@ -1236,6 +1373,9 @@ def main():
 
     print('  📋 Generando conclusiones...')
     generate_conclusions(doc)
+
+    print('  📄 Generando contraportada...')
+    generate_back_cover(doc)
 
     # Guardar documento
     print(f'  💾 Guardando documento: {OUTPUT_PATH.name}')
