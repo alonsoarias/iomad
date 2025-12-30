@@ -346,11 +346,8 @@
   </g>
 
   <!-- Footer note -->
-  <rect x="30" y="1020" width="890" height="60" rx="8" fill="#E8F5E9" stroke="#1B9E88" stroke-width="1"/>
-  <text x="475" y="1045" text-anchor="middle" style="font-family: Arial; font-size: 11px; fill: #333; font-weight: bold;">
+  <rect x="30" y="1020" width="890" height="40" rx="8" fill="#E8F5E9" stroke="#1B9E88" stroke-width="1"/>
+  <text x="475" y="1048" text-anchor="middle" style="font-family: Arial; font-size: 12px; fill: #333; font-weight: bold;">
     Plugin local_jobboard - Sistema de Gestión de Vacantes ISER
-  </text>
-  <text x="475" y="1065" text-anchor="middle" style="font-family: Arial; font-size: 10px; fill: #646363;">
-    Nota: Se excluye la carpeta cli/ según especificación del proyecto. Estructura basada en Moodle 4.x
   </text>
 </svg>
