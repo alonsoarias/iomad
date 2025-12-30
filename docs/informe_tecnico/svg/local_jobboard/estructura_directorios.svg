@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 950" width="900" height="950">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 1100" width="950" height="1100">
   <defs>
     <style>
       .bg { fill: #FAFAFA; }
@@ -7,333 +7,350 @@
       .header-text { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #FFFFFF; }
       .folder-icon { fill: #FCBD05; }
       .folder-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; fill: #1B9E88; font-weight: bold; }
-      .subfolder-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; fill: #646363; }
+      .subfolder-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 11px; fill: #646363; }
       .file-icon { fill: #EB4335; }
-      .file-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 11px; fill: #333333; }
+      .file-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 10px; fill: #333333; }
       .tree-line { stroke: #CCCCCC; stroke-width: 1; fill: none; }
-      .badge { fill: #1B9E88; rx: 3; }
+      .badge { fill: #1B9E88; }
       .badge-text { font-family: Arial, sans-serif; font-size: 9px; fill: #FFFFFF; }
       .section-title { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; font-weight: bold; }
+      .stats-box { fill: #F0F0F0; stroke: #1B9E88; stroke-width: 2; }
     </style>
-    <!-- Folder icon -->
     <symbol id="folder" viewBox="0 0 24 24">
       <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
     </symbol>
-    <!-- File icon -->
     <symbol id="file" viewBox="0 0 24 24">
       <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/>
     </symbol>
   </defs>
 
   <!-- Background -->
-  <rect width="900" height="950" class="bg"/>
+  <rect width="950" height="1100" class="bg"/>
 
   <!-- Header -->
-  <rect x="0" y="0" width="900" height="50" class="header-bg"/>
-  <text x="450" y="32" text-anchor="middle" class="header-text">Estructura de Directorios - local_jobboard</text>
+  <rect x="0" y="0" width="950" height="50" class="header-bg"/>
+  <text x="475" y="32" text-anchor="middle" class="header-text">Estructura de Directorios - local_jobboard</text>
 
-  <!-- Tree Structure -->
+  <!-- Left Column: Directory Tree -->
   <g transform="translate(30, 70)">
     <!-- Root folder -->
     <use href="#folder" x="0" y="0" width="20" height="20" class="folder-icon"/>
     <text x="28" y="15" class="folder-text">local/jobboard/</text>
-    <rect x="160" y="3" width="90" height="16" class="badge"/>
-    <text x="205" y="14" text-anchor="middle" class="badge-text">Plugin principal</text>
+    <rect x="150" y="3" width="85" height="16" rx="3" class="badge"/>
+    <text x="192" y="14" text-anchor="middle" class="badge-text">Plugin principal</text>
 
     <!-- Vertical line from root -->
-    <line x1="10" y1="25" x2="10" y2="860" class="tree-line"/>
+    <line x1="10" y1="25" x2="10" y2="980" class="tree-line"/>
 
     <!-- admin/ -->
-    <g transform="translate(0, 35)">
+    <g transform="translate(0, 40)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">admin/</text>
       <text x="110" y="13" class="subfolder-text">(16 archivos PHP)</text>
-      <!-- admin files detail -->
-      <text x="55" y="30" class="file-text">assign_reviewer.php, bulk_validate.php, doctypes.php, edit.php...</text>
     </g>
 
     <!-- ajax/ -->
-    <g transform="translate(0, 85)">
+    <g transform="translate(0, 80)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">ajax/</text>
-      <text x="105" y="13" class="subfolder-text">(4 archivos PHP)</text>
-      <text x="55" y="30" class="file-text">filter_public_vacancies.php, get_companies.php, get_convocatorias.php, get_departments.php</text>
+      <text x="100" y="13" class="subfolder-text">(4 archivos PHP)</text>
     </g>
 
     <!-- amd/ -->
-    <g transform="translate(0, 135)">
+    <g transform="translate(0, 120)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">amd/</text>
-      <text x="95" y="13" class="subfolder-text">(Módulos JavaScript AMD)</text>
+      <text x="95" y="13" class="subfolder-text">(Módulos JS AMD)</text>
 
-      <line x1="45" y1="25" x2="45" y2="80" class="tree-line"/>
+      <line x1="45" y1="25" x2="45" y2="75" class="tree-line"/>
 
       <!-- amd/build -->
       <g transform="translate(15, 30)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">build/</text>
-        <text x="115" y="12" class="file-text">(22 módulos minificados)</text>
+        <text x="72" y="12" class="subfolder-text">build/ (22 minificados)</text>
       </g>
 
       <!-- amd/src -->
       <g transform="translate(15, 55)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">src/</text>
-        <text x="105" y="12" class="file-text">(22 módulos fuente: dashboard.js, bulk_actions.js...)</text>
+        <text x="72" y="12" class="subfolder-text">src/ (22 fuentes)</text>
       </g>
     </g>
 
     <!-- classes/ -->
-    <g transform="translate(0, 240)">
+    <g transform="translate(0, 220)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">classes/</text>
-      <rect x="115" y="0" width="75" height="16" class="badge"/>
-      <text x="152" y="11" text-anchor="middle" class="badge-text">Lógica de negocio</text>
+      <rect x="115" y="0" width="80" height="16" rx="3" class="badge"/>
+      <text x="155" y="11" text-anchor="middle" class="badge-text">Lógica negocio</text>
 
-      <line x1="45" y1="25" x2="45" y2="195" class="tree-line"/>
+      <line x1="45" y1="25" x2="45" y2="200" class="tree-line"/>
 
-      <!-- classes/event -->
+      <!-- Subcarpetas de classes -->
       <g transform="translate(15, 30)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">event/</text>
-        <text x="115" y="12" class="file-text">(9 eventos Moodle)</text>
+        <text x="72" y="12" class="subfolder-text">event/ (9 eventos)</text>
       </g>
 
-      <!-- classes/external -->
       <g transform="translate(15, 55)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">external/</text>
-        <text x="130" y="12" class="file-text">(5 servicios web)</text>
+        <text x="72" y="12" class="subfolder-text">external/ (5 servicios)</text>
       </g>
 
-      <!-- classes/forms -->
       <g transform="translate(15, 80)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">forms/</text>
-        <text x="120" y="12" class="file-text">(9 formularios Moodle)</text>
+        <text x="72" y="12" class="subfolder-text">forms/ (9 formularios)</text>
       </g>
 
-      <!-- classes/helper -->
       <g transform="translate(15, 105)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">helper/</text>
-        <text x="120" y="12" class="file-text">(clases auxiliares)</text>
+        <text x="72" y="12" class="subfolder-text">helper/ (auxiliares)</text>
       </g>
 
-      <!-- classes/migration -->
       <g transform="translate(15, 130)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">migration/</text>
-        <text x="138" y="12" class="file-text">(herramientas de migración)</text>
+        <text x="72" y="12" class="subfolder-text">migration/ (migración)</text>
       </g>
 
-      <!-- classes/output -->
       <g transform="translate(15, 155)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">output/</text>
-        <text x="120" y="12" class="file-text">(renderizadores)</text>
+        <text x="72" y="12" class="subfolder-text">output/ (renderizadores)</text>
       </g>
 
-      <!-- classes/task -->
       <g transform="translate(15, 180)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">task/</text>
-        <text x="108" y="12" class="file-text">(tareas programadas)</text>
+        <text x="72" y="12" class="subfolder-text">task/ (tareas cron)</text>
       </g>
-
-      <!-- Main classes -->
-      <text x="55" y="210" class="file-text">+ application.php, document.php, exemption.php, vacancy.php...</text>
     </g>
 
     <!-- Convocatoria/ -->
-    <g transform="translate(0, 470)">
+    <g transform="translate(0, 450)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">Convocatoria/</text>
-      <text x="150" y="13" class="subfolder-text">(Módulo de convocatorias)</text>
+      <text x="150" y="13" class="subfolder-text">(módulo)</text>
     </g>
 
     <!-- db/ -->
-    <g transform="translate(0, 505)">
+    <g transform="translate(0, 490)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">db/</text>
-      <rect x="80" y="0" width="70" height="16" class="badge"/>
-      <text x="115" y="11" text-anchor="middle" class="badge-text">Base de datos</text>
+      <rect x="80" y="0" width="70" height="16" rx="3" class="badge"/>
+      <text x="115" y="11" text-anchor="middle" class="badge-text">Base datos</text>
 
-      <line x1="45" y1="25" x2="45" y2="55" class="tree-line"/>
+      <line x1="45" y1="25" x2="45" y2="50" class="tree-line"/>
 
       <g transform="translate(15, 30)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">tours/</text>
-        <text x="110" y="12" class="file-text">(tours guiados)</text>
+        <text x="72" y="12" class="subfolder-text">tours/ (tours guiados)</text>
       </g>
-
-      <text x="55" y="70" class="file-text">install.xml (24 tablas), access.php (27 capacidades), services.php, upgrade.php</text>
     </g>
 
     <!-- lang/ -->
-    <g transform="translate(0, 595)">
+    <g transform="translate(0, 570)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">lang/</text>
+      <text x="100" y="13" class="subfolder-text">(traducciones)</text>
 
-      <line x1="45" y1="25" x2="45" y2="55" class="tree-line"/>
+      <line x1="45" y1="25" x2="45" y2="75" class="tree-line"/>
 
       <g transform="translate(15, 30)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">en/</text>
-        <text x="95" y="12" class="file-text">local_jobboard.php (English)</text>
+        <text x="72" y="12" class="subfolder-text">en/ (English)</text>
       </g>
 
       <g transform="translate(15, 55)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">es/</text>
-        <text x="95" y="12" class="file-text">local_jobboard.php (Español)</text>
+        <text x="72" y="12" class="subfolder-text">es/ (Español)</text>
       </g>
     </g>
 
     <!-- templates/ -->
-    <g transform="translate(0, 675)">
+    <g transform="translate(0, 670)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">templates/</text>
-      <text x="130" y="13" class="subfolder-text">(Plantillas Mustache)</text>
+      <text x="140" y="13" class="subfolder-text">(Mustache)</text>
 
-      <line x1="45" y1="25" x2="45" y2="80" class="tree-line"/>
+      <line x1="45" y1="25" x2="45" y2="100" class="tree-line"/>
 
       <g transform="translate(15, 30)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
         <text x="72" y="12" class="subfolder-text">components/</text>
-        <text x="155" y="12" class="file-text">(componentes reutilizables)</text>
       </g>
 
       <g transform="translate(15, 55)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
-        <text x="72" y="12" class="subfolder-text">pages/</text>
-        <text x="115" y="12" class="file-text">(12 subcarpetas: admin, applications, vacancies...)</text>
+        <text x="72" y="12" class="subfolder-text">pages/ (12 subcarpetas)</text>
       </g>
 
       <g transform="translate(15, 80)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
         <text x="72" y="12" class="subfolder-text">partials/</text>
-        <text x="130" y="12" class="file-text">(fragmentos parciales)</text>
       </g>
     </g>
 
     <!-- tests/ -->
-    <g transform="translate(0, 780)">
+    <g transform="translate(0, 800)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">tests/</text>
+      <text x="100" y="13" class="subfolder-text">(pruebas)</text>
 
-      <line x1="45" y1="25" x2="45" y2="55" class="tree-line"/>
+      <line x1="45" y1="25" x2="45" y2="75" class="tree-line"/>
 
       <g transform="translate(15, 30)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
         <text x="72" y="12" class="subfolder-text">behat/</text>
-        <text x="115" y="12" class="file-text">(tests de comportamiento)</text>
       </g>
 
       <g transform="translate(15, 55)">
         <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
         <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
         <text x="72" y="12" class="subfolder-text">generator/</text>
-        <text x="135" y="12" class="file-text">(generadores de datos de prueba)</text>
       </g>
     </g>
 
     <!-- views/ -->
-    <g transform="translate(0, 855)">
+    <g transform="translate(0, 900)">
       <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
       <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
       <text x="55" y="13" class="folder-text">views/</text>
-      <text x="100" y="13" class="subfolder-text">(vistas del plugin)</text>
+      <text x="100" y="13" class="subfolder-text">(vistas)</text>
     </g>
   </g>
 
-  <!-- Root files section -->
-  <g transform="translate(500, 70)">
-    <text x="0" y="0" class="section-title">ARCHIVOS RAÍZ:</text>
+  <!-- Right Column: Root Files and Statistics -->
+  <g transform="translate(480, 70)">
+    <!-- Root Files Section -->
+    <rect x="0" y="0" width="420" height="220" rx="8" fill="#FFFFFF" stroke="#1B9E88" stroke-width="2"/>
+    <rect x="0" y="0" width="420" height="30" rx="8" class="header-bg"/>
+    <text x="210" y="20" text-anchor="middle" class="header-text" style="font-size: 13px;">ARCHIVOS RAÍZ</text>
 
-    <g transform="translate(0, 20)">
-      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
-      <text x="20" y="11" class="file-text">version.php</text>
-      <text x="120" y="11" style="font-size: 10px; fill: #999;">(v2025011000)</text>
+    <g transform="translate(20, 50)">
+      <use href="#file" x="0" y="0" width="16" height="16" class="file-icon"/>
+      <text x="25" y="12" class="file-text">version.php</text>
+      <text x="150" y="12" class="subfolder-text">v2025011000</text>
     </g>
 
-    <g transform="translate(0, 40)">
-      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
-      <text x="20" y="11" class="file-text">lib.php</text>
-      <text x="80" y="11" style="font-size: 10px; fill: #999;">(38KB - API principal)</text>
+    <g transform="translate(20, 80)">
+      <use href="#file" x="0" y="0" width="16" height="16" class="file-icon"/>
+      <text x="25" y="12" class="file-text">lib.php</text>
+      <text x="150" y="12" class="subfolder-text">38KB - API principal</text>
     </g>
 
-    <g transform="translate(0, 60)">
-      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
-      <text x="20" y="11" class="file-text">settings.php</text>
-      <text x="105" y="11" style="font-size: 10px; fill: #999;">(configuración)</text>
+    <g transform="translate(20, 110)">
+      <use href="#file" x="0" y="0" width="16" height="16" class="file-icon"/>
+      <text x="25" y="12" class="file-text">settings.php</text>
+      <text x="150" y="12" class="subfolder-text">configuración</text>
     </g>
 
-    <g transform="translate(0, 80)">
-      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
-      <text x="20" y="11" class="file-text">index.php</text>
-      <text x="95" y="11" style="font-size: 10px; fill: #999;">(listado vacantes)</text>
+    <g transform="translate(20, 140)">
+      <use href="#file" x="0" y="0" width="16" height="16" class="file-icon"/>
+      <text x="25" y="12" class="file-text">index.php</text>
+      <text x="150" y="12" class="subfolder-text">listado vacantes</text>
     </g>
 
-    <g transform="translate(0, 100)">
-      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
-      <text x="20" y="11" class="file-text">signup.php</text>
-      <text x="100" y="11" style="font-size: 10px; fill: #999;">(registro usuarios)</text>
+    <g transform="translate(20, 170)">
+      <use href="#file" x="0" y="0" width="16" height="16" class="file-icon"/>
+      <text x="25" y="12" class="file-text">signup.php</text>
+      <text x="150" y="12" class="subfolder-text">registro usuarios</text>
     </g>
 
-    <g transform="translate(0, 120)">
-      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
-      <text x="20" y="11" class="file-text">styles.css</text>
-      <text x="95" y="11" style="font-size: 10px; fill: #999;">(159KB - estilos)</text>
+    <g transform="translate(20, 200)">
+      <use href="#file" x="0" y="0" width="16" height="16" class="file-icon"/>
+      <text x="25" y="12" class="file-text">styles.css</text>
+      <text x="150" y="12" class="subfolder-text">159KB - estilos</text>
     </g>
   </g>
 
-  <!-- Statistics -->
-  <g transform="translate(500, 250)">
-    <rect x="0" y="0" width="370" height="140" rx="8" fill="#F0F0F0" stroke="#1B9E88" stroke-width="2"/>
-    <text x="185" y="25" text-anchor="middle" class="section-title">ESTADÍSTICAS DEL PLUGIN</text>
+  <!-- Statistics Box -->
+  <g transform="translate(480, 320)">
+    <rect x="0" y="0" width="420" height="180" rx="8" class="stats-box"/>
+    <rect x="0" y="0" width="420" height="30" rx="8" class="header-bg"/>
+    <text x="210" y="20" text-anchor="middle" class="header-text" style="font-size: 13px;">ESTADÍSTICAS DEL PLUGIN</text>
 
-    <text x="20" y="50" class="file-text">Carpetas principales: 11</text>
-    <text x="20" y="70" class="file-text">Subcarpetas: 23</text>
-    <text x="20" y="90" class="file-text">Tablas en BD: 24</text>
-    <text x="20" y="110" class="file-text">Capacidades: 27</text>
-    <text x="20" y="130" class="file-text">Módulos AMD: 22</text>
+    <!-- Left column stats -->
+    <text x="30" y="60" class="file-text" style="font-size: 12px;">Carpetas principales:</text>
+    <text x="180" y="60" class="folder-text">11</text>
 
-    <text x="200" y="50" class="file-text">Clases PHP: 35+</text>
-    <text x="200" y="70" class="file-text">Servicios Web: 5</text>
-    <text x="200" y="90" class="file-text">Eventos: 9</text>
-    <text x="200" y="110" class="file-text">Formularios: 9</text>
-    <text x="200" y="130" class="file-text">Plantillas: 50+</text>
+    <text x="30" y="85" class="file-text" style="font-size: 12px;">Subcarpetas:</text>
+    <text x="180" y="85" class="folder-text">23</text>
+
+    <text x="30" y="110" class="file-text" style="font-size: 12px;">Tablas en BD:</text>
+    <text x="180" y="110" class="folder-text">24</text>
+
+    <text x="30" y="135" class="file-text" style="font-size: 12px;">Capacidades:</text>
+    <text x="180" y="135" class="folder-text">27</text>
+
+    <text x="30" y="160" class="file-text" style="font-size: 12px;">Módulos AMD:</text>
+    <text x="180" y="160" class="folder-text">22</text>
+
+    <!-- Right column stats -->
+    <text x="240" y="60" class="file-text" style="font-size: 12px;">Clases PHP:</text>
+    <text x="370" y="60" class="folder-text">35+</text>
+
+    <text x="240" y="85" class="file-text" style="font-size: 12px;">Servicios Web:</text>
+    <text x="370" y="85" class="folder-text">5</text>
+
+    <text x="240" y="110" class="file-text" style="font-size: 12px;">Eventos:</text>
+    <text x="370" y="110" class="folder-text">9</text>
+
+    <text x="240" y="135" class="file-text" style="font-size: 12px;">Formularios:</text>
+    <text x="370" y="135" class="folder-text">9</text>
+
+    <text x="240" y="160" class="file-text" style="font-size: 12px;">Plantillas:</text>
+    <text x="370" y="160" class="folder-text">50+</text>
+  </g>
+
+  <!-- DB Files Detail -->
+  <g transform="translate(480, 530)">
+    <rect x="0" y="0" width="420" height="120" rx="8" fill="#FFF8E1" stroke="#FCBD05" stroke-width="2"/>
+    <rect x="0" y="0" width="420" height="30" rx="8" fill="#FCBD05"/>
+    <text x="210" y="20" text-anchor="middle" style="font-family: Arial; font-size: 13px; font-weight: bold; fill: #333;">ARCHIVOS db/</text>
+
+    <text x="20" y="55" class="file-text">install.xml</text>
+    <text x="130" y="55" class="subfolder-text">24 tablas definidas</text>
+
+    <text x="20" y="80" class="file-text">access.php</text>
+    <text x="130" y="80" class="subfolder-text">27 capabilities</text>
+
+    <text x="20" y="105" class="file-text">services.php</text>
+    <text x="130" y="105" class="subfolder-text">5 web services</text>
+
+    <text x="250" y="55" class="file-text">upgrade.php</text>
+    <text x="250" y="80" class="file-text">tasks.php</text>
+    <text x="250" y="105" class="file-text">events.php</text>
   </g>
 
   <!-- Footer note -->
-  <rect x="20" y="910" width="860" height="30" rx="5" fill="#FFF8E1" stroke="#FCBD05" stroke-width="1"/>
-  <text x="450" y="930" text-anchor="middle" style="font-family: Arial; font-size: 11px; fill: #646363;">
+  <rect x="30" y="1020" width="890" height="60" rx="8" fill="#E8F5E9" stroke="#1B9E88" stroke-width="1"/>
+  <text x="475" y="1045" text-anchor="middle" style="font-family: Arial; font-size: 11px; fill: #333; font-weight: bold;">
+    Plugin local_jobboard - Sistema de Gestión de Vacantes ISER
+  </text>
+  <text x="475" y="1065" text-anchor="middle" style="font-family: Arial; font-size: 10px; fill: #646363;">
     Nota: Se excluye la carpeta cli/ según especificación del proyecto. Estructura basada en Moodle 4.x
   </text>
 </svg>
