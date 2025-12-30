@@ -46,14 +46,14 @@ export async function generarSeccionPlatformAccess() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: `${datos.resumen_ejecutivo.nombre_completo} es un plugin de tipo `,
+                    text: `${datos.nombre_completo} es un plugin de tipo `,
                 }),
                 new TextRun({
                     text: datos.tipo,
                     bold: true
                 }),
                 new TextRun({
-                    text: ` cuyo propósito es ${datos.resumen_ejecutivo.proposito}`
+                    text: ` cuyo propósito es ${datos.resumen_ejecutivo?.proposito || 'generar registros de acceso'}`
                 })
             ],
             spacing: { after: 200 },
@@ -171,7 +171,7 @@ export async function generarSeccionPlatformAccess() {
             new TableRow({
                 children: [
                     new TableCell({ children: [new Paragraph('Nombre completo')], margins: { top: 100, bottom: 100, left: 100, right: 100 } }),
-                    new TableCell({ children: [new Paragraph(datos.resumen_ejecutivo.nombre_completo)], margins: { top: 100, bottom: 100, left: 100, right: 100 } })
+                    new TableCell({ children: [new Paragraph(datos.nombre_completo)], margins: { top: 100, bottom: 100, left: 100, right: 100 } })
                 ]
             }),
             new TableRow({
