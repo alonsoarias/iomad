@@ -1,0 +1,429 @@
+{
+  "metadata": {
+    "plugin": "local_jobboard",
+    "file_source": "/home/user/iomad/local/jobboard/lang/es/local_jobboard.php",
+    "language": "es",
+    "description": "Cadenas de idioma principales del plugin local_jobboard (Español)",
+    "extracted_date": "2025-12-30",
+    "total_strings": 3225,
+    "sample_size": 100,
+    "note": "Se muestran las 100 cadenas más representativas del archivo completo"
+  },
+  "main_categories": [
+    {
+      "category": "Plugin Identification",
+      "strings": [
+        {
+          "key": "pluginname",
+          "value": "Bolsa de Empleo",
+          "context": "Nombre del plugin"
+        },
+        {
+          "key": "pluginname_desc",
+          "value": "Sistema de bolsa de empleo para reclutamiento docente y gestión de vacantes",
+          "context": "Descripción del plugin"
+        },
+        {
+          "key": "jobboard",
+          "value": "Bolsa de Empleo",
+          "context": "Nombre corto"
+        }
+      ]
+    },
+    {
+      "category": "Capabilities",
+      "strings": [
+        {
+          "key": "jobboard:view",
+          "value": "Ver bolsa de empleo",
+          "context": "Permiso para ver"
+        },
+        {
+          "key": "jobboard:viewinternal",
+          "value": "Ver vacantes internas",
+          "context": "Permiso para ver vacantes internas"
+        },
+        {
+          "key": "jobboard:manage",
+          "value": "Gestionar vacantes",
+          "context": "Permiso para gestionar"
+        },
+        {
+          "key": "jobboard:createvacancy",
+          "value": "Crear vacantes",
+          "context": "Permiso para crear vacantes"
+        },
+        {
+          "key": "jobboard:editvacancy",
+          "value": "Editar vacantes",
+          "context": "Permiso para editar"
+        },
+        {
+          "key": "jobboard:deletevacancy",
+          "value": "Eliminar vacantes",
+          "context": "Permiso para eliminar"
+        },
+        {
+          "key": "jobboard:apply",
+          "value": "Postularse a vacantes",
+          "context": "Permiso para postularse"
+        },
+        {
+          "key": "jobboard:viewallapplications",
+          "value": "Ver todas las postulaciones",
+          "context": "Permiso para ver todas las postulaciones"
+        },
+        {
+          "key": "jobboard:review",
+          "value": "Revisar postulaciones",
+          "context": "Permiso para revisar"
+        },
+        {
+          "key": "jobboard:validatedocuments",
+          "value": "Validar documentos",
+          "context": "Permiso para validar documentos"
+        },
+        {
+          "key": "jobboard:managedoctypes",
+          "value": "Gestionar tipos de documento",
+          "context": "Permiso para gestionar tipos de documento"
+        },
+        {
+          "key": "jobboard:manageexemptions",
+          "value": "Gestionar excepciones",
+          "context": "Permiso para gestionar excepciones"
+        }
+      ]
+    },
+    {
+      "category": "Navigation and Menu",
+      "strings": [
+        {
+          "key": "dashboard",
+          "value": "Panel de control",
+          "context": "Panel principal"
+        },
+        {
+          "key": "convocatorias",
+          "value": "Convocatorias",
+          "context": "Menú convocatorias"
+        },
+        {
+          "key": "vacancies",
+          "value": "Vacantes",
+          "context": "Menú vacantes"
+        },
+        {
+          "key": "applications",
+          "value": "Postulaciones",
+          "context": "Menú postulaciones"
+        },
+        {
+          "key": "myapplications",
+          "value": "Mis postulaciones",
+          "context": "Mis postulaciones"
+        },
+        {
+          "key": "review",
+          "value": "Revisión",
+          "context": "Menú revisión"
+        },
+        {
+          "key": "reports",
+          "value": "Reportes",
+          "context": "Menú reportes"
+        },
+        {
+          "key": "settings",
+          "value": "Configuración",
+          "context": "Menú configuración"
+        }
+      ]
+    },
+    {
+      "category": "Common Actions",
+      "strings": [
+        {
+          "key": "view",
+          "value": "Ver",
+          "context": "Acción ver"
+        },
+        {
+          "key": "edit",
+          "value": "Editar",
+          "context": "Acción editar"
+        },
+        {
+          "key": "delete",
+          "value": "Eliminar",
+          "context": "Acción eliminar"
+        },
+        {
+          "key": "save",
+          "value": "Guardar",
+          "context": "Acción guardar"
+        },
+        {
+          "key": "cancel",
+          "value": "Cancelar",
+          "context": "Acción cancelar"
+        },
+        {
+          "key": "create",
+          "value": "Crear",
+          "context": "Acción crear"
+        },
+        {
+          "key": "submit",
+          "value": "Enviar",
+          "context": "Acción enviar"
+        },
+        {
+          "key": "download",
+          "value": "Descargar",
+          "context": "Acción descargar"
+        },
+        {
+          "key": "upload",
+          "value": "Subir",
+          "context": "Acción subir"
+        },
+        {
+          "key": "approve",
+          "value": "Aprobar",
+          "context": "Acción aprobar"
+        },
+        {
+          "key": "reject",
+          "value": "Rechazar",
+          "context": "Acción rechazar"
+        }
+      ]
+    },
+    {
+      "category": "Common Labels",
+      "strings": [
+        {
+          "key": "name",
+          "value": "Nombre",
+          "context": "Etiqueta nombre"
+        },
+        {
+          "key": "title",
+          "value": "Título",
+          "context": "Etiqueta título"
+        },
+        {
+          "key": "description",
+          "value": "Descripción",
+          "context": "Etiqueta descripción"
+        },
+        {
+          "key": "status",
+          "value": "Estado",
+          "context": "Etiqueta estado"
+        },
+        {
+          "key": "date",
+          "value": "Fecha",
+          "context": "Etiqueta fecha"
+        },
+        {
+          "key": "startdate",
+          "value": "Fecha de inicio",
+          "context": "Fecha de inicio"
+        },
+        {
+          "key": "enddate",
+          "value": "Fecha de fin",
+          "context": "Fecha de fin"
+        },
+        {
+          "key": "department",
+          "value": "Departamento",
+          "context": "Departamento"
+        },
+        {
+          "key": "company",
+          "value": "Sede / Centro tutorial",
+          "context": "Sede"
+        },
+        {
+          "key": "program",
+          "value": "Programa",
+          "context": "Programa académico"
+        }
+      ]
+    },
+    {
+      "category": "Status Strings",
+      "strings": [
+        {
+          "key": "active",
+          "value": "Activo",
+          "context": "Estado activo"
+        },
+        {
+          "key": "inactive",
+          "value": "Inactivo",
+          "context": "Estado inactivo"
+        },
+        {
+          "key": "pending",
+          "value": "Pendiente",
+          "context": "Estado pendiente"
+        },
+        {
+          "key": "approved",
+          "value": "Aprobado",
+          "context": "Estado aprobado"
+        },
+        {
+          "key": "rejected",
+          "value": "Rechazado",
+          "context": "Estado rechazado"
+        },
+        {
+          "key": "status:draft",
+          "value": "Borrador",
+          "context": "Vacante en borrador"
+        },
+        {
+          "key": "status:published",
+          "value": "Publicada",
+          "context": "Vacante publicada"
+        },
+        {
+          "key": "status:closed",
+          "value": "Cerrada",
+          "context": "Vacante cerrada"
+        }
+      ]
+    },
+    {
+      "category": "Application Status",
+      "strings": [
+        {
+          "key": "appstatus:submitted",
+          "value": "Enviada",
+          "context": "Postulación enviada"
+        },
+        {
+          "key": "appstatus:under_review",
+          "value": "En revisión",
+          "context": "En revisión"
+        },
+        {
+          "key": "status_pending_dean_review",
+          "value": "Pendiente revisión Decano",
+          "context": "Workflow v4.0"
+        },
+        {
+          "key": "status_dean_approved",
+          "value": "Aprobado por Decano",
+          "context": "Workflow v4.0"
+        },
+        {
+          "key": "status_pending_hr_validation",
+          "value": "Pendiente validación T. Humano",
+          "context": "Workflow v4.0"
+        },
+        {
+          "key": "status_hr_validated",
+          "value": "Validado por Talento Humano",
+          "context": "Workflow v4.0"
+        },
+        {
+          "key": "status_hr_rejected",
+          "value": "Rechazado por Talento Humano",
+          "context": "Workflow v4.0"
+        },
+        {
+          "key": "appstatus:withdrawn",
+          "value": "Retirada",
+          "context": "Postulación retirada"
+        }
+      ]
+    },
+    {
+      "category": "Convocatorias",
+      "strings": [
+        {
+          "key": "convocatoria",
+          "value": "Convocatoria",
+          "context": "Singular"
+        },
+        {
+          "key": "newconvocatoria",
+          "value": "Nueva convocatoria",
+          "context": "Crear nueva"
+        },
+        {
+          "key": "editconvocatoria",
+          "value": "Editar convocatoria",
+          "context": "Editar existente"
+        },
+        {
+          "key": "convocatoriacode",
+          "value": "Código de convocatoria",
+          "context": "Código único"
+        },
+        {
+          "key": "convocatorianame",
+          "value": "Nombre de la convocatoria",
+          "context": "Nombre"
+        },
+        {
+          "key": "convocatoriapdf",
+          "value": "PDF Acuerdo/Resolución",
+          "context": "Documento oficial"
+        },
+        {
+          "key": "convocatoriaterms_pdf",
+          "value": "PDF Términos de Convocatoria",
+          "context": "Términos y condiciones"
+        },
+        {
+          "key": "publishconvocatoria",
+          "value": "Publicar convocatoria",
+          "context": "Acción publicar"
+        },
+        {
+          "key": "closeconvocatoria",
+          "value": "Cerrar convocatoria",
+          "context": "Acción cerrar"
+        },
+        {
+          "key": "noconvocatorias",
+          "value": "No se encontraron convocatorias",
+          "context": "Lista vacía"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_categories": 8,
+    "strings_per_category": {
+      "Plugin Identification": 3,
+      "Capabilities": 12,
+      "Navigation and Menu": 8,
+      "Common Actions": 11,
+      "Common Labels": 10,
+      "Status Strings": 8,
+      "Application Status": 8,
+      "Convocatorias": 10
+    },
+    "key_features": [
+      "Sistema multiidioma completo (3225+ cadenas)",
+      "Capacidades y permisos detallados",
+      "Estados de workflow v4.0 con revisión Decano y Talento Humano",
+      "Terminología específica para educación (Sede, Centro tutorial, Programa)",
+      "Gestión de convocatorias con documentos PDF oficiales",
+      "Sistema de postulaciones con estados múltiples",
+      "Validación y gestión de documentos",
+      "Sistema de excepciones personalizable"
+    ],
+    "language_coverage": "Español (es)",
+    "alternative_language": "English (en) también disponible"
+  }
+}

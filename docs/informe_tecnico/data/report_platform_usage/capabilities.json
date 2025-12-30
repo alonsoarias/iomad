@@ -1,0 +1,73 @@
+{
+  "plugin": "report_platform_usage",
+  "capabilities": [
+    {
+      "nombre": "report/platform_usage:view",
+      "nombre_completo": "report/platform_usage:view",
+      "tipo": "read",
+      "descripcion": "Ver el informe de uso de la plataforma",
+      "contexto": "CONTEXT_COURSE",
+      "contexto_descripcion": "Nivel de curso - puede aplicarse a cursos individuales o a nivel de sistema",
+      "arquetipos": [
+        {
+          "rol": "manager",
+          "permiso": "CAP_ALLOW",
+          "descripcion": "Administradores pueden ver el informe"
+        },
+        {
+          "rol": "editingteacher",
+          "permiso": "CAP_ALLOW",
+          "descripcion": "Profesores editores pueden ver el informe"
+        }
+      ],
+      "uso": [
+        "Controla el acceso a la página principal del informe (index.php)",
+        "Controla el acceso al endpoint AJAX (ajax.php)",
+        "Requerido para ver cualquier dato del informe"
+      ]
+    },
+    {
+      "nombre": "report/platform_usage:export",
+      "nombre_completo": "report/platform_usage:export",
+      "tipo": "read",
+      "descripcion": "Exportar el informe de uso de la plataforma",
+      "contexto": "CONTEXT_COURSE",
+      "contexto_descripcion": "Nivel de curso - puede aplicarse a cursos individuales o a nivel de sistema",
+      "arquetipos": [
+        {
+          "rol": "manager",
+          "permiso": "CAP_ALLOW",
+          "descripcion": "Administradores pueden exportar el informe"
+        },
+        {
+          "rol": "editingteacher",
+          "permiso": "CAP_ALLOW",
+          "descripcion": "Profesores editores pueden exportar el informe"
+        }
+      ],
+      "uso": [
+        "Controla el acceso a la funcionalidad de exportación (export.php)",
+        "Permite descargar datos en formato Excel o CSV",
+        "Incluye exportación con gráficos mediante excel_exporter"
+      ]
+    }
+  ],
+  "notas": [
+    "Ambas capabilities son de tipo 'read', no modifican datos",
+    "Los profesores editores tienen acceso completo por defecto",
+    "El contexto CONTEXT_COURSE permite usar el informe tanto a nivel de sistema como de curso individual",
+    "Las capabilities se verifican después del login usando require_capability()"
+  ],
+  "integracion_navegacion": {
+    "navegacion_curso": {
+      "funcion": "report_platform_usage_extend_navigation_course",
+      "descripcion": "Añade enlace al informe en la navegación del curso",
+      "condicion": "Requiere capability report/platform_usage:view"
+    },
+    "configuracion_curso": {
+      "funcion": "report_platform_usage_extend_settings_navigation",
+      "descripcion": "Añade enlace en la sección de informes del curso",
+      "condicion": "Requiere capability report/platform_usage:view y curso != SITEID"
+    }
+  }
+}

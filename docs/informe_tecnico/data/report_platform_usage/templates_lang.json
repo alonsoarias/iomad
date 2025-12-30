@@ -1,0 +1,277 @@
+{
+  "plugin": "report_platform_usage",
+  "plantillas_mustache": {
+    "cantidad": 0,
+    "ubicacion": "No se encontraron plantillas .mustache",
+    "nota": "El plugin no utiliza plantillas Mustache. La interfaz se genera mediante PHP tradicional con HTML embebido."
+  },
+  "archivos_idioma": {
+    "ubicacion": "lang/",
+    "idiomas_disponibles": [
+      {
+        "codigo": "en",
+        "nombre": "English",
+        "archivo": "lang/en/report_platform_usage.php",
+        "lineas": 325,
+        "estado": "completo"
+      },
+      {
+        "codigo": "es",
+        "nombre": "Español",
+        "archivo": "lang/es/report_platform_usage.php",
+        "estado": "disponible",
+        "nota": "Traducción española del plugin"
+      }
+    ]
+  },
+  "categorias_cadenas": {
+    "nucleo_plugin": {
+      "descripcion": "Identificación y nombres del plugin",
+      "cadenas_principales": [
+        {
+          "clave": "pluginname",
+          "valor": "Platform Usage Report",
+          "uso": "Nombre del plugin en el sistema"
+        },
+        {
+          "clave": "platform_usage:view",
+          "valor": "View the platform usage report",
+          "uso": "Descripción de capability de visualización"
+        },
+        {
+          "clave": "platform_usage:export",
+          "valor": "Export the platform usage report",
+          "uso": "Descripción de capability de exportación"
+        },
+        {
+          "clave": "platformusagereport",
+          "valor": "Platform Usage Report",
+          "uso": "Título alternativo del informe"
+        },
+        {
+          "clave": "reporttitle",
+          "valor": "Platform Usage Report",
+          "uso": "Título del informe en cabeceras"
+        },
+        {
+          "clave": "coursereport",
+          "valor": "Course Usage Report",
+          "uso": "Título cuando se usa en contexto de curso"
+        }
+      ]
+    },
+    "filtros": {
+      "descripcion": "Cadenas para filtros y selección de datos",
+      "cadenas": [
+        "company - Company",
+        "allcompanies - All companies",
+        "selectcompany - Select a company",
+        "filter - Apply filters",
+        "filter_company - Company",
+        "filter_daterange - Date range"
+      ]
+    },
+    "periodos_tiempo": {
+      "descripcion": "Etiquetas para rangos de tiempo",
+      "cadenas": [
+        "today - Today",
+        "lastweek - Last 7 days",
+        "lastmonth - Last 30 days",
+        "lastquarter - Last 90 days",
+        "lastyear - Last 365 days",
+        "custom - Custom range",
+        "datefrom - From",
+        "dateto - To",
+        "daterange - Date range"
+      ]
+    },
+    "metricas_login": {
+      "descripcion": "Cadenas relacionadas con logins y accesos",
+      "cadenas": [
+        "loginstoday - Logins today",
+        "loginsweek - Logins (7 days)",
+        "loginsmonth - Logins (30 days)",
+        "uniqueuserstoday - Unique users today",
+        "uniqueusersweek - Unique users (7 days)",
+        "uniqueusersmonth - Unique users (30 days)",
+        "loginsummary - Login summary",
+        "logintrends - Login trends",
+        "dailylogins - Daily logins",
+        "weeklylogins - Weekly logins",
+        "monthlylogins - Monthly logins",
+        "logins - Logins",
+        "uniqueusers - Unique users"
+      ]
+    },
+    "metricas_usuario": {
+      "descripcion": "Cadenas relacionadas con usuarios",
+      "cadenas": [
+        "totalusers - Total users",
+        "activeusers - Active users",
+        "inactiveusers - Inactive users",
+        "usersummary - User summary",
+        "usersbyactivity - Users by activity",
+        "userdetails - User details",
+        "usercount - Users",
+        "dailyusers - Daily unique users",
+        "dailyuserstable - Daily users",
+        "username - Username",
+        "fullname - Full name",
+        "email - Email",
+        "logincount - Login count",
+        "lastaccess - Last access",
+        "created - Created",
+        "status - Status",
+        "active - Active",
+        "inactive - Inactive"
+      ]
+    },
+    "metricas_curso": {
+      "descripcion": "Cadenas relacionadas con cursos",
+      "cadenas": [
+        "courses - Courses",
+        "coursename - Course",
+        "shortname - Short name",
+        "courseaccesses - Accesses",
+        "courseusage - Course usage",
+        "topcourses - Most accessed courses",
+        "courseaccessdetails - Course access details",
+        "coursesummary - Course summary",
+        "courseaccess - Course access",
+        "enrolledusers - Enrolled users",
+        "avgaccessperuser - Average access per user"
+      ]
+    },
+    "metricas_actividad": {
+      "descripcion": "Cadenas relacionadas con actividades de Moodle",
+      "cadenas": [
+        "activities - Activities",
+        "activityname - Activity",
+        "activitytype - Type",
+        "activityaccesses - Views",
+        "activityusage - Activity usage",
+        "topactivities - Most accessed activities",
+        "activityaccessdetails - Activity details",
+        "activityaccess - Activity access"
+      ]
+    },
+    "metricas_dedicacion": {
+      "descripcion": "Cadenas relacionadas con tiempo de dedicación",
+      "cadenas": [
+        "dedication - Dedication",
+        "totaldedication - Total dedication",
+        "avgdedication - Average dedication",
+        "dedicationpercent - Dedication %",
+        "topdedication - Top courses by dedication",
+        "dedicationsummary - Dedication summary"
+      ]
+    },
+    "completaciones": {
+      "descripcion": "Cadenas relacionadas con completación de cursos",
+      "cadenas": [
+        "completions - Completions",
+        "completionstoday - Completions today",
+        "completionsweek - Completions (7 days)",
+        "completionsmonth - Completions (30 days)",
+        "totalcompletions - Total completions",
+        "completiontrends - Completion trends"
+      ]
+    },
+    "exportacion": {
+      "descripcion": "Cadenas para funcionalidad de exportación",
+      "cadenas": [
+        "exportexcel - Download as Excel",
+        "exportcsv - Download as CSV",
+        "generateddate - Generated date",
+        "export_logins_desc - Login data export description",
+        "export_courses_desc - Course access data export description",
+        "export_users_desc - User details export description",
+        "export_daily_desc - Daily login data export description",
+        "export_activities_desc - Activity access data export description",
+        "export_dedication_desc - Dedication data export description",
+        "export_dailyusers_desc - Daily users data export description",
+        "export_report_desc - Complete report export description"
+      ]
+    },
+    "estadisticas_generales": {
+      "descripcion": "Términos estadísticos generales",
+      "cadenas": [
+        "total - Total",
+        "average - Average",
+        "maximum - Maximum",
+        "minimum - Minimum",
+        "period - Period",
+        "date - Date",
+        "count - Count"
+      ]
+    },
+    "configuracion": {
+      "descripcion": "Cadenas para página de configuración",
+      "cadenas": [
+        "settings - Settings",
+        "setting_session_limit - Session limit",
+        "setting_session_limit_desc - Maximum time between events to be considered same session",
+        "setting_ignore_sessions_limit - Minimum session duration",
+        "setting_ignore_sessions_limit_desc - Ignore sessions shorter than this",
+        "setting_default_period - Default time period",
+        "setting_default_period_desc - Default date range for reports",
+        "setting_top_items_limit - Top items limit",
+        "setting_top_items_limit_desc - Number of items to show in top lists",
+        "setting_enable_cache - Enable cache",
+        "setting_enable_cache_desc - Use cache for better performance"
+      ]
+    },
+    "tareas": {
+      "descripcion": "Cadenas para tareas programadas",
+      "cadenas": [
+        "task_collect_dedication - Collect dedication data"
+      ]
+    },
+    "privacidad": {
+      "descripcion": "Cadenas relacionadas con GDPR",
+      "cadenas": [
+        "privacy:metadata - This plugin does not store any personal data"
+      ]
+    }
+  },
+  "total_cadenas_estimadas": 100,
+  "estructura_archivo": {
+    "formato": "Array PHP de pares clave-valor",
+    "prefijo": "$string",
+    "ejemplo": "$string['pluginname'] = 'Platform Usage Report';",
+    "encoding": "UTF-8",
+    "licencia": "GNU GPL v3 or later"
+  },
+  "uso_en_codigo": {
+    "funcion_principal": "get_string()",
+    "ejemplos": [
+      "get_string('pluginname', 'report_platform_usage')",
+      "get_string('loginsummary', 'report_platform_usage')",
+      "get_string('export_logins_desc', 'report_platform_usage')"
+    ],
+    "contextos": [
+      "Títulos de páginas y secciones",
+      "Etiquetas de formularios y filtros",
+      "Cabeceras de tablas y gráficos",
+      "Mensajes de exportación",
+      "Descripciones de configuración",
+      "Nombres de capabilities"
+    ]
+  },
+  "localizacion": {
+    "idioma_base": "English (en)",
+    "traducciones": ["Español (es)"],
+    "notas": [
+      "El plugin está completamente internacionalizado",
+      "Todas las cadenas visibles usan get_string()",
+      "Facilita agregar nuevos idiomas copiando y traduciendo el archivo en/",
+      "Las cadenas de configuración están separadas con prefijo 'setting_'",
+      "Las descripciones de exportación usan sufijo '_desc'"
+    ]
+  },
+  "mantenimiento": {
+    "nuevas_cadenas": "Añadir a todos los archivos de idioma",
+    "cambios": "Actualizar en archivo base (en) primero, luego traducir",
+    "obsoletas": "Comentar pero no eliminar para compatibilidad"
+  }
+}

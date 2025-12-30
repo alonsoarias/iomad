@@ -1,0 +1,288 @@
+{
+  "plugin": "local_jobboard",
+  "total_capabilities": 27,
+  "categories": [
+    {
+      "name": "Vista general",
+      "capabilities": [
+        {
+          "name": "local/jobboard:view",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Capacidad general de visualización de la bolsa de empleo",
+          "archetypes": ["guest", "user", "student", "teacher", "editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:viewinternal",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver vacantes internas (no públicas)",
+          "archetypes": ["user", "student", "teacher", "editingteacher", "manager"]
+        }
+      ]
+    },
+    {
+      "name": "Gestión de vacantes",
+      "capabilities": [
+        {
+          "name": "local/jobboard:manage",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Capacidad general de gestión de la bolsa de empleo",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:createvacancy",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Crear nuevas vacantes",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:editvacancy",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Editar vacantes existentes",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:deletevacancy",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Eliminar vacantes",
+          "archetypes": ["manager"],
+          "riskbitmask": "RISK_DATALOSS"
+        },
+        {
+          "name": "local/jobboard:publishvacancy",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Publicar vacantes",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:viewallvacancies",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver todas las vacantes (incluyendo borradores)",
+          "archetypes": ["editingteacher", "manager"]
+        }
+      ]
+    },
+    {
+      "name": "Gestión de convocatorias",
+      "capabilities": [
+        {
+          "name": "local/jobboard:manageconvocatorias",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Gestionar convocatorias (campañas de vacantes)",
+          "archetypes": ["manager"]
+        }
+      ]
+    },
+    {
+      "name": "Postulaciones",
+      "capabilities": [
+        {
+          "name": "local/jobboard:apply",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Postularse a vacantes",
+          "archetypes": ["user", "student", "teacher", "editingteacher"]
+        },
+        {
+          "name": "local/jobboard:viewownapplications",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver postulaciones propias",
+          "archetypes": ["user", "student", "teacher", "editingteacher"]
+        },
+        {
+          "name": "local/jobboard:viewallapplications",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver todas las postulaciones",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:changeapplicationstatus",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Cambiar estado de postulaciones",
+          "archetypes": ["editingteacher", "manager"]
+        }
+      ]
+    },
+    {
+      "name": "Revisión de documentos",
+      "capabilities": [
+        {
+          "name": "local/jobboard:review",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Capacidad general de revisión",
+          "archetypes": ["teacher", "editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:validatedocuments",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Validar documentos de postulantes",
+          "archetypes": ["teacher", "editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:reviewdocuments",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Revisar documentos de postulantes",
+          "archetypes": ["teacher", "editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:assignreviewers",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Asignar revisores a postulaciones",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:downloadanydocument",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Descargar cualquier documento de postulantes",
+          "archetypes": ["teacher", "editingteacher", "manager"]
+        }
+      ]
+    },
+    {
+      "name": "Revisión de decanos",
+      "capabilities": [
+        {
+          "name": "local/jobboard:reviewprofiles",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Revisar perfiles de postulantes (acceso de solo lectura a documentos)",
+          "archetypes": []
+        },
+        {
+          "name": "local/jobboard:approveprofile",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Aprobar o rechazar perfiles de postulantes",
+          "archetypes": []
+        }
+      ]
+    },
+    {
+      "name": "Validación de RRHH",
+      "capabilities": [
+        {
+          "name": "local/jobboard:validatehr",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Validación final de documentos por RRHH",
+          "archetypes": []
+        }
+      ]
+    },
+    {
+      "name": "Gestión de flujo de trabajo",
+      "capabilities": [
+        {
+          "name": "local/jobboard:manageworkflow",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Gestionar flujo de trabajo de postulaciones",
+          "archetypes": ["manager"]
+        }
+      ]
+    },
+    {
+      "name": "Reportes",
+      "capabilities": [
+        {
+          "name": "local/jobboard:viewreports",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver reportes de la bolsa de empleo",
+          "archetypes": ["editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:exportreports",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Exportar reportes",
+          "archetypes": ["manager"]
+        },
+        {
+          "name": "local/jobboard:exportdata",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Exportar datos",
+          "archetypes": ["manager"]
+        }
+      ]
+    },
+    {
+      "name": "Gestión de exenciones ISER",
+      "capabilities": [
+        {
+          "name": "local/jobboard:manageexemptions",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Gestionar exenciones de personal histórico ISER",
+          "archetypes": ["manager"]
+        }
+      ]
+    },
+    {
+      "name": "Configuración y administración",
+      "capabilities": [
+        {
+          "name": "local/jobboard:configure",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Configurar opciones del plugin",
+          "archetypes": ["manager"],
+          "riskbitmask": "RISK_CONFIG"
+        },
+        {
+          "name": "local/jobboard:managedoctypes",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Gestionar tipos de documentos",
+          "archetypes": ["manager"]
+        },
+        {
+          "name": "local/jobboard:manageemailtemplates",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Gestionar plantillas de correo electrónico",
+          "archetypes": ["manager"]
+        },
+        {
+          "name": "local/jobboard:viewpublicvacancies",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver vacantes públicas (disponible para invitados)",
+          "archetypes": ["guest", "user", "student", "teacher", "editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:viewinternalvacancies",
+          "type": "read",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Ver vacantes internas (solo usuarios autenticados)",
+          "archetypes": ["user", "student", "teacher", "editingteacher", "manager"]
+        },
+        {
+          "name": "local/jobboard:unlimitedapplications",
+          "type": "write",
+          "context": "CONTEXT_SYSTEM",
+          "description": "Postulaciones ilimitadas (omitir límite de postulaciones)",
+          "archetypes": ["manager"],
+          "clonepermissionsfrom": "moodle/site:config"
+        }
+      ]
+    }
+  ]
+}

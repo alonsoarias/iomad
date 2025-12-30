@@ -1,0 +1,319 @@
+{
+  "descripcion": "Funciones externas expuestas por el plugin local_jobboard para integración vía web services",
+  "funciones": [
+    {
+      "clase": "get_next_document",
+      "namespace": "local_jobboard\\external\\get_next_document",
+      "funcion_expuesta": "execute",
+      "descripcion": "Obtiene el siguiente documento pendiente de revisión para una aplicación",
+      "parametros_entrada": [
+        {
+          "nombre": "applicationid",
+          "tipo": "int",
+          "descripcion": "ID de la aplicación"
+        }
+      ],
+      "parametros_retorno": [
+        {
+          "nombre": "hasnext",
+          "tipo": "bool",
+          "descripcion": "Indica si existe un siguiente documento"
+        },
+        {
+          "nombre": "documentid",
+          "tipo": "int",
+          "descripcion": "ID del documento"
+        },
+        {
+          "nombre": "typename",
+          "tipo": "string",
+          "descripcion": "Nombre del tipo de documento"
+        },
+        {
+          "nombre": "filename",
+          "tipo": "string",
+          "descripcion": "Nombre original del archivo"
+        },
+        {
+          "nombre": "docindex",
+          "tipo": "int",
+          "descripcion": "Índice del documento en la lista"
+        },
+        {
+          "nombre": "previewurl",
+          "tipo": "url",
+          "descripcion": "URL de vista previa del documento"
+        },
+        {
+          "nombre": "downloadurl",
+          "tipo": "url",
+          "descripcion": "URL de descarga del documento"
+        },
+        {
+          "nombre": "ispdf",
+          "tipo": "bool",
+          "descripcion": "Indica si el documento es un PDF"
+        },
+        {
+          "nombre": "isimage",
+          "tipo": "bool",
+          "descripcion": "Indica si el documento es una imagen"
+        }
+      ],
+      "capacidades_requeridas": [
+        "local/jobboard:reviewdocuments",
+        "local/jobboard:manageworkflow"
+      ]
+    },
+    {
+      "clase": "reject_document",
+      "namespace": "local_jobboard\\external\\reject_document",
+      "funcion_expuesta": "execute",
+      "descripcion": "Rechaza un documento proporcionando una razón. Solo HR y Admin pueden rechazar documentos",
+      "parametros_entrada": [
+        {
+          "nombre": "documentid",
+          "tipo": "int",
+          "descripcion": "ID del documento a rechazar"
+        },
+        {
+          "nombre": "applicationid",
+          "tipo": "int",
+          "descripcion": "ID de la aplicación"
+        },
+        {
+          "nombre": "reason",
+          "tipo": "string",
+          "descripcion": "Razón del rechazo (obligatorio)"
+        }
+      ],
+      "parametros_retorno": [
+        {
+          "nombre": "success",
+          "tipo": "bool",
+          "descripcion": "Indica si la operación fue exitosa"
+        },
+        {
+          "nombre": "message",
+          "tipo": "string",
+          "descripcion": "Mensaje de estado"
+        },
+        {
+          "nombre": "documentid",
+          "tipo": "int",
+          "descripcion": "ID del documento rechazado"
+        },
+        {
+          "nombre": "newstatus",
+          "tipo": "string",
+          "descripcion": "Nuevo estado del documento"
+        },
+        {
+          "nombre": "nextdocumentid",
+          "tipo": "int",
+          "descripcion": "ID del siguiente documento pendiente (0 si no hay)"
+        },
+        {
+          "nombre": "stats",
+          "tipo": "object",
+          "descripcion": "Estadísticas de documentos",
+          "propiedades": [
+            {
+              "nombre": "approved",
+              "tipo": "int",
+              "descripcion": "Número de documentos aprobados"
+            },
+            {
+              "nombre": "rejected",
+              "tipo": "int",
+              "descripcion": "Número de documentos rechazados"
+            },
+            {
+              "nombre": "pending",
+              "tipo": "int",
+              "descripcion": "Número de documentos pendientes"
+            },
+            {
+              "nombre": "total",
+              "tipo": "int",
+              "descripcion": "Total de documentos"
+            }
+          ]
+        },
+        {
+          "nombre": "allreviewed",
+          "tipo": "bool",
+          "descripcion": "Indica si todos los documentos han sido revisados"
+        }
+      ],
+      "capacidades_requeridas": [
+        "local/jobboard:reviewdocuments",
+        "local/jobboard:manageworkflow"
+      ],
+      "restricciones": [
+        "El rol Dean no puede rechazar documentos individuales"
+      ]
+    },
+    {
+      "clase": "save_document_observations",
+      "namespace": "local_jobboard\\external\\save_document_observations",
+      "funcion_expuesta": "execute",
+      "descripcion": "Guarda observaciones para documentos de una aplicación",
+      "parametros_entrada": [
+        {
+          "nombre": "applicationid",
+          "tipo": "int",
+          "descripcion": "ID de la aplicación"
+        },
+        {
+          "nombre": "observations",
+          "tipo": "string",
+          "descripcion": "Array de observaciones codificado en JSON",
+          "estructura": "Array de objetos con documentid y observation"
+        }
+      ],
+      "parametros_retorno": [
+        {
+          "nombre": "success",
+          "tipo": "bool",
+          "descripcion": "Indica si la operación fue exitosa"
+        },
+        {
+          "nombre": "saved",
+          "tipo": "int",
+          "descripcion": "Número de observaciones guardadas"
+        }
+      ],
+      "capacidades_requeridas": [
+        "local/jobboard:reviewdocuments",
+        "local/jobboard:manageworkflow"
+      ],
+      "tabla_bd": "local_jobboard_doc_observation"
+    },
+    {
+      "clase": "send_observations_email",
+      "namespace": "local_jobboard\\external\\send_observations_email",
+      "funcion_expuesta": "execute",
+      "descripcion": "Envía un correo electrónico al solicitante con las observaciones de los documentos",
+      "parametros_entrada": [
+        {
+          "nombre": "applicationid",
+          "tipo": "int",
+          "descripcion": "ID de la aplicación"
+        },
+        {
+          "nombre": "observations",
+          "tipo": "string",
+          "descripcion": "Array de observaciones codificado en JSON"
+        }
+      ],
+      "parametros_retorno": [
+        {
+          "nombre": "success",
+          "tipo": "bool",
+          "descripcion": "Indica si el correo fue enviado exitosamente"
+        },
+        {
+          "nombre": "message",
+          "tipo": "string",
+          "descripcion": "Mensaje de estado"
+        }
+      ],
+      "capacidades_requeridas": [
+        "local/jobboard:reviewdocuments",
+        "local/jobboard:manageworkflow"
+      ],
+      "clase_helper": "review_notifier"
+    },
+    {
+      "clase": "validate_document",
+      "namespace": "local_jobboard\\external\\validate_document",
+      "funcion_expuesta": "execute",
+      "descripcion": "Valida (aprueba) un documento. Solo HR y Admin pueden validar documentos",
+      "parametros_entrada": [
+        {
+          "nombre": "documentid",
+          "tipo": "int",
+          "descripcion": "ID del documento a validar"
+        },
+        {
+          "nombre": "applicationid",
+          "tipo": "int",
+          "descripcion": "ID de la aplicación"
+        }
+      ],
+      "parametros_retorno": [
+        {
+          "nombre": "success",
+          "tipo": "bool",
+          "descripcion": "Indica si la operación fue exitosa"
+        },
+        {
+          "nombre": "message",
+          "tipo": "string",
+          "descripcion": "Mensaje de estado"
+        },
+        {
+          "nombre": "documentid",
+          "tipo": "int",
+          "descripcion": "ID del documento validado"
+        },
+        {
+          "nombre": "newstatus",
+          "tipo": "string",
+          "descripcion": "Nuevo estado del documento"
+        },
+        {
+          "nombre": "nextdocumentid",
+          "tipo": "int",
+          "descripcion": "ID del siguiente documento pendiente (0 si no hay)"
+        },
+        {
+          "nombre": "stats",
+          "tipo": "object",
+          "descripcion": "Estadísticas de documentos",
+          "propiedades": [
+            {
+              "nombre": "approved",
+              "tipo": "int",
+              "descripcion": "Número de documentos aprobados"
+            },
+            {
+              "nombre": "rejected",
+              "tipo": "int",
+              "descripcion": "Número de documentos rechazados"
+            },
+            {
+              "nombre": "pending",
+              "tipo": "int",
+              "descripcion": "Número de documentos pendientes"
+            },
+            {
+              "nombre": "total",
+              "tipo": "int",
+              "descripcion": "Total de documentos"
+            }
+          ]
+        },
+        {
+          "nombre": "allreviewed",
+          "tipo": "bool",
+          "descripcion": "Indica si todos los documentos han sido revisados"
+        }
+      ],
+      "capacidades_requeridas": [
+        "local/jobboard:reviewdocuments",
+        "local/jobboard:manageworkflow"
+      ],
+      "restricciones": [
+        "El rol Dean no puede validar documentos individuales"
+      ]
+    }
+  ],
+  "notas": [
+    "Todas las funciones externas requieren contexto de sistema",
+    "Las funciones validate_document y reject_document no están disponibles para el rol Dean",
+    "Los Admins con capacidad manageworkflow pueden revisar todos los documentos",
+    "La clase role_access_helper se utiliza para verificar permisos específicos por rol"
+  ]
+}

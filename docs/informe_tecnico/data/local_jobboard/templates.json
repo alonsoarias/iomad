@@ -1,0 +1,570 @@
+{
+  "metadata": {
+    "plugin": "local_jobboard",
+    "directory_source": "/home/user/iomad/local/jobboard/templates/",
+    "description": "Plantillas Mustache del plugin local_jobboard",
+    "extracted_date": "2025-12-30",
+    "total_templates": 87
+  },
+  "template_categories": [
+    {
+      "category": "components",
+      "description": "Componentes reutilizables de UI",
+      "path": "templates/components/",
+      "templates": [
+        {
+          "filename": "action_buttons.mustache",
+          "relative_path": "components/action_buttons.mustache",
+          "purpose": "Botones de acción (editar, eliminar, ver, etc.)"
+        },
+        {
+          "filename": "alert.mustache",
+          "relative_path": "components/alert.mustache",
+          "purpose": "Alertas y mensajes de notificación"
+        },
+        {
+          "filename": "badge.mustache",
+          "relative_path": "components/badge.mustache",
+          "purpose": "Insignias y etiquetas de estado"
+        },
+        {
+          "filename": "breadcrumb.mustache",
+          "relative_path": "components/breadcrumb.mustache",
+          "purpose": "Navegación breadcrumb/migas de pan"
+        },
+        {
+          "filename": "button.mustache",
+          "relative_path": "components/button.mustache",
+          "purpose": "Botón genérico reutilizable"
+        },
+        {
+          "filename": "card.mustache",
+          "relative_path": "components/card.mustache",
+          "purpose": "Tarjetas de contenido"
+        },
+        {
+          "filename": "checkbox.mustache",
+          "relative_path": "components/checkbox.mustache",
+          "purpose": "Casilla de verificación"
+        },
+        {
+          "filename": "confirm_dialog.mustache",
+          "relative_path": "components/confirm_dialog.mustache",
+          "purpose": "Diálogo de confirmación"
+        },
+        {
+          "filename": "empty_state.mustache",
+          "relative_path": "components/empty_state.mustache",
+          "purpose": "Estado vacío cuando no hay datos"
+        },
+        {
+          "filename": "form_group.mustache",
+          "relative_path": "components/form_group.mustache",
+          "purpose": "Grupo de elementos de formulario"
+        },
+        {
+          "filename": "lazy_image.mustache",
+          "relative_path": "components/lazy_image.mustache",
+          "purpose": "Carga diferida de imágenes"
+        },
+        {
+          "filename": "list_group.mustache",
+          "relative_path": "components/list_group.mustache",
+          "purpose": "Grupo de elementos de lista"
+        },
+        {
+          "filename": "loading_dots.mustache",
+          "relative_path": "components/loading_dots.mustache",
+          "purpose": "Indicador de carga con puntos animados"
+        },
+        {
+          "filename": "nav_tabs.mustache",
+          "relative_path": "components/nav_tabs.mustache",
+          "purpose": "Pestañas de navegación"
+        },
+        {
+          "filename": "page_header.mustache",
+          "relative_path": "components/page_header.mustache",
+          "purpose": "Encabezado de página"
+        },
+        {
+          "filename": "page_loading.mustache",
+          "relative_path": "components/page_loading.mustache",
+          "purpose": "Indicador de carga de página completa"
+        },
+        {
+          "filename": "pagination.mustache",
+          "relative_path": "components/pagination.mustache",
+          "purpose": "Paginación de resultados"
+        },
+        {
+          "filename": "progress.mustache",
+          "relative_path": "components/progress.mustache",
+          "purpose": "Indicador de progreso"
+        },
+        {
+          "filename": "progress_bar.mustache",
+          "relative_path": "components/progress_bar.mustache",
+          "purpose": "Barra de progreso"
+        },
+        {
+          "filename": "radio.mustache",
+          "relative_path": "components/radio.mustache",
+          "purpose": "Botón de radio"
+        },
+        {
+          "filename": "search_input.mustache",
+          "relative_path": "components/search_input.mustache",
+          "purpose": "Campo de búsqueda"
+        },
+        {
+          "filename": "skeleton.mustache",
+          "relative_path": "components/skeleton.mustache",
+          "purpose": "Esqueleto de carga (placeholder)"
+        },
+        {
+          "filename": "skip_links.mustache",
+          "relative_path": "components/skip_links.mustache",
+          "purpose": "Enlaces de accesibilidad para saltar contenido"
+        },
+        {
+          "filename": "sr_only.mustache",
+          "relative_path": "components/sr_only.mustache",
+          "purpose": "Contenido solo para lectores de pantalla"
+        },
+        {
+          "filename": "stat_card.mustache",
+          "relative_path": "components/stat_card.mustache",
+          "purpose": "Tarjeta de estadística"
+        },
+        {
+          "filename": "stepper.mustache",
+          "relative_path": "components/stepper.mustache",
+          "purpose": "Indicador de pasos/wizard"
+        },
+        {
+          "filename": "table.mustache",
+          "relative_path": "components/table.mustache",
+          "purpose": "Tabla de datos"
+        },
+        {
+          "filename": "timeline.mustache",
+          "relative_path": "components/timeline.mustache",
+          "purpose": "Línea de tiempo"
+        },
+        {
+          "filename": "toast.mustache",
+          "relative_path": "components/toast.mustache",
+          "purpose": "Notificación toast"
+        },
+        {
+          "filename": "tooltip.mustache",
+          "relative_path": "components/tooltip.mustache",
+          "purpose": "Tooltip/información emergente"
+        },
+        {
+          "filename": "vacancy_card.mustache",
+          "relative_path": "components/vacancy_card.mustache",
+          "purpose": "Tarjeta de vacante"
+        }
+      ]
+    },
+    {
+      "category": "layouts",
+      "description": "Layouts de página",
+      "path": "templates/layouts/",
+      "templates": [
+        {
+          "filename": "page.mustache",
+          "relative_path": "layouts/page.mustache",
+          "purpose": "Layout base de página"
+        }
+      ]
+    },
+    {
+      "category": "pages/admin",
+      "description": "Páginas de administración",
+      "path": "templates/pages/admin/",
+      "templates": [
+        {
+          "filename": "dashboard.mustache",
+          "relative_path": "pages/admin/dashboard.mustache",
+          "purpose": "Panel de control administrativo"
+        },
+        {
+          "filename": "doctype_delete.mustache",
+          "relative_path": "pages/admin/doctype_delete.mustache",
+          "purpose": "Eliminar tipo de documento"
+        },
+        {
+          "filename": "doctype_form.mustache",
+          "relative_path": "pages/admin/doctype_form.mustache",
+          "purpose": "Formulario de tipo de documento"
+        },
+        {
+          "filename": "doctypes.mustache",
+          "relative_path": "pages/admin/doctypes.mustache",
+          "purpose": "Listado de tipos de documentos"
+        },
+        {
+          "filename": "import_vacancies.mustache",
+          "relative_path": "pages/admin/import_vacancies.mustache",
+          "purpose": "Importar vacantes desde archivo"
+        },
+        {
+          "filename": "import_vacancies_results.mustache",
+          "relative_path": "pages/admin/import_vacancies_results.mustache",
+          "purpose": "Resultados de importación de vacantes"
+        },
+        {
+          "filename": "migrate.mustache",
+          "relative_path": "pages/admin/migrate.mustache",
+          "purpose": "Herramienta de migración de datos"
+        },
+        {
+          "filename": "roles.mustache",
+          "relative_path": "pages/admin/roles.mustache",
+          "purpose": "Gestión de roles y permisos"
+        },
+        {
+          "filename": "template_edit.mustache",
+          "relative_path": "pages/admin/template_edit.mustache",
+          "purpose": "Editar plantilla de correo"
+        },
+        {
+          "filename": "templates.mustache",
+          "relative_path": "pages/admin/templates.mustache",
+          "purpose": "Listado de plantillas de correo"
+        }
+      ]
+    },
+    {
+      "category": "pages/applications",
+      "description": "Páginas de postulaciones",
+      "path": "templates/pages/applications/",
+      "templates": [
+        {
+          "filename": "apply.mustache",
+          "relative_path": "pages/applications/apply.mustache",
+          "purpose": "Formulario de postulación a vacante"
+        },
+        {
+          "filename": "detail.mustache",
+          "relative_path": "pages/applications/detail.mustache",
+          "purpose": "Detalle de una postulación"
+        },
+        {
+          "filename": "list.mustache",
+          "relative_path": "pages/applications/list.mustache",
+          "purpose": "Listado de postulaciones del usuario"
+        },
+        {
+          "filename": "manage.mustache",
+          "relative_path": "pages/applications/manage.mustache",
+          "purpose": "Gestión administrativa de postulaciones"
+        }
+      ]
+    },
+    {
+      "category": "pages/convocatorias",
+      "description": "Páginas de convocatorias",
+      "path": "templates/pages/convocatorias/",
+      "templates": [
+        {
+          "filename": "browse.mustache",
+          "relative_path": "pages/convocatorias/browse.mustache",
+          "purpose": "Explorar convocatorias disponibles"
+        },
+        {
+          "filename": "detail.mustache",
+          "relative_path": "pages/convocatorias/detail.mustache",
+          "purpose": "Detalle de una convocatoria"
+        },
+        {
+          "filename": "form.mustache",
+          "relative_path": "pages/convocatorias/form.mustache",
+          "purpose": "Formulario de crear/editar convocatoria"
+        },
+        {
+          "filename": "list.mustache",
+          "relative_path": "pages/convocatorias/list.mustache",
+          "purpose": "Listado de convocatorias"
+        }
+      ]
+    },
+    {
+      "category": "pages/documents",
+      "description": "Páginas de gestión de documentos",
+      "path": "templates/pages/documents/",
+      "templates": [
+        {
+          "filename": "bulk_validate.mustache",
+          "relative_path": "pages/documents/bulk_validate.mustache",
+          "purpose": "Validación masiva de documentos"
+        },
+        {
+          "filename": "reupload.mustache",
+          "relative_path": "pages/documents/reupload.mustache",
+          "purpose": "Resubir documento rechazado"
+        },
+        {
+          "filename": "validate.mustache",
+          "relative_path": "pages/documents/validate.mustache",
+          "purpose": "Validar documento individual"
+        }
+      ]
+    },
+    {
+      "category": "pages/error",
+      "description": "Páginas de error",
+      "path": "templates/pages/error/",
+      "templates": [
+        {
+          "filename": "public_disabled.mustache",
+          "relative_path": "pages/error/public_disabled.mustache",
+          "purpose": "Error cuando página pública está deshabilitada"
+        }
+      ]
+    },
+    {
+      "category": "pages/exemptions",
+      "description": "Páginas de excepciones de documentos",
+      "path": "templates/pages/exemptions/",
+      "templates": [
+        {
+          "filename": "form.mustache",
+          "relative_path": "pages/exemptions/form.mustache",
+          "purpose": "Formulario de crear/editar excepción"
+        },
+        {
+          "filename": "import.mustache",
+          "relative_path": "pages/exemptions/import.mustache",
+          "purpose": "Importar excepciones desde archivo"
+        },
+        {
+          "filename": "import_results.mustache",
+          "relative_path": "pages/exemptions/import_results.mustache",
+          "purpose": "Resultados de importación de excepciones"
+        },
+        {
+          "filename": "list.mustache",
+          "relative_path": "pages/exemptions/list.mustache",
+          "purpose": "Listado de excepciones"
+        },
+        {
+          "filename": "revoke.mustache",
+          "relative_path": "pages/exemptions/revoke.mustache",
+          "purpose": "Revocar una excepción"
+        },
+        {
+          "filename": "view.mustache",
+          "relative_path": "pages/exemptions/view.mustache",
+          "purpose": "Ver detalle de excepción"
+        }
+      ]
+    },
+    {
+      "category": "pages/public",
+      "description": "Páginas públicas (sin autenticación)",
+      "path": "templates/pages/public/",
+      "templates": [
+        {
+          "filename": "convocatoria.mustache",
+          "relative_path": "pages/public/convocatoria.mustache",
+          "purpose": "Vista pública de convocatoria"
+        },
+        {
+          "filename": "detail.mustache",
+          "relative_path": "pages/public/detail.mustache",
+          "purpose": "Vista pública de detalle"
+        },
+        {
+          "filename": "index.mustache",
+          "relative_path": "pages/public/index.mustache",
+          "purpose": "Página principal pública"
+        },
+        {
+          "filename": "vacancy.mustache",
+          "relative_path": "pages/public/vacancy.mustache",
+          "purpose": "Vista pública de vacante"
+        }
+      ]
+    },
+    {
+      "category": "pages/reports",
+      "description": "Páginas de reportes",
+      "path": "templates/pages/reports/",
+      "templates": [
+        {
+          "filename": "index.mustache",
+          "relative_path": "pages/reports/index.mustache",
+          "purpose": "Panel de reportes y estadísticas"
+        }
+      ]
+    },
+    {
+      "category": "pages/review",
+      "description": "Páginas de revisión de postulaciones",
+      "path": "templates/pages/review/",
+      "templates": [
+        {
+          "filename": "assign_reviewer.mustache",
+          "relative_path": "pages/review/assign_reviewer.mustache",
+          "purpose": "Asignar revisor a postulación"
+        },
+        {
+          "filename": "index.mustache",
+          "relative_path": "pages/review/index.mustache",
+          "purpose": "Panel de revisión"
+        },
+        {
+          "filename": "my_reviews.mustache",
+          "relative_path": "pages/review/my_reviews.mustache",
+          "purpose": "Mis revisiones asignadas"
+        },
+        {
+          "filename": "program_reviewers.mustache",
+          "relative_path": "pages/review/program_reviewers.mustache",
+          "purpose": "Revisores por programa"
+        },
+        {
+          "filename": "results.mustache",
+          "relative_path": "pages/review/results.mustache",
+          "purpose": "Resultados de revisión"
+        }
+      ]
+    },
+    {
+      "category": "pages/support",
+      "description": "Páginas de soporte",
+      "path": "templates/pages/support/",
+      "templates": [
+        {
+          "filename": "index.mustache",
+          "relative_path": "pages/support/index.mustache",
+          "purpose": "Página de soporte y ayuda"
+        }
+      ]
+    },
+    {
+      "category": "pages/user",
+      "description": "Páginas de usuario",
+      "path": "templates/pages/user/",
+      "templates": [
+        {
+          "filename": "confirm_failed.mustache",
+          "relative_path": "pages/user/confirm_failed.mustache",
+          "purpose": "Confirmación de email fallida"
+        },
+        {
+          "filename": "confirm_success.mustache",
+          "relative_path": "pages/user/confirm_success.mustache",
+          "purpose": "Confirmación de email exitosa"
+        },
+        {
+          "filename": "profile.mustache",
+          "relative_path": "pages/user/profile.mustache",
+          "purpose": "Perfil de usuario"
+        },
+        {
+          "filename": "signup.mustache",
+          "relative_path": "pages/user/signup.mustache",
+          "purpose": "Formulario de registro"
+        },
+        {
+          "filename": "signup_success.mustache",
+          "relative_path": "pages/user/signup_success.mustache",
+          "purpose": "Registro exitoso"
+        }
+      ]
+    },
+    {
+      "category": "pages/vacancies",
+      "description": "Páginas de vacantes",
+      "path": "templates/pages/vacancies/",
+      "templates": [
+        {
+          "filename": "detail.mustache",
+          "relative_path": "pages/vacancies/detail.mustache",
+          "purpose": "Detalle de vacante"
+        },
+        {
+          "filename": "edit.mustache",
+          "relative_path": "pages/vacancies/edit.mustache",
+          "purpose": "Editar vacante"
+        },
+        {
+          "filename": "list.mustache",
+          "relative_path": "pages/vacancies/list.mustache",
+          "purpose": "Listado de vacantes"
+        },
+        {
+          "filename": "manage.mustache",
+          "relative_path": "pages/vacancies/manage.mustache",
+          "purpose": "Gestión de vacantes"
+        },
+        {
+          "filename": "select_convocatoria.mustache",
+          "relative_path": "pages/vacancies/select_convocatoria.mustache",
+          "purpose": "Seleccionar convocatoria para vacante"
+        }
+      ]
+    },
+    {
+      "category": "partials",
+      "description": "Plantillas parciales reutilizables",
+      "path": "templates/partials/",
+      "templates": [
+        {
+          "filename": "browse_convocatorias_results.mustache",
+          "relative_path": "partials/browse_convocatorias_results.mustache",
+          "purpose": "Resultados de búsqueda de convocatorias"
+        },
+        {
+          "filename": "convocatorias_results.mustache",
+          "relative_path": "partials/convocatorias_results.mustache",
+          "purpose": "Resultados de convocatorias"
+        },
+        {
+          "filename": "manage_results.mustache",
+          "relative_path": "partials/manage_results.mustache",
+          "purpose": "Resultados de gestión"
+        },
+        {
+          "filename": "public_vacancies_results.mustache",
+          "relative_path": "partials/public_vacancies_results.mustache",
+          "purpose": "Resultados de vacantes públicas"
+        },
+        {
+          "filename": "support_button.mustache",
+          "relative_path": "partials/support_button.mustache",
+          "purpose": "Botón de soporte"
+        },
+        {
+          "filename": "vacancies_results.mustache",
+          "relative_path": "partials/vacancies_results.mustache",
+          "purpose": "Resultados de vacantes"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_components": 31,
+    "total_layouts": 1,
+    "total_page_templates": 49,
+    "total_partials": 6,
+    "categories_count": 15,
+    "key_features": [
+      "Sistema de componentes reutilizables de UI",
+      "Plantillas para administración completa",
+      "Flujo de postulaciones y revisión",
+      "Gestión de convocatorias y vacantes",
+      "Sistema de documentos y validación",
+      "Páginas públicas sin autenticación",
+      "Sistema de excepciones y permisos",
+      "Componentes de accesibilidad (sr_only, skip_links)",
+      "Indicadores de carga y progreso",
+      "Sistema de notificaciones (toast, alert)"
+    ]
+  }
+}

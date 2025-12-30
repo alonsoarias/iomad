@@ -1,0 +1,164 @@
+{
+  "xmldb_version": "20251211",
+  "tables": [
+    {
+      "name": "local_jobboard_vacancy",
+      "comment": "Vacantes laborales para catedráticos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "code", "type": "char", "length": 50, "notnull": true, "comment": "Código de vacante (puede repetirse para diferentes ubicaciones/modalidades)"},
+        {"name": "title", "type": "char", "length": 255, "notnull": true, "comment": "Título de la vacante"},
+        {"name": "description", "type": "text", "notnull": false, "comment": "Descripción completa de la vacante"},
+        {"name": "contracttype", "type": "char", "length": 50, "notnull": false, "comment": "Tipo de contrato"},
+        {"name": "duration", "type": "char", "length": 100, "notnull": false, "comment": "Duración del contrato"},
+        {"name": "location", "type": "char", "length": 255, "notnull": false, "comment": "Ubicación de trabajo"},
+        {"name": "modality", "type": "char", "length": 100, "notnull": false, "comment": "Modalidad educativa: Presencial, A Distancia, Virtual, Híbrida"},
+        {"name": "department", "type": "char", "length": 255, "notnull": false, "comment": "Departamento o unidad"},
+        {"name": "companyid", "type": "int", "length": 10, "notnull": false, "comment": "ID de empresa/tenant IOMAD"},
+        {"name": "departmentid", "type": "int", "length": 10, "notnull": false, "comment": "ID de departamento IOMAD"},
+        {"name": "convocatoriaid", "type": "int", "length": 10, "notnull": false, "comment": "ID de convocatoria padre"},
+        {"name": "positions", "type": "int", "length": 5, "notnull": true, "default": 1, "comment": "Número de posiciones disponibles"},
+        {"name": "requirements", "type": "text", "notnull": false, "comment": "Requisitos mínimos"},
+        {"name": "desirable", "type": "text", "notnull": false, "comment": "Requisitos deseables"},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "draft", "comment": "Estado: draft, published, closed, assigned"},
+        {"name": "publicationtype", "type": "char", "length": 20, "notnull": true, "default": "internal", "comment": "Tipo de publicación: public o internal"},
+        {"name": "opendate", "type": "int", "length": 10, "notnull": false, "comment": "Fecha de apertura"},
+        {"name": "closedate", "type": "int", "length": 10, "notnull": false, "comment": "Fecha de cierre"},
+        {"name": "createdby", "type": "int", "length": 10, "notnull": true, "comment": "Usuario que creó la vacante"},
+        {"name": "modifiedby", "type": "int", "length": 10, "notnull": false, "comment": "Usuario que modificó"},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "createdby", "type": "foreign", "fields": ["createdby"], "reftable": "user", "reffields": ["id"]},
+        {"name": "modifiedby", "type": "foreign", "fields": ["modifiedby"], "reftable": "user", "reffields": ["id"]},
+        {"name": "convocatoriaid_fk", "type": "foreign", "fields": ["convocatoriaid"], "reftable": "local_jobboard_convocatoria", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "code_location_modality_unique", "unique": true, "fields": ["code", "location", "modality"]},
+        {"name": "code_idx", "unique": false, "fields": ["code"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]},
+        {"name": "companyid_idx", "unique": false, "fields": ["companyid"]},
+        {"name": "departmentid_idx", "unique": false, "fields": ["departmentid"]},
+        {"name": "convocatoriaid_idx", "unique": false, "fields": ["convocatoriaid"]},
+        {"name": "company_status_idx", "unique": false, "fields": ["companyid", "status"]},
+        {"name": "publicationtype_idx", "unique": false, "fields": ["publicationtype"]},
+        {"name": "status_pubtype_idx", "unique": false, "fields": ["status", "publicationtype"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_vacancy_field",
+      "comment": "Campos personalizados para vacantes",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "vacancyid", "type": "int", "length": 10, "notnull": true},
+        {"name": "fieldname", "type": "char", "length": 100, "notnull": true},
+        {"name": "fieldtype", "type": "char", "length": 20, "notnull": true, "default": "text", "comment": "Tipo: text, list, date, boolean"},
+        {"name": "fieldvalue", "type": "text", "notnull": false},
+        {"name": "required", "type": "int", "length": 1, "notnull": true, "default": 0},
+        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "vacancyid", "type": "foreign", "fields": ["vacancyid"], "reftable": "local_jobboard_vacancy", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "vacancy_field_idx", "unique": false, "fields": ["vacancyid", "fieldname"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_application",
+      "comment": "Postulaciones de candidatos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "vacancyid", "type": "int", "length": 10, "notnull": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true},
+        {"name": "status", "type": "char", "length": 30, "notnull": true, "default": "submitted", "comment": "Estados: submitted, under_review, docs_validated, docs_rejected, interview, selected, rejected, withdrawn"},
+        {"name": "statusnotes", "type": "text", "notnull": false, "comment": "Notas sobre el estado actual"},
+        {"name": "isexemption", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "Marcador de exención histórica ISER"},
+        {"name": "exemptionreason", "type": "text", "notnull": false, "comment": "Razón de la exención ISER"},
+        {"name": "consentgiven", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "Consentimiento aceptado"},
+        {"name": "consenttimestamp", "type": "int", "length": 10, "notnull": false, "comment": "Marca de tiempo del consentimiento"},
+        {"name": "consentip", "type": "char", "length": 45, "notnull": false, "comment": "Dirección IP al dar consentimiento"},
+        {"name": "consentuseragent", "type": "char", "length": 512, "notnull": false, "comment": "User agent al dar consentimiento"},
+        {"name": "digitalsignature", "type": "char", "length": 255, "notnull": false, "comment": "Firma digital (nombre completo)"},
+        {"name": "coverletter", "type": "text", "notnull": false, "comment": "Carta de presentación/motivación"},
+        {"name": "applicationdata", "type": "text", "notnull": false, "comment": "Datos adicionales de postulación (JSON)"},
+        {"name": "reviewerid", "type": "int", "length": 10, "notnull": false, "comment": "Revisor asignado"},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "vacancyid", "type": "foreign", "fields": ["vacancyid"], "reftable": "local_jobboard_vacancy", "reffields": ["id"]},
+        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
+        {"name": "reviewerid", "type": "foreign", "fields": ["reviewerid"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "vacancy_user_unique", "unique": true, "fields": ["vacancyid", "userid"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]},
+        {"name": "userid_idx", "unique": false, "fields": ["userid"]},
+        {"name": "reviewerid_idx", "unique": false, "fields": ["reviewerid"]},
+        {"name": "isexemption_idx", "unique": false, "fields": ["isexemption"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_document",
+      "comment": "Documentos subidos para postulaciones",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "applicationid", "type": "int", "length": 10, "notnull": true},
+        {"name": "documenttype", "type": "char", "length": 100, "notnull": true, "comment": "Tipo de documento"},
+        {"name": "filename", "type": "char", "length": 255, "notnull": true, "comment": "Nombre original del archivo"},
+        {"name": "contenthash", "type": "char", "length": 40, "notnull": false, "comment": "Contenthash de archivo Moodle"},
+        {"name": "filesize", "type": "int", "length": 10, "notnull": false, "comment": "Tamaño del archivo en bytes"},
+        {"name": "mimetype", "type": "char", "length": 100, "notnull": false},
+        {"name": "issuedate", "type": "int", "length": 10, "notnull": false, "comment": "Fecha de expedición del documento"},
+        {"name": "expirydate", "type": "int", "length": 10, "notnull": false, "comment": "Fecha de vencimiento del documento"},
+        {"name": "isencrypted", "type": "int", "length": 1, "notnull": true, "default": 0},
+        {"name": "issuperseded", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "Reemplazado por versión más nueva"},
+        {"name": "uploadedby", "type": "int", "length": 10, "notnull": true},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "applicationid", "type": "foreign", "fields": ["applicationid"], "reftable": "local_jobboard_application", "reffields": ["id"]},
+        {"name": "uploadedby", "type": "foreign", "fields": ["uploadedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "app_doctype_idx", "unique": false, "fields": ["applicationid", "documenttype"]},
+        {"name": "doctype_idx", "unique": false, "fields": ["documenttype"]},
+        {"name": "superseded_idx", "unique": false, "fields": ["issuperseded"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_doc_validation",
+      "comment": "Registros de validación de documentos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "documentid", "type": "int", "length": 10, "notnull": true},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "pending", "comment": "Estado: pending, approved, rejected"},
+        {"name": "isvalid", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "1=válido, 0=rechazado (legacy)"},
+        {"name": "validatedby", "type": "int", "length": 10, "notnull": false, "comment": "Usuario que validó"},
+        {"name": "rejectreason", "type": "char", "length": 100, "notnull": false, "comment": "Código de razón de rechazo"},
+        {"name": "notes", "type": "text", "notnull": false, "comment": "Notas del validador"},
+        {"name": "checklistitems", "type": "text", "notnull": false, "comment": "Items del checklist completados (JSON)"},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "documentid", "type": "foreign", "fields": ["documentid"], "reftable": "local_jobboard_document", "reffields": ["id"]},
+        {"name": "validatedby", "type": "foreign", "fields": ["validatedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "doc_unique", "unique": true, "fields": ["documentid"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]},
+        {"name": "isvalid_idx", "unique": false, "fields": ["isvalid"]}
+      ]
+    }
+  ]
+}

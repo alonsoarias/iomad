@@ -1,0 +1,59 @@
+{
+  "plugin": "local_platform_access",
+  "archivo_fuente": "/home/user/iomad/local/platform_access/db/access.php",
+  "capabilities": [
+    {
+      "nombre": "local/platform_access:generate",
+      "descripcion": "Capacidad para generar registros de acceso a la plataforma",
+      "riskbitmask": "RISK_CONFIG | RISK_DATALOSS",
+      "riesgos": [
+        "RISK_CONFIG: Puede modificar la configuración del sistema",
+        "RISK_DATALOSS: Puede causar pérdida de datos (al limpiar registros existentes)"
+      ],
+      "captype": "write",
+      "tipo_operacion": "Escritura en base de datos",
+      "contextlevel": "CONTEXT_SYSTEM",
+      "nivel_contexto": "Sistema (solo a nivel global)",
+      "archetypes": [
+        {
+          "rol": "manager",
+          "permiso": "CAP_ALLOW",
+          "descripcion": "Permitido para administradores/gestores por defecto"
+        }
+      ],
+      "uso": "Requerida para acceder al generador y ejecutar la generación de registros de acceso. Incluye la capacidad de limpiar registros existentes."
+    },
+    {
+      "nombre": "local/platform_access:view",
+      "descripcion": "Capacidad para ver el generador de accesos a la plataforma",
+      "riskbitmask": "RISK_PERSONAL",
+      "riesgos": [
+        "RISK_PERSONAL: Puede acceder a información personal de usuarios"
+      ],
+      "captype": "read",
+      "tipo_operacion": "Solo lectura",
+      "contextlevel": "CONTEXT_SYSTEM",
+      "nivel_contexto": "Sistema (solo a nivel global)",
+      "archetypes": [
+        {
+          "rol": "manager",
+          "permiso": "CAP_ALLOW",
+          "descripcion": "Permitido para administradores/gestores por defecto"
+        }
+      ],
+      "uso": "Permite visualizar la interfaz del generador sin necesariamente poder ejecutar la generación."
+    }
+  ],
+  "resumen": {
+    "total_capabilities": 2,
+    "niveles_riesgo": [
+      "CONFIG",
+      "DATALOSS",
+      "PERSONAL"
+    ],
+    "roles_con_acceso_por_defecto": [
+      "manager"
+    ],
+    "contexto": "SYSTEM"
+  }
+}

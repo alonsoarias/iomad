@@ -1,0 +1,1155 @@
+{
+  "descripcion": "Clases adicionales del plugin local_jobboard que complementan la funcionalidad principal de vacantes y postulaciones",
+  "clases": [
+    {
+      "nombre": "audit",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/audit.php",
+      "descripcion": "Clase para auditoría y registro de todas las acciones del sistema",
+      "constantes": [
+        {
+          "nombre": "ACTION_CREATE",
+          "valor": "create",
+          "descripcion": "Acción de creación de registro"
+        },
+        {
+          "nombre": "ACTION_UPDATE",
+          "valor": "update",
+          "descripcion": "Acción de actualización de registro"
+        },
+        {
+          "nombre": "ACTION_DELETE",
+          "valor": "delete",
+          "descripcion": "Acción de eliminación de registro"
+        },
+        {
+          "nombre": "ACTION_VIEW",
+          "valor": "view",
+          "descripcion": "Acción de visualización de registro"
+        },
+        {
+          "nombre": "ENTITY_VACANCY",
+          "valor": "vacancy",
+          "descripcion": "Entidad vacante"
+        },
+        {
+          "nombre": "ENTITY_APPLICATION",
+          "valor": "application",
+          "descripcion": "Entidad postulación"
+        },
+        {
+          "nombre": "ENTITY_DOCUMENT",
+          "valor": "document",
+          "descripcion": "Entidad documento"
+        },
+        {
+          "nombre": "ENTITY_EXEMPTION",
+          "valor": "exemption",
+          "descripcion": "Entidad exención"
+        }
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "log",
+          "parametros": ["action: string", "entity: string", "entityid: int", "details: array", "oldvalue: mixed", "newvalue: mixed"],
+          "descripcion": "Registra una acción en el log de auditoría",
+          "estatico": true
+        },
+        {
+          "nombre": "log_transition",
+          "parametros": ["entity: string", "entityid: int", "field: string", "oldvalue: string", "newvalue: string", "context: array"],
+          "descripcion": "Registra una transición de estado con contexto",
+          "estatico": true
+        },
+        {
+          "nombre": "get_logs",
+          "parametros": ["filters: array", "page: int", "perpage: int"],
+          "descripcion": "Obtiene logs de auditoría con filtros y paginación",
+          "estatico": true
+        },
+        {
+          "nombre": "get_entity_history",
+          "parametros": ["entity: string", "entityid: int"],
+          "descripcion": "Obtiene el historial completo de una entidad específica",
+          "estatico": true
+        },
+        {
+          "nombre": "get_user_activity",
+          "parametros": ["userid: int", "since: int", "limit: int"],
+          "descripcion": "Obtiene la actividad de un usuario específico",
+          "estatico": true
+        },
+        {
+          "nombre": "export_logs",
+          "parametros": ["filters: array", "format: string"],
+          "descripcion": "Exporta logs de auditoría en formato CSV o JSON",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "bulk_validator",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/bulk_validator.php",
+      "descripcion": "Clase para validación masiva de documentos de múltiples postulaciones",
+      "metodos_publicos": [
+        {
+          "nombre": "validate_batch",
+          "parametros": ["applicationids: array", "reviewerid: int", "validations: array"],
+          "descripcion": "Valida documentos de múltiples postulaciones en lote",
+          "estatico": true
+        },
+        {
+          "nombre": "approve_all_documents",
+          "parametros": ["applicationid: int", "reviewerid: int", "notes: string"],
+          "descripcion": "Aprueba todos los documentos de una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "reject_documents",
+          "parametros": ["documentids: array", "reason: string", "reviewerid: int"],
+          "descripcion": "Rechaza múltiples documentos con la misma razón",
+          "estatico": true
+        },
+        {
+          "nombre": "get_pending_count",
+          "parametros": ["reviewerid: int"],
+          "descripcion": "Obtiene el número de documentos pendientes de validación para un revisor",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "convocatoria_exemption",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/convocatoria_exemption.php",
+      "descripcion": "Clase para gestionar exenciones específicas de convocatorias",
+      "metodos_publicos": [
+        {
+          "nombre": "create",
+          "parametros": ["convocatoriaid: int", "userid: int", "exemptiontype: string", "data: array"],
+          "descripcion": "Crea una exención para una convocatoria específica",
+          "estatico": true
+        },
+        {
+          "nombre": "get_for_convocatoria",
+          "parametros": ["convocatoriaid: int"],
+          "descripcion": "Obtiene todas las exenciones de una convocatoria",
+          "estatico": true
+        },
+        {
+          "nombre": "has_exemption",
+          "parametros": ["convocatoriaid: int", "userid: int"],
+          "descripcion": "Verifica si un usuario tiene exención para una convocatoria",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "data_export",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/data_export.php",
+      "descripcion": "Clase para exportar datos del sistema en diferentes formatos",
+      "metodos_publicos": [
+        {
+          "nombre": "export_vacancies",
+          "parametros": ["filters: array", "format: string"],
+          "descripcion": "Exporta vacantes en CSV, Excel o PDF",
+          "estatico": true
+        },
+        {
+          "nombre": "export_applications",
+          "parametros": ["filters: array", "format: string"],
+          "descripcion": "Exporta postulaciones con datos de candidatos",
+          "estatico": true
+        },
+        {
+          "nombre": "export_documents",
+          "parametros": ["applicationid: int", "format: string"],
+          "descripcion": "Exporta documentos de una postulación como ZIP",
+          "estatico": true
+        },
+        {
+          "nombre": "generate_report",
+          "parametros": ["reporttype: string", "params: array"],
+          "descripcion": "Genera reportes estadísticos personalizados",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "document",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/document.php",
+      "descripcion": "Clase para gestionar documentos adjuntos a postulaciones",
+      "constantes": [
+        {
+          "nombre": "STATUS_PENDING",
+          "valor": "pending",
+          "descripcion": "Documento pendiente de revisión"
+        },
+        {
+          "nombre": "STATUS_APPROVED",
+          "valor": "approved",
+          "descripcion": "Documento aprobado"
+        },
+        {
+          "nombre": "STATUS_REJECTED",
+          "valor": "rejected",
+          "descripcion": "Documento rechazado"
+        }
+      ],
+      "propiedades": [
+        "id: int",
+        "applicationid: int",
+        "doctypeid: int",
+        "fileid: int",
+        "status: string",
+        "validatedby: int|null",
+        "validationnotes: string|null",
+        "timevalidated: int|null",
+        "timecreated: int"
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "upload",
+          "parametros": ["applicationid: int", "doctypeid: int", "fileinfo: array"],
+          "descripcion": "Sube un documento para una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "validate",
+          "parametros": ["documentid: int", "approved: bool", "notes: string", "reviewerid: int"],
+          "descripcion": "Valida (aprueba o rechaza) un documento",
+          "estatico": true
+        },
+        {
+          "nombre": "get_for_application",
+          "parametros": ["applicationid: int"],
+          "descripcion": "Obtiene todos los documentos de una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "get_stats",
+          "parametros": ["applicationid: int"],
+          "descripcion": "Obtiene estadísticas de documentos (total, aprobados, rechazados, pendientes)",
+          "estatico": true
+        },
+        {
+          "nombre": "get_rejected",
+          "parametros": ["applicationid: int"],
+          "descripcion": "Obtiene documentos rechazados de una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "delete",
+          "parametros": ["documentid: int"],
+          "descripcion": "Elimina un documento",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "document_services",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/document_services.php",
+      "descripcion": "Servicios auxiliares para procesamiento de documentos",
+      "metodos_publicos": [
+        {
+          "nombre": "validate_file",
+          "parametros": ["file: stored_file", "doctypeid: int"],
+          "descripcion": "Valida que un archivo cumpla con los requisitos del tipo de documento",
+          "estatico": true
+        },
+        {
+          "nombre": "get_file_content",
+          "parametros": ["documentid: int"],
+          "descripcion": "Obtiene el contenido de un archivo (con desencriptación si aplica)",
+          "estatico": true
+        },
+        {
+          "nombre": "extract_metadata",
+          "parametros": ["file: stored_file"],
+          "descripcion": "Extrae metadatos de un documento (fecha de expiración, etc.)",
+          "estatico": true
+        },
+        {
+          "nombre": "check_expiration",
+          "parametros": ["documentid: int"],
+          "descripcion": "Verifica si un documento está vencido",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "email_template",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/email_template.php",
+      "descripcion": "Clase para gestionar plantillas de correo electrónico personalizables",
+      "propiedades": [
+        "id: int",
+        "code: string",
+        "name: string",
+        "subject: string",
+        "body: string",
+        "companyid: int|null",
+        "enabled: bool"
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "get",
+          "parametros": ["code: string", "companyid: int"],
+          "descripcion": "Obtiene una plantilla por código (con soporte multi-tenant)",
+          "estatico": true
+        },
+        {
+          "nombre": "render",
+          "parametros": ["placeholders: array"],
+          "descripcion": "Renderiza la plantilla reemplazando placeholders con valores reales"
+        },
+        {
+          "nombre": "create",
+          "parametros": ["data: object"],
+          "descripcion": "Crea una nueva plantilla de email",
+          "estatico": true
+        },
+        {
+          "nombre": "update",
+          "parametros": ["data: object"],
+          "descripcion": "Actualiza una plantilla existente"
+        },
+        {
+          "nombre": "get_available_placeholders",
+          "parametros": ["code: string"],
+          "descripcion": "Obtiene los placeholders disponibles para una plantilla",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "encryption",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/encryption.php",
+      "descripcion": "Clase para encriptación AES-256-GCM de archivos sensibles (opcional)",
+      "constantes": [
+        {
+          "nombre": "CIPHER",
+          "valor": "aes-256-gcm",
+          "descripcion": "Método de cifrado utilizado"
+        },
+        {
+          "nombre": "TAG_LENGTH",
+          "valor": "16",
+          "descripcion": "Longitud del tag de autenticación"
+        },
+        {
+          "nombre": "IV_LENGTH",
+          "valor": "12",
+          "descripcion": "Longitud del vector de inicialización"
+        }
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "is_enabled",
+          "parametros": [],
+          "descripcion": "Verifica si la encriptación está habilitada en el sistema",
+          "estatico": true
+        },
+        {
+          "nombre": "enable",
+          "parametros": [],
+          "descripcion": "Habilita la encriptación y genera clave si no existe",
+          "estatico": true
+        },
+        {
+          "nombre": "disable",
+          "parametros": [],
+          "descripcion": "Deshabilita la encriptación (no desencripta archivos existentes)",
+          "estatico": true
+        },
+        {
+          "nombre": "has_key",
+          "parametros": [],
+          "descripcion": "Verifica si existe una clave de encriptación",
+          "estatico": true
+        },
+        {
+          "nombre": "generate_key",
+          "parametros": [],
+          "descripcion": "Genera una nueva clave de encriptación de 256 bits",
+          "estatico": true
+        },
+        {
+          "nombre": "import_key",
+          "parametros": ["encodedkey: string"],
+          "descripcion": "Importa una clave de encriptación (para recuperación de desastres)",
+          "estatico": true
+        },
+        {
+          "nombre": "encrypt",
+          "parametros": ["plaintext: string"],
+          "descripcion": "Encripta datos usando AES-256-GCM",
+          "estatico": true
+        },
+        {
+          "nombre": "decrypt",
+          "parametros": ["encrypted: string"],
+          "descripcion": "Desencripta datos",
+          "estatico": true
+        },
+        {
+          "nombre": "encrypt_file",
+          "parametros": ["file: stored_file"],
+          "descripcion": "Encripta el contenido de un archivo",
+          "estatico": true
+        },
+        {
+          "nombre": "decrypt_file",
+          "parametros": ["encrypted: string"],
+          "descripcion": "Desencripta el contenido de un archivo",
+          "estatico": true
+        },
+        {
+          "nombre": "is_encrypted",
+          "parametros": ["content: string"],
+          "descripcion": "Verifica si el contenido está encriptado",
+          "estatico": true
+        },
+        {
+          "nombre": "verify",
+          "parametros": [],
+          "descripcion": "Verifica que el sistema de encriptación funciona correctamente",
+          "estatico": true
+        },
+        {
+          "nombre": "get_backup_instructions",
+          "parametros": [],
+          "descripcion": "Obtiene instrucciones para respaldar la clave de encriptación",
+          "estatico": true
+        }
+      ],
+      "metodos_privados": [
+        {
+          "nombre": "get_key",
+          "descripcion": "Obtiene la clave de encriptación (con caché)"
+        }
+      ]
+    },
+    {
+      "nombre": "exemption",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/exemption.php",
+      "descripcion": "Clase para gestionar exenciones de personal histórico ISER con requisitos documentales reducidos",
+      "constantes": [
+        {
+          "nombre": "TYPE_HISTORICO_ISER",
+          "valor": "historico_iser",
+          "descripcion": "Personal histórico de ISER"
+        },
+        {
+          "nombre": "TYPE_DOCUMENTOS_RECIENTES",
+          "valor": "documentos_recientes",
+          "descripcion": "Documentos aprobados recientemente"
+        },
+        {
+          "nombre": "TYPE_TRASLADO_INTERNO",
+          "valor": "traslado_interno",
+          "descripcion": "Traslado interno entre sedes/programas"
+        },
+        {
+          "nombre": "TYPE_RECONTRATACION",
+          "valor": "recontratacion",
+          "descripcion": "Recontratación prioritaria"
+        }
+      ],
+      "propiedades": [
+        "id: int",
+        "userid: int",
+        "exemptiontype: string",
+        "documentref: string|null",
+        "validfrom: int",
+        "validuntil: int|null",
+        "notes: string|null",
+        "createdby: int",
+        "timecreated: int",
+        "timerevoked: int|null",
+        "revokedby: int|null",
+        "revokereason: string|null"
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "get",
+          "parametros": ["id: int"],
+          "descripcion": "Obtiene una exención por ID",
+          "estatico": true
+        },
+        {
+          "nombre": "get_active_for_user",
+          "parametros": ["userid: int"],
+          "descripcion": "Obtiene la exención activa de un usuario",
+          "estatico": true
+        },
+        {
+          "nombre": "get_all_for_user",
+          "parametros": ["userid: int", "activeonly: bool"],
+          "descripcion": "Obtiene todas las exenciones de un usuario",
+          "estatico": true
+        },
+        {
+          "nombre": "user_has_active_exemption",
+          "parametros": ["userid: int"],
+          "descripcion": "Verifica si un usuario tiene exención activa",
+          "estatico": true
+        },
+        {
+          "nombre": "create",
+          "parametros": ["userid: int", "type: string", "data: array"],
+          "descripcion": "Crea una nueva exención",
+          "estatico": true
+        },
+        {
+          "nombre": "revoke",
+          "parametros": ["reason: string"],
+          "descripcion": "Revoca la exención"
+        },
+        {
+          "nombre": "is_active",
+          "parametros": [],
+          "descripcion": "Verifica si la exención está actualmente activa"
+        },
+        {
+          "nombre": "get_required_document_codes",
+          "parametros": [],
+          "descripcion": "Obtiene códigos de documentos requeridos según el tipo de exención"
+        },
+        {
+          "nombre": "get_required_doctypes",
+          "parametros": ["userid: int|null", "onlyrequired: bool"],
+          "descripcion": "Obtiene tipos de documentos requeridos considerando exenciones",
+          "estatico": true
+        },
+        {
+          "nombre": "get_type_name",
+          "parametros": [],
+          "descripcion": "Obtiene nombre traducido del tipo de exención"
+        },
+        {
+          "nombre": "get_all_types",
+          "parametros": [],
+          "descripcion": "Obtiene todos los tipos de exención con nombres traducidos",
+          "estatico": true
+        },
+        {
+          "nombre": "get_list",
+          "parametros": ["filters: array", "sort: string", "order: string", "page: int", "perpage: int"],
+          "descripcion": "Obtiene listado de exenciones con filtros y paginación",
+          "estatico": true
+        },
+        {
+          "nombre": "import_from_csv",
+          "parametros": ["content: string"],
+          "descripcion": "Importa exenciones desde CSV",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "faculty_dean",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/faculty_dean.php",
+      "descripcion": "Clase para gestionar asignación de decanos a facultades (control de acceso basado en facultad)",
+      "constantes": [
+        {
+          "nombre": "STATUS_ACTIVE",
+          "valor": "active",
+          "descripcion": "Asignación activa"
+        },
+        {
+          "nombre": "STATUS_INACTIVE",
+          "valor": "inactive",
+          "descripcion": "Asignación inactiva"
+        }
+      ],
+      "propiedades": [
+        "id: int",
+        "facultyid: int",
+        "userid: int",
+        "status: string",
+        "addedby: int|null",
+        "timecreated: int",
+        "timemodified: int|null"
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "save",
+          "parametros": [],
+          "descripcion": "Guarda la asignación en base de datos"
+        },
+        {
+          "nombre": "delete",
+          "parametros": [],
+          "descripcion": "Elimina la asignación"
+        },
+        {
+          "nombre": "add",
+          "parametros": ["facultyid: int", "userid: int", "addedby: int|null"],
+          "descripcion": "Asigna un decano a una facultad",
+          "estatico": true
+        },
+        {
+          "nombre": "remove",
+          "parametros": ["facultyid: int", "userid: int"],
+          "descripcion": "Remueve un decano de una facultad",
+          "estatico": true
+        },
+        {
+          "nombre": "set_status",
+          "parametros": ["facultyid: int", "userid: int", "status: string"],
+          "descripcion": "Cambia el estado de una asignación",
+          "estatico": true
+        },
+        {
+          "nombre": "get_faculties_for_dean",
+          "parametros": ["userid: int", "activeonly: bool"],
+          "descripcion": "Obtiene facultades asignadas a un decano",
+          "estatico": true
+        },
+        {
+          "nombre": "get_deans_for_faculty",
+          "parametros": ["facultyid: int", "activeonly: bool"],
+          "descripcion": "Obtiene decanos asignados a una facultad",
+          "estatico": true
+        },
+        {
+          "nombre": "is_dean_for_faculty",
+          "parametros": ["userid: int", "facultyid: int", "activeonly: bool"],
+          "descripcion": "Verifica si un usuario es decano de una facultad específica",
+          "estatico": true
+        },
+        {
+          "nombre": "get_all",
+          "parametros": ["facultyid: int", "userid: int", "activeonly: bool"],
+          "descripcion": "Obtiene todas las asignaciones con filtros opcionales",
+          "estatico": true
+        },
+        {
+          "nombre": "get_faculty_ids_for_vacancy",
+          "parametros": ["vacancyid: int"],
+          "descripcion": "Obtiene IDs de facultades asociadas a una vacante",
+          "estatico": true
+        },
+        {
+          "nombre": "can_dean_access_vacancy",
+          "parametros": ["userid: int", "vacancyid: int"],
+          "descripcion": "Verifica si un decano puede acceder a una vacante basándose en su facultad",
+          "estatico": true
+        },
+        {
+          "nombre": "get_faculties_with_deans",
+          "parametros": ["companyid: int"],
+          "descripcion": "Obtiene facultades con información de sus decanos asignados",
+          "estatico": true
+        }
+      ],
+      "metodos_protegidos": [
+        {
+          "nombre": "populate_from_record",
+          "descripcion": "Llena las propiedades desde un registro de BD"
+        },
+        {
+          "nombre": "get_record",
+          "descripcion": "Obtiene objeto stdClass para operaciones de BD"
+        }
+      ]
+    },
+    {
+      "nombre": "interview",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/interview.php",
+      "descripcion": "Clase para programar y gestionar entrevistas con candidatos",
+      "constantes": [
+        {
+          "nombre": "STATUS_SCHEDULED",
+          "valor": "scheduled",
+          "descripcion": "Entrevista programada"
+        },
+        {
+          "nombre": "STATUS_CONFIRMED",
+          "valor": "confirmed",
+          "descripcion": "Entrevista confirmada por el candidato"
+        },
+        {
+          "nombre": "STATUS_COMPLETED",
+          "valor": "completed",
+          "descripcion": "Entrevista completada"
+        },
+        {
+          "nombre": "STATUS_CANCELLED",
+          "valor": "cancelled",
+          "descripcion": "Entrevista cancelada"
+        },
+        {
+          "nombre": "STATUS_NOSHOW",
+          "valor": "noshow",
+          "descripcion": "Candidato no se presentó"
+        },
+        {
+          "nombre": "STATUS_RESCHEDULED",
+          "valor": "rescheduled",
+          "descripcion": "Entrevista reprogramada"
+        },
+        {
+          "nombre": "TYPE_INPERSON",
+          "valor": "inperson",
+          "descripcion": "Entrevista presencial"
+        },
+        {
+          "nombre": "TYPE_VIDEO",
+          "valor": "video",
+          "descripcion": "Entrevista por videollamada"
+        },
+        {
+          "nombre": "TYPE_PHONE",
+          "valor": "phone",
+          "descripcion": "Entrevista telefónica"
+        }
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "schedule",
+          "parametros": ["applicationid: int", "scheduledtime: int", "duration: int", "type: string", "location: string", "interviewers: array", "notes: string"],
+          "descripcion": "Programa una nueva entrevista verificando conflictos de horario",
+          "estatico": true
+        },
+        {
+          "nombre": "has_conflict",
+          "parametros": ["userid: int", "scheduledtime: int", "duration: int", "excludeinterviewid: int"],
+          "descripcion": "Verifica si hay conflicto de horario para un entrevistador",
+          "estatico": true
+        },
+        {
+          "nombre": "reschedule",
+          "parametros": ["interviewid: int", "newtime: int", "newduration: int", "reason: string"],
+          "descripcion": "Reprograma una entrevista",
+          "estatico": true
+        },
+        {
+          "nombre": "cancel",
+          "parametros": ["interviewid: int", "reason: string"],
+          "descripcion": "Cancela una entrevista",
+          "estatico": true
+        },
+        {
+          "nombre": "confirm",
+          "parametros": ["interviewid: int"],
+          "descripcion": "Confirma asistencia a entrevista (por el candidato)",
+          "estatico": true
+        },
+        {
+          "nombre": "complete",
+          "parametros": ["interviewid: int", "rating: int", "feedback: string", "recommendation: string"],
+          "descripcion": "Completa una entrevista con resultados y recomendación",
+          "estatico": true
+        },
+        {
+          "nombre": "mark_noshow",
+          "parametros": ["interviewid: int", "notes: string"],
+          "descripcion": "Marca que el candidato no se presentó",
+          "estatico": true
+        },
+        {
+          "nombre": "get_for_application",
+          "parametros": ["applicationid: int"],
+          "descripcion": "Obtiene todas las entrevistas de una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "get_upcoming_for_interviewer",
+          "parametros": ["userid: int", "daysahead: int"],
+          "descripcion": "Obtiene próximas entrevistas de un entrevistador",
+          "estatico": true
+        },
+        {
+          "nombre": "get_upcoming_for_applicant",
+          "parametros": ["userid: int"],
+          "descripcion": "Obtiene próximas entrevistas de un candidato",
+          "estatico": true
+        },
+        {
+          "nombre": "get_details",
+          "parametros": ["interviewid: int"],
+          "descripcion": "Obtiene detalles completos de una entrevista incluyendo entrevistadores",
+          "estatico": true
+        },
+        {
+          "nombre": "get_vacancy_schedule",
+          "parametros": ["vacancyid: int", "fromtime: int", "totime: int"],
+          "descripcion": "Obtiene agenda de entrevistas para una vacante",
+          "estatico": true
+        },
+        {
+          "nombre": "get_vacancy_stats",
+          "parametros": ["vacancyid: int"],
+          "descripcion": "Obtiene estadísticas de entrevistas de una vacante",
+          "estatico": true
+        }
+      ],
+      "metodos_protegidos": [
+        {
+          "nombre": "queue_notification",
+          "descripcion": "Encola notificación de entrevista para candidato"
+        }
+      ]
+    },
+    {
+      "nombre": "notification",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/notification.php",
+      "descripcion": "Clase para encolar y gestionar notificaciones a usuarios",
+      "constantes": [
+        {
+          "nombre": "TEMPLATE_APPLICATION_RECEIVED",
+          "valor": "application_received",
+          "descripcion": "Plantilla: Postulación recibida"
+        },
+        {
+          "nombre": "TEMPLATE_UNDER_REVIEW",
+          "valor": "under_review",
+          "descripcion": "Plantilla: En revisión"
+        },
+        {
+          "nombre": "TEMPLATE_DOCS_VALIDATED",
+          "valor": "docs_validated",
+          "descripcion": "Plantilla: Documentos validados"
+        },
+        {
+          "nombre": "TEMPLATE_DOCS_REJECTED",
+          "valor": "docs_rejected",
+          "descripcion": "Plantilla: Documentos rechazados"
+        },
+        {
+          "nombre": "TEMPLATE_INTERVIEW",
+          "valor": "interview",
+          "descripcion": "Plantilla: Entrevista programada"
+        },
+        {
+          "nombre": "TEMPLATE_SELECTED",
+          "valor": "selected",
+          "descripcion": "Plantilla: Candidato seleccionado"
+        },
+        {
+          "nombre": "TEMPLATE_REJECTED",
+          "valor": "rejected",
+          "descripcion": "Plantilla: Postulación rechazada"
+        }
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "queue",
+          "parametros": ["userid: int", "templatecode: string", "data: array"],
+          "descripcion": "Encola una notificación para envío asíncrono",
+          "estatico": true
+        },
+        {
+          "nombre": "queue_status_change",
+          "parametros": ["application: application", "newstatus: string", "notes: string|null"],
+          "descripcion": "Encola notificación de cambio de estado de postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "queue_application_received",
+          "parametros": ["application: application"],
+          "descripcion": "Encola notificación de postulación recibida",
+          "estatico": true
+        },
+        {
+          "nombre": "queue_closing_soon",
+          "parametros": ["vacancy: vacancy", "userid: int", "daysleft: int"],
+          "descripcion": "Encola notificación de vacante próxima a cerrar",
+          "estatico": true
+        },
+        {
+          "nombre": "send_immediate",
+          "parametros": ["userid: int", "templatecode: string", "data: array"],
+          "descripcion": "Envía notificación inmediatamente (sin cola)",
+          "estatico": true
+        },
+        {
+          "nombre": "get_pending_count",
+          "parametros": [],
+          "descripcion": "Obtiene número de notificaciones pendientes de envío",
+          "estatico": true
+        },
+        {
+          "nombre": "get_failed",
+          "parametros": ["limit: int"],
+          "descripcion": "Obtiene notificaciones fallidas",
+          "estatico": true
+        },
+        {
+          "nombre": "retry_failed",
+          "parametros": [],
+          "descripcion": "Reintenta envío de notificaciones fallidas",
+          "estatico": true
+        }
+      ],
+      "metodos_protegidos": [
+        {
+          "nombre": "parse_placeholders",
+          "descripcion": "Reemplaza placeholders en plantillas con valores reales"
+        }
+      ]
+    },
+    {
+      "nombre": "program_reviewer",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/program_reviewer.php",
+      "descripcion": "Clase para gestionar revisores asignados a programas académicos (categorías de cursos)",
+      "constantes": [
+        {
+          "nombre": "ROLE_LEAD",
+          "valor": "lead_reviewer",
+          "descripcion": "Revisor líder (puede asignar trabajo)"
+        },
+        {
+          "nombre": "ROLE_REVIEWER",
+          "valor": "reviewer",
+          "descripcion": "Revisor regular"
+        },
+        {
+          "nombre": "STATUS_ACTIVE",
+          "valor": "active",
+          "descripcion": "Revisor activo"
+        },
+        {
+          "nombre": "STATUS_INACTIVE",
+          "valor": "inactive",
+          "descripcion": "Revisor inactivo"
+        }
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "add",
+          "parametros": ["categoryid: int", "userid: int", "role: string"],
+          "descripcion": "Asigna un revisor a un programa académico",
+          "estatico": true
+        },
+        {
+          "nombre": "remove",
+          "parametros": ["categoryid: int", "userid: int"],
+          "descripcion": "Remueve un revisor de un programa",
+          "estatico": true
+        },
+        {
+          "nombre": "update_role",
+          "parametros": ["categoryid: int", "userid: int", "newrole: string"],
+          "descripcion": "Actualiza el rol de un revisor",
+          "estatico": true
+        },
+        {
+          "nombre": "toggle_status",
+          "parametros": ["categoryid: int", "userid: int"],
+          "descripcion": "Activa/desactiva un revisor",
+          "estatico": true
+        },
+        {
+          "nombre": "get_for_program",
+          "parametros": ["categoryid: int", "activeonly: bool"],
+          "descripcion": "Obtiene revisores de un programa",
+          "estatico": true
+        },
+        {
+          "nombre": "get_user_programs",
+          "parametros": ["userid: int", "activeonly: bool"],
+          "descripcion": "Obtiene programas que un usuario revisa",
+          "estatico": true
+        },
+        {
+          "nombre": "get_all_active",
+          "parametros": [],
+          "descripcion": "Obtiene todos los revisores activos del sistema",
+          "estatico": true
+        },
+        {
+          "nombre": "get_statistics",
+          "parametros": [],
+          "descripcion": "Obtiene estadísticas de revisores",
+          "estatico": true
+        },
+        {
+          "nombre": "get_programs_with_reviewers",
+          "parametros": [],
+          "descripcion": "Obtiene programas con conteo de revisores",
+          "estatico": true
+        },
+        {
+          "nombre": "get_programs_without_reviewers",
+          "parametros": ["parentid: int"],
+          "descripcion": "Obtiene programas sin revisores asignados",
+          "estatico": true
+        },
+        {
+          "nombre": "is_reviewer",
+          "parametros": ["userid: int", "categoryid: int"],
+          "descripcion": "Verifica si un usuario es revisor (opcionalmente de programa específico)",
+          "estatico": true
+        },
+        {
+          "nombre": "is_lead_reviewer",
+          "parametros": ["userid: int", "categoryid: int"],
+          "descripcion": "Verifica si un usuario es revisor líder",
+          "estatico": true
+        },
+        {
+          "nombre": "get_for_vacancy",
+          "parametros": ["vacancyid: int"],
+          "descripcion": "Obtiene revisores para una vacante basándose en su programa",
+          "estatico": true
+        },
+        {
+          "nombre": "get_workload_for_program",
+          "parametros": ["categoryid: int"],
+          "descripcion": "Obtiene carga de trabajo de revisores en un programa",
+          "estatico": true
+        },
+        {
+          "nombre": "get_category_hierarchy",
+          "parametros": [],
+          "descripcion": "Obtiene jerarquía de categorías (facultad > programa)",
+          "estatico": true
+        }
+      ]
+    },
+    {
+      "nombre": "review_notifier",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/review_notifier.php",
+      "descripcion": "Clase para enviar notificaciones consolidadas después de completar revisión de documentos",
+      "propiedades": [
+        "application: application",
+        "applicant: stdClass",
+        "vacancy: vacancy",
+        "companyid: int"
+      ],
+      "metodos_publicos": [
+        {
+          "nombre": "__construct",
+          "parametros": ["application: application"],
+          "descripcion": "Constructor que inicializa con datos de postulación"
+        },
+        {
+          "nombre": "send_review_notification",
+          "parametros": ["reviewerobservations: string"],
+          "descripcion": "Envía notificación apropiada según resultado de revisión (aprobado/rechazado)"
+        },
+        {
+          "nombre": "send_review_complete_notification",
+          "parametros": ["observations: string"],
+          "descripcion": "Envía notificación completa con resumen de revisión"
+        },
+        {
+          "nombre": "notify",
+          "parametros": ["applicationid: int", "observations: string"],
+          "descripcion": "Helper estático para enviar notificación de revisión",
+          "estatico": true
+        }
+      ],
+      "metodos_protegidos": [
+        {
+          "nombre": "send_docs_validated_notification",
+          "descripcion": "Envía notificación cuando todos los documentos son aprobados"
+        },
+        {
+          "nombre": "send_docs_rejected_notification",
+          "descripcion": "Envía notificación cuando hay documentos rechazados"
+        },
+        {
+          "nombre": "format_rejected_documents",
+          "descripcion": "Formatea lista de documentos rechazados para email"
+        },
+        {
+          "nombre": "build_review_summary",
+          "descripcion": "Construye resumen de revisión con estadísticas"
+        },
+        {
+          "nombre": "send_email",
+          "descripcion": "Envía email usando la API de mensajería de Moodle"
+        }
+      ]
+    },
+    {
+      "nombre": "reviewer",
+      "namespace": "local_jobboard",
+      "archivo": "local/jobboard/classes/reviewer.php",
+      "descripcion": "Clase para gestionar asignación de revisores a postulaciones y balanceo de carga de trabajo",
+      "metodos_publicos": [
+        {
+          "nombre": "assign",
+          "parametros": ["applicationid: int", "reviewerid: int"],
+          "descripcion": "Asigna un revisor a una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "unassign",
+          "parametros": ["applicationid: int"],
+          "descripcion": "Desasigna el revisor de una postulación",
+          "estatico": true
+        },
+        {
+          "nombre": "bulk_assign",
+          "parametros": ["applicationids: array", "reviewerid: int"],
+          "descripcion": "Asigna múltiples postulaciones a un revisor",
+          "estatico": true
+        },
+        {
+          "nombre": "auto_assign",
+          "parametros": ["vacancyid: int|null", "maxperreviewer: int"],
+          "descripcion": "Asigna automáticamente postulaciones balanceando carga de trabajo",
+          "estatico": true
+        },
+        {
+          "nombre": "get_available_reviewers",
+          "parametros": ["vacancyid: int|null"],
+          "descripcion": "Obtiene revisores disponibles (filtrando por compañía si aplica)",
+          "estatico": true
+        },
+        {
+          "nombre": "get_reviewer_workload",
+          "parametros": ["reviewerid: int"],
+          "descripcion": "Obtiene carga de trabajo actual de un revisor (postulaciones activas)",
+          "estatico": true
+        },
+        {
+          "nombre": "get_reviewer_stats",
+          "parametros": ["reviewerid: int", "since: int"],
+          "descripcion": "Obtiene estadísticas de un revisor (asignadas, revisadas, tiempo promedio)",
+          "estatico": true
+        },
+        {
+          "nombre": "get_all_with_workload",
+          "parametros": [],
+          "descripcion": "Obtiene todos los revisores con su carga de trabajo",
+          "estatico": true
+        },
+        {
+          "nombre": "get_assigned_applications",
+          "parametros": ["reviewerid: int", "filters: array", "page: int", "perpage: int"],
+          "descripcion": "Obtiene postulaciones asignadas a un revisor",
+          "estatico": true
+        },
+        {
+          "nombre": "reassign",
+          "parametros": ["fromreviewerid: int", "toreviewerid: int", "applicationids: array"],
+          "descripcion": "Reasigna postulaciones de un revisor a otro",
+          "estatico": true
+        }
+      ],
+      "metodos_protegidos": [
+        {
+          "nombre": "notify_assignment",
+          "descripcion": "Notifica al revisor sobre nueva asignación"
+        }
+      ]
+    }
+  ]
+}

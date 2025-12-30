@@ -1,0 +1,15 @@
+{
+  "component": "local_jobboard",
+  "version": 2025122302,
+  "release": "4.0.2",
+  "requires": 2022112800,
+  "requires_description": "Moodle 4.1 LTS mínimo",
+  "supported": [401, 405],
+  "supported_description": "Moodle 4.1 a 4.5",
+  "maturity": "MATURITY_STABLE",
+  "description": "Plugin de bolsa de empleo para gestión de vacantes académicas y postulaciones docentes. Diseñado para reclutamiento de catedráticos en instituciones de educación superior. Compatible con arquitectura multi-tenant IOMAD.",
+  "copyright": "2025 ISER - Instituto Superior de Educación Rural",
+  "author": "Alonso Arias",
+  "author_email": "soporteplataformas@iser.edu.co",
+  "license": "GNU GPL v3 or later"
+}

@@ -1,0 +1,8 @@
+{
+  "plugin": "local_platform_access",
+  "tiene_lib_php": false,
+  "archivo_lib": null,
+  "descripcion": "Este plugin no tiene archivo lib.php. Toda la funcionalidad está implementada en clases dentro del directorio classes/.",
+  "funciones": [],
+  "nota": "La arquitectura del plugin sigue las mejores prácticas modernas de Moodle utilizando clases con namespaces en lugar de funciones globales en lib.php"
+}

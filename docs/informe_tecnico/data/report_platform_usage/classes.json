@@ -1,0 +1,293 @@
+{
+  "plugin": "report_platform_usage",
+  "namespace": "report_platform_usage",
+  "clases": [
+    {
+      "nombre": "report",
+      "namespace_completo": "report_platform_usage\\report",
+      "archivo": "classes/report.php",
+      "proposito": "Clase principal para manejo de datos del informe con soporte de caché",
+      "descripcion": "Gestiona toda la lógica de obtención y procesamiento de datos de uso de la plataforma. Incluye cálculo de dedicación, estadísticas de acceso y completaciones.",
+      "tipo": "clase_principal",
+      "propiedades": [
+        {
+          "nombre": "$companyid",
+          "tipo": "int",
+          "descripcion": "ID de empresa para filtrar (0 = todas las empresas)",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$courseid",
+          "tipo": "int",
+          "descripcion": "ID de curso para filtrar (0 = todos los cursos)",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$datefrom",
+          "tipo": "int",
+          "descripcion": "Timestamp de inicio del rango de fechas",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$dateto",
+          "tipo": "int",
+          "descripcion": "Timestamp de fin del rango de fechas",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$userids",
+          "tipo": "array",
+          "descripcion": "IDs de usuarios filtrados por empresa (caché interno)",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$cache",
+          "tipo": "cache",
+          "descripcion": "Instancia de caché para datos del informe",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$usercache",
+          "tipo": "cache",
+          "descripcion": "Instancia de caché para usuarios de empresa",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$usecache",
+          "tipo": "bool",
+          "descripcion": "Indica si usar caché o no",
+          "visibilidad": "protected"
+        }
+      ],
+      "metodos_principales": [
+        {
+          "nombre": "__construct",
+          "descripcion": "Constructor que inicializa filtros y caché",
+          "parametros": ["companyid", "datefrom", "dateto", "usecache", "courseid"],
+          "retorno": "void"
+        },
+        {
+          "nombre": "get_login_summary",
+          "descripcion": "Obtiene resumen de logins/accesos con caché",
+          "retorno": "array",
+          "datos_retornados": ["total_logins", "unique_users", "avg_logins_per_day", "avg_logins_per_user"]
+        },
+        {
+          "nombre": "get_daily_logins",
+          "descripcion": "Obtiene datos de logins diarios para gráficos",
+          "retorno": "array",
+          "datos_retornados": ["labels", "logins", "unique_users"]
+        },
+        {
+          "nombre": "get_user_activity_summary",
+          "descripcion": "Obtiene resumen de actividad de usuarios",
+          "retorno": "array",
+          "datos_retornados": ["total", "active", "inactive"]
+        },
+        {
+          "nombre": "get_top_courses",
+          "descripcion": "Obtiene cursos más accedidos",
+          "parametros": ["limit"],
+          "retorno": "array"
+        },
+        {
+          "nombre": "get_top_activities",
+          "descripcion": "Obtiene actividades más accedidas",
+          "parametros": ["limit"],
+          "retorno": "array"
+        },
+        {
+          "nombre": "get_course_completions_summary",
+          "descripcion": "Obtiene resumen de completaciones de cursos",
+          "retorno": "array",
+          "datos_retornados": ["total_completions", "unique_courses", "avg_per_day"]
+        },
+        {
+          "nombre": "get_top_courses_dedication",
+          "descripcion": "Obtiene cursos ordenados por tiempo de dedicación",
+          "parametros": ["limit", "days"],
+          "retorno": "array",
+          "nota": "Usa datos pre-calculados cuando están disponibles"
+        },
+        {
+          "nombre": "get_course_statistics",
+          "descripcion": "Obtiene estadísticas específicas de un curso (contexto de curso)",
+          "retorno": "array",
+          "datos_retornados": ["course", "enrolled_users", "active_users", "completions", "accesses", "dedication"]
+        },
+        {
+          "nombre": "get_course_users_details",
+          "descripcion": "Obtiene detalles de usuarios matriculados en un curso",
+          "retorno": "array",
+          "nota": "Incluye dedicación, completación y último acceso por usuario"
+        },
+        {
+          "nombre": "is_iomad_installed",
+          "descripcion": "Verifica si IOMAD está instalado",
+          "tipo": "static",
+          "retorno": "bool"
+        },
+        {
+          "nombre": "get_companies",
+          "descripcion": "Obtiene lista de empresas (si IOMAD está instalado)",
+          "tipo": "static",
+          "retorno": "array"
+        }
+      ],
+      "caracteristicas": [
+        "Sistema de caché con MUC (Moodle Universal Cache)",
+        "Soporte dual: contexto de plataforma y contexto de curso",
+        "Integración con IOMAD para filtrado por empresas",
+        "Cálculo de dedicación usando datos pre-calculados o logs en tiempo real",
+        "Todas las consultas usan el rango de fechas configurado",
+        "Optimización mediante índices de base de datos"
+      ]
+    },
+    {
+      "nombre": "exporter",
+      "namespace_completo": "report_platform_usage\\exporter",
+      "archivo": "classes/exporter.php",
+      "proposito": "Clase para exportación de datos a CSV y Excel",
+      "descripcion": "Maneja la exportación de datos del informe en diferentes formatos (CSV, Excel) con múltiples tipos de exportación.",
+      "propiedades": [
+        {
+          "nombre": "$report",
+          "tipo": "report",
+          "descripcion": "Instancia de la clase report",
+          "visibilidad": "protected"
+        },
+        {
+          "nombre": "$type",
+          "tipo": "string",
+          "descripcion": "Tipo de exportación (logins, courses, users, daily, summary, dedication, activities)",
+          "visibilidad": "protected"
+        }
+      ],
+      "metodos_principales": [
+        {
+          "nombre": "export",
+          "descripcion": "Exporta datos según el tipo y formato especificado",
+          "parametros": ["format"],
+          "tipos_exportacion": [
+            "logins - Resumen de logins",
+            "courses - Acceso a cursos",
+            "users - Detalles de usuarios",
+            "daily - Logins diarios",
+            "summary - Resumen completo",
+            "dedication - Dedicación por cursos",
+            "activities - Acceso a actividades",
+            "dailyusers - Usuarios únicos diarios"
+          ]
+        },
+        {
+          "nombre": "add_report_header",
+          "descripcion": "Añade cabecera con información de contexto al archivo exportado",
+          "incluye": ["Título", "Fecha de generación", "Empresa/Curso", "Rango de fechas"]
+        }
+      ],
+      "formatos_soportados": ["CSV", "Excel"],
+      "caracteristicas": [
+        "Exportación con cabeceras informativas",
+        "Múltiples tipos de datos exportables",
+        "Formato personalizado según contexto (plataforma/curso)",
+        "Estadísticas agregadas en resúmenes"
+      ]
+    },
+    {
+      "nombre": "excel_exporter",
+      "namespace_completo": "report_platform_usage\\excel_exporter",
+      "archivo": "classes/excel_exporter.php",
+      "proposito": "Exportador avanzado de Excel con gráficos",
+      "descripcion": "Extensión del exportador estándar que genera archivos Excel con gráficos y formato avanzado.",
+      "nota": "Archivo muy extenso (25210+ tokens), no se leyó completamente",
+      "caracteristicas_conocidas": [
+        "Generación de gráficos en Excel",
+        "Formato avanzado con estilos",
+        "Múltiples hojas de trabajo",
+        "Exportación mejorada para tipo 'summary'"
+      ]
+    },
+    {
+      "nombre": "dedication_collector",
+      "namespace_completo": "report_platform_usage\\task\\dedication_collector",
+      "archivo": "classes/task/dedication_collector.php",
+      "proposito": "Tarea programada para calcular datos de dedicación",
+      "descripcion": "Tarea que se ejecuta periódicamente para pre-calcular tiempos de dedicación de usuarios en cursos y almacenarlos en la tabla report_platform_usage_ded.",
+      "hereda_de": "core\\task\\scheduled_task",
+      "metodos": [
+        {
+          "nombre": "get_name",
+          "descripcion": "Retorna el nombre de la tarea",
+          "retorno": "string"
+        },
+        {
+          "nombre": "execute",
+          "descripcion": "Ejecuta la tarea de cálculo de dedicación",
+          "logica": [
+            "Obtiene última ejecución desde configuración",
+            "Si es primera vez, calcula datos de últimas 12 semanas",
+            "Previene ejecución más de una vez cada 2 horas",
+            "Procesa datos en chunks semanales para optimizar memoria"
+          ]
+        },
+        {
+          "nombre": "calculate",
+          "descripcion": "Calcula estadísticas para un período de tiempo",
+          "logica": [
+            "Obtiene configuración de límites de sesión",
+            "Consulta logs de actividad por curso y usuario",
+            "Calcula sesiones basadas en intervalos de tiempo",
+            "Inserta registros en report_platform_usage_ded",
+            "Actualiza timestamp de última ejecución"
+          ]
+        },
+        {
+          "nombre": "calculate_user_sessions",
+          "descripcion": "Calcula sesiones individuales de usuario a partir de eventos",
+          "algoritmo": "Agrupa eventos en sesiones basándose en límite de tiempo entre eventos. Ignora sesiones menores al mínimo configurado."
+        }
+      ],
+      "configuracion": {
+        "programacion": "Diaria a las 01:30 AM",
+        "bloqueante": false,
+        "parametros": [
+          {
+            "nombre": "session_limit",
+            "descripcion": "Tiempo máximo entre eventos para considerar misma sesión",
+            "defecto": "1 hora (HOURSECS)"
+          },
+          {
+            "nombre": "ignore_sessions_limit",
+            "descripcion": "Duración mínima de sesión a contar",
+            "defecto": "1 minuto (MINSECS)"
+          }
+        ]
+      }
+    },
+    {
+      "nombre": "provider",
+      "namespace_completo": "report_platform_usage\\privacy\\provider",
+      "archivo": "classes/privacy/provider.php",
+      "proposito": "Proveedor de privacidad GDPR",
+      "descripcion": "Implementa la interfaz null_provider indicando que el plugin no almacena datos personales de usuarios.",
+      "implementa": "core_privacy\\local\\metadata\\null_provider",
+      "metodos": [
+        {
+          "nombre": "get_reason",
+          "descripcion": "Retorna la razón de ser un null provider",
+          "retorno": "string",
+          "valor": "privacy:metadata"
+        }
+      ],
+      "nota_privacidad": "El plugin solo lee datos de otras tablas (logs, users, courses) pero no almacena información personal propia. La tabla report_platform_usage_ded contiene agregaciones que se derivan de logs existentes."
+    }
+  ],
+  "patron_arquitectura": "MVC con capa de datos separada",
+  "uso_cache": {
+    "tipos": [
+      "reportdata - Datos del informe (TTL: 5 minutos)",
+      "companyusers - Listas de usuarios por empresa (TTL: 10 minutos)"
+    ],
+    "estrategia": "Cache-aside pattern con aceleración estática"
+  }
+}

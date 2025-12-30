@@ -1,0 +1,444 @@
+{
+  "total_functions": 25,
+  "file_path": "/home/user/iomad/local/jobboard/lib.php",
+  "analysis_date": "2025-12-30",
+  "functions": [
+    {
+      "name": "local_jobboard_user_has_custom_role",
+      "line_start": 33,
+      "description": "Check if user has any of the jobboard custom roles.",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "int|null",
+          "default": "null",
+          "description": "User ID or null for current user."
+        }
+      ],
+      "return_type": "bool",
+      "return_description": "True if user has any jobboard role."
+    },
+    {
+      "name": "local_jobboard_has_open_convocatorias",
+      "line_start": 61,
+      "description": "Check if there are any open convocatorias.",
+      "parameters": [],
+      "return_type": "bool",
+      "return_description": "True if there are open convocatorias."
+    },
+    {
+      "name": "local_jobboard_should_show_menu",
+      "line_start": 83,
+      "description": "Check if the jobboard menu should be visible for the current user. The menu is visible if: There are open convocatorias, OR the user has one of the custom jobboard roles, OR the user is a site admin.",
+      "parameters": [],
+      "return_type": "bool",
+      "return_description": "True if menu should be visible."
+    },
+    {
+      "name": "local_jobboard_extend_navigation",
+      "line_start": 130,
+      "description": "Adds navigation nodes to the main navigation. This function adds Job Board to both: 1) The Moodle navigation drawer (side navigation) and 2) The main navigation menu (custom menu items in top bar). VISIBILITY: Menu is only shown if there are open convocatorias, OR user has a custom jobboard role (reviewer, coordinator, dean, hr), OR user is a site admin. Navigation Structure includes: Dashboard, Public Vacancies (if enabled), Available Vacancies, My Applications, Management Section (for managers), Review Section (for reviewers), Reports, and Settings.",
+      "parameters": [
+        {
+          "name": "navigation",
+          "type": "global_navigation",
+          "description": "The global navigation object."
+        }
+      ],
+      "return_type": "void",
+      "return_description": "No return value."
+    },
+    {
+      "name": "local_jobboard_extend_settings_navigation",
+      "line_start": 343,
+      "description": "Adds settings to the site admin menu. Note: The admin pages are registered in settings.php using admin_externalpage, which automatically adds them to the Moodle admin tree. This function provides additional contextual navigation support.",
+      "parameters": [
+        {
+          "name": "settingsnav",
+          "type": "settings_navigation",
+          "description": "The settings navigation object."
+        },
+        {
+          "name": "context",
+          "type": "context",
+          "description": "The context."
+        }
+      ],
+      "return_type": "void",
+      "return_description": "No return value."
+    },
+    {
+      "name": "local_jobboard_pluginfile",
+      "line_start": 360,
+      "description": "Serves files for the local_jobboard plugin.",
+      "parameters": [
+        {
+          "name": "course",
+          "type": "stdClass",
+          "description": "The course object."
+        },
+        {
+          "name": "cm",
+          "type": "stdClass",
+          "description": "The course module object."
+        },
+        {
+          "name": "context",
+          "type": "context",
+          "description": "The context."
+        },
+        {
+          "name": "filearea",
+          "type": "string",
+          "description": "The file area."
+        },
+        {
+          "name": "args",
+          "type": "array",
+          "description": "The arguments."
+        },
+        {
+          "name": "forcedownload",
+          "type": "bool",
+          "description": "Whether to force download."
+        },
+        {
+          "name": "options",
+          "type": "array",
+          "default": "[]",
+          "description": "Additional options."
+        }
+      ],
+      "return_type": "bool",
+      "return_description": "False if file not found, does not return if file found."
+    },
+    {
+      "name": "local_jobboard_get_application_statuses",
+      "line_start": 495,
+      "description": "Get the list of application statuses.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "List of status code => name."
+    },
+    {
+      "name": "local_jobboard_get_document_statuses",
+      "line_start": 513,
+      "description": "Get the list of document validation statuses.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "List of status code => name."
+    },
+    {
+      "name": "local_jobboard_get_contract_types",
+      "line_start": 526,
+      "description": "Get the list of contract types.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "List of contract type code => name."
+    },
+    {
+      "name": "local_jobboard_get_modalities",
+      "line_start": 543,
+      "description": "Get available educational modalities.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "List of modality code => name."
+    },
+    {
+      "name": "local_jobboard_get_allowed_transitions",
+      "line_start": 557,
+      "description": "Get allowed state transitions for applications.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "From status => array of allowed to statuses."
+    },
+    {
+      "name": "local_jobboard_is_transition_allowed",
+      "line_start": 574,
+      "description": "Check if a status transition is allowed.",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "string",
+          "description": "Current status."
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "description": "Target status."
+        }
+      ],
+      "return_type": "bool",
+      "return_description": "True if transition is allowed."
+    },
+    {
+      "name": "local_jobboard_get_convocatorias",
+      "line_start": 592,
+      "description": "Get list of convocatorias for select dropdown.",
+      "parameters": [
+        {
+          "name": "companyid",
+          "type": "int",
+          "default": "0",
+          "description": "Optional company ID to filter by."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "default": "''",
+          "description": "Optional status filter ('draft', 'open', 'closed', 'archived')."
+        },
+        {
+          "name": "includeall",
+          "type": "bool",
+          "default": "false",
+          "description": "Whether to include all convocatorias regardless of status."
+        }
+      ],
+      "return_type": "array",
+      "return_description": "Array of convocatoria ID => name."
+    },
+    {
+      "name": "local_jobboard_get_convocatoria",
+      "line_start": 635,
+      "description": "Get convocatoria by ID.",
+      "parameters": [
+        {
+          "name": "convocatoriaid",
+          "type": "int",
+          "description": "The convocatoria ID."
+        }
+      ],
+      "return_type": "stdClass|false",
+      "return_description": "The convocatoria record or false."
+    },
+    {
+      "name": "local_jobboard_can_user_apply_to_vacancy",
+      "line_start": 656,
+      "description": "Check if user can apply to a vacancy based on convocatoria restrictions. This checks: Single application restriction per convocatoria (if allow_multiple_applications is false) and Maximum applications per user per convocatoria.",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "int",
+          "description": "The user ID."
+        },
+        {
+          "name": "vacancyid",
+          "type": "int",
+          "description": "The vacancy ID they want to apply to."
+        }
+      ],
+      "return_type": "array",
+      "return_description": "Array with keys 'can_apply' (bool) and 'reason' (string|null)."
+    },
+    {
+      "name": "local_jobboard_check_experience_requirements",
+      "line_start": 717,
+      "description": "Check if user meets experience requirements for a vacancy. Occasional contracts require a minimum of 2 years of related work experience.",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "int",
+          "description": "The user ID."
+        },
+        {
+          "name": "vacancyid",
+          "type": "int",
+          "description": "The vacancy ID."
+        }
+      ],
+      "return_type": "array",
+      "return_description": "Array with keys 'meets_requirements' (bool) and 'reason' (string|null)."
+    },
+    {
+      "name": "local_jobboard_get_iser_exempted_doctypes",
+      "line_start": 762,
+      "description": "Get the default document types to be exempted for ISER historic personnel.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "Array of document type codes."
+    },
+    {
+      "name": "local_jobboard_get_user_exemption",
+      "line_start": 778,
+      "description": "Check if user has an active ISER exemption.",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "int|null",
+          "default": "null",
+          "description": "User ID or null for current user."
+        }
+      ],
+      "return_type": "stdClass|false",
+      "return_description": "Exemption record or false."
+    },
+    {
+      "name": "local_jobboard_get_user_age",
+      "line_start": 801,
+      "description": "Get user's age in years based on birthdate.",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "int|null",
+          "default": "null",
+          "description": "User ID or null for current user."
+        }
+      ],
+      "return_type": "int|null",
+      "return_description": "Age in years or null if birthdate not set."
+    },
+    {
+      "name": "local_jobboard_get_all_doctypes",
+      "line_start": 856,
+      "description": "Get all enabled document types.",
+      "parameters": [],
+      "return_type": "array",
+      "return_description": "Array of document type objects."
+    },
+    {
+      "name": "local_jobboard_get_required_doctypes_for_applicant",
+      "line_start": 877,
+      "description": "Get required document types for an applicant based on their profile. This function filters document types based on: Gender condition (e.g., libreta_militar only for men), Profession exemptions (e.g., tarjeta_profesional not for licenciados), ISER exemption status (documents already in file for previous ISER employees), and Age exemption (e.g., libreta_militar exempt for 50+ years).",
+      "parameters": [
+        {
+          "name": "gender",
+          "type": "string|null",
+          "default": "null",
+          "description": "The applicant's gender (M, F, O, N)."
+        },
+        {
+          "name": "educationlevel",
+          "type": "string|null",
+          "default": "null",
+          "description": "DEPRECATED - No longer used. Kept for backward compatibility."
+        },
+        {
+          "name": "isiserexempted",
+          "type": "bool",
+          "default": "false",
+          "description": "Whether the applicant is ISER exempted."
+        },
+        {
+          "name": "userage",
+          "type": "int|null",
+          "default": "null",
+          "description": "The applicant's age in years (for age exemptions)."
+        }
+      ],
+      "return_type": "array",
+      "return_description": "Array of document type objects that are required for this applicant."
+    },
+    {
+      "name": "local_jobboard_get_doctypes_by_category",
+      "line_start": 938,
+      "description": "Get document types grouped by category.",
+      "parameters": [
+        {
+          "name": "gender",
+          "type": "string|null",
+          "default": "null",
+          "description": "The applicant's gender for filtering."
+        },
+        {
+          "name": "educationlevel",
+          "type": "string|null",
+          "default": "null",
+          "description": "The applicant's education level for filtering."
+        },
+        {
+          "name": "isiserexempted",
+          "type": "bool",
+          "default": "false",
+          "description": "Whether the applicant is ISER exempted."
+        },
+        {
+          "name": "userage",
+          "type": "int|null",
+          "default": "null",
+          "description": "The applicant's age in years (for age exemptions)."
+        }
+      ],
+      "return_type": "array",
+      "return_description": "Associative array of category => doctypes."
+    },
+    {
+      "name": "local_jobboard_get_category_name",
+      "line_start": 979,
+      "description": "Get the localized category name for a document category.",
+      "parameters": [
+        {
+          "name": "category",
+          "type": "string",
+          "description": "The category code."
+        }
+      ],
+      "return_type": "string",
+      "return_description": "The localized category name."
+    },
+    {
+      "name": "local_jobboard_is_document_required",
+      "line_start": 997,
+      "description": "Check if a specific document is required for an applicant.",
+      "parameters": [
+        {
+          "name": "doccode",
+          "type": "string",
+          "description": "The document type code."
+        },
+        {
+          "name": "gender",
+          "type": "string|null",
+          "default": "null",
+          "description": "The applicant's gender."
+        },
+        {
+          "name": "educationlevel",
+          "type": "string|null",
+          "default": "null",
+          "description": "The applicant's education level."
+        },
+        {
+          "name": "isiserexempted",
+          "type": "bool",
+          "default": "false",
+          "description": "Whether the applicant is ISER exempted."
+        },
+        {
+          "name": "userage",
+          "type": "int|null",
+          "default": "null",
+          "description": "The applicant's age in years."
+        }
+      ],
+      "return_type": "bool",
+      "return_description": "True if the document is required."
+    },
+    {
+      "name": "local_jobboard_get_dashboard_stats",
+      "line_start": 1016,
+      "description": "Get dashboard statistics for the current user.",
+      "parameters": [
+        {
+          "name": "userid",
+          "type": "int",
+          "description": "The user ID."
+        },
+        {
+          "name": "isadmin",
+          "type": "bool",
+          "default": "false",
+          "description": "Whether the user is an admin."
+        },
+        {
+          "name": "isreviewer",
+          "type": "bool",
+          "default": "false",
+          "description": "Whether the user is a reviewer."
+        }
+      ],
+      "return_type": "array",
+      "return_description": "Statistics array containing metrics such as active_convocatorias, published_vacancies, total_applications, pending_reviews, my_pending_reviews, my_applications, available_vacancies, pending_docs, and recent_activity."
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "plugin": "report_platform_usage",
+  "tablas": [
+    {
+      "nombre": "report_platform_usage_ded",
+      "nombre_completo": "mdl_report_platform_usage_ded",
+      "proposito": "Almacena datos pre-calculados de tiempo de dedicación para generación rápida de informes",
+      "descripcion": "Tabla que guarda sesiones de dedicación calculadas por la tarea programada. Evita el cálculo en tiempo real para mejorar el rendimiento.",
+      "campos": [
+        {
+          "nombre": "id",
+          "tipo": "int(10)",
+          "descripcion": "Identificador único del registro",
+          "clave_primaria": true,
+          "autoincremental": true
+        },
+        {
+          "nombre": "userid",
+          "tipo": "int(10)",
+          "descripcion": "ID del usuario",
+          "requerido": true,
+          "valor_defecto": "0",
+          "referencia": "Tabla user"
+        },
+        {
+          "nombre": "courseid",
+          "tipo": "int(10)",
+          "descripcion": "ID del curso",
+          "requerido": true,
+          "valor_defecto": "0",
+          "referencia": "Tabla course"
+        },
+        {
+          "nombre": "timespent",
+          "tipo": "int(10)",
+          "descripcion": "Tiempo dedicado en segundos durante la sesión",
+          "requerido": true,
+          "valor_defecto": "0"
+        },
+        {
+          "nombre": "timestart",
+          "tipo": "int(10)",
+          "descripcion": "Timestamp de inicio de la sesión",
+          "requerido": true,
+          "valor_defecto": "0"
+        }
+      ],
+      "indices": [
+        {
+          "nombre": "userid",
+          "tipo": "INDEX",
+          "campos": ["userid"],
+          "descripcion": "Índice para búsquedas por usuario"
+        },
+        {
+          "nombre": "courseid",
+          "tipo": "INDEX",
+          "campos": ["courseid"],
+          "descripcion": "Índice para búsquedas por curso"
+        },
+        {
+          "nombre": "courseid_userid",
+          "tipo": "INDEX",
+          "campos": ["courseid", "userid"],
+          "descripcion": "Índice compuesto para búsquedas por curso y usuario"
+        },
+        {
+          "nombre": "timestart",
+          "tipo": "INDEX",
+          "campos": ["timestart"],
+          "descripcion": "Índice para filtrado por fecha"
+        }
+      ],
+      "uso": "Almacena sesiones pre-calculadas por la tarea dedication_collector que se ejecuta cada noche. Permite consultas rápidas de dedicación sin procesar logs en tiempo real."
+    }
+  ],
+  "notas": [
+    "La tabla es poblada por la tarea programada dedication_collector",
+    "Los datos se calculan a partir de logstore_standard_log",
+    "Se utiliza un algoritmo de sesiones basado en límites de tiempo configurables",
+    "El plugin también puede usar la tabla block_dedication si existe como respaldo"
+  ]
+}

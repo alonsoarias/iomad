@@ -1,0 +1,458 @@
+{
+  "clase": "vacancy",
+  "namespace": "local_jobboard",
+  "archivo": "local/jobboard/classes/vacancy.php",
+  "descripcion": "Clase para gestionar vacantes/convocatorias laborales en el sistema",
+  "constantes": {
+    "estados_vacante": [
+      {
+        "nombre": "STATUS_DRAFT",
+        "valor": "draft",
+        "descripcion": "Vacante en estado borrador, aún no publicada"
+      },
+      {
+        "nombre": "STATUS_OPEN",
+        "valor": "open",
+        "descripcion": "Vacante abierta y disponible para postulaciones"
+      },
+      {
+        "nombre": "STATUS_CLOSED",
+        "valor": "closed",
+        "descripcion": "Vacante cerrada, no acepta más postulaciones"
+      },
+      {
+        "nombre": "STATUS_CANCELLED",
+        "valor": "cancelled",
+        "descripcion": "Vacante cancelada"
+      },
+      {
+        "nombre": "STATUS_FILLED",
+        "valor": "filled",
+        "descripcion": "Vacante completada, posición llenada"
+      }
+    ],
+    "tipos_contrato": [
+      {
+        "nombre": "CONTRACT_FULLTIME",
+        "valor": "fulltime",
+        "descripcion": "Contrato a tiempo completo"
+      },
+      {
+        "nombre": "CONTRACT_PARTTIME",
+        "valor": "parttime",
+        "descripcion": "Contrato a tiempo parcial"
+      },
+      {
+        "nombre": "CONTRACT_TEMPORAL",
+        "valor": "temporal",
+        "descripcion": "Contrato temporal"
+      },
+      {
+        "nombre": "CONTRACT_PRESTACION",
+        "valor": "prestacion_servicios",
+        "descripcion": "Prestación de servicios"
+      }
+    ],
+    "visibilidad": [
+      {
+        "nombre": "VISIBILITY_PUBLIC",
+        "valor": "public",
+        "descripcion": "Visible para todos los usuarios"
+      },
+      {
+        "nombre": "VISIBILITY_INTERNAL",
+        "valor": "internal",
+        "descripcion": "Visible solo para usuarios internos de la compañía"
+      },
+      {
+        "nombre": "VISIBILITY_PRIVATE",
+        "valor": "private",
+        "descripcion": "Visible solo para usuarios específicos"
+      }
+    ]
+  },
+  "propiedades": [
+    {
+      "nombre": "id",
+      "tipo": "int",
+      "descripcion": "ID único de la vacante"
+    },
+    {
+      "nombre": "code",
+      "tipo": "string",
+      "descripcion": "Código único de la vacante (generado automáticamente)"
+    },
+    {
+      "nombre": "title",
+      "tipo": "string",
+      "descripcion": "Título de la vacante"
+    },
+    {
+      "nombre": "description",
+      "tipo": "string",
+      "descripcion": "Descripción completa de la vacante"
+    },
+    {
+      "nombre": "requirements",
+      "tipo": "string",
+      "descripcion": "Requisitos para aplicar"
+    },
+    {
+      "nombre": "responsibilities",
+      "tipo": "string",
+      "descripcion": "Responsabilidades del cargo"
+    },
+    {
+      "nombre": "benefits",
+      "tipo": "string",
+      "descripcion": "Beneficios ofrecidos"
+    },
+    {
+      "nombre": "companyid",
+      "tipo": "int",
+      "descripcion": "ID de la compañía (IOMAD multi-tenant)"
+    },
+    {
+      "nombre": "categoryid",
+      "tipo": "int",
+      "descripcion": "ID de categoría del curso (programa académico)"
+    },
+    {
+      "nombre": "status",
+      "tipo": "string",
+      "descripcion": "Estado actual de la vacante"
+    },
+    {
+      "nombre": "contracttype",
+      "tipo": "string",
+      "descripcion": "Tipo de contrato"
+    },
+    {
+      "nombre": "location",
+      "tipo": "string",
+      "descripcion": "Ubicación del trabajo"
+    },
+    {
+      "nombre": "salary",
+      "tipo": "string|null",
+      "descripcion": "Rango salarial (opcional)"
+    },
+    {
+      "nombre": "positions",
+      "tipo": "int",
+      "descripcion": "Número de posiciones disponibles"
+    },
+    {
+      "nombre": "opendate",
+      "tipo": "int",
+      "descripcion": "Timestamp de apertura de la vacante"
+    },
+    {
+      "nombre": "closedate",
+      "tipo": "int",
+      "descripcion": "Timestamp de cierre de la vacante"
+    },
+    {
+      "nombre": "visibility",
+      "tipo": "string",
+      "descripcion": "Nivel de visibilidad de la vacante"
+    },
+    {
+      "nombre": "featured",
+      "tipo": "bool",
+      "descripcion": "Si la vacante es destacada"
+    },
+    {
+      "nombre": "createdby",
+      "tipo": "int",
+      "descripcion": "ID del usuario que creó la vacante"
+    },
+    {
+      "nombre": "timecreated",
+      "tipo": "int",
+      "descripcion": "Timestamp de creación"
+    },
+    {
+      "nombre": "timemodified",
+      "tipo": "int",
+      "descripcion": "Timestamp de última modificación"
+    }
+  ],
+  "metodos_publicos": [
+    {
+      "nombre": "__construct",
+      "parametros": [
+        {
+          "nombre": "record",
+          "tipo": "object",
+          "descripcion": "Registro de base de datos"
+        }
+      ],
+      "retorno": "void",
+      "descripcion": "Constructor que inicializa la vacante desde un registro de BD"
+    },
+    {
+      "nombre": "get",
+      "parametros": [
+        {
+          "nombre": "id",
+          "tipo": "int",
+          "descripcion": "ID de la vacante"
+        }
+      ],
+      "retorno": "self|null",
+      "descripcion": "Obtiene una vacante por su ID",
+      "estatico": true
+    },
+    {
+      "nombre": "get_by_code",
+      "parametros": [
+        {
+          "nombre": "code",
+          "tipo": "string",
+          "descripcion": "Código de la vacante"
+        }
+      ],
+      "retorno": "self|null",
+      "descripcion": "Obtiene una vacante por su código único",
+      "estatico": true
+    },
+    {
+      "nombre": "create",
+      "parametros": [
+        {
+          "nombre": "data",
+          "tipo": "object",
+          "descripcion": "Datos de la nueva vacante"
+        }
+      ],
+      "retorno": "self",
+      "descripcion": "Crea una nueva vacante con código autogenerado",
+      "estatico": true
+    },
+    {
+      "nombre": "update",
+      "parametros": [
+        {
+          "nombre": "data",
+          "tipo": "object",
+          "descripcion": "Datos a actualizar"
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Actualiza los datos de la vacante"
+    },
+    {
+      "nombre": "delete",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Elimina la vacante (soft delete, marca como cancelada)"
+    },
+    {
+      "nombre": "change_status",
+      "parametros": [
+        {
+          "nombre": "newstatus",
+          "tipo": "string",
+          "descripcion": "Nuevo estado"
+        },
+        {
+          "nombre": "notes",
+          "tipo": "string",
+          "descripcion": "Notas opcionales",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Cambia el estado de la vacante con validación de transiciones"
+    },
+    {
+      "nombre": "publish",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Publica la vacante (cambia de draft a open)"
+    },
+    {
+      "nombre": "close",
+      "parametros": [
+        {
+          "nombre": "reason",
+          "tipo": "string",
+          "descripcion": "Razón del cierre",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Cierra la vacante"
+    },
+    {
+      "nombre": "reopen",
+      "parametros": [
+        {
+          "nombre": "newclosedate",
+          "tipo": "int",
+          "descripcion": "Nueva fecha de cierre",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Reabre una vacante cerrada"
+    },
+    {
+      "nombre": "mark_filled",
+      "parametros": [
+        {
+          "nombre": "applicationid",
+          "tipo": "int",
+          "descripcion": "ID de la postulación seleccionada",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Marca la vacante como completada/llenada"
+    },
+    {
+      "nombre": "can_apply",
+      "parametros": [
+        {
+          "nombre": "userid",
+          "tipo": "int",
+          "descripcion": "ID del usuario",
+          "opcional": true
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Verifica si un usuario puede aplicar (retorna array con 'can' y 'reason')"
+    },
+    {
+      "nombre": "is_open",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Verifica si la vacante está abierta para postulaciones"
+    },
+    {
+      "nombre": "is_closing_soon",
+      "parametros": [
+        {
+          "nombre": "days",
+          "tipo": "int",
+          "descripcion": "Días de anticipación",
+          "default": 3
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Verifica si la vacante está por cerrar pronto"
+    },
+    {
+      "nombre": "get_applications_count",
+      "parametros": [
+        {
+          "nombre": "status",
+          "tipo": "string|null",
+          "descripcion": "Filtrar por estado específico",
+          "opcional": true
+        }
+      ],
+      "retorno": "int",
+      "descripcion": "Obtiene el número de postulaciones a la vacante"
+    },
+    {
+      "nombre": "get_applications",
+      "parametros": [
+        {
+          "nombre": "filters",
+          "tipo": "array",
+          "descripcion": "Filtros adicionales",
+          "default": "[]"
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene las postulaciones de la vacante"
+    },
+    {
+      "nombre": "get_list",
+      "parametros": [
+        {
+          "nombre": "filters",
+          "tipo": "array",
+          "descripcion": "Filtros de búsqueda",
+          "default": "[]"
+        },
+        {
+          "nombre": "sort",
+          "tipo": "string",
+          "descripcion": "Campo de ordenamiento",
+          "default": "timecreated"
+        },
+        {
+          "nombre": "order",
+          "tipo": "string",
+          "descripcion": "Orden ASC/DESC",
+          "default": "DESC"
+        },
+        {
+          "nombre": "page",
+          "tipo": "int",
+          "descripcion": "Número de página",
+          "default": "0"
+        },
+        {
+          "nombre": "perpage",
+          "tipo": "int",
+          "descripcion": "Registros por página",
+          "default": "20"
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene listado de vacantes con filtros y paginación",
+      "estatico": true
+    },
+    {
+      "nombre": "get_featured",
+      "parametros": [
+        {
+          "nombre": "limit",
+          "tipo": "int",
+          "descripcion": "Número máximo de vacantes",
+          "default": "5"
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene vacantes destacadas",
+      "estatico": true
+    },
+    {
+      "nombre": "get_statistics",
+      "parametros": [],
+      "retorno": "array",
+      "descripcion": "Obtiene estadísticas de la vacante (postulaciones por estado)"
+    },
+    {
+      "nombre": "duplicate",
+      "parametros": [
+        {
+          "nombre": "newtitle",
+          "tipo": "string",
+          "descripcion": "Título para la nueva vacante",
+          "opcional": true
+        }
+      ],
+      "retorno": "self",
+      "descripcion": "Duplica la vacante creando una copia en estado draft"
+    }
+  ],
+  "metodos_privados": [
+    {
+      "nombre": "generate_code",
+      "descripcion": "Genera un código único para la vacante"
+    },
+    {
+      "nombre": "validate_status_transition",
+      "descripcion": "Valida que la transición de estado sea permitida"
+    },
+    {
+      "nombre": "log_status_change",
+      "descripcion": "Registra el cambio de estado en audit log"
+    }
+  ]
+}

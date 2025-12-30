@@ -1,0 +1,56 @@
+{
+  "plugin": "local_jobboard",
+  "total_services": 5,
+  "services": [
+    {
+      "function_name": "local_jobboard_validate_document",
+      "classname": "local_jobboard\\external\\validate_document",
+      "methodname": "execute",
+      "description": "Validar (aprobar) un documento en una postulación",
+      "type": "write",
+      "ajax": true,
+      "capabilities": "local/jobboard:reviewdocuments",
+      "login_required": true
+    },
+    {
+      "function_name": "local_jobboard_reject_document",
+      "classname": "local_jobboard\\external\\reject_document",
+      "methodname": "execute",
+      "description": "Rechazar un documento en una postulación con una razón",
+      "type": "write",
+      "ajax": true,
+      "capabilities": "local/jobboard:reviewdocuments",
+      "login_required": true
+    },
+    {
+      "function_name": "local_jobboard_save_document_observations",
+      "classname": "local_jobboard\\external\\save_document_observations",
+      "methodname": "execute",
+      "description": "Guardar observaciones para documentos en una postulación",
+      "type": "write",
+      "ajax": true,
+      "capabilities": "local/jobboard:reviewdocuments",
+      "login_required": true
+    },
+    {
+      "function_name": "local_jobboard_send_observations_email",
+      "classname": "local_jobboard\\external\\send_observations_email",
+      "methodname": "execute",
+      "description": "Enviar correo electrónico con observaciones de documentos al postulante",
+      "type": "write",
+      "ajax": true,
+      "capabilities": "local/jobboard:reviewdocuments",
+      "login_required": true
+    },
+    {
+      "function_name": "local_jobboard_get_next_document",
+      "classname": "local_jobboard\\external\\get_next_document",
+      "methodname": "execute",
+      "description": "Obtener el siguiente documento pendiente de revisión en una postulación",
+      "type": "read",
+      "ajax": true,
+      "capabilities": "local/jobboard:reviewdocuments",
+      "login_required": true
+    }
+  ]
+}

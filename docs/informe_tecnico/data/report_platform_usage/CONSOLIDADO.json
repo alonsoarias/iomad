@@ -1,0 +1,728 @@
+{
+  "meta": {
+    "fecha_analisis": "2025-12-30",
+    "plugin_analizado": "report_platform_usage",
+    "ubicacion": "/home/user/iomad/report/platform_usage/",
+    "version_analizada": "3.2.0 (Build: 20251204)",
+    "archivos_generados": [
+      "version_info.json",
+      "db_tables.json",
+      "capabilities.json",
+      "lib_functions.json",
+      "classes.json",
+      "pages.json",
+      "settings.json",
+      "templates_lang.json"
+    ]
+  },
+
+  "resumen_ejecutivo": {
+    "nombre_plugin": "Platform Usage Report",
+    "tipo": "Plugin de informe (report)",
+    "version": "3.2.0 (Build: 20251204)",
+    "proposito": "Informe avanzado de análisis de uso de la plataforma Moodle con métricas de accesos, dedicación, actividad de usuarios y completaciones de cursos",
+    "caracteristicas_destacadas": [
+      "Dashboard interactivo con gráficos de tendencias",
+      "Cálculo de tiempo de dedicación real basado en logs",
+      "Soporte para contexto dual (plataforma completa y curso individual)",
+      "Integración con IOMAD para filtrado por empresas",
+      "Sistema de caché MUC para alto rendimiento",
+      "Exportación avanzada a Excel con gráficos",
+      "Tarea programada para pre-cálculo de dedicación",
+      "Interfaz AJAX para actualización dinámica"
+    ],
+    "audiencia_objetivo": [
+      "Administradores de plataforma",
+      "Coordinadores académicos",
+      "Profesores editores",
+      "Gestores de empresas (en entornos IOMAD)"
+    ],
+    "dependencias": {
+      "moodle_minimo": "Moodle 4.5 (2024100700)",
+      "tabla_logs": "logstore_standard_log (requerida)",
+      "iomad": "Opcional - si está instalado habilita filtrado por empresas",
+      "block_dedication": "Opcional - puede usar sus datos si existen"
+    }
+  },
+
+  "informacion_version": {
+    "plugin": "report_platform_usage",
+    "component": "report_platform_usage",
+    "version_numero": "2025120400",
+    "version_release": "3.2.0 (Build: 20251204)",
+    "fecha_build": "2025-12-04",
+    "moodle_requerido": "2024100700",
+    "madurez": "MATURITY_STABLE",
+    "copyright": "2024 IOMAD",
+    "licencia": "GNU GPL v3 or later"
+  },
+
+  "arquitectura_base_datos": {
+    "tablas_propias": [
+      {
+        "nombre": "report_platform_usage_ded",
+        "proposito": "Almacenamiento de datos pre-calculados de dedicación",
+        "registros_tipo": "Sesiones de usuario por curso con tiempo dedicado",
+        "poblada_por": "Tarea programada dedication_collector",
+        "frecuencia_actualizacion": "Diaria (01:30 AM)",
+        "campos_clave": [
+          "id - Identificador único",
+          "userid - ID del usuario",
+          "courseid - ID del curso",
+          "timespent - Tiempo en segundos",
+          "timestart - Inicio de sesión"
+        ],
+        "indices": [
+          "userid - Búsqueda por usuario",
+          "courseid - Búsqueda por curso",
+          "courseid_userid - Búsqueda combinada",
+          "timestart - Filtrado por fecha"
+        ]
+      }
+    ],
+    "tablas_externas_usadas": [
+      "logstore_standard_log - Logs de eventos del sistema (principal fuente de datos)",
+      "user - Información de usuarios",
+      "course - Información de cursos",
+      "course_completions - Datos de completación de cursos",
+      "course_modules - Módulos de actividades",
+      "enrol - Métodos de matriculación",
+      "user_enrolments - Matriculaciones de usuarios",
+      "company - Empresas IOMAD (opcional)",
+      "company_users - Relación usuario-empresa IOMAD (opcional)",
+      "block_dedication - Datos del bloque de dedicación (opcional)"
+    ]
+  },
+
+  "seguridad_permisos": {
+    "capabilities": [
+      {
+        "nombre": "report/platform_usage:view",
+        "tipo": "read",
+        "nivel": "CONTEXT_COURSE",
+        "proposito": "Ver el informe",
+        "roles_defecto": ["manager", "editingteacher"],
+        "usado_en": ["index.php", "ajax.php"]
+      },
+      {
+        "nombre": "report/platform_usage:export",
+        "tipo": "read",
+        "nivel": "CONTEXT_COURSE",
+        "proposito": "Exportar datos del informe",
+        "roles_defecto": ["manager", "editingteacher"],
+        "usado_en": ["export.php"],
+        "proteccion_adicional": "Requiere sesskey válido"
+      }
+    ],
+    "validaciones_seguridad": [
+      "require_login() - Autenticación obligatoria",
+      "require_capability() - Verificación de permisos",
+      "require_sesskey() - Protección CSRF en exportaciones",
+      "optional_param() con tipos PARAM_* - Sanitización de entrada",
+      "Verificación de contexto apropiado (sistema o curso)"
+    ]
+  },
+
+  "arquitectura_clases": {
+    "clases_principales": [
+      {
+        "nombre": "report",
+        "responsabilidad": "Lógica de negocio y obtención de datos",
+        "patron": "Data Access Object + Service Layer",
+        "caracteristicas": [
+          "Sistema de caché integrado",
+          "Soporte para dos contextos (plataforma/curso)",
+          "Integración IOMAD opcional",
+          "Métodos públicos para cada métrica",
+          "Métodos protegidos para cálculos complejos"
+        ],
+        "metricas_proporcionadas": [
+          "Resumen de logins/accesos",
+          "Actividad de usuarios",
+          "Cursos más accedidos",
+          "Actividades más usadas",
+          "Completaciones de cursos",
+          "Tiempo de dedicación",
+          "Tendencias diarias",
+          "Estadísticas de curso específico"
+        ]
+      },
+      {
+        "nombre": "exporter",
+        "responsabilidad": "Exportación de datos a CSV/Excel",
+        "tipos_exportacion": [
+          "summary - Resumen completo",
+          "logins - Datos de acceso",
+          "courses - Información de cursos",
+          "users - Detalles de usuarios",
+          "daily - Estadísticas diarias",
+          "dedication - Dedicación por curso",
+          "activities - Acceso a actividades",
+          "dailyusers - Usuarios únicos diarios"
+        ]
+      },
+      {
+        "nombre": "excel_exporter",
+        "responsabilidad": "Exportación avanzada con gráficos",
+        "caracteristicas": [
+          "Generación de gráficos en Excel",
+          "Formato profesional con estilos",
+          "Múltiples hojas de trabajo",
+          "Solo para exportación tipo 'summary'"
+        ]
+      },
+      {
+        "nombre": "dedication_collector",
+        "responsabilidad": "Tarea programada de pre-cálculo",
+        "tipo": "Scheduled Task",
+        "funcionamiento": [
+          "Se ejecuta diariamente a las 01:30",
+          "Procesa logs desde última ejecución",
+          "Calcula sesiones por curso y usuario",
+          "Almacena en report_platform_usage_ded",
+          "Procesa en chunks semanales para optimizar memoria"
+        ],
+        "algoritmo_sesiones": [
+          "Agrupa eventos por curso y usuario",
+          "Aplica límite de sesión (defecto: 1 hora)",
+          "Filtra sesiones menores al mínimo (defecto: 1 minuto)",
+          "Calcula duración entre primer y último evento de sesión"
+        ]
+      },
+      {
+        "nombre": "provider",
+        "responsabilidad": "Cumplimiento GDPR",
+        "tipo": "Privacy Provider",
+        "implementacion": "null_provider",
+        "razon": "No almacena datos personales propios, solo lee de otras tablas"
+      }
+    ]
+  },
+
+  "interfaz_usuario": {
+    "paginas": [
+      {
+        "archivo": "index.php",
+        "ruta": "/report/platform_usage/index.php",
+        "proposito": "Dashboard principal del informe",
+        "componentes": [
+          "Filtros de fecha y empresa",
+          "Tarjetas de métricas clave",
+          "Gráficos de tendencias (Chart.js)",
+          "Tablas de top cursos/actividades",
+          "Botones de exportación"
+        ],
+        "modos": [
+          "Modo plataforma (courseid=0) - Vista global",
+          "Modo curso (courseid>0) - Vista específica de curso"
+        ]
+      },
+      {
+        "archivo": "ajax.php",
+        "ruta": "/report/platform_usage/ajax.php",
+        "proposito": "Endpoint JSON para actualización dinámica",
+        "retorna": "Objeto JSON con todas las métricas",
+        "uso": "Actualiza dashboard cuando cambian filtros sin recargar página"
+      },
+      {
+        "archivo": "export.php",
+        "ruta": "/report/platform_usage/export.php",
+        "proposito": "Descarga de datos en Excel/CSV",
+        "formatos": ["Excel (.xlsx)", "CSV"],
+        "proteccion": "Requiere sesskey para prevenir CSRF"
+      }
+    ],
+    "tecnologias_frontend": [
+      "JavaScript para interactividad AJAX",
+      "Chart.js para gráficos",
+      "CSS personalizado (styles.css)",
+      "Bootstrap de Moodle para layout responsive"
+    ]
+  },
+
+  "configuracion_administracion": {
+    "ubicacion_menu": "Administración del sitio > Informes > Platform Usage Report",
+    "parametros_configurables": [
+      {
+        "nombre": "session_limit",
+        "tipo": "Duración",
+        "defecto": "1 hora",
+        "proposito": "Límite de tiempo entre eventos para considerar misma sesión",
+        "impacto": "Alto - afecta cálculo de dedicación"
+      },
+      {
+        "nombre": "ignore_sessions_limit",
+        "tipo": "Duración",
+        "defecto": "1 minuto",
+        "proposito": "Duración mínima de sesión a contabilizar",
+        "impacto": "Medio - filtra sesiones muy cortas"
+      },
+      {
+        "nombre": "default_period",
+        "tipo": "Selección",
+        "defecto": "30 días",
+        "opciones": ["7 días", "30 días", "90 días", "365 días"],
+        "proposito": "Período predeterminado al abrir el informe",
+        "impacto": "Bajo - solo afecta vista inicial"
+      },
+      {
+        "nombre": "top_items_limit",
+        "tipo": "Número",
+        "defecto": 10,
+        "proposito": "Cantidad de elementos en listas de 'top'",
+        "impacto": "Bajo - afecta visualización"
+      },
+      {
+        "nombre": "enable_cache",
+        "tipo": "Checkbox",
+        "defecto": "Habilitado",
+        "proposito": "Activar/desactivar sistema de caché",
+        "impacto": "Alto - afecta rendimiento significativamente"
+      }
+    ]
+  },
+
+  "sistema_cache": {
+    "definiciones": [
+      {
+        "nombre": "reportdata",
+        "modo": "APPLICATION",
+        "ttl": "5 minutos (300 segundos)",
+        "proposito": "Cachear resultados de consultas de métricas",
+        "aceleracion_estatica": true,
+        "tamaño_aceleracion": 10
+      },
+      {
+        "nombre": "companyusers",
+        "modo": "APPLICATION",
+        "ttl": "10 minutos (600 segundos)",
+        "proposito": "Cachear listas de usuarios por empresa",
+        "aceleracion_estatica": true,
+        "tamaño_aceleracion": 50
+      }
+    ],
+    "estrategia": "Cache-aside pattern con lazy loading",
+    "invalidacion": "Por tiempo (TTL) o manual desde administración"
+  },
+
+  "integracion_sistema": {
+    "navegacion_moodle": {
+      "curso": {
+        "funcion": "report_platform_usage_extend_navigation_course",
+        "ubicacion": "Navegación del curso",
+        "texto": "Platform Usage Report"
+      },
+      "configuracion_curso": {
+        "funcion": "report_platform_usage_extend_settings_navigation",
+        "ubicacion": "Configuración > Informes",
+        "condicion": "Solo cursos (no sitio principal)"
+      },
+      "administracion": {
+        "ubicacion": "Administración > Informes",
+        "tipo": "admin_externalpage"
+      }
+    },
+    "integracion_iomad": {
+      "deteccion_automatica": "Verifica existencia de tablas 'company' y 'company_users'",
+      "funcionalidad": [
+        "Filtro de empresa en dashboard",
+        "Restringe usuarios a empresa seleccionada",
+        "Menú desplegable de empresas",
+        "Opción 'Todas las empresas'"
+      ],
+      "metodos": [
+        "is_iomad_installed() - Detección",
+        "get_companies() - Lista de empresas",
+        "get_company_name() - Nombre de empresa"
+      ]
+    }
+  },
+
+  "metricas_informes": {
+    "categorias": [
+      {
+        "nombre": "Acceso y Logins",
+        "metricas": [
+          "Total de logins/accesos en período",
+          "Usuarios únicos que accedieron",
+          "Promedio de logins por día",
+          "Promedio de logins por usuario",
+          "Tendencia diaria de logins",
+          "Usuarios únicos por día"
+        ],
+        "contexto": "En curso: mide accesos al curso. En plataforma: mide logins globales"
+      },
+      {
+        "nombre": "Actividad de Usuarios",
+        "metricas": [
+          "Total de usuarios",
+          "Usuarios activos (accedieron en período)",
+          "Usuarios inactivos",
+          "Detalles por usuario con último acceso"
+        ]
+      },
+      {
+        "nombre": "Uso de Cursos",
+        "metricas": [
+          "Top cursos por número de accesos",
+          "Usuarios únicos por curso",
+          "Tendencias de acceso a cursos",
+          "Último acceso a cada curso"
+        ],
+        "nota": "No aplica en modo curso individual"
+      },
+      {
+        "nombre": "Uso de Actividades",
+        "metricas": [
+          "Top actividades más accedidas",
+          "Tipo de actividad (foro, tarea, quiz, etc.)",
+          "Usuarios únicos que accedieron",
+          "Curso al que pertenece"
+        ]
+      },
+      {
+        "nombre": "Completaciones",
+        "metricas": [
+          "Total de completaciones en período",
+          "Cursos únicos completados",
+          "Promedio de completaciones por día",
+          "Tendencia de completaciones"
+        ]
+      },
+      {
+        "nombre": "Dedicación",
+        "metricas": [
+          "Tiempo total de dedicación por curso",
+          "Tiempo promedio por estudiante",
+          "Ranking de cursos por dedicación",
+          "Porcentaje de dedicación de cada curso"
+        ],
+        "fuente_datos": "Datos pre-calculados (preferido) o cálculo en tiempo real",
+        "algoritmo": "Basado en agrupación de eventos con límites de sesión"
+      },
+      {
+        "nombre": "Estadísticas de Curso (solo modo curso)",
+        "metricas": [
+          "Usuarios matriculados",
+          "Usuarios activos en período",
+          "Completaciones en período",
+          "Accesos totales",
+          "Dedicación total y promedio"
+        ]
+      }
+    ]
+  },
+
+  "flujo_datos": {
+    "obtencion_datos": [
+      "1. Usuario accede a index.php con parámetros de filtro",
+      "2. Se crea instancia de clase report con filtros",
+      "3. report verifica caché para cada métrica",
+      "4. Si no está en caché, ejecuta consultas SQL",
+      "5. Resultados se cachean con TTL apropiado",
+      "6. Datos se pasan a la vista para renderizar"
+    ],
+    "actualizacion_ajax": [
+      "1. Usuario cambia filtros en interfaz",
+      "2. JavaScript hace llamada a ajax.php",
+      "3. ajax.php crea nueva instancia de report",
+      "4. Retorna JSON con todas las métricas",
+      "5. JavaScript actualiza gráficos y tablas"
+    ],
+    "exportacion": [
+      "1. Usuario hace clic en botón de exportar",
+      "2. Se envía formulario con sesskey a export.php",
+      "3. export.php crea report sin caché (datos frescos)",
+      "4. Instancia exporter o excel_exporter según formato",
+      "5. Genera archivo y envía al navegador para descarga"
+    ],
+    "pre_calculo_dedicacion": [
+      "1. Tarea dedication_collector se ejecuta a las 01:30",
+      "2. Obtiene última fecha procesada",
+      "3. Consulta logs desde esa fecha hasta ahora",
+      "4. Procesa por chunks semanales",
+      "5. Calcula sesiones por usuario y curso",
+      "6. Inserta registros en report_platform_usage_ded",
+      "7. Actualiza marca de última ejecución"
+    ]
+  },
+
+  "algoritmo_dedicacion": {
+    "nombre": "Cálculo de sesiones basado en tiempo",
+    "descripcion": "Algoritmo que determina tiempo de dedicación analizando patrones de eventos en logs",
+    "pasos": [
+      "1. Obtener todos los eventos del usuario en el curso ordenados por tiempo",
+      "2. Inicializar primera sesión con primer evento",
+      "3. Para cada evento subsecuente:",
+      "   a. Calcular diferencia de tiempo con evento anterior",
+      "   b. Si diferencia > session_limit: finalizar sesión actual, iniciar nueva",
+      "   c. Si diferencia <= session_limit: mismo sesión continúa",
+      "4. Al finalizar sesión, calcular duración (último evento - primer evento)",
+      "5. Si duración >= ignore_sessions_limit: contabilizar sesión",
+      "6. Si duración < ignore_sessions_limit: descartar sesión (muy corta)",
+      "7. Sumar todas las sesiones válidas"
+    ],
+    "parametros": {
+      "session_limit": {
+        "descripcion": "Tiempo máximo de inactividad para considerar misma sesión",
+        "defecto": "3600 segundos (1 hora)",
+        "ajustable": true
+      },
+      "ignore_sessions_limit": {
+        "descripcion": "Duración mínima de sesión para contabilizar",
+        "defecto": "60 segundos (1 minuto)",
+        "ajustable": true
+      }
+    },
+    "ejemplo": {
+      "eventos": [
+        "10:00:00 - Usuario accede al curso",
+        "10:15:00 - Usuario accede a un recurso (diferencia: 15 min)",
+        "10:30:00 - Usuario completa una actividad (diferencia: 15 min)",
+        "12:00:00 - Usuario accede nuevamente (diferencia: 90 min > 1 hora)",
+        "12:10:00 - Usuario ve foro (diferencia: 10 min)"
+      ],
+      "resultado": [
+        "Sesión 1: 10:00 - 10:30 = 30 minutos",
+        "Sesión 2: 12:00 - 12:10 = 10 minutos",
+        "Total dedicación: 40 minutos"
+      ]
+    },
+    "optimizaciones": [
+      "Pre-cálculo nocturno para evitar procesamiento en tiempo real",
+      "Caché de resultados con TTL de 5 minutos",
+      "Uso de datos de block_dedication si están disponibles",
+      "Índices en base de datos para consultas rápidas"
+    ]
+  },
+
+  "internacionalizacion": {
+    "idiomas_soportados": ["English (en)", "Español (es)"],
+    "total_cadenas": "~100 cadenas de texto",
+    "categorias_cadenas": [
+      "Núcleo del plugin",
+      "Filtros y controles",
+      "Períodos de tiempo",
+      "Métricas de login",
+      "Métricas de usuario",
+      "Métricas de curso",
+      "Métricas de actividad",
+      "Dedicación",
+      "Completaciones",
+      "Exportación",
+      "Configuración",
+      "Privacidad"
+    ],
+    "metodo": "Sistema estándar de Moodle con get_string()",
+    "facilidad_traduccion": "Alta - estructura clara y bien organizada"
+  },
+
+  "rendimiento_escalabilidad": {
+    "optimizaciones": [
+      "Sistema de caché MUC con dos niveles (reportdata y companyusers)",
+      "Pre-cálculo de dedicación mediante tarea programada",
+      "Índices de base de datos en campos de búsqueda frecuente",
+      "Procesamiento en chunks para grandes volúmenes de datos",
+      "Lazy loading de datos (solo se calculan métricas solicitadas)",
+      "Aceleración estática de caché en memoria"
+    ],
+    "consideraciones_escalabilidad": [
+      "Tarea de dedicación procesa en chunks semanales",
+      "Límite configurable para listas de 'top'",
+      "Filtrado por fecha reduce conjunto de datos",
+      "En IOMAD, filtrado por empresa reduce scope",
+      "Caché previene recálculos frecuentes"
+    ],
+    "tiempos_cache": {
+      "datos_informe": "5 minutos",
+      "listas_usuarios": "10 minutos",
+      "razon": "Balance entre frescura de datos y rendimiento"
+    },
+    "carga_tarea_programada": {
+      "frecuencia": "Diaria a las 01:30 (horario de baja actividad)",
+      "duracion_estimada": "Variable según volumen de logs",
+      "impacto": "Bloqueante=false, no afecta otras tareas"
+    }
+  },
+
+  "casos_uso": [
+    {
+      "caso": "Administrador revisa uso general de plataforma",
+      "pasos": [
+        "1. Accede desde Administración > Informes > Platform Usage Report",
+        "2. Ve dashboard con métricas de últimos 30 días",
+        "3. Identifica cursos más populares y tendencias",
+        "4. Exporta informe completo para presentación"
+      ],
+      "beneficio": "Visión panorámica del uso de la plataforma"
+    },
+    {
+      "caso": "Profesor analiza actividad en su curso",
+      "pasos": [
+        "1. Entra al curso y va a Configuración > Informes > Platform Usage Report",
+        "2. Ve estadísticas específicas del curso",
+        "3. Identifica estudiantes activos vs inactivos",
+        "4. Revisa qué actividades son más accedidas",
+        "5. Exporta lista de usuarios con dedicación"
+      ],
+      "beneficio": "Comprensión del engagement estudiantil"
+    },
+    {
+      "caso": "Coordinador IOMAD analiza uso por empresa",
+      "pasos": [
+        "1. Accede al informe a nivel sistema",
+        "2. Selecciona empresa del filtro",
+        "3. Ajusta rango de fechas al mes actual",
+        "4. Revisa métricas específicas de esa empresa",
+        "5. Compara con otras empresas cambiando filtro"
+      ],
+      "beneficio": "Seguimiento por cliente/organización"
+    },
+    {
+      "caso": "Analista descarga datos para análisis externo",
+      "pasos": [
+        "1. Configura filtros deseados",
+        "2. Exporta cada tipo de dato (usuarios, cursos, daily)",
+        "3. Procesa archivos CSV en herramienta de análisis",
+        "4. Crea reportes personalizados"
+      ],
+      "beneficio": "Integración con herramientas de BI externas"
+    }
+  ],
+
+  "mantenimiento_desarrollo": {
+    "estructura_codigo": {
+      "organizacion": "Limpia y bien documentada",
+      "patron": "Separación de responsabilidades clara",
+      "comentarios": "Docblocks completos en todas las funciones",
+      "estandar": "Cumple coding style de Moodle"
+    },
+    "extensibilidad": [
+      "Métodos protegidos permiten herencia",
+      "Sistema de caché configurable",
+      "Fácil agregar nuevas métricas",
+      "Nuevos tipos de exportación mediante extend de exporter",
+      "Hooks de navegación estándar de Moodle"
+    ],
+    "testing": {
+      "recomendaciones": [
+        "Probar con grandes volúmenes de datos",
+        "Verificar rendimiento de caché",
+        "Testear en entorno con/sin IOMAD",
+        "Validar cálculos de dedicación",
+        "Probar exportaciones con diferentes filtros"
+      ]
+    },
+    "debugging": [
+      "Deshabilitar caché para ver datos en tiempo real",
+      "Revisar logs de tarea programada (mtrace)",
+      "Validar configuración de session_limit",
+      "Verificar tablas de logs disponibles"
+    ]
+  },
+
+  "limitaciones_conocidas": [
+    "Depende de logstore_standard_log - no funciona con otros log stores",
+    "Cálculo de dedicación es estimación basada en eventos (no tiempo real de pantalla)",
+    "Sesiones muy largas sin interacción pueden sesgar métricas",
+    "En contexto de curso, algunas métricas no aplican (top cursos)",
+    "Excel con gráficos requiere class excel_exporter completa",
+    "No hay plantillas Mustache, interfaz en PHP/HTML tradicional"
+  ],
+
+  "mejores_practicas": {
+    "configuracion": [
+      "Ajustar session_limit según tipo de contenido del sitio",
+      "Mantener caché habilitado en producción",
+      "Configurar ignore_sessions_limit para filtrar ruido",
+      "Revisar ejecución de tarea programada regularmente"
+    ],
+    "uso": [
+      "Usar filtros de fecha para limitar volumen de datos",
+      "En sitios grandes, filtrar por empresa si usa IOMAD",
+      "Exportar datos regularmente para análisis histórico",
+      "Combinar vista de plataforma y curso para insights completos"
+    ],
+    "rendimiento": [
+      "Monitorear tamaño de report_platform_usage_ded",
+      "Considerar purgar datos antiguos periódicamente",
+      "Verificar que tarea programada complete exitosamente",
+      "Ajustar TTL de caché según necesidades"
+    ]
+  },
+
+  "comparacion_alternativas": {
+    "vs_informes_nativos_moodle": {
+      "ventajas": [
+        "Dashboard visual con gráficos",
+        "Cálculo de dedicación (no está en Moodle estándar)",
+        "Métricas agregadas en un solo lugar",
+        "Exportación avanzada con formato"
+      ],
+      "desventajas": [
+        "Instalación adicional requerida",
+        "Curva de aprendizaje",
+        "Requiere mantenimiento de tarea programada"
+      ]
+    },
+    "vs_block_dedication": {
+      "relacion": "Complementario - puede usar sus datos",
+      "ventajas_report": [
+        "Vista más amplia que un solo curso",
+        "Más métricas adicionales",
+        "Mejor exportación"
+      ],
+      "ventajas_block": [
+        "Visible dentro del curso",
+        "Más simple para usuarios finales"
+      ]
+    }
+  },
+
+  "roadmap_sugerencias": [
+    "Implementar plantillas Mustache para mejor separación vista/lógica",
+    "Añadir más tipos de gráficos (barras, pie, etc.)",
+    "Permitir comparación entre períodos",
+    "Dashboard personalizable por usuario",
+    "Exportación programada por email",
+    "API REST para integración con sistemas externos",
+    "Soporte para más log stores además de standard",
+    "Predictive analytics basado en tendencias",
+    "Alertas configurables (ej: baja actividad)"
+  ],
+
+  "documentacion_adicional": {
+    "archivos_referencia": [
+      "/home/user/iomad/report/platform_usage/README.md - Documentación del plugin",
+      "/home/user/iomad/report/platform_usage/version.php - Info de versión",
+      "/home/user/iomad/report/platform_usage/db/install.xml - Esquema de BD",
+      "/home/user/iomad/report/platform_usage/db/access.php - Permisos",
+      "/home/user/iomad/report/platform_usage/lang/en/ - Cadenas de idioma"
+    ],
+    "recursos_desarrollo": [
+      "Moodle Plugin Development Docs",
+      "Moodle Database Schema",
+      "Moodle Universal Cache (MUC) Docs",
+      "Moodle Scheduled Tasks Docs"
+    ]
+  },
+
+  "conclusiones": {
+    "fortalezas": [
+      "Plugin robusto y bien diseñado",
+      "Alto rendimiento con sistema de caché",
+      "Métricas completas y útiles",
+      "Buena integración con Moodle e IOMAD",
+      "Código limpio y mantenible",
+      "Exportaciones profesionales"
+    ],
+    "areas_mejora": [
+      "Modernizar frontend con plantillas Mustache",
+      "Añadir más visualizaciones",
+      "Documentación de usuario más extensa",
+      "Tests automatizados"
+    ],
+    "recomendacion_uso": "Altamente recomendado para sitios que necesiten análisis detallado de uso, especialmente en entornos corporativos con IOMAD",
+    "valor_agregado": "Proporciona insights que no están disponibles en Moodle estándar, particularmente el cálculo de dedicación real y visualizaciones agregadas"
+  }
+}

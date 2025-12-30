@@ -1,0 +1,204 @@
+{
+  "plugin": "local_platform_access",
+  "templates_mustache": {
+    "tiene_templates": false,
+    "directorio": null,
+    "descripcion": "El plugin no utiliza plantillas Mustache. Toda la interfaz se genera con formularios Moodle estándar y output HTML directo.",
+    "templates": []
+  },
+  "archivos_idioma": {
+    "directorio": "/home/user/iomad/local/platform_access/lang",
+    "idiomas_disponibles": [
+      {
+        "codigo": "en",
+        "nombre": "English",
+        "archivo": "/home/user/iomad/local/platform_access/lang/en/local_platform_access.php",
+        "total_cadenas": 101
+      },
+      {
+        "codigo": "es",
+        "nombre": "Español",
+        "archivo": "/home/user/iomad/local/platform_access/lang/es/local_platform_access.php",
+        "total_cadenas": 101
+      }
+    ],
+    "categorias_cadenas": [
+      {
+        "categoria": "Plugin y capacidades",
+        "cadenas": [
+          "pluginname",
+          "platform_access:generate",
+          "platform_access:view",
+          "privacy:metadata"
+        ],
+        "descripcion": "Nombre del plugin, capacidades y privacidad"
+      },
+      {
+        "categoria": "Formulario y acciones",
+        "cadenas": [
+          "generateaccess",
+          "generateaccessdesc",
+          "generatelogins",
+          "generatecourseaccess",
+          "generatebutton",
+          "confirmgenerate"
+        ],
+        "descripcion": "Títulos y descripciones del formulario principal"
+      },
+      {
+        "categoria": "Campos de configuración",
+        "cadenas": [
+          "company",
+          "company_help",
+          "accesstype",
+          "loginonly",
+          "courseonly",
+          "activityonly",
+          "all",
+          "all_access",
+          "cleanbeforegenerate",
+          "cleanbeforegenerate_help"
+        ],
+        "descripcion": "Campos y opciones del formulario"
+      },
+      {
+        "categoria": "Configuración de usuario",
+        "cadenas": [
+          "usersettings",
+          "updateusercreated",
+          "updateusercreated_help",
+          "usercreateddate",
+          "onlyactiveusers",
+          "includeadmins",
+          "includeguests"
+        ],
+        "descripcion": "Sección de configuración de usuarios"
+      },
+      {
+        "categoria": "Rango de fechas",
+        "cadenas": [
+          "daterange",
+          "datefrom",
+          "dateto",
+          "randomize",
+          "randomize_help"
+        ],
+        "descripcion": "Campos de configuración de fechas"
+      },
+      {
+        "categoria": "Contadores de acceso",
+        "cadenas": [
+          "accesscounts",
+          "loginsperuser",
+          "courseaccessperuser",
+          "activityaccesspercourse"
+        ],
+        "descripcion": "Configuración de rangos de generación"
+      },
+      {
+        "categoria": "Eventos avanzados",
+        "cadenas": [
+          "advancedevents",
+          "generatedashboard",
+          "generatedashboard_help",
+          "generatelogouts",
+          "generatelogouts_help",
+          "generatecompletions",
+          "generatecompletions_help",
+          "completionpercent"
+        ],
+        "descripcion": "Opciones de eventos avanzados"
+      },
+      {
+        "categoria": "Procesamiento y progreso",
+        "cadenas": [
+          "generating",
+          "processinguser"
+        ],
+        "descripcion": "Mensajes durante el procesamiento"
+      },
+      {
+        "categoria": "Resultados y estadísticas",
+        "cadenas": [
+          "summary",
+          "usersprocessed",
+          "usersupdated",
+          "userswithoutenrollments",
+          "recordsdeleted",
+          "loginsgenerated",
+          "courseaccessgenerated",
+          "activityaccessgenerated",
+          "dashboardaccessgenerated",
+          "logoutsgenerated",
+          "completionsgenerated",
+          "lastaccessupdated",
+          "timecompleted"
+        ],
+        "descripcion": "Estadísticas mostradas después de la generación"
+      },
+      {
+        "categoria": "Mensajes de estado",
+        "cadenas": [
+          "success",
+          "error",
+          "nousers",
+          "nocourses"
+        ],
+        "descripcion": "Mensajes de éxito, error y advertencia"
+      },
+      {
+        "categoria": "Validación",
+        "cadenas": [
+          "minmaxerror",
+          "percentageerror"
+        ],
+        "descripcion": "Mensajes de error de validación"
+      }
+    ],
+    "cadenas_principales": [
+      {
+        "clave": "pluginname",
+        "en": "Platform Access Generator",
+        "es": "Generador de Accesos a Plataforma"
+      },
+      {
+        "clave": "generateaccessdesc",
+        "en": "This tool generates login, course and activity access records for users in the platform. Select a company to generate access records for all its users and their enrolled courses.",
+        "es": "Esta herramienta genera registros de inicio de sesion, acceso a cursos y actividades para los usuarios de la plataforma. Seleccione una compania para generar registros de acceso para todos sus usuarios y los cursos en los que estan inscritos."
+      },
+      {
+        "clave": "company_help",
+        "en": "Select a company to generate access records for all its users. If you select \"All companies\", records will be generated for users from all companies in the system.",
+        "es": "Seleccione una compania para generar registros de acceso para todos sus usuarios. Si selecciona \"Todas las companias\", se generaran registros para usuarios de todas las companias del sistema."
+      },
+      {
+        "clave": "randomize_help",
+        "en": "When enabled, timestamps for login and course access records will be randomly distributed within the specified date range. When disabled, all records will use the end date.",
+        "es": "Cuando esta habilitado, las marcas de tiempo para los registros de inicio de sesion y acceso a cursos se distribuiran aleatoriamente dentro del rango de fechas especificado. Cuando esta deshabilitado, todos los registros usaran la fecha final."
+      },
+      {
+        "clave": "cleanbeforegenerate_help",
+        "en": "If enabled, all existing access records (logins, course views, activity views) for the selected users will be deleted before generating new records. This includes resetting user access fields (firstaccess, lastaccess, lastlogin, currentlogin).",
+        "es": "Si esta habilitado, todos los registros de acceso existentes (inicios de sesion, vistas de cursos, vistas de actividades) para los usuarios seleccionados seran eliminados antes de generar nuevos registros. Esto incluye restablecer los campos de acceso del usuario (firstaccess, lastaccess, lastlogin, currentlogin)."
+      }
+    ],
+    "caracteristicas_i18n": [
+      "Soporte completo bilingüe (inglés y español)",
+      "Todas las cadenas están completamente traducidas",
+      "Incluye textos de ayuda (help) para campos complejos",
+      "Mensajes claros para el usuario en ambos idiomas",
+      "Cadenas de privacidad para cumplimiento GDPR"
+    ]
+  },
+  "resumen": {
+    "usa_templates_mustache": false,
+    "total_idiomas": 2,
+    "total_cadenas_por_idioma": 101,
+    "idiomas": [
+      "English (en)",
+      "Español (es)"
+    ],
+    "cobertura_traduccion": "100%",
+    "metodo_interfaz": "Formularios Moodle estándar con output HTML directo"
+  }
+}

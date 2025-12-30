@@ -1,0 +1,358 @@
+{
+  "plugin": "local_platform_access",
+  "directorio": "/home/user/iomad/local/platform_access/classes",
+  "clases": [
+    {
+      "nombre": "generator",
+      "namespace": "local_platform_access",
+      "archivo": "/home/user/iomad/local/platform_access/classes/generator.php",
+      "descripcion": "Clase principal para generar registros de acceso con optimización de inserciones masivas en la base de datos",
+      "tipo": "Clase de servicio/generador",
+      "constantes": [
+        {
+          "nombre": "BATCH_SIZE",
+          "valor": 500,
+          "descripcion": "Tamaño del lote para inserciones masivas en BD"
+        }
+      ],
+      "propiedades_principales": [
+        "datefrom: Fecha inicial del rango de generación",
+        "dateto: Fecha final del rango de generación",
+        "loginsmin/loginsmax: Rango de inicios de sesión por usuario",
+        "courseaccessmin/courseaccessmax: Rango de accesos a cursos por usuario",
+        "activityaccessmin/activityaccessmax: Rango de accesos a actividades por curso",
+        "randomize: Si se aleatorizan las marcas de tiempo",
+        "includeadmins: Si se incluyen administradores",
+        "onlyactive: Si solo se procesan usuarios activos",
+        "accesstype: Tipo de acceso a generar (login/course/activity/all)",
+        "companyid: ID de la empresa (0 = todas)",
+        "cleanbeforegenerate: Si se limpian registros existentes antes de generar",
+        "generatedashboard: Si se generan accesos al dashboard",
+        "generatelogouts: Si se generan eventos de cierre de sesión",
+        "generatecompletions: Si se generan finalizaciones de cursos",
+        "stats: Array con estadísticas de generación"
+      ],
+      "buffers_optimizacion": [
+        "logbuffer: Buffer para registros de log (optimización de inserciones)",
+        "lastaccessbuffer: Buffer para actualizaciones de último acceso",
+        "completionbuffer: Buffer para finalizaciones de cursos",
+        "cmcompletionbuffer: Buffer para finalizaciones de actividades",
+        "cmviewedbuffer: Buffer para registros de visualizaciones"
+      ],
+      "caches": [
+        "userenrollmentscache: Cache de matriculaciones de usuarios",
+        "coursecontextscache: Cache de contextos de cursos",
+        "modulecontextscache: Cache de contextos de módulos",
+        "usercontextscache: Cache de contextos de usuarios"
+      ],
+      "metodos_principales": [
+        {
+          "nombre": "__construct",
+          "parametros": "array $options",
+          "descripcion": "Constructor que inicializa opciones de generación"
+        },
+        {
+          "nombre": "get_users",
+          "retorno": "array",
+          "descripcion": "Obtiene usuarios a procesar según filtros (empresa, activos, administradores)"
+        },
+        {
+          "nombre": "preload_user_enrollments",
+          "parametros": "array $userids",
+          "descripcion": "Pre-carga matriculaciones de usuarios para optimizar consultas"
+        },
+        {
+          "nombre": "clean_existing_records",
+          "parametros": "array $users",
+          "retorno": "int",
+          "descripcion": "Limpia registros existentes usando TRUNCATE para máxima velocidad"
+        },
+        {
+          "nombre": "run",
+          "parametros": "callable $progresscallback = null",
+          "retorno": "array",
+          "descripcion": "Ejecuta el proceso completo de generación con callbacks de progreso"
+        },
+        {
+          "nombre": "buffer_login_record",
+          "descripcion": "Genera y bufferiza registro de inicio de sesión"
+        },
+        {
+          "nombre": "buffer_dashboard_record",
+          "descripcion": "Genera y bufferiza registro de acceso al dashboard"
+        },
+        {
+          "nombre": "buffer_logout_record",
+          "descripcion": "Genera y bufferiza registro de cierre de sesión"
+        },
+        {
+          "nombre": "buffer_course_access_record",
+          "descripcion": "Genera y bufferiza registro de acceso a curso"
+        },
+        {
+          "nombre": "buffer_activity_access_record",
+          "descripcion": "Genera y bufferiza registro de acceso a actividad"
+        },
+        {
+          "nombre": "buffer_course_completion",
+          "descripcion": "Genera y bufferiza finalización de curso"
+        },
+        {
+          "nombre": "flush_log_buffer",
+          "descripcion": "Vacía buffer de logs a la base de datos usando insert_records"
+        },
+        {
+          "nombre": "flush_lastaccess_buffer",
+          "descripcion": "Vacía buffer de últimos accesos a la base de datos"
+        },
+        {
+          "nombre": "flush_completion_buffers",
+          "descripcion": "Vacía buffers de finalizaciones a la base de datos"
+        },
+        {
+          "nombre": "update_users_access_info",
+          "parametros": "array $users, array $logindata",
+          "descripcion": "Actualiza información de acceso de usuarios en masa"
+        },
+        {
+          "nombre": "get_stats",
+          "retorno": "array",
+          "descripcion": "Obtiene estadísticas de la generación"
+        }
+      ],
+      "metodos_estaticos": [
+        {
+          "nombre": "get_companies",
+          "retorno": "array",
+          "descripcion": "Obtiene todas las empresas no suspendidas del sistema IOMAD"
+        }
+      ],
+      "caracteristicas_optimizacion": [
+        "Inserciones masivas con lotes de 500 registros",
+        "Pre-carga de datos en memoria (enrollments, contexts)",
+        "Sistema de buffering para minimizar queries a BD",
+        "Uso de TRUNCATE en lugar de DELETE para limpieza rápida",
+        "Cache de contextos para evitar consultas repetidas",
+        "Verificación de existencia de tablas opcionales con cache"
+      ],
+      "eventos_generados": [
+        "\\core\\event\\user_loggedin",
+        "\\core\\event\\user_loggedout",
+        "\\core\\event\\dashboard_viewed",
+        "\\core\\event\\course_viewed",
+        "\\core\\event\\course_completed",
+        "\\mod_{modname}\\event\\course_module_viewed"
+      ]
+    },
+    {
+      "nombre": "generate_form",
+      "namespace": "local_platform_access\\form",
+      "archivo": "/home/user/iomad/local/platform_access/classes/form/generate_form.php",
+      "descripcion": "Formulario Moodle para configurar y ejecutar la generación de registros de acceso",
+      "tipo": "Formulario (extiende moodleform)",
+      "extends": "\\moodleform",
+      "campos_formulario": [
+        {
+          "seccion": "General Options",
+          "campos": [
+            {
+              "nombre": "companyid",
+              "tipo": "select",
+              "descripcion": "Selector de empresa (incluye opción 'Todas')"
+            },
+            {
+              "nombre": "accesstype",
+              "tipo": "select",
+              "opciones": ["all", "login", "course", "activity"],
+              "descripcion": "Tipo de acceso a generar"
+            },
+            {
+              "nombre": "cleanbeforegenerate",
+              "tipo": "advcheckbox",
+              "default": 1,
+              "descripcion": "Limpiar registros existentes antes de generar"
+            }
+          ]
+        },
+        {
+          "seccion": "User Settings",
+          "campos": [
+            {
+              "nombre": "updateusercreated",
+              "tipo": "advcheckbox",
+              "default": 1,
+              "descripcion": "Actualizar fecha de creación de usuario"
+            },
+            {
+              "nombre": "usercreateddate",
+              "tipo": "date_selector",
+              "default": "2025-11-15",
+              "descripcion": "Fecha de creación de usuario"
+            },
+            {
+              "nombre": "onlyactive",
+              "tipo": "advcheckbox",
+              "default": 1,
+              "descripcion": "Solo usuarios activos"
+            },
+            {
+              "nombre": "includeadmins",
+              "tipo": "advcheckbox",
+              "default": 0,
+              "descripcion": "Incluir administradores"
+            }
+          ]
+        },
+        {
+          "seccion": "Date Range",
+          "campos": [
+            {
+              "nombre": "datefrom",
+              "tipo": "date_selector",
+              "default": "2025-11-15",
+              "descripcion": "Fecha desde"
+            },
+            {
+              "nombre": "dateto",
+              "tipo": "date_selector",
+              "default": "time()",
+              "descripcion": "Fecha hasta"
+            },
+            {
+              "nombre": "randomize",
+              "tipo": "advcheckbox",
+              "default": 1,
+              "descripcion": "Aleatorizar marcas de tiempo"
+            }
+          ]
+        },
+        {
+          "seccion": "Access Counts (Random Ranges)",
+          "campos": [
+            {
+              "nombre": "loginsmin",
+              "tipo": "text",
+              "default": 1,
+              "descripcion": "Mínimo de inicios de sesión por usuario"
+            },
+            {
+              "nombre": "loginsmax",
+              "tipo": "text",
+              "default": 5,
+              "descripcion": "Máximo de inicios de sesión por usuario"
+            },
+            {
+              "nombre": "courseaccessmin",
+              "tipo": "text",
+              "default": 1,
+              "descripcion": "Mínimo de accesos a cursos por usuario"
+            },
+            {
+              "nombre": "courseaccessmax",
+              "tipo": "text",
+              "default": 3,
+              "descripcion": "Máximo de accesos a cursos por usuario"
+            },
+            {
+              "nombre": "activityaccessmin",
+              "tipo": "text",
+              "default": 1,
+              "descripcion": "Mínimo de accesos a actividades por curso"
+            },
+            {
+              "nombre": "activityaccessmax",
+              "tipo": "text",
+              "default": 2,
+              "descripcion": "Máximo de accesos a actividades por curso"
+            }
+          ]
+        },
+        {
+          "seccion": "Advanced Events",
+          "campos": [
+            {
+              "nombre": "generatedashboard",
+              "tipo": "advcheckbox",
+              "default": 1,
+              "descripcion": "Generar accesos al dashboard (70% probabilidad)"
+            },
+            {
+              "nombre": "generatelogouts",
+              "tipo": "advcheckbox",
+              "default": 0,
+              "descripcion": "Generar cierres de sesión (50% probabilidad)"
+            },
+            {
+              "nombre": "generatecompletions",
+              "tipo": "advcheckbox",
+              "default": 0,
+              "descripcion": "Generar finalizaciones de cursos"
+            },
+            {
+              "nombre": "completionpercentmin",
+              "tipo": "text",
+              "default": 50,
+              "descripcion": "Porcentaje mínimo de finalización"
+            },
+            {
+              "nombre": "completionpercentmax",
+              "tipo": "text",
+              "default": 100,
+              "descripcion": "Porcentaje máximo de finalización"
+            }
+          ]
+        }
+      ],
+      "metodos": [
+        {
+          "nombre": "definition",
+          "descripcion": "Define la estructura del formulario con todos los campos organizados en secciones"
+        },
+        {
+          "nombre": "validation",
+          "parametros": "array $data, array $files",
+          "retorno": "array",
+          "descripcion": "Valida los datos del formulario (rangos de fechas, valores min/max, porcentajes)"
+        }
+      ],
+      "validaciones": [
+        "Fecha desde debe ser menor o igual a fecha hasta",
+        "Valores mínimos no pueden ser mayores que máximos",
+        "Porcentajes deben estar entre 0 y 100",
+        "Valores numéricos deben ser no negativos"
+      ]
+    },
+    {
+      "nombre": "provider",
+      "namespace": "local_platform_access\\privacy",
+      "archivo": "/home/user/iomad/local/platform_access/classes/privacy/provider.php",
+      "descripcion": "Proveedor de privacidad que indica que el plugin no almacena datos personales propios",
+      "tipo": "Clase de privacidad (GDPR)",
+      "implements": "core_privacy\\local\\metadata\\null_provider",
+      "metodos": [
+        {
+          "nombre": "get_reason",
+          "modificador": "public static",
+          "retorno": "string",
+          "valor": "'privacy:metadata'",
+          "descripcion": "Retorna la clave de idioma que explica por qué no se almacenan datos"
+        }
+      ],
+      "cumplimiento_gdpr": "El plugin cumple con GDPR al declarar explícitamente que no almacena datos personales propios. Solo genera registros en tablas estándar de Moodle que ya tienen su propia gestión de privacidad."
+    }
+  ],
+  "resumen": {
+    "total_clases": 3,
+    "tipos": [
+      "1 generador/servicio",
+      "1 formulario",
+      "1 proveedor de privacidad"
+    ],
+    "namespaces": [
+      "local_platform_access",
+      "local_platform_access\\form",
+      "local_platform_access\\privacy"
+    ],
+    "arquitectura": "Diseño moderno con separación de responsabilidades: generación, interfaz y privacidad"
+  }
+}

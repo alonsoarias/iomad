@@ -1,0 +1,178 @@
+{
+  "plugin": "report_platform_usage",
+  "archivo": "settings.php",
+  "descripcion": "Configuración del plugin en la administración de Moodle",
+  "componentes": [
+    {
+      "tipo": "admin_externalpage",
+      "nombre": "report_platform_usage",
+      "ubicacion": "Administración del sitio > Informes",
+      "proposito": "Enlace al informe en el menú de administración",
+      "configuracion": {
+        "nombre": "report_platform_usage",
+        "titulo": "get_string('pluginname', 'report_platform_usage')",
+        "url": "/report/platform_usage/index.php",
+        "capability_requerida": "report/platform_usage:view"
+      },
+      "descripcion": "Añade un enlace en la sección de informes de administración para acceder al informe a nivel de plataforma"
+    },
+    {
+      "tipo": "admin_settingpage",
+      "nombre": "report_platform_usage_settings",
+      "ubicacion": "Administración del sitio > Informes > Platform Usage Report",
+      "proposito": "Página de configuración con parámetros del plugin",
+      "condicion": "$hassiteconfig",
+      "configuraciones": [
+        {
+          "nombre": "session_limit",
+          "tipo": "admin_setting_configduration",
+          "titulo": "setting_session_limit",
+          "descripcion": "Límite de sesión para cálculo de dedicación",
+          "proposito": "Define el tiempo máximo entre eventos para considerar que pertenecen a la misma sesión de estudio",
+          "valor_defecto": "HOURSECS (1 hora)",
+          "unidad_minima": "MINSECS (minutos)",
+          "uso": "Utilizado por dedication_collector y cálculos de dedicación",
+          "ejemplo": "Si un usuario tiene eventos a las 10:00 y 10:45, se consideran misma sesión. Si el siguiente evento es a las 12:00, es una nueva sesión."
+        },
+        {
+          "nombre": "ignore_sessions_limit",
+          "tipo": "admin_setting_configduration",
+          "titulo": "setting_ignore_sessions_limit",
+          "descripcion": "Duración mínima de sesión (ignorar sesiones más cortas)",
+          "proposito": "Sesiones más cortas que este límite no se contabilizan en las estadísticas de dedicación",
+          "valor_defecto": "MINSECS (1 minuto)",
+          "unidad_minima": "1 segundo",
+          "uso": "Filtrar sesiones muy cortas que probablemente sean accesos accidentales",
+          "ejemplo": "Una sesión de 30 segundos no se contará en las estadísticas de dedicación"
+        },
+        {
+          "nombre": "default_period",
+          "tipo": "admin_setting_configselect",
+          "titulo": "setting_default_period",
+          "descripcion": "Período de tiempo predeterminado para informes",
+          "proposito": "Define el rango de fechas predeterminado al abrir el informe",
+          "valor_defecto": 30,
+          "opciones": [
+            {
+              "valor": 7,
+              "etiqueta": "lastweek (7 días)"
+            },
+            {
+              "valor": 30,
+              "etiqueta": "lastmonth (30 días)"
+            },
+            {
+              "valor": 90,
+              "etiqueta": "lastquarter (90 días)"
+            },
+            {
+              "valor": 365,
+              "etiqueta": "lastyear (365 días)"
+            }
+          ],
+          "uso": "Define cuántos días hacia atrás mostrar por defecto"
+        },
+        {
+          "nombre": "top_items_limit",
+          "tipo": "admin_setting_configtext",
+          "titulo": "setting_top_items_limit",
+          "descripcion": "Número de elementos a mostrar en listas de top",
+          "proposito": "Limita cuántos cursos/actividades mostrar en las listas de 'más accedidos'",
+          "valor_defecto": 10,
+          "tipo_parametro": "PARAM_INT",
+          "uso": "Controla el límite predeterminado para get_top_courses(), get_top_activities(), etc.",
+          "ejemplo": "Mostrar solo los 10 cursos más accedidos"
+        },
+        {
+          "nombre": "enable_cache",
+          "tipo": "admin_setting_configcheckbox",
+          "titulo": "setting_enable_cache",
+          "descripcion": "Habilitar/deshabilitar caché",
+          "proposito": "Controla si se usa el sistema de caché MUC para mejorar rendimiento",
+          "valor_defecto": 1,
+          "valores": {
+            "1": "Caché habilitado (recomendado)",
+            "0": "Caché deshabilitado (datos siempre frescos)"
+          },
+          "uso": "Cuando está habilitado, los datos se cachean por 5-10 minutos según el tipo",
+          "nota": "Deshabilitar puede afectar rendimiento en sitios grandes"
+        }
+      ]
+    }
+  ],
+  "configuraciones_adicionales": {
+    "caches": {
+      "archivo": "db/caches.php",
+      "definiciones": [
+        {
+          "nombre": "reportdata",
+          "modo": "MODE_APPLICATION",
+          "ttl": 300,
+          "descripcion": "Caché de datos del informe (5 minutos)"
+        },
+        {
+          "nombre": "companyusers",
+          "modo": "MODE_APPLICATION",
+          "ttl": 600,
+          "descripcion": "Caché de listas de usuarios por empresa (10 minutos)"
+        }
+      ]
+    },
+    "tasks": {
+      "archivo": "db/tasks.php",
+      "tareas": [
+        {
+          "classname": "report_platform_usage\\task\\dedication_collector",
+          "programacion": {
+            "minuto": "30",
+            "hora": "1",
+            "dia": "*",
+            "mes": "*",
+            "dia_semana": "*"
+          },
+          "bloqueante": false,
+          "habilitada": true,
+          "descripcion": "Tarea que se ejecuta diariamente a la 1:30 AM para calcular datos de dedicación"
+        }
+      ]
+    }
+  },
+  "impacto_configuracion": {
+    "session_limit": {
+      "alto": "Afecta directamente el cálculo de tiempo de dedicación",
+      "recomendacion": "Ajustar según la naturaleza del contenido. Para cursos de lectura, puede ser mayor (2-3 horas). Para cursos interactivos, menor (30 minutos)"
+    },
+    "ignore_sessions_limit": {
+      "medio": "Filtra ruido de accesos muy breves",
+      "recomendacion": "Mantener en 1 minuto para excluir accesos accidentales"
+    },
+    "default_period": {
+      "bajo": "Solo afecta la vista inicial",
+      "recomendacion": "Usar 30 días para balance entre detalle y visión general"
+    },
+    "enable_cache": {
+      "alto": "Impacta significativamente el rendimiento",
+      "recomendacion": "Mantener habilitado excepto para debugging",
+      "consideracion": "En sitios muy grandes, el caché es esencial"
+    }
+  },
+  "cadenas_idioma_configuracion": [
+    "setting_session_limit",
+    "setting_session_limit_desc",
+    "setting_ignore_sessions_limit",
+    "setting_ignore_sessions_limit_desc",
+    "setting_default_period",
+    "setting_default_period_desc",
+    "setting_top_items_limit",
+    "setting_top_items_limit_desc",
+    "setting_enable_cache",
+    "setting_enable_cache_desc",
+    "settings"
+  ],
+  "notas": [
+    "Las configuraciones se almacenan en la tabla mdl_config_plugins",
+    "Los cambios en session_limit e ignore_sessions_limit afectan futuros cálculos de la tarea programada",
+    "El caché se puede limpiar manualmente desde Administración > Desarrollo > Purgar cachés",
+    "La configuración requiere rol con capability moodle/site:config"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "plugin": "local_platform_access",
+  "tiene_tablas_propias": false,
+  "archivo_install_xml": null,
+  "descripcion": "Este plugin no define tablas propias en la base de datos. Trabaja con tablas estándar de Moodle y tablas de IOMAD.",
+  "tablas_utilizadas": [
+    {
+      "tabla": "logstore_standard_log",
+      "descripcion": "Tabla del sistema de logs estándar de Moodle donde se insertan los registros de eventos generados"
+    },
+    {
+      "tabla": "user",
+      "descripcion": "Tabla de usuarios donde se actualizan campos de acceso (firstaccess, lastaccess, lastlogin, currentlogin, lastip)"
+    },
+    {
+      "tabla": "user_lastaccess",
+      "descripcion": "Registra el último acceso de usuarios a cursos específicos"
+    },
+    {
+      "tabla": "course",
+      "descripcion": "Tabla de cursos para obtener información de cursos visibles"
+    },
+    {
+      "tabla": "enrol",
+      "descripcion": "Métodos de matriculación utilizados para obtener usuarios matriculados"
+    },
+    {
+      "tabla": "user_enrolments",
+      "descripcion": "Matriculaciones de usuarios en cursos"
+    },
+    {
+      "tabla": "course_modules",
+      "descripcion": "Módulos de actividades en cursos"
+    },
+    {
+      "tabla": "course_modules_completion",
+      "descripcion": "Estado de finalización de actividades por usuario"
+    },
+    {
+      "tabla": "course_modules_viewed",
+      "descripcion": "Registro de visualizaciones de módulos (si existe en la instalación)"
+    },
+    {
+      "tabla": "course_completions",
+      "descripcion": "Registros de finalización de cursos"
+    },
+    {
+      "tabla": "company",
+      "descripcion": "Tabla de IOMAD con información de empresas/compañías"
+    },
+    {
+      "tabla": "company_users",
+      "descripcion": "Tabla de IOMAD que relaciona usuarios con empresas"
+    },
+    {
+      "tabla": "company_course",
+      "descripcion": "Tabla de IOMAD que relaciona cursos con empresas"
+    },
+    {
+      "tabla": "local_report_user_logins",
+      "descripcion": "Tabla de reportes de IOMAD para estadísticas de inicio de sesión (si existe)"
+    }
+  ]
+}

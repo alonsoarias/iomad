@@ -1,0 +1,13 @@
+{
+  "plugin": "local_platform_access",
+  "nombre_completo": "Platform Access Generator",
+  "version": "2025112904",
+  "release": "2.1.0 (Build: 20251129)",
+  "requires": "2024100700",
+  "component": "local_platform_access",
+  "maturity": "MATURITY_STABLE",
+  "descripcion": "Plugin para generar registros de acceso a la plataforma, incluyendo inicios de sesión, accesos a cursos y actividades. Diseñado para entornos IOMAD con soporte multi-empresa.",
+  "copyright": "2024 IOMAD",
+  "licencia": "GNU GPL v3 or later",
+  "archivo_fuente": "/home/user/iomad/local/platform_access/version.php"
+}

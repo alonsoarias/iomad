@@ -1,0 +1,449 @@
+{
+  "clase": "application",
+  "namespace": "local_jobboard",
+  "archivo": "local/jobboard/classes/application.php",
+  "descripcion": "Clase para gestionar postulaciones de candidatos a vacantes",
+  "constantes": {
+    "estados_postulacion": [
+      {
+        "nombre": "STATUS_DRAFT",
+        "valor": "draft",
+        "descripcion": "Postulación guardada como borrador, no enviada"
+      },
+      {
+        "nombre": "STATUS_SUBMITTED",
+        "valor": "submitted",
+        "descripcion": "Postulación enviada, pendiente de revisión inicial"
+      },
+      {
+        "nombre": "STATUS_UNDER_REVIEW",
+        "valor": "under_review",
+        "descripcion": "En revisión por el equipo de RR.HH."
+      },
+      {
+        "nombre": "STATUS_DOCS_VALIDATED",
+        "valor": "docs_validated",
+        "descripcion": "Documentos validados, candidato aprobado para siguiente etapa"
+      },
+      {
+        "nombre": "STATUS_DOCS_REJECTED",
+        "valor": "docs_rejected",
+        "descripcion": "Documentos rechazados, requiere re-envío"
+      },
+      {
+        "nombre": "STATUS_INTERVIEW",
+        "valor": "interview",
+        "descripcion": "Candidato en etapa de entrevista"
+      },
+      {
+        "nombre": "STATUS_SELECTED",
+        "valor": "selected",
+        "descripcion": "Candidato seleccionado para el cargo"
+      },
+      {
+        "nombre": "STATUS_REJECTED",
+        "valor": "rejected",
+        "descripcion": "Postulación rechazada"
+      },
+      {
+        "nombre": "STATUS_WITHDRAWN",
+        "valor": "withdrawn",
+        "descripcion": "Postulación retirada por el candidato"
+      }
+    ],
+    "transiciones_permitidas": {
+      "descripcion": "Mapa de transiciones de estado válidas",
+      "reglas": [
+        "draft -> submitted",
+        "submitted -> under_review",
+        "under_review -> docs_validated | docs_rejected | rejected",
+        "docs_validated -> interview | selected | rejected",
+        "docs_rejected -> under_review (después de re-envío)",
+        "interview -> selected | rejected",
+        "cualquier_estado -> withdrawn (por el candidato)"
+      ]
+    }
+  },
+  "propiedades": [
+    {
+      "nombre": "id",
+      "tipo": "int",
+      "descripcion": "ID único de la postulación"
+    },
+    {
+      "nombre": "vacancyid",
+      "tipo": "int",
+      "descripcion": "ID de la vacante a la que se postula"
+    },
+    {
+      "nombre": "userid",
+      "tipo": "int",
+      "descripcion": "ID del usuario candidato"
+    },
+    {
+      "nombre": "status",
+      "tipo": "string",
+      "descripcion": "Estado actual de la postulación"
+    },
+    {
+      "nombre": "coverletter",
+      "tipo": "string",
+      "descripcion": "Carta de presentación del candidato"
+    },
+    {
+      "nombre": "additionalinfo",
+      "tipo": "string|null",
+      "descripcion": "Información adicional proporcionada por el candidato"
+    },
+    {
+      "nombre": "reviewerid",
+      "tipo": "int|null",
+      "descripcion": "ID del revisor asignado"
+    },
+    {
+      "nombre": "reviewernotes",
+      "tipo": "string|null",
+      "descripcion": "Notas del revisor"
+    },
+    {
+      "nombre": "score",
+      "tipo": "float|null",
+      "descripcion": "Puntuación de la postulación (0-100)"
+    },
+    {
+      "nombre": "timecreated",
+      "tipo": "int",
+      "descripcion": "Timestamp de creación"
+    },
+    {
+      "nombre": "timemodified",
+      "tipo": "int",
+      "descripcion": "Timestamp de última modificación"
+    },
+    {
+      "nombre": "timesubmitted",
+      "tipo": "int|null",
+      "descripcion": "Timestamp de envío de la postulación"
+    }
+  ],
+  "metodos_publicos": [
+    {
+      "nombre": "__construct",
+      "parametros": [
+        {
+          "nombre": "id",
+          "tipo": "int",
+          "descripcion": "ID de la postulación (0 para nueva)"
+        }
+      ],
+      "retorno": "void",
+      "descripcion": "Constructor que carga la postulación desde BD si el ID es mayor a 0"
+    },
+    {
+      "nombre": "get",
+      "parametros": [
+        {
+          "nombre": "id",
+          "tipo": "int",
+          "descripcion": "ID de la postulación"
+        }
+      ],
+      "retorno": "self|null",
+      "descripcion": "Obtiene una postulación por su ID",
+      "estatico": true
+    },
+    {
+      "nombre": "create",
+      "parametros": [
+        {
+          "nombre": "vacancyid",
+          "tipo": "int",
+          "descripcion": "ID de la vacante"
+        },
+        {
+          "nombre": "userid",
+          "tipo": "int",
+          "descripcion": "ID del usuario"
+        },
+        {
+          "nombre": "data",
+          "tipo": "object",
+          "descripcion": "Datos adicionales de la postulación"
+        }
+      ],
+      "retorno": "self",
+      "descripcion": "Crea una nueva postulación",
+      "estatico": true
+    },
+    {
+      "nombre": "save",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Guarda los cambios de la postulación en la base de datos"
+    },
+    {
+      "nombre": "submit",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Envía la postulación (cambia de draft a submitted)"
+    },
+    {
+      "nombre": "withdraw",
+      "parametros": [
+        {
+          "nombre": "reason",
+          "tipo": "string",
+          "descripcion": "Razón del retiro",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Retira la postulación por parte del candidato"
+    },
+    {
+      "nombre": "change_status",
+      "parametros": [
+        {
+          "nombre": "newstatus",
+          "tipo": "string",
+          "descripcion": "Nuevo estado"
+        },
+        {
+          "nombre": "notes",
+          "tipo": "string",
+          "descripcion": "Notas sobre el cambio",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Cambia el estado de la postulación con validación de transiciones"
+    },
+    {
+      "nombre": "assign_reviewer",
+      "parametros": [
+        {
+          "nombre": "reviewerid",
+          "tipo": "int",
+          "descripcion": "ID del revisor"
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Asigna un revisor a la postulación"
+    },
+    {
+      "nombre": "update_score",
+      "parametros": [
+        {
+          "nombre": "score",
+          "tipo": "float",
+          "descripcion": "Nueva puntuación (0-100)"
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Actualiza la puntuación de la postulación"
+    },
+    {
+      "nombre": "get_documents",
+      "parametros": [
+        {
+          "nombre": "status",
+          "tipo": "string|null",
+          "descripcion": "Filtrar por estado de documento",
+          "opcional": true
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene los documentos adjuntos a la postulación"
+    },
+    {
+      "nombre": "get_required_documents",
+      "parametros": [],
+      "retorno": "array",
+      "descripcion": "Obtiene la lista de documentos requeridos para esta postulación"
+    },
+    {
+      "nombre": "has_all_required_documents",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Verifica si todos los documentos requeridos están cargados"
+    },
+    {
+      "nombre": "can_submit",
+      "parametros": [],
+      "retorno": "array",
+      "descripcion": "Verifica si la postulación puede ser enviada (retorna array con 'can' y 'reasons')"
+    },
+    {
+      "nombre": "can_edit",
+      "parametros": [
+        {
+          "nombre": "userid",
+          "tipo": "int",
+          "descripcion": "ID del usuario",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Verifica si la postulación puede ser editada por el usuario"
+    },
+    {
+      "nombre": "can_withdraw",
+      "parametros": [
+        {
+          "nombre": "userid",
+          "tipo": "int",
+          "descripcion": "ID del usuario",
+          "opcional": true
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Verifica si la postulación puede ser retirada por el usuario"
+    },
+    {
+      "nombre": "get_status_display",
+      "parametros": [],
+      "retorno": "string",
+      "descripcion": "Obtiene el nombre traducido del estado actual"
+    },
+    {
+      "nombre": "get_vacancy",
+      "parametros": [],
+      "retorno": "vacancy|null",
+      "descripcion": "Obtiene el objeto vacancy asociado"
+    },
+    {
+      "nombre": "get_user",
+      "parametros": [],
+      "retorno": "object|null",
+      "descripcion": "Obtiene el objeto user del candidato"
+    },
+    {
+      "nombre": "get_reviewer",
+      "parametros": [],
+      "retorno": "object|null",
+      "descripcion": "Obtiene el objeto user del revisor asignado"
+    },
+    {
+      "nombre": "get_workflow_history",
+      "parametros": [],
+      "retorno": "array",
+      "descripcion": "Obtiene el historial de cambios de estado de la postulación"
+    },
+    {
+      "nombre": "get_list",
+      "parametros": [
+        {
+          "nombre": "filters",
+          "tipo": "array",
+          "descripcion": "Filtros de búsqueda",
+          "default": "[]"
+        },
+        {
+          "nombre": "sort",
+          "tipo": "string",
+          "descripcion": "Campo de ordenamiento",
+          "default": "timecreated"
+        },
+        {
+          "nombre": "order",
+          "tipo": "string",
+          "descripcion": "Orden ASC/DESC",
+          "default": "DESC"
+        },
+        {
+          "nombre": "page",
+          "tipo": "int",
+          "descripcion": "Número de página",
+          "default": "0"
+        },
+        {
+          "nombre": "perpage",
+          "tipo": "int",
+          "descripcion": "Registros por página",
+          "default": "20"
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene listado de postulaciones con filtros y paginación",
+      "estatico": true
+    },
+    {
+      "nombre": "get_user_applications",
+      "parametros": [
+        {
+          "nombre": "userid",
+          "tipo": "int",
+          "descripcion": "ID del usuario"
+        },
+        {
+          "nombre": "filters",
+          "tipo": "array",
+          "descripcion": "Filtros adicionales",
+          "default": "[]"
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene las postulaciones de un usuario específico",
+      "estatico": true
+    },
+    {
+      "nombre": "get_statistics_for_vacancy",
+      "parametros": [
+        {
+          "nombre": "vacancyid",
+          "tipo": "int",
+          "descripcion": "ID de la vacante"
+        }
+      ],
+      "retorno": "array",
+      "descripcion": "Obtiene estadísticas de postulaciones para una vacante",
+      "estatico": true
+    },
+    {
+      "nombre": "user_has_applied",
+      "parametros": [
+        {
+          "nombre": "userid",
+          "tipo": "int",
+          "descripcion": "ID del usuario"
+        },
+        {
+          "nombre": "vacancyid",
+          "tipo": "int",
+          "descripcion": "ID de la vacante"
+        }
+      ],
+      "retorno": "bool",
+      "descripcion": "Verifica si un usuario ya aplicó a una vacante",
+      "estatico": true
+    },
+    {
+      "nombre": "delete",
+      "parametros": [],
+      "retorno": "bool",
+      "descripcion": "Elimina la postulación (solo si está en draft)"
+    }
+  ],
+  "metodos_protegidos": [
+    {
+      "nombre": "load_from_db",
+      "descripcion": "Carga los datos de la postulación desde la base de datos"
+    },
+    {
+      "nombre": "validate_status_transition",
+      "descripcion": "Valida que la transición de estado sea permitida según las reglas del workflow"
+    },
+    {
+      "nombre": "log_status_change",
+      "descripcion": "Registra el cambio de estado en la tabla de workflow log"
+    },
+    {
+      "nombre": "send_notification",
+      "descripcion": "Envía notificación al candidato sobre cambios en su postulación"
+    },
+    {
+      "nombre": "trigger_event",
+      "descripcion": "Dispara evento de Moodle para el cambio de estado"
+    }
+  ]
+}

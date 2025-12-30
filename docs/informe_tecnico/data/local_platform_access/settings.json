@@ -1,0 +1,26 @@
+{
+  "plugin": "local_platform_access",
+  "archivo_fuente": "/home/user/iomad/local/platform_access/settings.php",
+  "tiene_configuraciones": false,
+  "descripcion": "El plugin no define configuraciones almacenadas. Solo añade una entrada al menú de administración.",
+  "menu_administracion": {
+    "categoria": "development",
+    "categoria_nombre": "Development (Desarrollo)",
+    "tipo": "admin_externalpage",
+    "configuracion": {
+      "identificador": "local_platform_access",
+      "nombre_visible": "get_string('pluginname', 'local_platform_access')",
+      "nombre_visible_texto": "Platform Access Generator",
+      "url": "/local/platform_access/index.php",
+      "capability_requerida": "local/platform_access:generate"
+    },
+    "descripcion": "Añade un enlace en el menú de administración bajo la categoría 'Development' que lleva a la página principal del generador"
+  },
+  "condicion": {
+    "variable": "$hassiteconfig",
+    "descripcion": "Solo añade la entrada al menú si el usuario tiene capacidad de configurar el sitio (siteconfig)"
+  },
+  "ubicacion_menu": "Administración del sitio > Development > Platform Access Generator",
+  "configuraciones_plugin": [],
+  "nota": "El plugin no utiliza configuraciones persistentes (settings). Todas las opciones se configuran por ejecución a través del formulario en index.php"
+}

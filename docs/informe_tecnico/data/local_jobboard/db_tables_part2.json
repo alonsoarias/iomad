@@ -1,0 +1,516 @@
+{
+  "tables": [
+    {
+      "name": "local_jobboard_doc_requirement",
+      "comment": "Configuración de requisitos de documentos por vacante",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "vacancyid", "type": "int", "length": 10, "notnull": true},
+        {"name": "documenttype", "type": "char", "length": 100, "notnull": true},
+        {"name": "required", "type": "int", "length": 1, "notnull": true, "default": 1},
+        {"name": "acceptedformats", "type": "char", "length": 255, "notnull": false, "default": "pdf", "comment": "Lista de formatos aceptados separados por coma"},
+        {"name": "maxsize", "type": "int", "length": 10, "notnull": false, "comment": "Tamaño máximo en bytes"},
+        {"name": "requiresissuedate", "type": "int", "length": 1, "notnull": true, "default": 0},
+        {"name": "maxagedays", "type": "int", "length": 5, "notnull": false, "comment": "Días máximos desde la fecha de expedición"},
+        {"name": "validationrules", "type": "text", "notnull": false, "comment": "Reglas de validación específicas (JSON)"},
+        {"name": "instructions", "type": "text", "notnull": false, "comment": "Instrucciones para el postulante"},
+        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "vacancyid", "type": "foreign", "fields": ["vacancyid"], "reftable": "local_jobboard_vacancy", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "vacancy_doctype_unique", "unique": true, "fields": ["vacancyid", "documenttype"]},
+        {"name": "doctype_idx", "unique": false, "fields": ["documenttype"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_workflow_log",
+      "comment": "Registro de cambios de estado del flujo de trabajo",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "applicationid", "type": "int", "length": 10, "notnull": true},
+        {"name": "previousstatus", "type": "char", "length": 30, "notnull": false},
+        {"name": "newstatus", "type": "char", "length": 30, "notnull": true},
+        {"name": "changedby", "type": "int", "length": 10, "notnull": true},
+        {"name": "comments", "type": "text", "notnull": false},
+        {"name": "notificationsent", "type": "int", "length": 1, "notnull": true, "default": 0},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "applicationid", "type": "foreign", "fields": ["applicationid"], "reftable": "local_jobboard_application", "reffields": ["id"]},
+        {"name": "changedby", "type": "foreign", "fields": ["changedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "app_time_idx", "unique": false, "fields": ["applicationid", "timecreated"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_audit",
+      "comment": "Registro de auditoría general para todas las acciones",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true},
+        {"name": "userrole", "type": "char", "length": 50, "notnull": false, "comment": "Rol del usuario que realiza la acción"},
+        {"name": "action", "type": "char", "length": 100, "notnull": true, "comment": "Acción realizada"},
+        {"name": "entitytype", "type": "char", "length": 50, "notnull": true, "comment": "Tipo de entidad: vacancy, application, document"},
+        {"name": "entityid", "type": "int", "length": 10, "notnull": false},
+        {"name": "ipaddress", "type": "char", "length": 45, "notnull": false},
+        {"name": "useragent", "type": "char", "length": 512, "notnull": false},
+        {"name": "extradata", "type": "text", "notnull": false, "comment": "Datos adicionales (JSON)"},
+        {"name": "previousvalue", "type": "text", "notnull": false, "comment": "Valor anterior (JSON)"},
+        {"name": "newvalue", "type": "text", "notnull": false, "comment": "Nuevo valor (JSON)"},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "entity_idx", "unique": false, "fields": ["entitytype", "entityid"]},
+        {"name": "user_time_idx", "unique": false, "fields": ["userid", "timecreated"]},
+        {"name": "action_idx", "unique": false, "fields": ["action"]},
+        {"name": "time_idx", "unique": false, "fields": ["timecreated"]},
+        {"name": "userrole_idx", "unique": false, "fields": ["userrole"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_exemption",
+      "comment": "Exenciones de personal histórico ISER",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true},
+        {"name": "exemptiontype", "type": "char", "length": 50, "notnull": true, "default": "historico_iser"},
+        {"name": "documentref", "type": "char", "length": 255, "notnull": false, "comment": "Número de documento de referencia"},
+        {"name": "exempteddocs", "type": "text", "notnull": false, "comment": "Tipos de documentos exentos (array JSON)"},
+        {"name": "validfrom", "type": "int", "length": 10, "notnull": true},
+        {"name": "validuntil", "type": "int", "length": 10, "notnull": false},
+        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
+        {"name": "notes", "type": "text", "notnull": false},
+        {"name": "timerevoked", "type": "int", "length": 10, "notnull": false, "comment": "Fecha de revocación"},
+        {"name": "revokedby", "type": "int", "length": 10, "notnull": false, "comment": "Usuario que revocó"},
+        {"name": "revokereason", "type": "text", "notnull": false, "comment": "Razón de revocación"},
+        {"name": "modifiedby", "type": "int", "length": 10, "notnull": false},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
+        {"name": "createdby", "type": "foreign", "fields": ["createdby"], "reftable": "user", "reffields": ["id"]},
+        {"name": "revokedby", "type": "foreign", "fields": ["revokedby"], "reftable": "user", "reffields": ["id"]},
+        {"name": "modifiedby", "type": "foreign", "fields": ["modifiedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "user_type_idx", "unique": false, "fields": ["userid", "exemptiontype"]},
+        {"name": "validity_idx", "unique": false, "fields": ["validfrom", "validuntil"]},
+        {"name": "active_idx", "unique": false, "fields": ["timerevoked"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_notification",
+      "comment": "Cola e historial de notificaciones",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true, "comment": "Usuario destinatario"},
+        {"name": "templatecode", "type": "char", "length": 50, "notnull": true, "comment": "Código de plantilla de correo"},
+        {"name": "data", "type": "text", "notnull": false, "comment": "Datos de marcadores (JSON)"},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "pending", "comment": "Estado: pending, sent, failed"},
+        {"name": "attempts", "type": "int", "length": 3, "notnull": true, "default": 0, "comment": "Intentos de envío"},
+        {"name": "lasterror", "type": "text", "notnull": false, "comment": "Último mensaje de error"},
+        {"name": "timesent", "type": "int", "length": 10, "notnull": false},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "userid", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "user_status_idx", "unique": false, "fields": ["userid", "status"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]},
+        {"name": "template_idx", "unique": false, "fields": ["templatecode"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_config",
+      "comment": "Configuraciones del plugin",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "name", "type": "char", "length": 100, "notnull": true},
+        {"name": "value", "type": "text", "notnull": false},
+        {"name": "description", "type": "text", "notnull": false},
+        {"name": "category", "type": "char", "length": 50, "notnull": false, "default": "general"},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "name_unique", "unique": true, "fields": ["name"]},
+        {"name": "category_idx", "unique": false, "fields": ["category"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_doctype",
+      "comment": "Tipos de documentos predefinidos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "code", "type": "char", "length": 50, "notnull": true, "comment": "Código único del tipo de documento"},
+        {"name": "name", "type": "char", "length": 255, "notnull": true},
+        {"name": "description", "type": "text", "notnull": false},
+        {"name": "requirements", "type": "text", "notnull": false, "comment": "Descripción de requisitos de validación"},
+        {"name": "checklistitems", "type": "text", "notnull": false, "comment": "Items de checklist por defecto (array JSON)"},
+        {"name": "externalurl", "type": "char", "length": 512, "notnull": false, "comment": "URL externa donde obtener el documento"},
+        {"name": "isrequired", "type": "int", "length": 1, "notnull": true, "default": 1, "comment": "Requerido para postulaciones estándar"},
+        {"name": "iserexempted", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "Exento para personal histórico ISER"},
+        {"name": "gender_condition", "type": "char", "length": 1, "notnull": false, "comment": "Condición de género: M=solo hombres, F=solo mujeres, null=todos"},
+        {"name": "age_exemption_threshold", "type": "int", "length": 3, "notnull": false, "comment": "Edad en años para exención (ej: 50 para libreta militar)"},
+        {"name": "profession_exempt", "type": "text", "notnull": false, "comment": "Array JSON de tipos de educación exentos"},
+        {"name": "conditional_note", "type": "text", "notnull": false, "comment": "Nota condicional mostrada cuando el documento es opcional"},
+        {"name": "input_type", "type": "char", "length": 20, "notnull": true, "default": "file", "comment": "Tipo de entrada: file, text, textarea, select"},
+        {"name": "category", "type": "char", "length": 50, "notnull": false, "comment": "Categoría del documento para agrupación"},
+        {"name": "defaultmaxagedays", "type": "int", "length": 5, "notnull": false},
+        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
+        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "code_unique", "unique": true, "fields": ["code"]},
+        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]},
+        {"name": "isrequired_idx", "unique": false, "fields": ["isrequired"]},
+        {"name": "iserexempted_idx", "unique": false, "fields": ["iserexempted"]},
+        {"name": "gender_idx", "unique": false, "fields": ["gender_condition"]},
+        {"name": "category_idx", "unique": false, "fields": ["category"]},
+        {"name": "input_type_idx", "unique": false, "fields": ["input_type"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_email_template",
+      "comment": "Plantillas de notificación por correo con soporte multi-tenant",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "code", "type": "char", "length": 50, "notnull": true, "comment": "Código único de plantilla"},
+        {"name": "companyid", "type": "int", "length": 10, "notnull": true, "default": 0, "comment": "ID de empresa IOMAD (0 = plantilla global)"},
+        {"name": "category", "type": "char", "length": 30, "notnull": true, "default": "application", "comment": "Categoría: application, documents, interview, selection, system"},
+        {"name": "name", "type": "char", "length": 255, "notnull": true, "comment": "Nombre legible de la plantilla"},
+        {"name": "description", "type": "text", "notnull": false, "comment": "Descripción y uso de la plantilla"},
+        {"name": "subject", "type": "char", "length": 255, "notnull": true, "comment": "Asunto del correo con marcadores"},
+        {"name": "body", "type": "text", "notnull": true, "comment": "Cuerpo del correo (HTML) con marcadores"},
+        {"name": "bodyformat", "type": "int", "length": 2, "notnull": true, "default": 1, "comment": "Formato: 0=MOODLE, 1=HTML, 2=PLAIN"},
+        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1, "comment": "Si la plantilla está activa"},
+        {"name": "is_default", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "Si es plantilla por defecto del sistema"},
+        {"name": "priority", "type": "int", "length": 3, "notnull": true, "default": 0, "comment": "Prioridad de orden de visualización"},
+        {"name": "createdby", "type": "int", "length": 10, "notnull": false},
+        {"name": "modifiedby", "type": "int", "length": 10, "notnull": false},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "companyid_fk", "type": "foreign", "fields": ["companyid"], "reftable": "company", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "code_company_unique", "unique": true, "fields": ["code", "companyid"]},
+        {"name": "category_idx", "unique": false, "fields": ["category"]},
+        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]},
+        {"name": "companyid_idx", "unique": false, "fields": ["companyid"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_interview",
+      "comment": "Entrevistas programadas para postulaciones",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "applicationid", "type": "int", "length": 10, "notnull": true},
+        {"name": "scheduledtime", "type": "int", "length": 10, "notnull": true},
+        {"name": "duration", "type": "int", "length": 4, "notnull": true, "default": 30},
+        {"name": "interviewtype", "type": "char", "length": 20, "notnull": true, "default": "inperson"},
+        {"name": "location", "type": "text", "notnull": false},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "scheduled"},
+        {"name": "notes", "type": "text", "notnull": false},
+        {"name": "rating", "type": "int", "length": 1, "notnull": false},
+        {"name": "feedback", "type": "text", "notnull": false},
+        {"name": "recommendation", "type": "char", "length": 20, "notnull": false},
+        {"name": "completedby", "type": "int", "length": 10, "notnull": false},
+        {"name": "timecompleted", "type": "int", "length": 10, "notnull": false},
+        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "applicationid_fk", "type": "foreign", "fields": ["applicationid"], "reftable": "local_jobboard_application", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "scheduledtime_idx", "unique": false, "fields": ["scheduledtime"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_interviewer",
+      "comment": "Miembros del panel de entrevistas",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "interviewid", "type": "int", "length": 10, "notnull": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "interviewid_fk", "type": "foreign", "fields": ["interviewid"], "reftable": "local_jobboard_interview", "reffields": ["id"]},
+        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "interview_user_idx", "unique": true, "fields": ["interviewid", "userid"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_consent",
+      "comment": "Registros de consentimiento de usuarios para tratamiento de datos y términos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true, "comment": "Usuario que dio consentimiento"},
+        {"name": "consenttype", "type": "char", "length": 50, "notnull": true, "comment": "Tipo de consentimiento: datatreatment, terms, privacy"},
+        {"name": "consentgiven", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "1=dado, 0=rechazado"},
+        {"name": "consentversion", "type": "char", "length": 20, "notnull": false, "comment": "Versión de la política aceptada"},
+        {"name": "ipaddress", "type": "char", "length": 45, "notnull": false},
+        {"name": "useragent", "type": "char", "length": 512, "notnull": false},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "user_type_idx", "unique": false, "fields": ["userid", "consenttype"]},
+        {"name": "consenttype_idx", "unique": false, "fields": ["consenttype"]},
+        {"name": "time_idx", "unique": false, "fields": ["timecreated"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_applicant_profile",
+      "comment": "Datos de perfil extendido para postulantes registrados a través del jobboard",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true, "comment": "ID de usuario de mdl_user"},
+        {"name": "doctype", "type": "char", "length": 20, "notnull": false, "comment": "Tipo de documento: cc, ce, passport, ti, pep, ppt"},
+        {"name": "birthdate", "type": "int", "length": 10, "notnull": false, "comment": "Fecha de nacimiento (timestamp Unix)"},
+        {"name": "gender", "type": "char", "length": 1, "notnull": false, "comment": "Género: M, F, O, N"},
+        {"name": "education_level", "type": "char", "length": 30, "notnull": false, "comment": "Código de nivel educativo más alto"},
+        {"name": "degree_title", "type": "char", "length": 255, "notnull": false, "comment": "Título o grado obtenido"},
+        {"name": "expertise_area", "type": "char", "length": 255, "notnull": false, "comment": "Área de experiencia o especialización"},
+        {"name": "experience_years", "type": "char", "length": 10, "notnull": false, "comment": "Código de años de experiencia"},
+        {"name": "profile_complete", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "1 si el perfil está completo"},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "userid_fk", "type": "foreign-unique", "fields": ["userid"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "education_idx", "unique": false, "fields": ["education_level"]},
+        {"name": "experience_idx", "unique": false, "fields": ["experience_years"]},
+        {"name": "profile_complete_idx", "unique": false, "fields": ["profile_complete"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_conv_docexempt",
+      "comment": "Tipos de documentos exentos a nivel de convocatoria (aplica a todos los postulantes)",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "convocatoriaid", "type": "int", "length": 10, "notnull": true, "comment": "ID de convocatoria"},
+        {"name": "doctypeid", "type": "int", "length": 10, "notnull": true, "comment": "Tipo de documento exento"},
+        {"name": "exemptionreason", "type": "text", "notnull": false, "comment": "Razón de la exención"},
+        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "convocatoriaid_fk", "type": "foreign", "fields": ["convocatoriaid"], "reftable": "local_jobboard_convocatoria", "reffields": ["id"]},
+        {"name": "doctypeid_fk", "type": "foreign", "fields": ["doctypeid"], "reftable": "local_jobboard_doctype", "reffields": ["id"]},
+        {"name": "createdby_fk", "type": "foreign", "fields": ["createdby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "conv_doctype_unique", "unique": true, "fields": ["convocatoriaid", "doctypeid"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_convocatoria",
+      "comment": "Convocatorias/campañas que agrupan vacantes relacionadas",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "code", "type": "char", "length": 50, "notnull": true, "comment": "Código único de convocatoria"},
+        {"name": "name", "type": "char", "length": 255, "notnull": true, "comment": "Título/nombre de la convocatoria"},
+        {"name": "description", "type": "text", "notnull": false, "comment": "Descripción completa"},
+        {"name": "brief_description", "type": "text", "notnull": false, "comment": "Descripción breve para listados"},
+        {"name": "pdf_contenthash", "type": "char", "length": 40, "notnull": false, "comment": "Contenthash del archivo PDF"},
+        {"name": "pdf_filename", "type": "char", "length": 255, "notnull": false, "comment": "Nombre original del archivo PDF"},
+        {"name": "startdate", "type": "int", "length": 10, "notnull": true, "comment": "Fecha de inicio de postulaciones"},
+        {"name": "enddate", "type": "int", "length": 10, "notnull": true, "comment": "Fecha de cierre de postulaciones"},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "draft", "comment": "Estado: draft, open, closed, archived"},
+        {"name": "companyid", "type": "int", "length": 10, "notnull": false, "comment": "ID de empresa IOMAD"},
+        {"name": "departmentid", "type": "int", "length": 10, "notnull": false, "comment": "ID de departamento IOMAD"},
+        {"name": "publicationtype", "type": "char", "length": 20, "notnull": true, "default": "internal", "comment": "Tipo de publicación: public o internal"},
+        {"name": "terms", "type": "text", "notnull": false, "comment": "Términos y condiciones"},
+        {"name": "allow_multiple_applications", "type": "int", "length": 1, "notnull": true, "default": 0, "comment": "1 si usuarios pueden postularse a múltiples vacantes"},
+        {"name": "max_applications_per_user", "type": "int", "length": 3, "notnull": true, "default": 1, "comment": "Máximo de postulaciones por usuario (0=ilimitado)"},
+        {"name": "dean_review_startdate", "type": "int", "length": 10, "notnull": false, "comment": "Inicio del período de revisión de decanos"},
+        {"name": "dean_review_enddate", "type": "int", "length": 10, "notnull": false, "comment": "Fin del período de revisión de decanos"},
+        {"name": "hr_review_startdate", "type": "int", "length": 10, "notnull": false, "comment": "Inicio del período de validación de RRHH"},
+        {"name": "hr_review_enddate", "type": "int", "length": 10, "notnull": false, "comment": "Fin del período de validación de RRHH"},
+        {"name": "createdby", "type": "int", "length": 10, "notnull": true},
+        {"name": "modifiedby", "type": "int", "length": 10, "notnull": false},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "createdby_fk", "type": "foreign", "fields": ["createdby"], "reftable": "user", "reffields": ["id"]},
+        {"name": "modifiedby_fk", "type": "foreign", "fields": ["modifiedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "code_unique", "unique": true, "fields": ["code"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]},
+        {"name": "companyid_idx", "unique": false, "fields": ["companyid"]},
+        {"name": "dates_idx", "unique": false, "fields": ["startdate", "enddate"]},
+        {"name": "publicationtype_idx", "unique": false, "fields": ["publicationtype"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_program_reviewer",
+      "comment": "Revisores de documentos asignados a programas académicos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "programid", "type": "int", "length": 10, "notnull": false, "comment": "ID de programa"},
+        {"name": "categoryid", "type": "int", "length": 10, "notnull": false, "comment": "ID de categoría de curso (legacy)"},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true, "comment": "ID de usuario revisor"},
+        {"name": "role", "type": "char", "length": 20, "notnull": true, "default": "reviewer", "comment": "Rol: lead_reviewer, reviewer"},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "active", "comment": "Estado: active, inactive"},
+        {"name": "addedby", "type": "int", "length": 10, "notnull": true},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "programid_fk", "type": "foreign", "fields": ["programid"], "reftable": "local_jobboard_program", "reffields": ["id"]},
+        {"name": "categoryid_fk", "type": "foreign", "fields": ["categoryid"], "reftable": "course_categories", "reffields": ["id"]},
+        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
+        {"name": "addedby_fk", "type": "foreign", "fields": ["addedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "program_user_idx", "unique": true, "fields": ["programid", "userid"]},
+        {"name": "category_user_idx", "unique": false, "fields": ["categoryid", "userid"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_faculty",
+      "comment": "Facultades dentro de cada empresa IOMAD - soporta arquitectura ISER (FCAS, FII por centro)",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "companyid", "type": "int", "length": 10, "notnull": true, "comment": "ID de empresa IOMAD (centro)"},
+        {"name": "code", "type": "char", "length": 20, "notnull": true, "comment": "Código de facultad: FCAS, FII"},
+        {"name": "name", "type": "char", "length": 255, "notnull": true, "comment": "Nombre de la facultad"},
+        {"name": "shortname", "type": "char", "length": 50, "notnull": false, "comment": "Nombre corto para visualización"},
+        {"name": "description", "type": "text", "notnull": false},
+        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
+        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "companyid_idx", "unique": false, "fields": ["companyid"]},
+        {"name": "company_code_unique", "unique": true, "fields": ["companyid", "code"]},
+        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_program",
+      "comment": "Programas académicos dentro de facultades - vinculados a categorías de cursos",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "facultyid", "type": "int", "length": 10, "notnull": true, "comment": "ID de facultad"},
+        {"name": "categoryid", "type": "int", "length": 10, "notnull": false, "comment": "ID de categoría de curso (si está vinculado)"},
+        {"name": "code", "type": "char", "length": 50, "notnull": true, "comment": "Código del programa"},
+        {"name": "name", "type": "char", "length": 255, "notnull": true, "comment": "Nombre del programa"},
+        {"name": "shortname", "type": "char", "length": 100, "notnull": false},
+        {"name": "description", "type": "text", "notnull": false},
+        {"name": "modality", "type": "char", "length": 50, "notnull": false, "comment": "Modalidad: presencial, virtual, hibrida"},
+        {"name": "level", "type": "char", "length": 50, "notnull": false, "comment": "Nivel: pregrado, posgrado, tecnico"},
+        {"name": "enabled", "type": "int", "length": 1, "notnull": true, "default": 1},
+        {"name": "sortorder", "type": "int", "length": 5, "notnull": true, "default": 0},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "facultyid_fk", "type": "foreign", "fields": ["facultyid"], "reftable": "local_jobboard_faculty", "reffields": ["id"]},
+        {"name": "categoryid_fk", "type": "foreign", "fields": ["categoryid"], "reftable": "course_categories", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "faculty_code_unique", "unique": true, "fields": ["facultyid", "code"]},
+        {"name": "categoryid_idx", "unique": false, "fields": ["categoryid"]},
+        {"name": "enabled_idx", "unique": false, "fields": ["enabled"]},
+        {"name": "modality_idx", "unique": false, "fields": ["modality"]},
+        {"name": "level_idx", "unique": false, "fields": ["level"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_faculty_dean",
+      "comment": "Vincula decanos (usuarios) a facultades para flujo de revisión de postulaciones",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "facultyid", "type": "int", "length": 10, "notnull": true, "comment": "ID de facultad"},
+        {"name": "userid", "type": "int", "length": 10, "notnull": true, "comment": "ID de usuario decano"},
+        {"name": "status", "type": "char", "length": 20, "notnull": true, "default": "active", "comment": "active o inactive"},
+        {"name": "addedby", "type": "int", "length": 10, "notnull": false, "comment": "Usuario que asignó al decano"},
+        {"name": "timecreated", "type": "int", "length": 10, "notnull": true},
+        {"name": "timemodified", "type": "int", "length": 10, "notnull": false}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "facultyid_fk", "type": "foreign", "fields": ["facultyid"], "reftable": "local_jobboard_faculty", "reffields": ["id"]},
+        {"name": "userid_fk", "type": "foreign", "fields": ["userid"], "reftable": "user", "reffields": ["id"]},
+        {"name": "addedby_fk", "type": "foreign", "fields": ["addedby"], "reftable": "user", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "faculty_user_unique", "unique": true, "fields": ["facultyid", "userid"]},
+        {"name": "userid_idx", "unique": false, "fields": ["userid"]},
+        {"name": "status_idx", "unique": false, "fields": ["status"]}
+      ]
+    },
+    {
+      "name": "local_jobboard_email_strings",
+      "comment": "Contenido específico por idioma para plantillas de correo",
+      "fields": [
+        {"name": "id", "type": "int", "length": 10, "notnull": true, "sequence": true},
+        {"name": "templateid", "type": "int", "length": 10, "notnull": true, "comment": "ID de plantilla de correo"},
+        {"name": "lang", "type": "char", "length": 20, "notnull": true, "comment": "Código de idioma (en, es, etc.)"},
+        {"name": "subject", "type": "text", "notnull": false, "comment": "Asunto del correo"},
+        {"name": "body", "type": "text", "notnull": false, "comment": "Cuerpo del correo"},
+        {"name": "signature", "type": "text", "notnull": false, "comment": "Firma del correo"}
+      ],
+      "keys": [
+        {"name": "primary", "type": "primary", "fields": ["id"]},
+        {"name": "templateid_fk", "type": "foreign", "fields": ["templateid"], "reftable": "local_jobboard_email_template", "reffields": ["id"]}
+      ],
+      "indexes": [
+        {"name": "template_lang_idx", "unique": true, "fields": ["templateid", "lang"]},
+        {"name": "lang_idx", "unique": false, "fields": ["lang"]}
+      ]
+    }
+  ]
+}

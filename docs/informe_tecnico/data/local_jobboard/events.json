@@ -1,0 +1,313 @@
+{
+  "descripcion": "Eventos del sistema disparados por el plugin local_jobboard",
+  "eventos": [
+    {
+      "nombre": "application_created",
+      "clase": "local_jobboard\\event\\application_created",
+      "descripcion": "Evento disparado cuando se crea una nueva aplicación/postulación",
+      "tipo_accion": "create",
+      "nivel_educativo": "LEVEL_PARTICIPATING",
+      "tabla_bd": "local_jobboard_application",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la aplicación creada"
+        },
+        {
+          "campo": "relateduserid",
+          "descripcion": "ID del usuario que creó la aplicación (postulante)"
+        },
+        {
+          "campo": "other['vacancyid']",
+          "descripcion": "ID de la vacante a la que se postula"
+        }
+      ],
+      "disparado_por": [
+        "Creación de una nueva postulación a una vacante"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=application&id={objectid}"
+    },
+    {
+      "nombre": "application_deleted",
+      "clase": "local_jobboard\\event\\application_deleted",
+      "descripcion": "Evento disparado cuando se elimina una aplicación",
+      "tipo_accion": "delete",
+      "nivel_educativo": "LEVEL_OTHER",
+      "tabla_bd": "local_jobboard_application",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la aplicación eliminada"
+        },
+        {
+          "campo": "userid",
+          "descripcion": "ID del usuario que eliminó la aplicación"
+        },
+        {
+          "campo": "other['vacancyid']",
+          "descripcion": "ID de la vacante asociada"
+        },
+        {
+          "campo": "other['applicantuserid']",
+          "descripcion": "ID del usuario postulante"
+        },
+        {
+          "campo": "other['reason']",
+          "descripcion": "Razón de la eliminación (opcional)"
+        }
+      ],
+      "disparado_por": [
+        "Eliminación de una aplicación por parte de un administrador o usuario con permisos"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=review"
+    },
+    {
+      "nombre": "application_status_changed",
+      "clase": "local_jobboard\\event\\application_status_changed",
+      "descripcion": "Evento disparado cuando cambia el estado de una aplicación",
+      "tipo_accion": "update",
+      "nivel_educativo": "LEVEL_PARTICIPATING",
+      "tabla_bd": "local_jobboard_application",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la aplicación"
+        },
+        {
+          "campo": "other['oldstatus']",
+          "descripcion": "Estado anterior de la aplicación"
+        },
+        {
+          "campo": "other['newstatus']",
+          "descripcion": "Nuevo estado de la aplicación"
+        }
+      ],
+      "disparado_por": [
+        "Cambio de estado de una aplicación (ej: pending -> approved, pending -> rejected)"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=application&id={objectid}",
+      "estados_posibles": [
+        "pending",
+        "approved",
+        "rejected",
+        "shortlisted",
+        "interview",
+        "hired"
+      ]
+    },
+    {
+      "nombre": "document_uploaded",
+      "clase": "local_jobboard\\event\\document_uploaded",
+      "descripcion": "Evento disparado cuando se sube un documento a una aplicación",
+      "tipo_accion": "create",
+      "nivel_educativo": "LEVEL_PARTICIPATING",
+      "tabla_bd": "local_jobboard_document",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID del documento subido"
+        },
+        {
+          "campo": "other['documenttype']",
+          "descripcion": "Tipo de documento subido"
+        },
+        {
+          "campo": "other['applicationid']",
+          "descripcion": "ID de la aplicación asociada"
+        }
+      ],
+      "disparado_por": [
+        "Subida de un documento requerido por parte del postulante"
+      ],
+      "tipos_documento": [
+        "CV",
+        "Carta de presentación",
+        "Certificados",
+        "Diplomas",
+        "Referencias"
+      ]
+    },
+    {
+      "nombre": "vacancy_closed",
+      "clase": "local_jobboard\\event\\vacancy_closed",
+      "descripcion": "Evento disparado cuando se cierra una vacante",
+      "tipo_accion": "update",
+      "nivel_educativo": "LEVEL_OTHER",
+      "tabla_bd": "local_jobboard_vacancy",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la vacante cerrada"
+        },
+        {
+          "campo": "userid",
+          "descripcion": "ID del usuario que cerró la vacante"
+        },
+        {
+          "campo": "other['code']",
+          "descripcion": "Código de la vacante"
+        },
+        {
+          "campo": "other['title']",
+          "descripcion": "Título de la vacante"
+        }
+      ],
+      "disparado_por": [
+        "Cierre manual de una vacante",
+        "Cierre automático al llegar a la fecha límite"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=vacancy&id={objectid}"
+    },
+    {
+      "nombre": "vacancy_created",
+      "clase": "local_jobboard\\event\\vacancy_created",
+      "descripcion": "Evento disparado cuando se crea una nueva vacante",
+      "tipo_accion": "create",
+      "nivel_educativo": "LEVEL_OTHER",
+      "tabla_bd": "local_jobboard_vacancy",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la vacante creada"
+        },
+        {
+          "campo": "userid",
+          "descripcion": "ID del usuario que creó la vacante"
+        },
+        {
+          "campo": "other['code']",
+          "descripcion": "Código de la vacante"
+        },
+        {
+          "campo": "other['title']",
+          "descripcion": "Título de la vacante"
+        }
+      ],
+      "disparado_por": [
+        "Creación de una nueva vacante de empleo"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=vacancy&id={objectid}"
+    },
+    {
+      "nombre": "vacancy_deleted",
+      "clase": "local_jobboard\\event\\vacancy_deleted",
+      "descripcion": "Evento disparado cuando se elimina una vacante",
+      "tipo_accion": "delete",
+      "nivel_educativo": "LEVEL_OTHER",
+      "tabla_bd": "local_jobboard_vacancy",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la vacante eliminada"
+        },
+        {
+          "campo": "userid",
+          "descripcion": "ID del usuario que eliminó la vacante"
+        },
+        {
+          "campo": "other['code']",
+          "descripcion": "Código de la vacante"
+        },
+        {
+          "campo": "other['title']",
+          "descripcion": "Título de la vacante"
+        }
+      ],
+      "disparado_por": [
+        "Eliminación de una vacante por parte de un administrador"
+      ]
+    },
+    {
+      "nombre": "vacancy_published",
+      "clase": "local_jobboard\\event\\vacancy_published",
+      "descripcion": "Evento disparado cuando se publica una vacante",
+      "tipo_accion": "update",
+      "nivel_educativo": "LEVEL_OTHER",
+      "tabla_bd": "local_jobboard_vacancy",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la vacante publicada"
+        },
+        {
+          "campo": "userid",
+          "descripcion": "ID del usuario que publicó la vacante"
+        },
+        {
+          "campo": "other['code']",
+          "descripcion": "Código de la vacante"
+        },
+        {
+          "campo": "other['title']",
+          "descripcion": "Título de la vacante"
+        }
+      ],
+      "disparado_por": [
+        "Publicación de una vacante (cambio de estado borrador a publicada)"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=vacancy&id={objectid}"
+    },
+    {
+      "nombre": "vacancy_updated",
+      "clase": "local_jobboard\\event\\vacancy_updated",
+      "descripcion": "Evento disparado cuando se actualiza una vacante",
+      "tipo_accion": "update",
+      "nivel_educativo": "LEVEL_OTHER",
+      "tabla_bd": "local_jobboard_vacancy",
+      "datos_contenidos": [
+        {
+          "campo": "objectid",
+          "descripcion": "ID de la vacante actualizada"
+        },
+        {
+          "campo": "userid",
+          "descripcion": "ID del usuario que actualizó la vacante"
+        },
+        {
+          "campo": "other['code']",
+          "descripcion": "Código de la vacante"
+        },
+        {
+          "campo": "other['title']",
+          "descripcion": "Título de la vacante"
+        }
+      ],
+      "disparado_por": [
+        "Actualización de los datos de una vacante existente"
+      ],
+      "url_relacionada": "/local/jobboard/index.php?view=vacancy&id={objectid}"
+    }
+  ],
+  "patrones_uso": [
+    {
+      "flujo": "Creación de postulación",
+      "eventos": [
+        "vacancy_created -> vacancy_published -> application_created -> document_uploaded"
+      ]
+    },
+    {
+      "flujo": "Proceso de revisión",
+      "eventos": [
+        "application_created -> document_uploaded -> application_status_changed"
+      ]
+    },
+    {
+      "flujo": "Cierre de proceso",
+      "eventos": [
+        "application_status_changed -> vacancy_closed"
+      ]
+    }
+  ],
+  "integracion_con_moodle": {
+    "log_viewer": "Todos los eventos se registran en el log estándar de Moodle",
+    "analytics": "Pueden ser utilizados para analytics e informes",
+    "observers": "Se pueden definir observers en db/events.php para reaccionar a estos eventos",
+    "notificaciones": "Los eventos pueden disparar notificaciones del sistema Moodle"
+  },
+  "notas": [
+    "No existe archivo db/events.php, por lo que no hay observers configurados actualmente",
+    "Todos los eventos extienden \\core\\event\\base de Moodle",
+    "Los eventos siguen el estándar de eventos de Moodle 3.x+",
+    "Los tipos de acción (crud) son: c=create, r=read, u=update, d=delete"
+  ]
+}

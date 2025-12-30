@@ -1,0 +1,466 @@
+{
+  "plugin": "local_platform_access",
+  "nombre_completo": "Platform Access Generator",
+  "tipo": "local",
+  "fecha_analisis": "2025-12-30",
+
+  "resumen_ejecutivo": {
+    "proposito": "Plugin para generar registros de acceso ficticios a la plataforma Moodle/IOMAD, incluyendo inicios de sesión, accesos a cursos, actividades y eventos relacionados. Útil para pruebas, desarrollo y análisis de reportes.",
+    "arquitectura": "Diseño moderno con clases orientadas a objetos, sin lib.php, optimizado para inserciones masivas en base de datos",
+    "caracteristicas_principales": [
+      "Generación masiva de registros de acceso con buffering",
+      "Soporte multi-empresa (IOMAD)",
+      "Configuración flexible por formulario web",
+      "Optimización con inserciones en lotes de 500 registros",
+      "Sistema de caching para contextos y matriculaciones",
+      "Limpieza opcional de registros existentes con TRUNCATE",
+      "Generación de eventos avanzados (dashboard, logout, completions)",
+      "Barra de progreso para procesos largos",
+      "Estadísticas detalladas post-generación"
+    ],
+    "estado_desarrollo": "Stable (MATURITY_STABLE)",
+    "integracion_iomad": "Totalmente integrado con sistema multi-empresa de IOMAD"
+  },
+
+  "version": {
+    "version_numerica": "2025112904",
+    "release": "2.1.0 (Build: 20251129)",
+    "requires": "2024100700",
+    "maturity": "MATURITY_STABLE",
+    "copyright": "2024 IOMAD",
+    "licencia": "GNU GPL v3 or later"
+  },
+
+  "base_datos": {
+    "tiene_tablas_propias": false,
+    "tablas_estandar_utilizadas": [
+      {
+        "tabla": "logstore_standard_log",
+        "operacion": "INSERT masivo",
+        "proposito": "Registros de eventos de log (logins, vistas de cursos, actividades, etc.)"
+      },
+      {
+        "tabla": "user",
+        "operacion": "UPDATE",
+        "proposito": "Actualización de campos de acceso (firstaccess, lastaccess, lastlogin, currentlogin, lastip, timecreated)"
+      },
+      {
+        "tabla": "user_lastaccess",
+        "operacion": "INSERT/UPDATE",
+        "proposito": "Último acceso de usuarios a cursos específicos"
+      },
+      {
+        "tabla": "course_modules_completion",
+        "operacion": "INSERT masivo",
+        "proposito": "Estado de finalización de actividades"
+      },
+      {
+        "tabla": "course_modules_viewed",
+        "operacion": "INSERT masivo",
+        "proposito": "Registro de visualizaciones de módulos (si tabla existe)"
+      },
+      {
+        "tabla": "course_completions",
+        "operacion": "INSERT",
+        "proposito": "Finalizaciones de cursos"
+      }
+    ],
+    "tablas_iomad_utilizadas": [
+      {
+        "tabla": "company",
+        "operacion": "SELECT",
+        "proposito": "Obtener lista de empresas"
+      },
+      {
+        "tabla": "company_users",
+        "operacion": "SELECT",
+        "proposito": "Relación usuarios-empresas"
+      },
+      {
+        "tabla": "company_course",
+        "operacion": "SELECT",
+        "proposito": "Relación cursos-empresas"
+      },
+      {
+        "tabla": "local_report_user_logins",
+        "operacion": "INSERT/UPDATE",
+        "proposito": "Estadísticas de inicio de sesión (si existe)"
+      }
+    ],
+    "operaciones_limpieza": [
+      "TRUNCATE logstore_standard_log",
+      "TRUNCATE user_lastaccess",
+      "TRUNCATE course_modules_completion",
+      "TRUNCATE course_completions",
+      "TRUNCATE local_report_user_logins (si existe)",
+      "TRUNCATE course_modules_viewed (si existe)",
+      "UPDATE user SET firstaccess=0, lastaccess=0, lastlogin=0, currentlogin=0, lastip='' (usuarios seleccionados)"
+    ]
+  },
+
+  "capacidades": {
+    "total": 2,
+    "lista": [
+      {
+        "nombre": "local/platform_access:generate",
+        "tipo": "write",
+        "nivel": "CONTEXT_SYSTEM",
+        "riesgos": ["RISK_CONFIG", "RISK_DATALOSS"],
+        "proposito": "Permite generar y limpiar registros de acceso",
+        "roles_por_defecto": ["manager"]
+      },
+      {
+        "nombre": "local/platform_access:view",
+        "tipo": "read",
+        "nivel": "CONTEXT_SYSTEM",
+        "riesgos": ["RISK_PERSONAL"],
+        "proposito": "Permite ver la interfaz del generador",
+        "roles_por_defecto": ["manager"]
+      }
+    ]
+  },
+
+  "arquitectura": {
+    "clases": [
+      {
+        "nombre": "generator",
+        "namespace": "local_platform_access",
+        "tipo": "Servicio principal",
+        "responsabilidad": "Generación masiva de registros con optimizaciones de rendimiento",
+        "metodos_publicos_clave": [
+          "get_users(): Obtiene usuarios a procesar",
+          "run(callable $callback): Ejecuta generación completa",
+          "get_stats(): Retorna estadísticas",
+          "clean_existing_records(array $users): Limpia registros existentes",
+          "get_companies(): Obtiene lista de empresas (estático)"
+        ],
+        "optimizaciones": [
+          "Buffering con lotes de 500 registros",
+          "Pre-carga de matriculaciones en memoria",
+          "Cache de contextos (course, module, user)",
+          "Uso de TRUNCATE para limpieza rápida",
+          "Verificación cacheada de existencia de tablas"
+        ]
+      },
+      {
+        "nombre": "generate_form",
+        "namespace": "local_platform_access\\form",
+        "tipo": "Formulario Moodle",
+        "responsabilidad": "Interfaz de configuración de generación",
+        "secciones": [
+          "General Options",
+          "User Settings",
+          "Date Range",
+          "Access Counts",
+          "Advanced Events"
+        ]
+      },
+      {
+        "nombre": "provider",
+        "namespace": "local_platform_access\\privacy",
+        "tipo": "Proveedor de privacidad",
+        "responsabilidad": "Cumplimiento GDPR - declara que no almacena datos personales propios"
+      }
+    ],
+    "sin_lib_php": true,
+    "sin_templates_mustache": true,
+    "patron_diseno": "Generador con buffer pattern y cache pattern"
+  },
+
+  "paginas_interfaz": [
+    {
+      "archivo": "index.php",
+      "url": "/local/platform_access/index.php",
+      "proposito": "Formulario de configuración",
+      "flujo": "Mostrar formulario → Validar → Redirigir a generate.php"
+    },
+    {
+      "archivo": "generate.php",
+      "url": "/local/platform_access/generate.php",
+      "proposito": "Procesamiento y ejecución",
+      "flujo": "Confirmar → Ejecutar generación → Mostrar estadísticas",
+      "optimizaciones_ejecucion": [
+        "Sin límite de tiempo (raise(0))",
+        "Memoria extendida (MEMORY_HUGE)",
+        "Barra de progreso por usuario"
+      ]
+    }
+  ],
+
+  "configuracion": {
+    "settings_persistentes": false,
+    "configuracion_por_ejecucion": true,
+    "ubicacion_menu": "Administración del sitio > Development > Platform Access Generator",
+    "capability_menu": "local/platform_access:generate"
+  },
+
+  "internacionalizacion": {
+    "idiomas_soportados": ["en", "es"],
+    "total_cadenas": 101,
+    "cobertura": "100%",
+    "archivo_en": "/home/user/iomad/local/platform_access/lang/en/local_platform_access.php",
+    "archivo_es": "/home/user/iomad/local/platform_access/lang/es/local_platform_access.php"
+  },
+
+  "funcionalidades_principales": {
+    "generacion_accesos": {
+      "tipos_soportados": [
+        "login: Inicios de sesión",
+        "course: Accesos a cursos",
+        "activity: Accesos a actividades",
+        "all: Todos los anteriores"
+      ],
+      "eventos_generados": [
+        "\\core\\event\\user_loggedin",
+        "\\core\\event\\user_loggedout",
+        "\\core\\event\\dashboard_viewed",
+        "\\core\\event\\course_viewed",
+        "\\core\\event\\course_completed",
+        "\\mod_{modname}\\event\\course_module_viewed"
+      ]
+    },
+    "filtros_usuarios": {
+      "por_empresa": "Selección de empresa específica o todas",
+      "solo_activos": "Excluir suspendidos/eliminados",
+      "incluir_admins": "Opcional incluir/excluir administradores"
+    },
+    "configuracion_generacion": {
+      "rango_fechas": "Fecha desde/hasta para timestamps",
+      "aleatorizacion": "Timestamps aleatorios en rango o fecha fija",
+      "rangos_accesos": "Min/max por tipo (logins, cursos, actividades)",
+      "actualizacion_usuario": "Opcional actualizar fecha de creación",
+      "limpieza_previa": "Opcional truncar registros existentes"
+    },
+    "eventos_avanzados": {
+      "dashboard": "Generación con 70% probabilidad post-login",
+      "logout": "Generación con 50% probabilidad, duración 5min-2hrs",
+      "completions": "Finalizaciones de cursos con % configurable"
+    }
+  },
+
+  "estadisticas_generadas": [
+    "users_processed: Total de usuarios procesados",
+    "users_updated: Usuarios con timecreated actualizado",
+    "users_without_enrollments: Usuarios sin matriculaciones",
+    "records_deleted: Registros eliminados en limpieza",
+    "logins_generated: Inicios de sesión generados",
+    "course_access_generated: Accesos a cursos generados",
+    "activity_access_generated: Accesos a actividades generados",
+    "dashboard_access_generated: Accesos al dashboard generados",
+    "logouts_generated: Cierres de sesión generados",
+    "completions_generated: Finalizaciones de cursos generadas",
+    "lastaccess_updated: Actualizaciones de último acceso",
+    "time_elapsed: Tiempo de ejecución en segundos"
+  ],
+
+  "optimizaciones_rendimiento": {
+    "tecnicas": [
+      {
+        "nombre": "Buffering masivo",
+        "descripcion": "Acumulación de 500 registros antes de INSERT",
+        "impacto": "Reduce queries de N a N/500"
+      },
+      {
+        "nombre": "Pre-carga de enrollments",
+        "descripcion": "Una sola query para todas las matriculaciones",
+        "impacto": "Evita N queries por usuario"
+      },
+      {
+        "nombre": "Cache de contextos",
+        "descripcion": "Almacena contextos en memoria para reutilización",
+        "impacto": "Evita llamadas repetidas a context::instance()"
+      },
+      {
+        "nombre": "TRUNCATE vs DELETE",
+        "descripcion": "Usa TRUNCATE para limpieza completa de tablas",
+        "impacto": "10-100x más rápido que DELETE"
+      },
+      {
+        "nombre": "Verificación cacheada de tablas",
+        "descripcion": "Verifica existencia de tablas opcionales una sola vez",
+        "impacto": "Evita queries repetidas a información del esquema"
+      },
+      {
+        "nombre": "Construcción directa de eventos",
+        "descripcion": "Crea arrays de log sin instanciar eventos Moodle",
+        "impacto": "Evita overhead de clases de eventos"
+      }
+    ],
+    "constantes": {
+      "BATCH_SIZE": 500,
+      "memoria": "MEMORY_HUGE",
+      "tiempo": "ilimitado (0)"
+    }
+  },
+
+  "integracion_iomad": {
+    "tablas_utilizadas": [
+      "company",
+      "company_users",
+      "company_course",
+      "local_report_user_logins"
+    ],
+    "funcionalidades": [
+      "Selector de empresa en formulario",
+      "Filtrado de usuarios por empresa",
+      "Filtrado de cursos por empresa",
+      "Actualización de estadísticas en local_report_user_logins",
+      "Respeto de suspensiones a nivel empresa"
+    ],
+    "compatibilidad": "Funciona en Moodle estándar (ignora tablas IOMAD si no existen)"
+  },
+
+  "seguridad_privacidad": {
+    "gdpr_compliance": true,
+    "almacena_datos_personales": false,
+    "privacy_provider": "null_provider",
+    "capacidades_riesgo": [
+      "RISK_CONFIG: Puede afectar configuración del sistema",
+      "RISK_DATALOSS: Puede eliminar registros existentes",
+      "RISK_PERSONAL: Accede a información de usuarios"
+    ],
+    "controles_seguridad": [
+      "Verificación de login",
+      "Verificación de capacidades",
+      "Validación de sesskey",
+      "Contexto de sistema (solo admins)",
+      "Confirmación antes de ejecución"
+    ]
+  },
+
+  "casos_uso": [
+    "Generación de datos de prueba para desarrollo",
+    "Población de registros históricos para análisis",
+    "Testing de reportes y dashboards",
+    "Simulación de actividad de usuario para demos",
+    "Validación de rendimiento de queries de reportes"
+  ],
+
+  "limitaciones_consideraciones": [
+    "No genera datos 100% realistas (patrones aleatorios)",
+    "Requiere privilegios de administrador",
+    "Puede consumir mucho tiempo y recursos en grandes volúmenes",
+    "La limpieza elimina TODOS los registros (no es selectiva)",
+    "No valida coherencia de datos (ej: accesos sin matriculación)",
+    "Los timestamps son aleatorios dentro del rango (no cronológicos)"
+  ],
+
+  "estructura_directorios": {
+    "/home/user/iomad/local/platform_access/": "Raíz del plugin",
+    "/home/user/iomad/local/platform_access/classes/": "Clases PHP con namespaces",
+    "/home/user/iomad/local/platform_access/classes/form/": "Formularios Moodle",
+    "/home/user/iomad/local/platform_access/classes/privacy/": "Proveedores de privacidad",
+    "/home/user/iomad/local/platform_access/db/": "Definiciones de BD (access.php)",
+    "/home/user/iomad/local/platform_access/lang/": "Archivos de idioma",
+    "/home/user/iomad/local/platform_access/lang/en/": "Inglés",
+    "/home/user/iomad/local/platform_access/lang/es/": "Español"
+  },
+
+  "archivos_principales": [
+    {
+      "archivo": "version.php",
+      "proposito": "Metadatos del plugin"
+    },
+    {
+      "archivo": "settings.php",
+      "proposito": "Entrada en menú de administración"
+    },
+    {
+      "archivo": "index.php",
+      "proposito": "Página del formulario"
+    },
+    {
+      "archivo": "generate.php",
+      "proposito": "Página de procesamiento"
+    },
+    {
+      "archivo": "styles.css",
+      "proposito": "Estilos personalizados"
+    },
+    {
+      "archivo": "README.md",
+      "proposito": "Documentación"
+    },
+    {
+      "archivo": "db/access.php",
+      "proposito": "Definición de capacidades"
+    },
+    {
+      "archivo": "classes/generator.php",
+      "proposito": "Lógica principal de generación"
+    },
+    {
+      "archivo": "classes/form/generate_form.php",
+      "proposito": "Formulario de configuración"
+    },
+    {
+      "archivo": "classes/privacy/provider.php",
+      "proposito": "Cumplimiento GDPR"
+    }
+  ],
+
+  "dependencias": {
+    "moodle_version": "2024100700+",
+    "plugins_opcionales": [
+      "IOMAD (company, company_users, company_course)",
+      "local_report_user_logins"
+    ],
+    "tablas_opcionales": [
+      "course_modules_viewed",
+      "local_report_user_logins"
+    ]
+  },
+
+  "metricas_codigo": {
+    "total_archivos_php": 6,
+    "total_clases": 3,
+    "lineas_generator": "~1019",
+    "lineas_generate_form": "~229",
+    "lineas_total_estimadas": "~1500",
+    "complejidad": "Media-Alta (optimizaciones avanzadas)"
+  },
+
+  "flujo_completo": {
+    "paso_1": "Usuario accede a Administración > Development > Platform Access Generator",
+    "paso_2": "Sistema muestra formulario con opciones de configuración",
+    "paso_3": "Usuario configura empresa, fechas, rangos y opciones",
+    "paso_4": "Usuario envía formulario",
+    "paso_5": "Sistema redirige a generate.php con parámetros",
+    "paso_6": "Sistema solicita confirmación",
+    "paso_7": "Usuario confirma",
+    "paso_8": "Sistema aumenta límites de tiempo y memoria",
+    "paso_9": "Sistema crea instancia del generador con opciones",
+    "paso_10": "Sistema obtiene lista de usuarios a procesar",
+    "paso_11": "Sistema limpia registros existentes (si cleanbeforegenerate=1)",
+    "paso_12": "Sistema pre-carga enrollments y contextos",
+    "paso_13": "Sistema actualiza fechas de creación de usuarios (si updateusercreated=1)",
+    "paso_14": "Sistema procesa cada usuario con callbacks de progreso",
+    "paso_15": "Para cada usuario: genera logins, dashboard, cursos, actividades, completions",
+    "paso_16": "Sistema bufferiza registros y hace flush cada 500",
+    "paso_17": "Sistema actualiza campos de acceso de usuarios",
+    "paso_18": "Sistema muestra tabla de estadísticas",
+    "paso_19": "Usuario ve resumen y puede continuar"
+  },
+
+  "archivos_json_generados": [
+    "version_info.json",
+    "db_tables.json",
+    "capabilities.json",
+    "lib_functions.json",
+    "classes.json",
+    "pages.json",
+    "settings.json",
+    "templates_lang.json",
+    "CONSOLIDADO.json"
+  ],
+
+  "conclusion": {
+    "calidad_codigo": "Alta - Bien estructurado, moderno, optimizado",
+    "documentacion": "Buena - README, comentarios, strings de ayuda",
+    "mantenibilidad": "Alta - Separación de responsabilidades, namespaces",
+    "rendimiento": "Excelente - Múltiples optimizaciones implementadas",
+    "seguridad": "Adecuada - Verificaciones y capabilities correctas",
+    "usabilidad": "Buena - Interfaz clara, progreso visible, estadísticas detalladas",
+    "integracion_iomad": "Excelente - Totalmente integrado con fallback a Moodle estándar"
+  }
+}

@@ -1,0 +1,340 @@
+{
+  "metadata": {
+    "plugin": "local_jobboard",
+    "file_source": "/home/user/iomad/local/jobboard/settings.php",
+    "description": "Configuraciones disponibles en el plugin local_jobboard",
+    "extracted_date": "2025-12-30"
+  },
+  "settings_structure": {
+    "admin_category": {
+      "name": "local_jobboard_category",
+      "label": "pluginname"
+    },
+    "settings_page": {
+      "name": "local_jobboard",
+      "label": "generalsettings"
+    }
+  },
+  "external_pages": [
+    {
+      "name": "local_jobboard_doctypes",
+      "label": "managedoctypes",
+      "url": "/local/jobboard/admin/doctypes.php",
+      "capability": "local/jobboard:managedoctypes",
+      "description": "Gestión de tipos de documentos requeridos"
+    },
+    {
+      "name": "local_jobboard_templates",
+      "label": "emailtemplates",
+      "url": "/local/jobboard/admin/templates.php",
+      "capability": "local/jobboard:manageemailtemplates",
+      "description": "Gestión de plantillas de correo electrónico"
+    },
+    {
+      "name": "local_jobboard_exemptions",
+      "label": "manageexemptions",
+      "url": "/local/jobboard/admin/exemptions.php",
+      "capability": "local/jobboard:manageexemptions",
+      "description": "Gestión de excepciones de documentos"
+    },
+    {
+      "name": "local_jobboard_convocatorias",
+      "label": "manageconvocatorias",
+      "url": "/local/jobboard/index.php?view=convocatorias",
+      "capability": "local/jobboard:createvacancy",
+      "description": "Gestión de convocatorias"
+    }
+  ],
+  "settings_sections": [
+    {
+      "section": "General Settings",
+      "heading_key": "local_jobboard/generalheading",
+      "settings": [
+        {
+          "name": "local_jobboard/enable_self_registration",
+          "type": "admin_setting_configcheckbox",
+          "label": "enableselfregistration",
+          "description": "enableselfregistration_desc",
+          "default_value": 1,
+          "purpose": "Habilita el autoregistro específico del plugin"
+        },
+        {
+          "name": "local_jobboard/institutionname",
+          "type": "admin_setting_configtext",
+          "label": "institutionname",
+          "description": "",
+          "default_value": "",
+          "param_type": "PARAM_TEXT",
+          "purpose": "Nombre de la institución"
+        },
+        {
+          "name": "local_jobboard/contactemail",
+          "type": "admin_setting_configtext",
+          "label": "contactemail",
+          "description": "",
+          "default_value": "",
+          "param_type": "PARAM_EMAIL",
+          "purpose": "Email de contacto"
+        }
+      ]
+    },
+    {
+      "section": "Public Page Settings",
+      "heading_key": "local_jobboard/publicpageheading",
+      "description_key": "publicpagesettings_desc",
+      "settings": [
+        {
+          "name": "local_jobboard/enable_public_page",
+          "type": "admin_setting_configcheckbox",
+          "label": "enablepublicpage",
+          "description": "enablepublicpage_desc",
+          "default_value": 1,
+          "purpose": "Habilita la página pública de vacantes"
+        },
+        {
+          "name": "local_jobboard/public_page_title",
+          "type": "admin_setting_configtext",
+          "label": "publicpagetitle",
+          "description": "publicpagetitle_desc",
+          "default_value": "",
+          "param_type": "PARAM_TEXT",
+          "purpose": "Título de la página pública"
+        },
+        {
+          "name": "local_jobboard/public_page_description",
+          "type": "admin_setting_configtextarea",
+          "label": "publicpagedescription",
+          "description": "publicpagedescription_desc",
+          "default_value": "",
+          "purpose": "Descripción de la página pública"
+        },
+        {
+          "name": "local_jobboard/show_public_nav_link",
+          "type": "admin_setting_configcheckbox",
+          "label": "showpublicnavlink",
+          "description": "showpublicnavlink_desc",
+          "default_value": 1,
+          "purpose": "Muestra enlace público en la navegación"
+        }
+      ]
+    },
+    {
+      "section": "Navigation Settings",
+      "heading_key": "local_jobboard/navigationheading",
+      "description_key": "navigationsettings_desc",
+      "settings": [
+        {
+          "name": "local_jobboard/show_in_main_menu",
+          "type": "admin_setting_configcheckbox",
+          "label": "showinmainmenu",
+          "description": "showinmainmenu_desc",
+          "default_value": 1,
+          "purpose": "Muestra en el menú principal de navegación"
+        },
+        {
+          "name": "local_jobboard/main_menu_title",
+          "type": "admin_setting_configtext",
+          "label": "mainmenutitle",
+          "description": "mainmenutitle_desc",
+          "default_value": "",
+          "param_type": "PARAM_TEXT",
+          "purpose": "Título personalizado del elemento del menú principal"
+        }
+      ]
+    },
+    {
+      "section": "Application Limits",
+      "heading_key": "local_jobboard/applicationlimitsheading",
+      "description_key": "applicationlimits_perconvocatoria_desc",
+      "note": "Los límites de postulación (permitir múltiples, máximo por usuario) ahora se configuran por convocatoria, no globalmente. Ver el formulario de edición de convocatoria para estas configuraciones.",
+      "settings": []
+    },
+    {
+      "section": "Document Settings",
+      "heading_key": "local_jobboard/documentsheading",
+      "settings": [
+        {
+          "name": "local_jobboard/maxfilesize",
+          "type": "admin_setting_configtext",
+          "label": "maxfilesize",
+          "description": "",
+          "default_value": "10",
+          "param_type": "PARAM_INT",
+          "unit": "MB",
+          "purpose": "Tamaño máximo de archivo"
+        },
+        {
+          "name": "local_jobboard/allowedformats",
+          "type": "admin_setting_configtext",
+          "label": "allowedformats",
+          "description": "allowedformats_desc",
+          "default_value": "pdf",
+          "param_type": "PARAM_TEXT",
+          "purpose": "Formatos de archivo permitidos"
+        },
+        {
+          "name": "local_jobboard/epsmaxdays",
+          "type": "admin_setting_configtext",
+          "label": "epsmaxdays",
+          "description": "",
+          "default_value": "30",
+          "param_type": "PARAM_INT",
+          "unit": "days",
+          "purpose": "Días máximos de validez para documentos EPS"
+        },
+        {
+          "name": "local_jobboard/pensionmaxdays",
+          "type": "admin_setting_configtext",
+          "label": "pensionmaxdays",
+          "description": "",
+          "default_value": "30",
+          "param_type": "PARAM_INT",
+          "unit": "days",
+          "purpose": "Días máximos de validez para documentos de pensión"
+        },
+        {
+          "name": "local_jobboard/antecedentesmaxdays",
+          "type": "admin_setting_configtext",
+          "label": "antecedentesmaxdays",
+          "description": "",
+          "default_value": "30",
+          "param_type": "PARAM_INT",
+          "unit": "days",
+          "purpose": "Días máximos de validez para certificados de antecedentes"
+        }
+      ]
+    },
+    {
+      "section": "Security Settings",
+      "heading_key": "local_jobboard/securityheading",
+      "settings": [
+        {
+          "name": "local_jobboard/enableencryption",
+          "type": "admin_setting_configcheckbox",
+          "label": "enableencryption",
+          "description": "",
+          "default_value": 0,
+          "purpose": "Habilita encriptación de datos sensibles"
+        },
+        {
+          "name": "local_jobboard/dataretentiondays",
+          "type": "admin_setting_configtext",
+          "label": "dataretentiondays",
+          "description": "",
+          "default_value": "1825",
+          "param_type": "PARAM_INT",
+          "unit": "days",
+          "purpose": "Días de retención de datos (5 años por defecto)"
+        },
+        {
+          "name": "local_jobboard/enableapi",
+          "type": "admin_setting_configcheckbox",
+          "label": "enableapi",
+          "description": "",
+          "default_value": 0,
+          "purpose": "Habilita API externa"
+        }
+      ]
+    },
+    {
+      "section": "reCAPTCHA Enterprise Settings",
+      "heading_key": "local_jobboard/recaptchaheading",
+      "description_key": "recaptchasettings_desc",
+      "settings": [
+        {
+          "name": "local_jobboard/recaptcha_enabled",
+          "type": "admin_setting_configcheckbox",
+          "label": "recaptcha_enabled",
+          "description": "recaptcha_enabled_desc",
+          "default_value": 0,
+          "purpose": "Habilita reCAPTCHA para formularios públicos"
+        },
+        {
+          "name": "local_jobboard/recaptcha_type",
+          "type": "admin_setting_configselect",
+          "label": "recaptcha_type",
+          "description": "recaptcha_type_desc",
+          "default_value": "enterprise",
+          "options": {
+            "enterprise": "recaptcha_type_enterprise",
+            "standard": "recaptcha_type_standard"
+          },
+          "purpose": "Tipo de reCAPTCHA (estándar o enterprise)"
+        },
+        {
+          "name": "local_jobboard/recaptcha_sitekey",
+          "type": "admin_setting_configtext",
+          "label": "recaptcha_sitekey",
+          "description": "recaptcha_sitekey_desc",
+          "default_value": "",
+          "param_type": "PARAM_TEXT",
+          "purpose": "Clave del sitio reCAPTCHA"
+        },
+        {
+          "name": "local_jobboard/recaptcha_project_id",
+          "type": "admin_setting_configtext",
+          "label": "recaptcha_project_id",
+          "description": "recaptcha_project_id_desc",
+          "default_value": "",
+          "param_type": "PARAM_TEXT",
+          "purpose": "ID del proyecto de Google Cloud (solo Enterprise)"
+        },
+        {
+          "name": "local_jobboard/recaptcha_api_key",
+          "type": "admin_setting_configpasswordunmask",
+          "label": "recaptcha_api_key",
+          "description": "recaptcha_api_key_desc",
+          "default_value": "",
+          "purpose": "API Key de reCAPTCHA Enterprise"
+        },
+        {
+          "name": "local_jobboard/recaptcha_secretkey",
+          "type": "admin_setting_configpasswordunmask",
+          "label": "recaptcha_secretkey",
+          "description": "recaptcha_secretkey_desc",
+          "default_value": "",
+          "purpose": "Clave secreta de reCAPTCHA (solo versión estándar)"
+        },
+        {
+          "name": "local_jobboard/recaptcha_threshold",
+          "type": "admin_setting_configtext",
+          "label": "recaptcha_threshold",
+          "description": "recaptcha_threshold_desc",
+          "default_value": "0.5",
+          "param_type": "PARAM_FLOAT",
+          "range": "0.0 - 1.0",
+          "purpose": "Umbral de puntuación de reCAPTCHA"
+        }
+      ]
+    },
+    {
+      "section": "Support Settings",
+      "heading_key": "local_jobboard/supportheading",
+      "description_key": "supportsettings_desc",
+      "settings": [
+        {
+          "name": "local_jobboard/support_emails",
+          "type": "admin_setting_configtextarea",
+          "label": "support_emails",
+          "description": "support_emails_desc",
+          "default_value": "mtic@iser.edu.co, soporteplataformas@iser.edu.co",
+          "param_type": "PARAM_TEXT",
+          "purpose": "Emails de soporte (lista separada por comas)"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_settings": 26,
+    "total_external_pages": 4,
+    "total_sections": 8,
+    "key_features": [
+      "Configuración de página pública",
+      "Gestión de navegación personalizable",
+      "Validación de documentos con límites de días",
+      "Integración con reCAPTCHA Enterprise",
+      "Configuración de seguridad y retención de datos",
+      "Sistema de soporte multicanal"
+    ]
+  }
+}

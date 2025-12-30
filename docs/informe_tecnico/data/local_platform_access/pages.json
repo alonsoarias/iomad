@@ -1,0 +1,217 @@
+{
+  "plugin": "local_platform_access",
+  "directorio": "/home/user/iomad/local/platform_access",
+  "paginas": [
+    {
+      "archivo": "/home/user/iomad/local/platform_access/index.php",
+      "nombre": "Página principal del generador",
+      "descripcion": "Página de inicio que muestra el formulario de configuración para generar registros de acceso",
+      "tipo": "Interfaz de usuario",
+      "url": "/local/platform_access/index.php",
+      "requires_login": true,
+      "capability_requerida": "local/platform_access:generate",
+      "contexto": "system",
+      "funcionalidad": [
+        "Muestra el formulario de generación (generate_form)",
+        "Valida que el usuario tenga la capacidad necesaria",
+        "Procesa el formulario cuando se envía",
+        "Redirige a generate.php con parámetros si se confirma",
+        "Permite cancelar y volver al panel de administración"
+      ],
+      "configuracion_pagina": {
+        "context": "context_system",
+        "url": "/local/platform_access/index.php",
+        "pagelayout": "admin",
+        "title": "pluginname",
+        "heading": "pluginname"
+      },
+      "flujo": [
+        "1. Verifica login y capacidad",
+        "2. Crea instancia del formulario",
+        "3. Si se cancela: redirige a /admin/index.php",
+        "4. Si se envía: redirige a generate.php con todos los parámetros",
+        "5. Si no hay acción: muestra el formulario"
+      ],
+      "parametros_enviados": [
+        "companyid",
+        "accesstype",
+        "cleanbeforegenerate",
+        "datefrom",
+        "dateto",
+        "loginsmin",
+        "loginsmax",
+        "courseaccessmin",
+        "courseaccessmax",
+        "activityaccessmin",
+        "activityaccessmax",
+        "randomize",
+        "includeadmins",
+        "onlyactive",
+        "updateusercreated",
+        "usercreateddate",
+        "generatedashboard",
+        "generatelogouts",
+        "generatecompletions",
+        "completionpercentmin",
+        "completionpercentmax",
+        "sesskey"
+      ]
+    },
+    {
+      "archivo": "/home/user/iomad/local/platform_access/generate.php",
+      "nombre": "Página de procesamiento y generación",
+      "descripcion": "Ejecuta el proceso de generación de registros de acceso con barra de progreso y muestra resultados",
+      "tipo": "Página de procesamiento",
+      "url": "/local/platform_access/generate.php",
+      "requires_login": true,
+      "requires_sesskey": true,
+      "capability_requerida": "local/platform_access:generate",
+      "contexto": "system",
+      "funcionalidad": [
+        "Recibe todos los parámetros de configuración",
+        "Muestra confirmación antes de ejecutar (si confirm=0)",
+        "Aumenta límite de ejecución y memoria para procesos largos",
+        "Crea instancia del generador con las opciones",
+        "Ejecuta la generación con barra de progreso",
+        "Muestra resumen de estadísticas en tabla",
+        "Permite continuar de vuelta al formulario"
+      ],
+      "configuracion_pagina": {
+        "context": "context_system",
+        "url": "/local/platform_access/generate.php",
+        "pagelayout": "admin",
+        "title": "pluginname",
+        "heading": "pluginname"
+      },
+      "parametros_recibidos": {
+        "requeridos": [
+          "companyid (PARAM_INT)",
+          "accesstype (PARAM_ALPHA)",
+          "cleanbeforegenerate (PARAM_INT)",
+          "datefrom (PARAM_INT)",
+          "dateto (PARAM_INT)",
+          "loginsmin (PARAM_INT)",
+          "loginsmax (PARAM_INT)",
+          "courseaccessmin (PARAM_INT)",
+          "courseaccessmax (PARAM_INT)",
+          "activityaccessmin (PARAM_INT)",
+          "activityaccessmax (PARAM_INT)",
+          "randomize (PARAM_INT)",
+          "includeadmins (PARAM_INT)",
+          "onlyactive (PARAM_INT)",
+          "updateusercreated (PARAM_INT)",
+          "usercreateddate (PARAM_INT)"
+        ],
+        "opcionales": [
+          "generatedashboard (PARAM_INT, default: 1)",
+          "generatelogouts (PARAM_INT, default: 0)",
+          "generatecompletions (PARAM_INT, default: 0)",
+          "completionpercentmin (PARAM_INT, default: 50)",
+          "completionpercentmax (PARAM_INT, default: 100)",
+          "confirm (PARAM_INT, default: 0)"
+        ]
+      },
+      "flujo_confirmacion": [
+        "1. Si confirm=0: muestra diálogo de confirmación con botones Confirmar/Cancelar",
+        "2. Si cancela: vuelve a index.php",
+        "3. Si confirma: procesa con confirm=1"
+      ],
+      "flujo_procesamiento": [
+        "1. Aumenta límite de tiempo (ilimitado)",
+        "2. Aumenta límite de memoria (MEMORY_HUGE)",
+        "3. Crea instancia del generador con opciones",
+        "4. Obtiene lista de usuarios a procesar",
+        "5. Si no hay usuarios: muestra advertencia y botón continuar",
+        "6. Crea progress_bar para mostrar avance",
+        "7. Ejecuta generator->run() con callback de progreso",
+        "8. Muestra tabla de resumen con estadísticas",
+        "9. Muestra notificación de éxito",
+        "10. Botón para continuar de vuelta al formulario"
+      ],
+      "estadisticas_mostradas": [
+        {
+          "clave": "usersprocessed",
+          "descripcion": "Usuarios procesados"
+        },
+        {
+          "clave": "usersupdated",
+          "descripcion": "Usuarios con fecha de creación actualizada"
+        },
+        {
+          "clave": "userswithoutenrollments",
+          "descripcion": "Usuarios sin matriculaciones"
+        },
+        {
+          "clave": "recordsdeleted",
+          "descripcion": "Registros eliminados (si cleanbeforegenerate)"
+        },
+        {
+          "clave": "loginsgenerated",
+          "descripcion": "Inicios de sesión generados"
+        },
+        {
+          "clave": "courseaccessgenerated",
+          "descripcion": "Accesos a cursos generados"
+        },
+        {
+          "clave": "activityaccessgenerated",
+          "descripcion": "Accesos a actividades generados"
+        },
+        {
+          "clave": "dashboardaccessgenerated",
+          "descripcion": "Accesos al dashboard generados"
+        },
+        {
+          "clave": "logoutsgenerated",
+          "descripcion": "Cierres de sesión generados"
+        },
+        {
+          "clave": "completionsgenerated",
+          "descripcion": "Finalizaciones de cursos generadas"
+        },
+        {
+          "clave": "lastaccessupdated",
+          "descripcion": "Últimos accesos actualizados"
+        },
+        {
+          "clave": "timecompleted",
+          "descripcion": "Tiempo de ejecución en segundos"
+        }
+      ],
+      "optimizaciones": [
+        "core_php_time_limit::raise(0) - Sin límite de tiempo",
+        "raise_memory_limit(MEMORY_HUGE) - Memoria extendida",
+        "Progress bar con actualización por usuario procesado"
+      ]
+    }
+  ],
+  "otros_archivos": [
+    {
+      "archivo": "/home/user/iomad/local/platform_access/styles.css",
+      "tipo": "CSS",
+      "descripcion": "Archivo de estilos para personalizar la apariencia del plugin"
+    },
+    {
+      "archivo": "/home/user/iomad/local/platform_access/README.md",
+      "tipo": "Documentación",
+      "descripcion": "Documentación del plugin con instrucciones de uso"
+    }
+  ],
+  "resumen": {
+    "total_paginas": 2,
+    "flujo_navegacion": "index.php (formulario) -> generate.php (confirmación) -> generate.php (procesamiento) -> index.php (continuar)",
+    "seguridad": [
+      "Verificación de login en todas las páginas",
+      "Verificación de capacidad local/platform_access:generate",
+      "Validación de sesskey en generate.php",
+      "Contexto de sistema (solo administradores)"
+    ],
+    "experiencia_usuario": [
+      "Formulario intuitivo con secciones colapsables",
+      "Diálogo de confirmación antes de ejecutar",
+      "Barra de progreso durante generación",
+      "Tabla de resumen con estadísticas detalladas",
+      "Mensajes de error/éxito apropiados"
+    ]
+  }
+}

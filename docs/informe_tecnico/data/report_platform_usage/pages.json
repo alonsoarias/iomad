@@ -1,0 +1,252 @@
+{
+  "plugin": "report_platform_usage",
+  "paginas": [
+    {
+      "archivo": "index.php",
+      "ruta": "/report/platform_usage/index.php",
+      "nombre": "Página principal del informe",
+      "proposito": "Interfaz principal que muestra el dashboard con estadísticas y gráficos de uso",
+      "tipo": "página_principal",
+      "parametros_url": [
+        {
+          "nombre": "courseid",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": 0,
+          "descripcion": "ID del curso para contexto de curso (0 = contexto de plataforma)"
+        },
+        {
+          "nombre": "companyid",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": 0,
+          "descripcion": "ID de empresa para filtrar (solo si IOMAD instalado)"
+        },
+        {
+          "nombre": "datefrom",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": "strtotime('-30 days midnight')",
+          "descripcion": "Timestamp de inicio del rango de fechas"
+        },
+        {
+          "nombre": "dateto",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": "time()",
+          "descripcion": "Timestamp de fin del rango de fechas"
+        }
+      ],
+      "logica_principal": [
+        "Determina el contexto basado en courseid (curso o sistema)",
+        "Requiere login y verifica capability 'report/platform_usage:view'",
+        "Configura la página con URL, título y layout",
+        "Verifica si IOMAD está instalado para mostrar filtro de empresas",
+        "Crea instancia de report con parámetros de filtrado",
+        "Obtiene todos los datos del informe iniciales",
+        "Carga archivo CSS personalizado",
+        "Renderiza la interfaz con gráficos y tablas"
+      ],
+      "contextos_soportados": [
+        {
+          "tipo": "CONTEXT_SYSTEM",
+          "descripcion": "Vista de plataforma completa con todos los cursos",
+          "cuando": "courseid = 0"
+        },
+        {
+          "tipo": "CONTEXT_COURSE",
+          "descripcion": "Vista específica de un curso individual",
+          "cuando": "courseid > 0"
+        }
+      ],
+      "datos_obtenidos": [
+        "loginSummary - Resumen de logins/accesos",
+        "userSummary - Resumen de actividad de usuarios",
+        "dailyLogins - Datos de logins diarios (30 días)",
+        "courseAccessTrends - Tendencias de acceso a cursos",
+        "topCourses - Top 10 cursos más accedidos",
+        "topActivities - Top 10 actividades más accedidas",
+        "completionsSummary - Resumen de completaciones",
+        "completionTrends - Tendencias de completaciones",
+        "dailyUsers - Usuarios únicos diarios",
+        "topDedication - Top 10 cursos por dedicación"
+      ],
+      "interfaz": {
+        "tipo": "Dashboard con gráficos",
+        "incluye": [
+          "Filtros de fecha y empresa",
+          "Tarjetas de métricas principales",
+          "Gráficos de líneas para tendencias",
+          "Tablas de top cursos y actividades",
+          "Botones de exportación"
+        ]
+      }
+    },
+    {
+      "archivo": "ajax.php",
+      "ruta": "/report/platform_usage/ajax.php",
+      "nombre": "Endpoint AJAX",
+      "proposito": "Proporciona datos JSON para actualización dinámica del dashboard",
+      "tipo": "endpoint_ajax",
+      "caracteristicas": [
+        "Define AJAX_SCRIPT como true",
+        "Retorna datos en formato JSON",
+        "Usa los mismos parámetros que index.php",
+        "Requiere mismo nivel de permisos"
+      ],
+      "parametros_url": [
+        {
+          "nombre": "courseid",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": 0
+        },
+        {
+          "nombre": "companyid",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": 0
+        },
+        {
+          "nombre": "datefrom",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": "strtotime('-30 days midnight')"
+        },
+        {
+          "nombre": "dateto",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": "time()"
+        }
+      ],
+      "logica": [
+        "Determina contexto (curso o sistema)",
+        "Requiere login y capability 'report/platform_usage:view'",
+        "Crea instancia de report",
+        "Obtiene todos los datos usando get_all_data()",
+        "Añade datos de dedicación",
+        "Si es contexto de curso, añade estadísticas específicas del curso",
+        "Retorna JSON con Content-Type correcto"
+      ],
+      "respuesta_json": {
+        "campos_basicos": [
+          "login_summary",
+          "user_summary",
+          "daily_logins",
+          "course_access_trends",
+          "top_courses",
+          "top_activities",
+          "completions_summary",
+          "completion_trends",
+          "logout_summary",
+          "daily_users",
+          "top_dedication"
+        ],
+        "campos_condicionales": [
+          "course_stats - Solo en contexto de curso"
+        ]
+      },
+      "uso": "Permite actualizar el dashboard sin recargar la página cuando cambian filtros"
+    },
+    {
+      "archivo": "export.php",
+      "ruta": "/report/platform_usage/export.php",
+      "nombre": "Manejador de exportaciones",
+      "proposito": "Gestiona la exportación de datos a Excel o CSV",
+      "tipo": "manejador_exportacion",
+      "parametros_url": [
+        {
+          "nombre": "courseid",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": 0
+        },
+        {
+          "nombre": "companyid",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": 0
+        },
+        {
+          "nombre": "datefrom",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": "strtotime('-30 days midnight')"
+        },
+        {
+          "nombre": "dateto",
+          "tipo": "PARAM_INT",
+          "opcional": true,
+          "defecto": "time()"
+        },
+        {
+          "nombre": "type",
+          "tipo": "PARAM_ALPHA",
+          "opcional": true,
+          "defecto": "summary",
+          "descripcion": "Tipo de exportación (summary, logins, courses, users, daily, dedication, activities, dailyusers)"
+        },
+        {
+          "nombre": "format",
+          "tipo": "PARAM_ALPHA",
+          "opcional": true,
+          "defecto": "excel",
+          "descripcion": "Formato de exportación (excel o csv)"
+        }
+      ],
+      "seguridad": [
+        "Requiere login y contexto adecuado",
+        "Verifica capability 'report/platform_usage:export'",
+        "Requiere sesskey válido para prevenir CSRF"
+      ],
+      "logica": [
+        "Determina contexto basado en courseid",
+        "Valida permisos y sesskey",
+        "Crea instancia de report con caché deshabilitado (datos frescos)",
+        "Si formato=excel y type=summary, usa excel_exporter (con gráficos)",
+        "Para otros casos, usa exporter estándar",
+        "Descarga archivo directamente al navegador"
+      ],
+      "tipos_exportacion": {
+        "summary": "Resumen completo con todas las secciones",
+        "logins": "Datos de logins",
+        "courses": "Acceso a cursos",
+        "users": "Detalles de usuarios",
+        "daily": "Logins diarios",
+        "dedication": "Dedicación por cursos",
+        "activities": "Acceso a actividades",
+        "dailyusers": "Usuarios únicos diarios"
+      },
+      "formatos": {
+        "excel": "Archivo .xlsx con formato y gráficos (solo para summary)",
+        "csv": "Archivo CSV para todos los tipos"
+      }
+    }
+  ],
+  "flujo_usuario": {
+    "descripcion": "Flujo típico de uso del plugin",
+    "pasos": [
+      "1. Usuario accede a index.php desde menú de informes del curso o sistema",
+      "2. Se muestra dashboard con datos de últimos 30 días por defecto",
+      "3. Usuario puede cambiar filtros (fechas, empresa) que disparan llamadas AJAX",
+      "4. ajax.php retorna datos actualizados en JSON",
+      "5. JavaScript actualiza gráficos y tablas sin recargar página",
+      "6. Usuario puede exportar datos usando export.php con botones del dashboard",
+      "7. export.php genera y descarga archivo Excel/CSV según selección"
+    ]
+  },
+  "integracion_frontend": {
+    "javascript": "Uso de AJAX para actualizaciones dinámicas",
+    "css": "styles.css para estilos personalizados",
+    "graficos": "Uso de librería de gráficos (Chart.js u otra)",
+    "responsive": "Layout responsive mediante Moodle Bootstrap"
+  },
+  "notas": [
+    "Todas las páginas verifican permisos antes de mostrar datos",
+    "El sistema soporta dos contextos: plataforma completa y curso individual",
+    "La integración con IOMAD es opcional y se detecta automáticamente",
+    "Los datos se cachean para mejorar rendimiento (excepto en exportaciones)",
+    "El rango de fechas predeterminado es 30 días hacia atrás"
+  ]
+}

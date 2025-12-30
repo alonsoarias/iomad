@@ -1,0 +1,107 @@
+{
+  "plugin": "report_platform_usage",
+  "archivo": "lib.php",
+  "descripcion": "Funciones de integración con el sistema de navegación de Moodle",
+  "funciones": [
+    {
+      "nombre": "report_platform_usage_extend_navigation_course",
+      "tipo": "callback",
+      "proposito": "Extender la navegación del curso para añadir enlace al informe",
+      "descripcion": "Añade un nodo de navegación al menú del curso para acceder al informe de uso de la plataforma",
+      "parametros": [
+        {
+          "nombre": "$navigation",
+          "tipo": "navigation_node",
+          "descripcion": "Nodo de navegación a extender"
+        },
+        {
+          "nombre": "$course",
+          "tipo": "stdClass",
+          "descripcion": "Objeto del curso actual"
+        },
+        {
+          "nombre": "$context",
+          "tipo": "context",
+          "descripcion": "Contexto del curso"
+        }
+      ],
+      "logica": [
+        "Verifica que el usuario tenga la capability 'report/platform_usage:view'",
+        "Crea una URL hacia /report/platform_usage/index.php con el courseid",
+        "Añade un nodo de navegación con icono de informe",
+        "El enlace se muestra con el texto 'coursereport' del idioma"
+      ],
+      "retorno": "void"
+    },
+    {
+      "nombre": "report_platform_usage_myprofile_navigation",
+      "tipo": "callback",
+      "proposito": "Navegación de perfil de usuario",
+      "descripcion": "Callback para la navegación del perfil de usuario. Actualmente no añade nada ya que el informe no es específico de usuario.",
+      "parametros": [
+        {
+          "nombre": "$tree",
+          "tipo": "core_user\\output\\myprofile\\tree",
+          "descripcion": "Árbol de navegación del perfil"
+        },
+        {
+          "nombre": "$user",
+          "tipo": "stdClass",
+          "descripcion": "Objeto del usuario"
+        },
+        {
+          "nombre": "$iscurrentuser",
+          "tipo": "bool",
+          "descripcion": "Si es el usuario actual"
+        },
+        {
+          "nombre": "$course",
+          "tipo": "stdClass",
+          "descripcion": "Objeto del curso"
+        }
+      ],
+      "logica": [
+        "No hace nada - el informe no es específico de usuario",
+        "Incluido para cumplir con la convención de callbacks de Moodle"
+      ],
+      "retorno": "void"
+    },
+    {
+      "nombre": "report_platform_usage_extend_settings_navigation",
+      "tipo": "callback",
+      "proposito": "Extender la navegación de configuración",
+      "descripcion": "Añade un enlace al informe en la sección de informes del curso en la configuración",
+      "parametros": [
+        {
+          "nombre": "$settingsnav",
+          "tipo": "settings_navigation",
+          "descripcion": "Objeto de navegación de configuración"
+        },
+        {
+          "nombre": "$context",
+          "tipo": "context",
+          "descripcion": "Contexto actual"
+        }
+      ],
+      "logica": [
+        "Verifica que el contexto sea CONTEXT_COURSE",
+        "Obtiene el objeto del curso desde el contexto",
+        "Verifica que no sea el sitio principal (SITEID)",
+        "Verifica que el usuario tenga la capability 'report/platform_usage:view'",
+        "Obtiene el nodo 'coursereports' de la navegación",
+        "Añade un enlace al informe con icono"
+      ],
+      "retorno": "void"
+    }
+  ],
+  "callbacks_moodle": {
+    "tipo": "Funciones de extensión de navegación",
+    "patron": "Las funciones siguen el patrón {pluginname}_{callback_name}",
+    "documentacion": "Callbacks estándar de Moodle para integración de plugins de informes"
+  },
+  "notas": [
+    "Todas las funciones verifican capabilities antes de añadir enlaces",
+    "El informe se integra tanto en la navegación del curso como en la sección de informes",
+    "No se añade al perfil de usuario porque el informe no es específico de usuario individual"
+  ]
+}
