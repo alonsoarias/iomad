@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Plantilla Base SVG - Informe Técnico ISER
+  Colores corporativos:
+  - Verde primario: #1B9E88
+  - Amarillo primario: #FCBD05
+  - Rojo primario: #EB4335
+  - Gris textos: #646363
+  - Negro: #000000
+  - Blanco: #FFFFFF
+
+  Especificaciones:
+  - Dimensiones: 800x600 px
+  - Tipografía: Arial
+  - Bordes redondeados: rx="5" ry="5"
+  - Grosor de líneas: 2px
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <!-- Marcadores de flechas -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1B9E88"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#EB4335"/>
+    </marker>
+
+    <!-- Estilos de cajas -->
+    <style>
+      .box-main { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; }
+      .box-secondary { fill: #FFFFFF; stroke: #646363; stroke-width: 2; }
+      .box-action { fill: #FFFFFF; stroke: #FCBD05; stroke-width: 2; }
+      .box-critical { fill: #FFFFFF; stroke: #EB4335; stroke-width: 2; }
+      .box-filled-green { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .box-filled-red { fill: #EB4335; stroke: #EB4335; stroke-width: 2; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
+      .text-normal { font-family: Arial, sans-serif; font-size: 12px; fill: #000000; }
+      .text-small { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; }
+      .text-white { font-family: Arial, sans-serif; font-size: 12px; fill: #FFFFFF; }
+      .line { stroke: #646363; stroke-width: 2; fill: none; }
+      .line-green { stroke: #1B9E88; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Fondo blanco -->
+  <rect width="800" height="600" fill="#FFFFFF"/>
+
+  <!-- Contenido del diagrama aquí -->
+
+</svg>

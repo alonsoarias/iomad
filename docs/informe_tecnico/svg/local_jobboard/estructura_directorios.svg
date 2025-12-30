@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" width="900" height="700">
+  <defs>
+    <!-- Estilos de cajas -->
+    <style>
+      .folder { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .file { fill: #FFFFFF; stroke: #646363; stroke-width: 1.5; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
+      .text-folder { font-family: Arial, sans-serif; font-size: 12px; fill: #FFFFFF; }
+      .text-file { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; }
+      .line { stroke: #646363; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Fondo blanco -->
+  <rect width="900" height="700" fill="#FFFFFF"/>
+
+  <!-- Plugin raíz -->
+  <rect x="350" y="30" width="200" height="40" rx="5" ry="5" class="folder"/>
+  <text x="450" y="55" text-anchor="middle" class="text-folder">local/jobboard/</text>
+
+  <!-- Líneas de conexión desde raíz -->
+  <line x1="450" y1="70" x2="450" y2="100" class="line"/>
+
+  <!-- Carpetas principales - Columna izquierda -->
+  <g id="col1">
+    <!-- admin/ -->
+    <rect x="50" y="110" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="110" y="132" text-anchor="middle" class="text-folder">admin/</text>
+    <line x1="450" y1="100" x2="110" y2="110" class="line"/>
+
+    <!-- ajax/ -->
+    <rect x="50" y="160" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="110" y="182" text-anchor="middle" class="text-folder">ajax/</text>
+    <line x1="450" y1="100" x2="110" y2="160" class="line"/>
+
+    <!-- amd/ -->
+    <rect x="50" y="210" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="110" y="232" text-anchor="middle" class="text-folder">amd/</text>
+    <line x1="450" y1="100" x2="110" y2="210" class="line"/>
+
+    <!-- classes/ -->
+    <rect x="50" y="260" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="110" y="282" text-anchor="middle" class="text-folder">classes/</text>
+    <line x1="450" y1="100" x2="110" y2="260" class="line"/>
+
+    <!-- Convocatoria/ -->
+    <rect x="50" y="310" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="110" y="332" text-anchor="middle" class="text-folder">Convocatoria/</text>
+    <line x1="450" y1="100" x2="110" y2="310" class="line"/>
+  </g>
+
+  <!-- Carpetas principales - Columna central -->
+  <g id="col2">
+    <!-- db/ -->
+    <rect x="215" y="110" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="275" y="132" text-anchor="middle" class="text-folder">db/</text>
+    <line x1="450" y1="100" x2="275" y2="110" class="line"/>
+
+    <!-- docs/ -->
+    <rect x="215" y="160" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="275" y="182" text-anchor="middle" class="text-folder">docs/</text>
+    <line x1="450" y1="100" x2="275" y2="160" class="line"/>
+
+    <!-- lang/ -->
+    <rect x="215" y="210" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="275" y="232" text-anchor="middle" class="text-folder">lang/</text>
+    <line x1="450" y1="100" x2="275" y2="210" class="line"/>
+
+    <!-- templates/ -->
+    <rect x="215" y="260" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="275" y="282" text-anchor="middle" class="text-folder">templates/</text>
+    <line x1="450" y1="100" x2="275" y2="260" class="line"/>
+
+    <!-- tests/ -->
+    <rect x="215" y="310" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="275" y="332" text-anchor="middle" class="text-folder">tests/</text>
+    <line x1="450" y1="100" x2="275" y2="310" class="line"/>
+
+    <!-- views/ -->
+    <rect x="215" y="360" width="120" height="35" rx="5" ry="5" class="folder"/>
+    <text x="275" y="382" text-anchor="middle" class="text-folder">views/</text>
+    <line x1="450" y1="100" x2="275" y2="360" class="line"/>
+  </g>
+
+  <!-- Archivos principales - Columna derecha -->
+  <g id="files">
+    <text x="580" y="125" class="text-file">Archivos principales:</text>
+
+    <rect x="580" y="135" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="151" class="text-file">version.php</text>
+
+    <rect x="580" y="162" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="178" class="text-file">lib.php (38KB - funciones del plugin)</text>
+
+    <rect x="580" y="189" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="205" class="text-file">settings.php</text>
+
+    <rect x="580" y="216" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="232" class="text-file">index.php (lista de vacantes)</text>
+
+    <rect x="580" y="243" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="259" class="text-file">signup.php (registro de usuarios)</text>
+
+    <rect x="580" y="270" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="286" class="text-file">confirm.php</text>
+
+    <rect x="580" y="297" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="313" class="text-file">updateprofile.php</text>
+
+    <rect x="580" y="324" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="340" class="text-file">download_documents.php</text>
+
+    <rect x="580" y="351" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="367" class="text-file">reupload_document.php</text>
+
+    <rect x="580" y="378" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="394" class="text-file">support.php</text>
+
+    <rect x="580" y="405" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="421" class="text-file">ajax_conversion.php</text>
+
+    <rect x="580" y="432" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="448" class="text-file">ajax_reorder_doctypes.php</text>
+
+    <rect x="580" y="459" width="260" height="22" rx="3" ry="3" class="file"/>
+    <text x="590" y="475" class="text-file">styles.css (159KB)</text>
+
+    <line x1="450" y1="100" x2="580" y2="135" class="line"/>
+  </g>
+
+  <!-- Descripción de contenido de carpetas -->
+  <g id="descriptions">
+    <text x="50" y="420" class="text-title">Contenido principal:</text>
+
+    <text x="50" y="445" class="text-file">• admin/ - Páginas de administración</text>
+    <text x="50" y="465" class="text-file">• ajax/ - Endpoints AJAX</text>
+    <text x="50" y="485" class="text-file">• amd/ - Módulos AMD JavaScript</text>
+    <text x="50" y="505" class="text-file">• classes/ - Clases PHP (forms, external, workflow)</text>
+    <text x="50" y="525" class="text-file">• db/ - Esquemas de base de datos (install.xml)</text>
+    <text x="50" y="545" class="text-file">• docs/ - Documentación técnica</text>
+    <text x="50" y="565" class="text-file">• lang/ - Archivos de idioma (es, en)</text>
+    <text x="50" y="585" class="text-file">• templates/ - Plantillas Mustache</text>
+    <text x="50" y="605" class="text-file">• tests/ - Tests unitarios y funcionales</text>
+    <text x="50" y="625" class="text-file">• views/ - Vistas del plugin</text>
+    <text x="50" y="645" class="text-file">• Convocatoria/ - Módulo de convocatorias</text>
+  </g>
+
+  <!-- Nota -->
+  <rect x="50" y="665" width="840" height="25" rx="3" ry="3" fill="#F5F5F5" stroke="#1B9E88" stroke-width="1"/>
+  <text x="470" y="681" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 10px; fill: #646363;">
+    Nota: Estructura excluye carpeta cli/ según especificación. Total: 10 carpetas principales + archivos raíz
+  </text>
+</svg>

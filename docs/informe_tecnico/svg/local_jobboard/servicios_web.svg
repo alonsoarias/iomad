@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Diagrama de Servicios Web - local_jobboard
+  Colores corporativos ISER
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <!-- Estilos de cajas -->
+    <style>
+      .box-write { fill: #FFFFFF; stroke: #EB4335; stroke-width: 3; }
+      .box-read { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 3; }
+      .badge-write { fill: #EB4335; stroke: #EB4335; stroke-width: 2; }
+      .badge-read { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
+      .text-normal { font-family: Arial, sans-serif; font-size: 12px; fill: #000000; }
+      .text-small { font-family: Arial, sans-serif; font-size: 10px; fill: #646363; }
+      .text-white { font-family: Arial, sans-serif; font-size: 11px; fill: #FFFFFF; font-weight: bold; }
+      .line { stroke: #646363; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Fondo blanco -->
+  <rect width="800" height="400" fill="#FFFFFF"/>
+
+  <!-- Título de leyenda -->
+  <text x="50" y="30" class="text-title">Servicios Web Externos de local_jobboard</text>
+
+  <!-- Leyenda -->
+  <rect x="550" y="15" width="80" height="25" rx="3" ry="3" class="badge-write"/>
+  <text x="590" y="32" text-anchor="middle" class="text-white">WRITE</text>
+
+  <rect x="650" y="15" width="80" height="25" rx="3" ry="3" class="badge-read"/>
+  <text x="690" y="32" text-anchor="middle" class="text-white">READ</text>
+
+  <!-- SERVICIO 1: validate_document (WRITE) -->
+  <rect x="50" y="80" width="320" height="80" rx="5" ry="5" class="box-write"/>
+  <rect x="60" y="90" width="60" height="22" rx="3" ry="3" class="badge-write"/>
+  <text x="90" y="106" text-anchor="middle" class="text-white">WRITE</text>
+
+  <text x="140" y="105" class="text-title">validate_document</text>
+  <text x="60" y="130" class="text-normal">Valida un documento académico enviado por el estudiante</text>
+  <text x="60" y="148" class="text-small">Parámetros: documentid (int)</text>
+
+  <!-- SERVICIO 2: reject_document (WRITE) -->
+  <rect x="430" y="80" width="320" height="80" rx="5" ry="5" class="box-write"/>
+  <rect x="440" y="90" width="60" height="22" rx="3" ry="3" class="badge-write"/>
+  <text x="470" y="106" text-anchor="middle" class="text-white">WRITE</text>
+
+  <text x="520" y="105" class="text-title">reject_document</text>
+  <text x="440" y="130" class="text-normal">Rechaza un documento con razones especificadas</text>
+  <text x="440" y="148" class="text-small">Parámetros: documentid (int), reason (string)</text>
+
+  <!-- SERVICIO 3: save_document_observations (WRITE) -->
+  <rect x="50" y="180" width="320" height="80" rx="5" ry="5" class="box-write"/>
+  <rect x="60" y="190" width="60" height="22" rx="3" ry="3" class="badge-write"/>
+  <text x="90" y="206" text-anchor="middle" class="text-white">WRITE</text>
+
+  <text x="140" y="205" class="text-title">save_document_observations</text>
+  <text x="60" y="230" class="text-normal">Guarda observaciones sobre un documento</text>
+  <text x="60" y="248" class="text-small">Parámetros: documentid (int), observations (string)</text>
+
+  <!-- SERVICIO 4: send_observations_email (WRITE) -->
+  <rect x="430" y="180" width="320" height="80" rx="5" ry="5" class="box-write"/>
+  <rect x="440" y="190" width="60" height="22" rx="3" ry="3" class="badge-write"/>
+  <text x="470" y="206" text-anchor="middle" class="text-white">WRITE</text>
+
+  <text x="520" y="205" class="text-title">send_observations_email</text>
+  <text x="440" y="230" class="text-normal">Envía observaciones por correo electrónico al estudiante</text>
+  <text x="440" y="248" class="text-small">Parámetros: documentid (int)</text>
+
+  <!-- SERVICIO 5: get_next_document (READ) -->
+  <rect x="240" y="280" width="320" height="80" rx="5" ry="5" class="box-read"/>
+  <rect x="250" y="290" width="60" height="22" rx="3" ry="3" class="badge-read"/>
+  <text x="280" y="306" text-anchor="middle" class="text-white">READ</text>
+
+  <text x="330" y="305" class="text-title">get_next_document</text>
+  <text x="250" y="330" class="text-normal">Obtiene el siguiente documento pendiente de validación</text>
+  <text x="250" y="348" class="text-small">Parámetros: ninguno - retorna objeto documento</text>
+
+</svg>

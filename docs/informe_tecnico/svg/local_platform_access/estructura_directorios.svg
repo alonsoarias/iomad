@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+    <style>
+      .box-main { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; }
+      .box-secondary { fill: #FFFFFF; stroke: #646363; stroke-width: 2; }
+      .box-filled-green { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
+      .text-normal { font-family: Arial, sans-serif; font-size: 12px; fill: #000000; }
+      .text-small { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; }
+      .text-white { font-family: Arial, sans-serif; font-size: 12px; fill: #FFFFFF; }
+      .line { stroke: #646363; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="800" height="600" fill="#FFFFFF"/>
+
+  <!-- Raíz del plugin -->
+  <rect x="50" y="20" width="700" height="40" rx="5" ry="5" class="box-filled-green"/>
+  <text x="400" y="45" class="text-white" text-anchor="middle">/local/platform_access/</text>
+
+  <!-- Columna izquierda: Páginas principales -->
+  <rect x="60" y="80" width="200" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="160" y="100" class="text-title" text-anchor="middle">Páginas</text>
+
+  <rect x="70" y="120" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="160" y="137" class="text-normal" text-anchor="middle">index.php</text>
+
+  <rect x="70" y="150" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="160" y="167" class="text-normal" text-anchor="middle">generate.php</text>
+
+  <rect x="70" y="180" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="160" y="197" class="text-normal" text-anchor="middle">settings.php</text>
+
+  <rect x="70" y="210" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="160" y="227" class="text-normal" text-anchor="middle">version.php</text>
+
+  <rect x="70" y="240" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="160" y="257" class="text-normal" text-anchor="middle">styles.css</text>
+
+  <rect x="70" y="270" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="160" y="287" class="text-normal" text-anchor="middle">README.md</text>
+
+  <!-- Columna central: Directorio classes -->
+  <rect x="280" y="80" width="240" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="400" y="100" class="text-title" text-anchor="middle">classes/</text>
+
+  <rect x="290" y="120" width="220" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="400" y="137" class="text-normal" text-anchor="middle">generator.php</text>
+
+  <!-- Subdirectorio form -->
+  <rect x="295" y="155" width="210" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="400" y="175" class="text-title" text-anchor="middle">form/</text>
+
+  <rect x="305" y="190" width="190" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="400" y="207" class="text-normal" text-anchor="middle">generate_form.php</text>
+
+  <!-- Subdirectorio privacy -->
+  <rect x="295" y="225" width="210" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="400" y="245" class="text-title" text-anchor="middle">privacy/</text>
+
+  <rect x="305" y="260" width="190" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="400" y="277" class="text-normal" text-anchor="middle">provider.php</text>
+
+  <!-- Nota: Sin lib.php -->
+  <rect x="280" y="300" width="240" height="40" rx="5" ry="5" class="box-main"/>
+  <text x="400" y="318" class="text-small" text-anchor="middle" font-weight="bold">NO tiene lib.php</text>
+  <text x="400" y="333" class="text-small" text-anchor="middle">Diseño moderno sin lib.php</text>
+
+  <!-- Columna derecha: Directorio db -->
+  <rect x="540" y="80" width="200" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="640" y="100" class="text-title" text-anchor="middle">db/</text>
+
+  <rect x="550" y="120" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="640" y="137" class="text-normal" text-anchor="middle">access.php</text>
+
+  <text x="640" y="165" class="text-small" text-anchor="middle" font-style="italic">NO tiene install.xml</text>
+  <text x="640" y="180" class="text-small" text-anchor="middle" font-style="italic">NO crea tablas propias</text>
+
+  <!-- Directorio lang -->
+  <rect x="540" y="200" width="200" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="640" y="220" class="text-title" text-anchor="middle">lang/</text>
+
+  <rect x="550" y="240" width="80" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="590" y="257" class="text-normal" text-anchor="middle">en/</text>
+
+  <rect x="650" y="240" width="80" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="690" y="257" class="text-normal" text-anchor="middle">es/</text>
+
+  <rect x="550" y="270" width="180" height="40" rx="5" ry="5" class="box-secondary"/>
+  <text x="640" y="287" class="text-small" text-anchor="middle">local_platform_access.php</text>
+  <text x="640" y="302" class="text-small" text-anchor="middle">(101 cadenas)</text>
+
+  <!-- Sección de tablas utilizadas -->
+  <rect x="50" y="360" width="700" height="40" rx="5" ry="5" class="box-filled-green"/>
+  <text x="400" y="385" class="text-white" text-anchor="middle">Tablas de Base de Datos Utilizadas (no propias)</text>
+
+  <!-- Tablas Moodle -->
+  <rect x="60" y="410" width="330" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="225" y="430" class="text-title" text-anchor="middle">Tablas Moodle (INSERT/UPDATE)</text>
+
+  <rect x="70" y="450" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="145" y="467" class="text-small" text-anchor="middle">logstore_standard_log</text>
+
+  <rect x="230" y="450" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="305" y="467" class="text-small" text-anchor="middle">user</text>
+
+  <rect x="70" y="480" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="145" y="497" class="text-small" text-anchor="middle">user_lastaccess</text>
+
+  <rect x="230" y="480" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="305" y="497" class="text-small" text-anchor="middle">course_completions</text>
+
+  <rect x="70" y="510" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="145" y="527" class="text-small" text-anchor="middle">course_modules_completion</text>
+
+  <rect x="230" y="510" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="305" y="527" class="text-small" text-anchor="middle">course_modules_viewed</text>
+
+  <!-- Tablas IOMAD -->
+  <rect x="410" y="410" width="330" height="30" rx="5" ry="5" class="box-main"/>
+  <text x="575" y="430" class="text-title" text-anchor="middle">Tablas IOMAD (SELECT)</text>
+
+  <rect x="420" y="450" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="495" y="467" class="text-small" text-anchor="middle">company</text>
+
+  <rect x="580" y="450" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="655" y="467" class="text-small" text-anchor="middle">company_users</text>
+
+  <rect x="420" y="480" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="495" y="497" class="text-small" text-anchor="middle">company_course</text>
+
+  <rect x="580" y="480" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
+  <text x="655" y="497" class="text-small" text-anchor="middle">local_report_user_logins</text>
+
+  <!-- Capabilities -->
+  <rect x="50" y="550" width="700" height="40" rx="5" ry="5" class="box-filled-green"/>
+  <text x="400" y="575" class="text-white" text-anchor="middle">Capabilities</text>
+
+  <rect x="200" y="600" width="180" height="30" rx="5" ry="5" class="box-secondary"/>
+  <text x="290" y="619" class="text-small" text-anchor="middle">:generate (RISK_DATALOSS)</text>
+
+  <rect x="420" y="600" width="180" height="30" rx="5" ry="5" class="box-secondary"/>
+  <text x="510" y="619" class="text-small" text-anchor="middle">:view (RISK_PERSONAL)</text>
+
+</svg>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Diagrama de Arquitectura en Capas - local_jobboard
+  Colores corporativos ISER
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <!-- Marcadores de flechas -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1B9E88"/>
+    </marker>
+    <marker id="arrowhead-bidirectional" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1B9E88"/>
+    </marker>
+
+    <!-- Estilos de cajas -->
+    <style>
+      .box-main { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; }
+      .box-secondary { fill: #FFFFFF; stroke: #646363; stroke-width: 2; }
+      .box-action { fill: #FFFFFF; stroke: #FCBD05; stroke-width: 2; }
+      .box-filled-green { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .box-filled-yellow { fill: #FCBD05; stroke: #FCBD05; stroke-width: 2; }
+      .box-filled-red { fill: #EB4335; stroke: #EB4335; stroke-width: 2; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
+      .text-normal { font-family: Arial, sans-serif; font-size: 12px; fill: #000000; }
+      .text-small { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; }
+      .text-white { font-family: Arial, sans-serif; font-size: 12px; fill: #FFFFFF; font-weight: bold; }
+      .text-white-small { font-family: Arial, sans-serif; font-size: 11px; fill: #FFFFFF; }
+      .line { stroke: #646363; stroke-width: 2; fill: none; }
+      .line-green { stroke: #1B9E88; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Fondo blanco -->
+  <rect width="800" height="500" fill="#FFFFFF"/>
+
+  <!-- CAPA DE PRESENTACIÓN -->
+  <rect x="50" y="50" width="700" height="100" rx="5" ry="5" class="box-filled-green"/>
+  <text x="400" y="75" text-anchor="middle" class="text-white">CAPA DE PRESENTACIÓN</text>
+
+  <!-- Componentes de presentación -->
+  <rect x="70" y="95" width="200" height="40" rx="5" ry="5" fill="#FFFFFF" stroke="#1B9E88" stroke-width="1"/>
+  <text x="170" y="120" text-anchor="middle" class="text-normal">templates/</text>
+
+  <rect x="290" y="95" width="200" height="40" rx="5" ry="5" fill="#FFFFFF" stroke="#1B9E88" stroke-width="1"/>
+  <text x="390" y="120" text-anchor="middle" class="text-normal">views (index, dean, hr)</text>
+
+  <rect x="510" y="95" width="200" height="40" rx="5" ry="5" fill="#FFFFFF" stroke="#1B9E88" stroke-width="1"/>
+  <text x="610" y="120" text-anchor="middle" class="text-normal">amd/js/</text>
+
+  <!-- CAPA DE LÓGICA -->
+  <rect x="50" y="200" width="700" height="120" rx="5" ry="5" class="box-filled-yellow"/>
+  <text x="400" y="225" text-anchor="middle" class="text-normal" fill="#000000" font-weight="bold">CAPA DE LÓGICA</text>
+
+  <!-- Componentes de lógica -->
+  <rect x="70" y="245" width="150" height="60" rx="5" ry="5" fill="#FFFFFF" stroke="#FCBD05" stroke-width="1"/>
+  <text x="145" y="265" text-anchor="middle" class="text-small">classes/</text>
+  <text x="145" y="280" text-anchor="middle" class="text-small">form/</text>
+  <text x="145" y="295" text-anchor="middle" class="text-small">external/</text>
+
+  <rect x="240" y="245" width="150" height="60" rx="5" ry="5" fill="#FFFFFF" stroke="#FCBD05" stroke-width="1"/>
+  <text x="315" y="265" text-anchor="middle" class="text-small">lib.php</text>
+  <text x="315" y="280" text-anchor="middle" class="text-small">locallib.php</text>
+
+  <rect x="410" y="245" width="150" height="60" rx="5" ry="5" fill="#FFFFFF" stroke="#FCBD05" stroke-width="1"/>
+  <text x="485" y="265" text-anchor="middle" class="text-small">Web Services</text>
+  <text x="485" y="280" text-anchor="middle" class="text-small">(5 servicios)</text>
+
+  <rect x="580" y="245" width="150" height="60" rx="5" ry="5" fill="#FFFFFF" stroke="#FCBD05" stroke-width="1"/>
+  <text x="655" y="265" text-anchor="middle" class="text-small">Events</text>
+  <text x="655" y="280" text-anchor="middle" class="text-small">Observers</text>
+
+  <!-- CAPA DE DATOS -->
+  <rect x="50" y="370" width="700" height="100" rx="5" ry="5" class="box-filled-red"/>
+  <text x="400" y="395" text-anchor="middle" class="text-white">CAPA DE DATOS</text>
+
+  <!-- Componentes de datos -->
+  <rect x="120" y="415" width="200" height="40" rx="5" ry="5" fill="#FFFFFF" stroke="#EB4335" stroke-width="1"/>
+  <text x="220" y="440" text-anchor="middle" class="text-normal">mdl_local_jobboard</text>
+
+  <rect x="340" y="415" width="200" height="40" rx="5" ry="5" fill="#FFFFFF" stroke="#EB4335" stroke-width="1"/>
+  <text x="440" y="440" text-anchor="middle" class="text-normal">mdl_local_jobboard_history</text>
+
+  <!-- FLECHAS DE FLUJO DE DATOS -->
+  <!-- Presentación -> Lógica -->
+  <line x1="170" y1="150" x2="170" y2="200" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <line x1="390" y1="150" x2="390" y2="200" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <line x1="610" y1="150" x2="610" y2="200" class="line-green" marker-end="url(#arrowhead-green)"/>
+
+  <!-- Lógica -> Datos -->
+  <line x1="220" y1="320" x2="220" y2="370" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <line x1="440" y1="320" x2="440" y2="370" class="line-green" marker-end="url(#arrowhead-green)"/>
+
+  <!-- Datos -> Lógica (respuesta) -->
+  <line x1="260" y1="370" x2="260" y2="320" class="line" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  <line x1="480" y1="370" x2="480" y2="320" class="line" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+
+</svg>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1B9E88"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#EB4335"/>
+    </marker>
+    <marker id="arrowhead-yellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#FCBD05"/>
+    </marker>
+
+    <style>
+      .box-main { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; }
+      .box-secondary { fill: #FFFFFF; stroke: #646363; stroke-width: 2; }
+      .box-action { fill: #FFFFFF; stroke: #FCBD05; stroke-width: 2; }
+      .box-filled-green { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .box-filled-red { fill: #EB4335; stroke: #EB4335; stroke-width: 2; }
+      .box-filled-yellow { fill: #FCBD05; stroke: #FCBD05; stroke-width: 2; }
+      .text-title { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: #000000; }
+      .text-normal { font-family: Arial, sans-serif; font-size: 11px; fill: #000000; }
+      .text-small { font-family: Arial, sans-serif; font-size: 10px; fill: #646363; }
+      .text-white { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: #FFFFFF; }
+      .line { stroke: #646363; stroke-width: 2; fill: none; }
+      .line-green { stroke: #1B9E88; stroke-width: 2; fill: none; }
+      .line-red { stroke: #EB4335; stroke-width: 2; fill: none; }
+      .line-yellow { stroke: #FCBD05; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="800" height="500" fill="#FFFFFF"/>
+
+  <!-- Title -->
+  <text x="400" y="25" text-anchor="middle" class="text-title" style="font-size: 16px; font-weight: bold;">Flujo de Postulación (Application Workflow)</text>
+
+  <!-- Estado 1: SUBMITTED -->
+  <rect x="50" y="60" width="120" height="60" rx="5" ry="5" class="box-secondary"/>
+  <text x="110" y="85" text-anchor="middle" class="text-title">SUBMITTED</text>
+  <text x="110" y="105" text-anchor="middle" class="text-small">Enviada</text>
+
+  <!-- Estado 2: UNDER_REVIEW -->
+  <rect x="230" y="60" width="130" height="60" rx="5" ry="5" class="box-action"/>
+  <text x="295" y="85" text-anchor="middle" class="text-title">UNDER_REVIEW</text>
+  <text x="295" y="105" text-anchor="middle" class="text-small">Revisión documentos</text>
+
+  <!-- Estado 3a: DOCS_VALIDATED -->
+  <rect x="420" y="60" width="140" height="60" rx="5" ry="5" class="box-filled-green"/>
+  <text x="490" y="85" text-anchor="middle" class="text-white">DOCS_VALIDATED</text>
+  <text x="490" y="105" text-anchor="middle" style="font-family: Arial; font-size: 10px; fill: #FFFFFF;">Docs aprobados</text>
+
+  <!-- Estado 3b: DOCS_REJECTED -->
+  <rect x="420" y="170" width="140" height="60" rx="5" ry="5" class="box-filled-red"/>
+  <text x="490" y="195" text-anchor="middle" class="text-white">DOCS_REJECTED</text>
+  <text x="490" y="215" text-anchor="middle" style="font-family: Arial; font-size: 10px; fill: #FFFFFF;">Docs rechazados</text>
+
+  <!-- Estado 4: INTERVIEW -->
+  <rect x="620" y="60" width="130" height="60" rx="5" ry="5" class="box-main"/>
+  <text x="685" y="85" text-anchor="middle" class="text-title">INTERVIEW</text>
+  <text x="685" y="105" text-anchor="middle" class="text-small">Entrevista</text>
+
+  <!-- Estado 5a: SELECTED -->
+  <rect x="620" y="280" width="130" height="60" rx="5" ry="5" class="box-filled-green"/>
+  <text x="685" y="305" text-anchor="middle" class="text-white">SELECTED</text>
+  <text x="685" y="325" text-anchor="middle" style="font-family: Arial; font-size: 10px; fill: #FFFFFF;">Seleccionado</text>
+
+  <!-- Estado 5b: REJECTED -->
+  <rect x="50" y="280" width="130" height="60" rx="5" ry="5" class="box-filled-red"/>
+  <text x="115" y="305" text-anchor="middle" class="text-white">REJECTED</text>
+  <text x="115" y="325" text-anchor="middle" style="font-family: Arial; font-size: 10px; fill: #FFFFFF;">Rechazado</text>
+
+  <!-- Transiciones -->
+  <!-- submitted -> under_review -->
+  <line x1="170" y1="90" x2="230" y2="90" class="line" marker-end="url(#arrowhead)"/>
+  <text x="200" y="83" text-anchor="middle" class="text-small">start_review()</text>
+
+  <!-- under_review -> docs_validated -->
+  <line x1="360" y1="90" x2="420" y2="90" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="390" y="83" text-anchor="middle" class="text-small">validate_all()</text>
+
+  <!-- under_review -> docs_rejected -->
+  <line x1="295" y1="120" x2="295" y2="150" x3="490" y3="150" x4="490" y4="170" class="line-red"/>
+  <path d="M 295 120 L 295 150 L 490 150 L 490 170" class="line-red" marker-end="url(#arrowhead-red)"/>
+  <text x="350" y="145" text-anchor="middle" class="text-small">reject_doc()</text>
+
+  <!-- docs_rejected -> under_review (reupload cycle) -->
+  <path d="M 420 200 L 380 200 L 380 130 L 360 130" class="line-yellow" marker-end="url(#arrowhead-yellow)" stroke-dasharray="5,5"/>
+  <text x="370" y="195" text-anchor="middle" class="text-small">reupload()</text>
+
+  <!-- docs_validated -> interview -->
+  <line x1="560" y1="90" x2="620" y2="90" class="line" marker-end="url(#arrowhead)"/>
+  <text x="590" y="83" text-anchor="middle" class="text-small">schedule()</text>
+
+  <!-- interview -> selected -->
+  <line x1="685" y1="120" x2="685" y2="280" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="700" y="200" class="text-small">select()</text>
+
+  <!-- interview -> rejected -->
+  <path d="M 620 90 L 200 90 L 200 280 L 180 280" class="line-red" marker-end="url(#arrowhead-red)" stroke-dasharray="3,3"/>
+  <text x="400" y="275" text-anchor="middle" class="text-small">reject()</text>
+
+  <!-- submitted -> rejected (early rejection) -->
+  <path d="M 50 90 L 30 90 L 30 310 L 50 310" class="line-red" marker-end="url(#arrowhead-red)" stroke-dasharray="3,3"/>
+  <text x="20" y="200" class="text-small" transform="rotate(-90 20 200)">reject()</text>
+
+  <!-- docs_validated -> rejected -->
+  <path d="M 490 120 L 490 250 L 180 250 L 180 280" class="line-red" marker-end="url(#arrowhead-red)" stroke-dasharray="3,3"/>
+  <text x="340" y="245" text-anchor="middle" class="text-small">reject()</text>
+
+  <!-- Legend -->
+  <rect x="50" y="380" width="700" height="100" rx="5" ry="5" fill="#F9F9F9" stroke="#646363" stroke-width="1"/>
+  <text x="60" y="400" class="text-normal" style="font-weight: bold;">Flujo de Estados de Postulación:</text>
+
+  <text x="60" y="418" class="text-small">1. SUBMITTED: Postulación enviada por el aplicante</text>
+  <text x="60" y="432" class="text-small">2. UNDER_REVIEW: Documentos siendo revisados por revisor asignado</text>
+  <text x="60" y="446" class="text-small">3. DOCS_VALIDATED/DOCS_REJECTED: Todos los documentos aprobados o uno o más rechazados (puede resubir)</text>
+  <text x="60" y="460" class="text-small">4. INTERVIEW: Programado para entrevista (opcional)</text>
+  <text x="60" y="474" class="text-small">5. SELECTED/REJECTED: Decisión final - seleccionado o rechazado</text>
+</svg>

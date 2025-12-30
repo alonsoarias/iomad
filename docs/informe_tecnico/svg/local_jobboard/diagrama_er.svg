@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <!-- Marcadores de flechas -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1B9E88"/>
+    </marker>
+
+    <!-- Estilos de cajas -->
+    <style>
+      .table-box { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; }
+      .table-header { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
+      .pk-field { fill: #E8F5E9; stroke: #1B9E88; stroke-width: 1; }
+      .fk-field { fill: #FFF9E6; stroke: #FCBD05; stroke-width: 1; }
+      .normal-field { fill: #FFFFFF; stroke: #E0E0E0; stroke-width: 1; }
+      .text-header { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; fill: #FFFFFF; }
+      .text-field { font-family: Arial, sans-serif; font-size: 11px; fill: #000000; }
+      .text-type { font-family: Arial, sans-serif; font-size: 10px; fill: #646363; }
+      .line { stroke: #646363; stroke-width: 2; fill: none; }
+      .line-green { stroke: #1B9E88; stroke-width: 2.5; fill: none; }
+      .text-relation { font-family: Arial, sans-serif; font-size: 10px; fill: #1B9E88; font-weight: bold; }
+      .text-legend { font-family: Arial, sans-serif; font-size: 11px; fill: #000000; }
+    </style>
+  </defs>
+
+  <!-- Fondo blanco -->
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+
+  <!-- ========== CONVOCATORIA (Superior Centro) ========== -->
+  <g id="convocatoria">
+    <rect x="475" y="30" width="250" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="600" y="50" text-anchor="middle" class="text-header">CONVOCATORIA</text>
+
+    <rect x="475" y="60" width="250" height="160" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="480" y="65" width="240" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="490" y="79" class="text-field">🔑 id</text>
+    <text x="710" y="79" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- Campos -->
+    <rect x="480" y="88" width="240" height="18" class="normal-field"/>
+    <text x="490" y="100" class="text-field">code</text>
+    <text x="710" y="100" text-anchor="end" class="text-type">VARCHAR(50)</text>
+
+    <rect x="480" y="108" width="240" height="18" class="normal-field"/>
+    <text x="490" y="120" class="text-field">name</text>
+    <text x="710" y="120" text-anchor="end" class="text-type">VARCHAR(255)</text>
+
+    <rect x="480" y="128" width="240" height="18" class="normal-field"/>
+    <text x="490" y="140" class="text-field">description</text>
+    <text x="710" y="140" text-anchor="end" class="text-type">TEXT</text>
+
+    <rect x="480" y="148" width="240" height="18" class="normal-field"/>
+    <text x="490" y="160" class="text-field">startdate / enddate</text>
+    <text x="710" y="160" text-anchor="end" class="text-type">INT</text>
+
+    <rect x="480" y="168" width="240" height="18" class="normal-field"/>
+    <text x="490" y="180" class="text-field">status</text>
+    <text x="710" y="180" text-anchor="end" class="text-type">VARCHAR(20)</text>
+
+    <rect x="480" y="188" width="240" height="18" class="normal-field"/>
+    <text x="490" y="200" class="text-field">companyid, departmentid</text>
+    <text x="710" y="200" text-anchor="end" class="text-type">INT</text>
+  </g>
+
+  <!-- ========== VACANCY (Izquierda Superior) ========== -->
+  <g id="vacancy">
+    <rect x="50" y="270" width="280" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="190" y="290" text-anchor="middle" class="text-header">VACANCY</text>
+
+    <rect x="50" y="300" width="280" height="200" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="55" y="305" width="270" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="65" y="319" class="text-field">🔑 id</text>
+    <text x="318" y="319" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- FK -->
+    <rect x="55" y="328" width="270" height="20" rx="3" ry="3" class="fk-field"/>
+    <text x="65" y="342" class="text-field">🔗 convocatoriaid</text>
+    <text x="318" y="342" text-anchor="end" class="text-type">INT FK</text>
+
+    <!-- Campos -->
+    <rect x="55" y="351" width="270" height="18" class="normal-field"/>
+    <text x="65" y="363" class="text-field">code, title, description</text>
+    <text x="318" y="363" text-anchor="end" class="text-type">VARCHAR/TEXT</text>
+
+    <rect x="55" y="371" width="270" height="18" class="normal-field"/>
+    <text x="65" y="383" class="text-field">location, modality</text>
+    <text x="318" y="383" text-anchor="end" class="text-type">VARCHAR</text>
+
+    <rect x="55" y="391" width="270" height="18" class="normal-field"/>
+    <text x="65" y="403" class="text-field">department, companyid</text>
+    <text x="318" y="403" text-anchor="end" class="text-type">VARCHAR/INT</text>
+
+    <rect x="55" y="411" width="270" height="18" class="normal-field"/>
+    <text x="65" y="423" class="text-field">positions</text>
+    <text x="318" y="423" text-anchor="end" class="text-type">INT</text>
+
+    <rect x="55" y="431" width="270" height="18" class="normal-field"/>
+    <text x="65" y="443" class="text-field">status</text>
+    <text x="318" y="443" text-anchor="end" class="text-type">VARCHAR(20)</text>
+
+    <rect x="55" y="451" width="270" height="18" class="normal-field"/>
+    <text x="65" y="463" class="text-field">opendate / closedate</text>
+    <text x="318" y="463" text-anchor="end" class="text-type">INT</text>
+
+    <rect x="55" y="471" width="270" height="18" class="normal-field"/>
+    <text x="65" y="483" class="text-field">createdby, timecreated</text>
+    <text x="318" y="483" text-anchor="end" class="text-type">INT</text>
+  </g>
+
+  <!-- Relación CONVOCATORIA -> VACANCY -->
+  <path d="M 600 220 L 600 240 L 190 240 L 190 270" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="380" y="235" class="text-relation">1:N</text>
+  <text x="380" y="248" class="text-type">agrupa vacantes</text>
+
+  <!-- ========== APPLICATION (Centro) ========== -->
+  <g id="application">
+    <rect x="420" y="330" width="300" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="570" y="350" text-anchor="middle" class="text-header">APPLICATION</text>
+
+    <rect x="420" y="360" width="300" height="200" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="425" y="365" width="290" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="435" y="379" class="text-field">🔑 id</text>
+    <text x="708" y="379" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- FKs -->
+    <rect x="425" y="388" width="290" height="20" rx="3" ry="3" class="fk-field"/>
+    <text x="435" y="402" class="text-field">🔗 vacancyid</text>
+    <text x="708" y="402" text-anchor="end" class="text-type">INT FK</text>
+
+    <rect x="425" y="411" width="290" height="20" rx="3" ry="3" class="fk-field"/>
+    <text x="435" y="425" class="text-field">🔗 userid</text>
+    <text x="708" y="425" text-anchor="end" class="text-type">INT FK</text>
+
+    <!-- Campos -->
+    <rect x="425" y="434" width="290" height="18" class="normal-field"/>
+    <text x="435" y="446" class="text-field">status</text>
+    <text x="708" y="446" text-anchor="end" class="text-type">VARCHAR(30)</text>
+
+    <rect x="425" y="454" width="290" height="18" class="normal-field"/>
+    <text x="435" y="466" class="text-field">statusnotes</text>
+    <text x="708" y="466" text-anchor="end" class="text-type">TEXT</text>
+
+    <rect x="425" y="474" width="290" height="18" class="normal-field"/>
+    <text x="435" y="486" class="text-field">isexemption</text>
+    <text x="708" y="486" text-anchor="end" class="text-type">BOOLEAN</text>
+
+    <rect x="425" y="494" width="290" height="18" class="normal-field"/>
+    <text x="435" y="506" class="text-field">consentgiven, digitalsignature</text>
+    <text x="708" y="506" text-anchor="end" class="text-type">BOOL/VARCHAR</text>
+
+    <rect x="425" y="514" width="290" height="18" class="normal-field"/>
+    <text x="435" y="526" class="text-field">coverletter, applicationdata</text>
+    <text x="708" y="526" text-anchor="end" class="text-type">TEXT</text>
+
+    <rect x="425" y="534" width="290" height="18" class="normal-field"/>
+    <text x="435" y="546" class="text-field">timecreated, timemodified</text>
+    <text x="708" y="546" text-anchor="end" class="text-type">INT</text>
+  </g>
+
+  <!-- Relación VACANCY -> APPLICATION -->
+  <path d="M 330 370 L 420 370" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="360" y="365" class="text-relation">1:N</text>
+  <text x="345" y="385" class="text-type">recibe solicitudes</text>
+
+  <!-- ========== DOCUMENT (Derecha) ========== -->
+  <g id="document">
+    <rect x="820" y="330" width="280" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="960" y="350" text-anchor="middle" class="text-header">DOCUMENT</text>
+
+    <rect x="820" y="360" width="280" height="180" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="825" y="365" width="270" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="835" y="379" class="text-field">🔑 id</text>
+    <text x="1088" y="379" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- FK -->
+    <rect x="825" y="388" width="270" height="20" rx="3" ry="3" class="fk-field"/>
+    <text x="835" y="402" class="text-field">🔗 applicationid</text>
+    <text x="1088" y="402" text-anchor="end" class="text-type">INT FK</text>
+
+    <!-- Campos -->
+    <rect x="825" y="411" width="270" height="18" class="normal-field"/>
+    <text x="835" y="423" class="text-field">documenttype</text>
+    <text x="1088" y="423" text-anchor="end" class="text-type">VARCHAR(100)</text>
+
+    <rect x="825" y="431" width="270" height="18" class="normal-field"/>
+    <text x="835" y="443" class="text-field">filename, contenthash</text>
+    <text x="1088" y="443" text-anchor="end" class="text-type">VARCHAR</text>
+
+    <rect x="825" y="451" width="270" height="18" class="normal-field"/>
+    <text x="835" y="463" class="text-field">filesize, mimetype</text>
+    <text x="1088" y="463" text-anchor="end" class="text-type">INT/VARCHAR</text>
+
+    <rect x="825" y="471" width="270" height="18" class="normal-field"/>
+    <text x="835" y="483" class="text-field">issuedate, expirydate</text>
+    <text x="1088" y="483" text-anchor="end" class="text-type">INT</text>
+
+    <rect x="825" y="491" width="270" height="18" class="normal-field"/>
+    <text x="835" y="503" class="text-field">isencrypted, issuperseded</text>
+    <text x="1088" y="503" text-anchor="end" class="text-type">BOOLEAN</text>
+
+    <rect x="825" y="511" width="270" height="18" class="normal-field"/>
+    <text x="835" y="523" class="text-field">uploadedby, timecreated</text>
+    <text x="1088" y="523" text-anchor="end" class="text-type">INT</text>
+  </g>
+
+  <!-- Relación APPLICATION -> DOCUMENT -->
+  <path d="M 720 420 L 820 420" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="760" y="415" class="text-relation">1:N</text>
+  <text x="745" y="435" class="text-type">incluye documentos</text>
+
+  <!-- ========== DOC_VALIDATION (Inferior Derecha) ========== -->
+  <g id="doc_validation">
+    <rect x="820" y="600" width="280" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="960" y="620" text-anchor="middle" class="text-header">DOC_VALIDATION</text>
+
+    <rect x="820" y="630" width="280" height="160" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="825" y="635" width="270" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="835" y="649" class="text-field">🔑 id</text>
+    <text x="1088" y="649" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- FK -->
+    <rect x="825" y="658" width="270" height="20" rx="3" ry="3" class="fk-field"/>
+    <text x="835" y="672" class="text-field">🔗 documentid</text>
+    <text x="1088" y="672" text-anchor="end" class="text-type">INT FK (UNIQUE)</text>
+
+    <!-- Campos -->
+    <rect x="825" y="681" width="270" height="18" class="normal-field"/>
+    <text x="835" y="693" class="text-field">status</text>
+    <text x="1088" y="693" text-anchor="end" class="text-type">VARCHAR(20)</text>
+
+    <rect x="825" y="701" width="270" height="18" class="normal-field"/>
+    <text x="835" y="713" class="text-field">isvalid</text>
+    <text x="1088" y="713" text-anchor="end" class="text-type">BOOLEAN</text>
+
+    <rect x="825" y="721" width="270" height="18" class="normal-field"/>
+    <text x="835" y="733" class="text-field">validatedby</text>
+    <text x="1088" y="733" text-anchor="end" class="text-type">INT FK</text>
+
+    <rect x="825" y="741" width="270" height="18" class="normal-field"/>
+    <text x="835" y="753" class="text-field">rejectreason, notes</text>
+    <text x="1088" y="753" text-anchor="end" class="text-type">VARCHAR/TEXT</text>
+
+    <rect x="825" y="761" width="270" height="18" class="normal-field"/>
+    <text x="835" y="773" class="text-field">checklistitems (JSON)</text>
+    <text x="1088" y="773" text-anchor="end" class="text-type">TEXT</text>
+  </g>
+
+  <!-- Relación DOCUMENT -> DOC_VALIDATION -->
+  <path d="M 960 540 L 960 600" class="line-green" marker-end="url(#arrowhead-green)"/>
+  <text x="970" y="570" class="text-relation">1:1</text>
+  <text x="975" y="583" class="text-type">tiene validación</text>
+
+  <!-- ========== DOCTYPE (Inferior Izquierda) ========== -->
+  <g id="doctype">
+    <rect x="50" y="600" width="280" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="190" y="620" text-anchor="middle" class="text-header">DOCTYPE</text>
+
+    <rect x="50" y="630" width="280" height="180" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="55" y="635" width="270" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="65" y="649" class="text-field">🔑 id</text>
+    <text x="318" y="649" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- Campos -->
+    <rect x="55" y="658" width="270" height="18" class="normal-field"/>
+    <text x="65" y="670" class="text-field">code (UNIQUE)</text>
+    <text x="318" y="670" text-anchor="end" class="text-type">VARCHAR(50)</text>
+
+    <rect x="55" y="678" width="270" height="18" class="normal-field"/>
+    <text x="65" y="690" class="text-field">name, description</text>
+    <text x="318" y="690" text-anchor="end" class="text-type">VARCHAR/TEXT</text>
+
+    <rect x="55" y="698" width="270" height="18" class="normal-field"/>
+    <text x="65" y="710" class="text-field">requirements</text>
+    <text x="318" y="710" text-anchor="end" class="text-type">TEXT</text>
+
+    <rect x="55" y="718" width="270" height="18" class="normal-field"/>
+    <text x="65" y="730" class="text-field">isrequired, iserexempted</text>
+    <text x="318" y="730" text-anchor="end" class="text-type">BOOLEAN</text>
+
+    <rect x="55" y="738" width="270" height="18" class="normal-field"/>
+    <text x="65" y="750" class="text-field">gender_condition</text>
+    <text x="318" y="750" text-anchor="end" class="text-type">VARCHAR(1)</text>
+
+    <rect x="55" y="758" width="270" height="18" class="normal-field"/>
+    <text x="65" y="770" class="text-field">age_exemption_threshold</text>
+    <text x="318" y="770" text-anchor="end" class="text-type">INT</text>
+
+    <rect x="55" y="778" width="270" height="18" class="normal-field"/>
+    <text x="65" y="790" class="text-field">input_type, category</text>
+    <text x="318" y="790" text-anchor="end" class="text-type">VARCHAR</text>
+  </g>
+
+  <!-- Relación DOCTYPE -> DOCUMENT (punteada - referencia lógica) -->
+  <path d="M 330 710 L 960 710 L 960 540" stroke="#646363" stroke-width="1.5" stroke-dasharray="5,5" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="640" y="705" class="text-type">define tipo de documento</text>
+
+  <!-- ========== EXEMPTION (Inferior Centro) ========== -->
+  <g id="exemption">
+    <rect x="420" y="650" width="280" height="30" rx="5" ry="5" class="table-header"/>
+    <text x="560" y="670" text-anchor="middle" class="text-header">EXEMPTION</text>
+
+    <rect x="420" y="680" width="280" height="130" rx="5" ry="5" class="table-box"/>
+
+    <!-- PK -->
+    <rect x="425" y="685" width="270" height="20" rx="3" ry="3" class="pk-field"/>
+    <text x="435" y="699" class="text-field">🔑 id</text>
+    <text x="688" y="699" text-anchor="end" class="text-type">INT PK</text>
+
+    <!-- FK -->
+    <rect x="425" y="708" width="270" height="20" rx="3" ry="3" class="fk-field"/>
+    <text x="435" y="722" class="text-field">🔗 userid</text>
+    <text x="688" y="722" text-anchor="end" class="text-type">INT FK</text>
+
+    <!-- Campos -->
+    <rect x="425" y="731" width="270" height="18" class="normal-field"/>
+    <text x="435" y="743" class="text-field">exemptiontype</text>
+    <text x="688" y="743" text-anchor="end" class="text-type">VARCHAR(50)</text>
+
+    <rect x="425" y="751" width="270" height="18" class="normal-field"/>
+    <text x="435" y="763" class="text-field">exempteddocs (JSON)</text>
+    <text x="688" y="763" text-anchor="end" class="text-type">TEXT</text>
+
+    <rect x="425" y="771" width="270" height="18" class="normal-field"/>
+    <text x="435" y="783" class="text-field">validfrom, validuntil</text>
+    <text x="688" y="783" text-anchor="end" class="text-type">INT</text>
+
+    <rect x="425" y="791" width="270" height="18" class="normal-field"/>
+    <text x="435" y="803" class="text-field">createdby, timerevoked</text>
+    <text x="688" y="803" text-anchor="end" class="text-type">INT</text>
+  </g>
+
+  <!-- Relación EXEMPTION -> APPLICATION (punteada - referencia lógica) -->
+  <path d="M 560 650 L 560 560" stroke="#646363" stroke-width="1.5" stroke-dasharray="5,5" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="570" y="605" class="text-type">exime de documentos</text>
+
+  <!-- ========== LEYENDA ========== -->
+  <g id="legend">
+    <rect x="50" y="840" width="600" height="50" rx="5" ry="5" fill="#F5F5F5" stroke="#646363" stroke-width="1"/>
+    <text x="60" y="858" class="text-legend" font-weight="bold">Leyenda:</text>
+
+    <rect x="120" y="848" width="50" height="14" rx="2" ry="2" class="pk-field"/>
+    <text x="175" y="859" class="text-legend">= Primary Key (PK)</text>
+
+    <rect x="310" y="848" width="50" height="14" rx="2" ry="2" class="fk-field"/>
+    <text x="365" y="859" class="text-legend">= Foreign Key (FK)</text>
+
+    <line x1="60" y1="875" x2="110" y2="875" class="line-green" marker-end="url(#arrowhead-green)"/>
+    <text x="115" y="879" class="text-legend">= Relación 1:N (uno a muchos)</text>
+
+    <line x1="310" y1="875" x2="360" y2="875" stroke="#646363" stroke-width="1.5" stroke-dasharray="5,5" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="365" y="879" class="text-legend">= Referencia lógica</text>
+  </g>
+
+  <!-- Nota técnica -->
+  <rect x="700" y="840" width="450" height="50" rx="5" ry="5" fill="#F5F5F5" stroke="#1B9E88" stroke-width="1"/>
+  <text x="925" y="858" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 11px; fill: #000000; font-weight: bold;">
+    Diagrama ER - local_jobboard
+  </text>
+  <text x="925" y="873" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 10px; fill: #646363;">
+    Muestra las 7 tablas principales y sus relaciones. Total: 25 tablas en el esquema completo.
+  </text>
+</svg>
