@@ -17,7 +17,7 @@ import {
     VerticalAlign
 } from 'docx';
 import { COLORS } from './styles.js';
-import { crearParrafoConImagen, existeSVG } from './image_utils.js';
+import { crearParrafoConImagen, existeSVG, crearTituloFigura, crearTituloTabla } from './image_utils.js';
 
 // Rutas base de SVG
 const SVG_BASE = '/home/user/iomad/docs/informe_tecnico/svg/local_jobboard';
@@ -118,13 +118,7 @@ function generarIntroduccion(data) {
         )
     );
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 2. Información de versión del plugin local_jobboard',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Información de versión del plugin local_jobboard'));
 
     return elementos;
 }
@@ -167,13 +161,7 @@ async function generarEstructura(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 1. Estructura de directorios del plugin local_jobboard',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Estructura de directorios del plugin local_jobboard'));
 
     return elementos;
 }
@@ -216,13 +204,7 @@ async function generarArquitectura(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 2. Arquitectura del plugin local_jobboard',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Arquitectura del plugin local_jobboard'));
 
     // Casos de uso
     elementos.push(
@@ -256,13 +238,7 @@ async function generarArquitectura(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 3. Diagrama de casos de uso',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama de casos de uso'));
 
     return elementos;
 }
@@ -342,13 +318,7 @@ async function generarBaseDatos(data) {
         crearTabla(tablasData, [25, 45, 30])
     );
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 3. Resumen de tablas de base de datos',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Resumen de tablas de base de datos'));
 
     // Diagrama ER
     elementos.push(
@@ -369,13 +339,7 @@ async function generarBaseDatos(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 4. Diagrama entidad-relación del plugin local_jobboard',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama entidad-relación del plugin local_jobboard'));
 
     // Detalles de tablas principales
     elementos.push(
@@ -524,13 +488,7 @@ async function generarClasesPrincipales(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 5. Diagrama de clases principales',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama de clases principales'));
 
     // Clase vacancy
     if (data.classes && data.classes.vacancy) {
@@ -750,13 +708,7 @@ async function generarServiciosWeb(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 6. Servicios web disponibles',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Servicios web disponibles'));
 
     // Tabla de servicios
     const serviciosData = [['Función', 'Tipo', 'Descripción', 'Capability Requerido']];
@@ -774,13 +726,7 @@ async function generarServiciosWeb(data) {
         crearTabla(serviciosData, [30, 10, 40, 20])
     );
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 4. Servicios web disponibles',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Servicios web disponibles'));
 
     return elementos;
 }
@@ -918,13 +864,7 @@ async function generarFlujosTrabajo(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 7. Flujo de estados de vacante',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Flujo de estados de vacante'));
 
     // Flujo de postulación
     elementos.push(
@@ -959,13 +899,7 @@ async function generarFlujosTrabajo(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 8. Flujo de postulación',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Flujo de postulación'));
 
     // Ciclo de vida de la aplicación
     elementos.push(
@@ -999,13 +933,7 @@ async function generarFlujosTrabajo(data) {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 9. Ciclo de vida de la aplicación',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Ciclo de vida de la aplicación'));
 
     return elementos;
 }

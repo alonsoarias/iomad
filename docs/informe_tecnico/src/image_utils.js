@@ -11,8 +11,13 @@ import { fileURLToPath } from 'url';
 import {
     Paragraph,
     ImageRun,
-    AlignmentType
+    AlignmentType,
+    TextRun,
+    SimpleField,
+    BookmarkStart,
+    BookmarkEnd
 } from 'docx';
+import { COLORS } from './styles.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -154,11 +159,122 @@ export async function listarSVGsPlugin(plugin) {
     }
 }
 
+// Contador global para bookmarks unicos
+let bookmarkCounter = 0;
+
+/**
+ * Crea un parrafo de titulo de figura con campo SEQ para la tabla de ilustraciones
+ * @param {string} titulo - Titulo de la figura (sin "Figura X. ")
+ * @returns {Paragraph} Parrafo con el titulo de la figura
+ */
+export function crearTituloFigura(titulo) {
+    bookmarkCounter++;
+    const bookmarkId = `_Ref_Figura_${bookmarkCounter}`;
+
+    return new Paragraph({
+        children: [
+            new BookmarkStart({ id: bookmarkId, name: bookmarkId }),
+            new TextRun({
+                text: 'Figura ',
+                size: 20,
+                italics: true,
+                color: COLORS.GRIS,
+                font: 'Arial'
+            }),
+            new SimpleField({ instruction: 'SEQ Figura \\* ARABIC' }),
+            new TextRun({
+                text: '. ',
+                size: 20,
+                italics: true,
+                color: COLORS.GRIS,
+                font: 'Arial'
+            }),
+            new TextRun({
+                text: titulo,
+                size: 20,
+                italics: true,
+                color: COLORS.GRIS,
+                font: 'Arial'
+            }),
+            new BookmarkEnd({ id: bookmarkId })
+        ],
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 100, after: 300 }
+    });
+}
+
+/**
+ * Crea un parrafo de titulo de tabla con campo SEQ para la tabla de tablas
+ * @param {string} titulo - Titulo de la tabla (sin "Tabla X. ")
+ * @returns {Paragraph} Parrafo con el titulo de la tabla
+ */
+export function crearTituloTabla(titulo) {
+    bookmarkCounter++;
+    const bookmarkId = `_Ref_Tabla_${bookmarkCounter}`;
+
+    return new Paragraph({
+        children: [
+            new BookmarkStart({ id: bookmarkId, name: bookmarkId }),
+            new TextRun({
+                text: 'Tabla ',
+                size: 20,
+                bold: true,
+                color: COLORS.NEGRO,
+                font: 'Arial'
+            }),
+            new SimpleField({ instruction: 'SEQ Tabla \\* ARABIC' }),
+            new TextRun({
+                text: '. ',
+                size: 20,
+                bold: true,
+                color: COLORS.NEGRO,
+                font: 'Arial'
+            }),
+            new TextRun({
+                text: titulo,
+                size: 20,
+                bold: true,
+                color: COLORS.NEGRO,
+                font: 'Arial'
+            }),
+            new BookmarkEnd({ id: bookmarkId })
+        ],
+        alignment: AlignmentType.LEFT,
+        spacing: { before: 100, after: 100 }
+    });
+}
+
+/**
+ * Crea un parrafo con imagen y su titulo con SEQ
+ * @param {string} svgPath - Ruta al archivo SVG
+ * @param {string} titulo - Titulo de la figura
+ * @param {Object} options - Opciones de la imagen
+ * @returns {Promise<Array<Paragraph>>} Array con parrafo de imagen y titulo
+ */
+export async function crearFiguraConTitulo(svgPath, titulo, options = {}) {
+    const elementos = [];
+
+    try {
+        const imagenParrafo = await crearParrafoConImagen(svgPath, options);
+        elementos.push(imagenParrafo);
+    } catch (error) {
+        console.warn(`No se pudo cargar imagen: ${svgPath}`, error.message);
+        return elementos;
+    }
+
+    elementos.push(crearTituloFigura(titulo));
+
+    return elementos;
+}
+
 export default {
     svgToPng,
     crearImagenDesdeSVG,
     crearParrafoConImagen,
     crearImagenesMultiples,
     existeSVG,
-    listarSVGsPlugin
+    listarSVGsPlugin,
+    crearTituloFigura,
+    crearTituloTabla,
+    crearFiguraConTitulo
 };

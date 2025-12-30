@@ -8,7 +8,7 @@
 import { Paragraph, TextRun, Table, TableCell, TableRow, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
 import { readFile } from 'fs/promises';
 import { COLORS } from './styles.js';
-import { crearParrafoConImagen, existeSVG } from './image_utils.js';
+import { crearParrafoConImagen, existeSVG, crearTituloFigura, crearTituloTabla } from './image_utils.js';
 
 // Ruta base de SVG para este plugin
 const SVG_BASE = '/home/user/iomad/docs/informe_tecnico/svg/report_platform_usage';
@@ -139,13 +139,7 @@ export async function generarSeccionPlatformUsage() {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 10. Estructura de directorios del plugin report_platform_usage',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Estructura de directorios del plugin report_platform_usage'));
 
     // Tabla de información de versión
     elementos.push(
@@ -215,13 +209,7 @@ export async function generarSeccionPlatformUsage() {
 
     elementos.push(tablaVersion);
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 5. Información de versión - Platform Usage Report',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Información de versión - Platform Usage Report'));
 
     // ============================================================
     // 3. ARQUITECTURA
@@ -267,13 +255,7 @@ export async function generarSeccionPlatformUsage() {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 11. Diagrama de arquitectura - Platform Usage Report',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama de arquitectura - Platform Usage Report'));
 
     // ============================================================
     // 4. BASE DE DATOS
@@ -343,13 +325,7 @@ export async function generarSeccionPlatformUsage() {
 
         elementos.push(tablaDB);
 
-        elementos.push(
-            new Paragraph({
-                text: `Tabla ${6 + index}. Tabla ${tabla.nombre}`,
-                style: 'PieTabla',
-                spacing: { before: 100, after: 200 }
-            })
-        );
+        elementos.push(crearTituloTabla(`Tabla ${tabla.nombre}`));
     });
 
     elementos.push(
@@ -541,13 +517,7 @@ export async function generarSeccionPlatformUsage() {
 
     elementos.push(tablaCapabilities);
 
-    elementos.push(
-        new Paragraph({
-            text: `Tabla ${datos.arquitectura_base_datos.tablas_propias.length + 6}. Capabilities del plugin Platform Usage Report`,
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Capabilities del plugin Platform Usage Report'));
 
     // ============================================================
     // 7. MÉTRICAS DISPONIBLES
@@ -684,13 +654,7 @@ export async function generarSeccionPlatformUsage() {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 12. Diagrama de flujo de datos - Platform Usage Report',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama de flujo de datos - Platform Usage Report'));
 
     return elementos;
 }

@@ -8,7 +8,7 @@
 import { Paragraph, TextRun, Table, TableCell, TableRow, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
 import { readFile } from 'fs/promises';
 import { COLORS } from './styles.js';
-import { crearParrafoConImagen, existeSVG } from './image_utils.js';
+import { crearParrafoConImagen, existeSVG, crearTituloFigura, crearTituloTabla } from './image_utils.js';
 
 // Ruta base de SVG para este plugin
 const SVG_BASE = '/home/user/iomad/docs/informe_tecnico/svg/local_platform_access';
@@ -182,13 +182,7 @@ export async function generarSeccionPlatformAccess() {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 13. Estructura de directorios del plugin local_platform_access',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Estructura de directorios del plugin local_platform_access'));
 
     // Tabla de información de versión
     elementos.push(
@@ -264,13 +258,7 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(tablaVersion);
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 8. Información de versión - Platform Access Generator',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Información de versión - Platform Access Generator'));
 
     elementos.push(
         new Paragraph({
@@ -334,13 +322,7 @@ export async function generarSeccionPlatformAccess() {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 14. Diagrama de arquitectura - Platform Access Generator',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama de arquitectura - Platform Access Generator'));
 
     // ============================================================
     // 4. CLASES PRINCIPALES
@@ -568,13 +550,7 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(tablaCapabilities);
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 9. Capabilities del plugin Platform Access Generator',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 200 }
-        })
-    );
+    elementos.push(crearTituloTabla('Capabilities del plugin Platform Access Generator'));
 
     elementos.push(
         new Paragraph({
@@ -657,13 +633,7 @@ export async function generarSeccionPlatformAccess() {
         }
     }
 
-    elementos.push(
-        new Paragraph({
-            text: 'Figura 15. Diagrama de flujo de generación - Platform Access Generator',
-            style: 'PieIlustracion',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloFigura('Diagrama de flujo de generación - Platform Access Generator'));
 
     // ============================================================
     // 7. OPTIMIZACIONES DE RENDIMIENTO
@@ -731,13 +701,7 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(tablaOptimizaciones);
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 10. Técnicas de optimización implementadas',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 200 }
-        })
-    );
+    elementos.push(crearTituloTabla('Técnicas de optimización implementadas'));
 
     elementos.push(
         new Paragraph({

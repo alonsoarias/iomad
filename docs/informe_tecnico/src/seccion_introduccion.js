@@ -16,6 +16,7 @@ import {
     VerticalAlign
 } from 'docx';
 import { COLORS } from './styles.js';
+import { crearTituloTabla } from './image_utils.js';
 
 /**
  * Genera todas las secciones introductorias
@@ -363,13 +364,7 @@ function generarTecnologias() {
 
     elementos.push(crearTabla(tecnologias, [25, 30, 45]));
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 1. Tecnologías utilizadas en los plugins',
-            style: 'PieTabla',
-            spacing: { before: 100, after: 300 }
-        })
-    );
+    elementos.push(crearTituloTabla('Tecnologías utilizadas en los plugins'));
 
     return elementos;
 }

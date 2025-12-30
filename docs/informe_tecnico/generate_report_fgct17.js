@@ -68,7 +68,7 @@ const FGCT17 = {
  */
 async function crearEncabezadoFGCT17() {
     // Leer logo ISER
-    const logoPath = path.join(__dirname, 'output/template_extracted/word/media/image1.jpeg');
+    const logoPath = path.join(__dirname, 'images/logo_iser.png');
     let logoImage = null;
 
     try {
