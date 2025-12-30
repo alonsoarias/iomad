@@ -188,13 +188,24 @@ def add_simple_caption(paragraph, caption_type: str, number: int, title: str):
 
 
 def add_figure_caption(doc, title: str):
-    """Agrega un título de figura con numeración automática."""
+    """Agrega un título de figura con numeración automática y fuente."""
     global figura_counter
     figura_counter += 1
 
+    # Título de la figura
     caption = doc.add_paragraph()
     caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
     add_simple_caption(caption, 'Figura', figura_counter, title)
+
+    # Fuente: Elaboración propia
+    source = doc.add_paragraph()
+    source.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = source.add_run('Fuente: Elaboración propia')
+    run.font.size = Pt(9)
+    run.font.italic = True
+    run.font.color.rgb = COLORS['GRIS']
+    source.paragraph_format.space_before = Pt(0)
+    source.paragraph_format.space_after = Pt(6)
 
     return caption
 
@@ -259,7 +270,7 @@ def add_figure(doc, svg_path: Path, title: str, width_inches: float = 5.5):
 
 
 def add_table_with_caption(doc, data: list, title: str, col_widths: list = None):
-    """Agrega una tabla con su título."""
+    """Agrega una tabla con su título y formato corporativo."""
     if not data:
         return
 
@@ -277,6 +288,12 @@ def add_table_with_caption(doc, data: list, title: str, col_widths: list = None)
         for j, cell_data in enumerate(row_data):
             cell = row.cells[j]
             cell.text = str(cell_data) if cell_data else ''
+
+            # Aplicar fuente Arial a todas las celdas
+            for paragraph in cell.paragraphs:
+                for run in paragraph.runs:
+                    run.font.name = 'Arial'
+                    run.font.size = Pt(10)
 
             # Estilo de encabezado (primera fila)
             if i == 0:
@@ -390,28 +407,32 @@ def add_heading(doc, text: str, level: int = 1):
 
 
 def add_paragraph_text(doc, text: str, bold: bool = False, italic: bool = False):
-    """Agrega un párrafo de texto."""
+    """Agrega un párrafo de texto con formato corporativo."""
     p = doc.add_paragraph()
     run = p.add_run(text)
     run.bold = bold
     run.italic = italic
     run.font.size = Pt(11)
+    run.font.name = 'Arial'
 
-    # Justificado
+    # Justificado con interlineado 1.15
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.space_after = Pt(8)
+    p.paragraph_format.line_spacing = 1.15
 
     return p
 
 
 def add_bullet_list(doc, items: list):
-    """Agrega una lista con viñetas."""
+    """Agrega una lista con viñetas con formato corporativo."""
     for item in items:
         p = doc.add_paragraph()
         run = p.add_run(f'• {item}')
         run.font.size = Pt(11)
-        p.paragraph_format.left_indent = Inches(0.5)
-        p.paragraph_format.space_after = Pt(3)
+        run.font.name = 'Arial'
+        p.paragraph_format.left_indent = Inches(0.4)
+        p.paragraph_format.space_after = Pt(4)
+        p.paragraph_format.line_spacing = 1.15
 
 
 def generate_cover_page(doc):

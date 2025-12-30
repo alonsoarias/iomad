@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="900" height="650">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
   <defs>
     <style>
       .bg { fill: #FAFAFA; }
@@ -249,9 +249,4 @@
     <text x="185" y="165" text-anchor="middle" class="desc-text">Tipo: report | Requiere: Moodle 4.1+</text>
   </g>
 
-  <!-- Footer note -->
-  <rect x="20" y="610" width="860" height="30" rx="5" fill="#E8F5E9" stroke="#1B9E88" stroke-width="1"/>
-  <text x="450" y="630" text-anchor="middle" style="font-family: Arial; font-size: 11px; fill: #646363;">
-    Plugin de reportes para metricas de uso de la plataforma Moodle. Estructura optimizada para Moodle 4.x
-  </text>
 </svg>
