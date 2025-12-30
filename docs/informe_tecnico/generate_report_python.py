@@ -463,7 +463,31 @@ def generate_cover_page(doc):
         run.font.color.rgb = COLORS['VERDE']
 
     # Espacio
-    for _ in range(4):
+    for _ in range(3):
+        doc.add_paragraph()
+
+    # Autor
+    author_label = doc.add_paragraph()
+    author_label.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = author_label.add_run('Elaborado por:')
+    run.font.size = Pt(11)
+    run.font.color.rgb = COLORS['GRIS']
+
+    author_name = doc.add_paragraph()
+    author_name.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = author_name.add_run('Alonso Arias')
+    run.bold = True
+    run.font.size = Pt(14)
+    run.font.color.rgb = COLORS['VERDE']
+
+    author_email = doc.add_paragraph()
+    author_email.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = author_email.add_run('soporteplataformas@iser.edu.co')
+    run.font.size = Pt(10)
+    run.font.color.rgb = COLORS['GRIS']
+
+    # Espacio
+    for _ in range(2):
         doc.add_paragraph()
 
     # Año
