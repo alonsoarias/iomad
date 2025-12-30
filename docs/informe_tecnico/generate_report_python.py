@@ -359,25 +359,25 @@ def add_heading(doc, text: str, level: int = 1):
     """
     Agrega un encabezado con estilo de Word para la TOC.
     Usa estilos Heading 1/2/3 y establece outline level.
+    Aplica colores institucionales ISER.
     """
-    # Intentar usar el estilo de heading nativo
-    style_name = f'Heading {level}'
+    # Crear párrafo y aplicar formato manualmente para control total de colores
+    p = doc.add_paragraph()
+    run = p.add_run(text)
+    run.bold = True
 
-    try:
-        p = doc.add_paragraph(text, style=style_name)
-    except KeyError:
-        # Si el estilo no existe, crear párrafo normal y configurar manualmente
-        p = doc.add_paragraph()
-        run = p.add_run(text)
-        run.bold = True
+    # Tamaños según nivel
+    sizes = {1: 16, 2: 14, 3: 12}
+    run.font.size = Pt(sizes.get(level, 12))
+    run.font.name = 'Arial'
 
-        # Tamaños según nivel
-        sizes = {1: 16, 2: 14, 3: 12}
-        run.font.size = Pt(sizes.get(level, 12))
-
-        # Color verde para títulos principales
-        if level == 1:
-            run.font.color.rgb = COLORS['VERDE']
+    # Colores institucionales ISER según nivel
+    if level == 1:
+        run.font.color.rgb = COLORS['VERDE']  # Verde ISER para títulos principales
+    elif level == 2:
+        run.font.color.rgb = COLORS['GRIS']   # Gris para subtítulos
+    else:
+        run.font.color.rgb = COLORS['NEGRO']  # Negro para nivel 3
 
     # Establecer outline level para TOC (crítico para que funcione)
     set_paragraph_outline_level(p, level)
@@ -731,19 +731,42 @@ def generate_jobboard_section(doc):
     # Capabilities
     add_heading(doc, '5.12 Sistema de Permisos', 2)
     if 'capabilities' in data:
-        caps = data['capabilities']
+        caps_list = data['capabilities']
+        # Contar todas las capabilities en las categorías
+        total_caps = sum(len(cat.get('capabilities', [])) for cat in caps_list if isinstance(cat, dict))
         add_paragraph_text(doc,
-            f'El plugin define {len(caps)} capabilities para controlar el acceso a las diferentes '
-            'funcionalidades del sistema.')
+            f'El plugin define {total_caps} capabilities organizadas en {len(caps_list)} categorías '
+            'para controlar el acceso a las diferentes funcionalidades del sistema.')
 
-        caps_data = [['Capability', 'Tipo', 'Propósito']]
-        for cap in caps[:8]:
-            caps_data.append([
-                cap.get('name', 'N/A').replace('local/jobboard:', ''),
-                cap.get('captype', 'N/A'),
-                cap.get('title', cap.get('name', 'N/A'))[:35] + '...' if len(cap.get('title', cap.get('name', ''))) > 35 else cap.get('title', cap.get('name', 'N/A'))
-            ])
+        caps_data = [['Categoría', 'Capability', 'Tipo']]
+        for cat in caps_list[:6]:
+            cat_name = cat.get('name', 'N/A')
+            for cap in cat.get('capabilities', [])[:2]:
+                caps_data.append([
+                    cat_name,
+                    cap.get('name', 'N/A').replace('local/jobboard:', ''),
+                    cap.get('type', 'N/A')
+                ])
         add_table_with_caption(doc, caps_data, 'Principales capabilities del plugin local_jobboard')
+
+    # Templates Mustache
+    add_heading(doc, '5.13 Plantillas Mustache', 2)
+    if 'templates' in data:
+        templates = data['templates']
+        total = templates.get('metadata', {}).get('total_templates', 0)
+        add_paragraph_text(doc,
+            f'El plugin utiliza {total} plantillas Mustache organizadas por categoría para '
+            'la capa de presentación, siguiendo el patrón de separación de responsabilidades de Moodle.')
+
+        if 'template_categories' in templates:
+            tpl_data = [['Categoría', 'Descripción', 'Cantidad']]
+            for cat in templates['template_categories']:
+                tpl_data.append([
+                    cat.get('category', 'N/A'),
+                    cat.get('description', 'N/A')[:40] + '...' if len(cat.get('description', '')) > 40 else cat.get('description', 'N/A'),
+                    str(len(cat.get('templates', [])))
+                ])
+            add_table_with_caption(doc, tpl_data, 'Categorías de templates Mustache del plugin local_jobboard')
 
     doc.add_page_break()
 
@@ -799,8 +822,24 @@ def generate_platform_usage_section(doc):
     svg_path = SVG_DIR / 'report_platform_usage' / 'arquitectura.svg'
     add_figure(doc, svg_path, 'Diagrama de arquitectura del plugin report_platform_usage')
 
+    # Clases principales
+    add_heading(doc, '6.5 Clases Principales', 2)
+    if 'arquitectura_clases' in data and 'clases_principales' in data['arquitectura_clases']:
+        clases = data['arquitectura_clases']['clases_principales']
+        add_paragraph_text(doc,
+            'El plugin implementa varias clases PHP especializadas que encapsulan '
+            'la lógica de negocio y el acceso a datos.')
+
+        clases_data = [['Clase', 'Responsabilidad']]
+        for cls in clases:
+            clases_data.append([
+                cls.get('nombre', 'N/A'),
+                cls.get('responsabilidad', 'N/A')[:50] + '...' if len(cls.get('responsabilidad', '')) > 50 else cls.get('responsabilidad', 'N/A')
+            ])
+        add_table_with_caption(doc, clases_data, 'Clases principales del plugin report_platform_usage')
+
     # Base de datos
-    add_heading(doc, '6.5 Arquitectura de Base de Datos', 2)
+    add_heading(doc, '6.6 Arquitectura de Base de Datos', 2)
     if 'arquitectura_base_datos' in data:
         db = data['arquitectura_base_datos']
         if 'tablas_propias' in db:
@@ -815,7 +854,7 @@ def generate_platform_usage_section(doc):
                 add_table_with_caption(doc, tabla_data, f'Estructura de la tabla {tabla.get("nombre", "de datos")}')
 
     # Capabilities
-    add_heading(doc, '6.6 Capabilities y Seguridad', 2)
+    add_heading(doc, '6.7 Capabilities y Seguridad', 2)
     add_paragraph_text(doc,
         'El plugin define capabilities específicas para controlar el acceso a los reportes '
         'y la visualización de información sensible.')
@@ -832,7 +871,7 @@ def generate_platform_usage_section(doc):
         add_table_with_caption(doc, caps_data, 'Capabilities del plugin report_platform_usage')
 
     # Flujo de datos
-    add_heading(doc, '6.7 Flujo de Datos', 2)
+    add_heading(doc, '6.8 Flujo de Datos', 2)
     add_paragraph_text(doc,
         'El reporte recopila datos de múltiples tablas del sistema de logging de Moodle, '
         'los procesa y presenta en formatos tabulares y gráficos.')
@@ -841,7 +880,7 @@ def generate_platform_usage_section(doc):
     add_figure(doc, svg_path, 'Diagrama de flujo de datos del plugin report_platform_usage')
 
     # Flujo del reporte
-    add_heading(doc, '6.8 Flujo del Reporte', 2)
+    add_heading(doc, '6.9 Flujo del Reporte', 2)
     add_paragraph_text(doc,
         'El flujo de generación de reportes incluye la recopilación de métricas, '
         'el procesamiento de datos y la presentación en múltiples formatos de exportación.')
@@ -850,7 +889,7 @@ def generate_platform_usage_section(doc):
     add_figure(doc, svg_path, 'Diagrama de flujo del reporte de uso de plataforma')
 
     # Métricas disponibles
-    add_heading(doc, '6.9 Métricas Disponibles', 2)
+    add_heading(doc, '6.10 Métricas Disponibles', 2)
     if 'metricas_informes' in data:
         metricas = data['metricas_informes']
         add_paragraph_text(doc,
@@ -869,7 +908,7 @@ def generate_platform_usage_section(doc):
             add_table_with_caption(doc, categorias_data, 'Categorías de métricas del plugin report_platform_usage')
 
     # Algoritmo de dedicación
-    add_heading(doc, '6.10 Algoritmo de Cálculo de Dedicación', 2)
+    add_heading(doc, '6.11 Algoritmo de Cálculo de Dedicación', 2)
     if 'algoritmo_dedicacion' in data:
         alg = data['algoritmo_dedicacion']
         add_paragraph_text(doc,
@@ -887,7 +926,7 @@ def generate_platform_usage_section(doc):
             add_table_with_caption(doc, params_data, 'Parámetros del algoritmo de dedicación')
 
     # Sistema de caché
-    add_heading(doc, '6.11 Sistema de Caché', 2)
+    add_heading(doc, '6.12 Sistema de Caché', 2)
     if 'sistema_cache' in data:
         cache = data['sistema_cache']
         add_paragraph_text(doc,
@@ -906,7 +945,7 @@ def generate_platform_usage_section(doc):
             add_table_with_caption(doc, cache_data, 'Definiciones de caché del plugin report_platform_usage')
 
     # Casos de uso
-    add_heading(doc, '6.12 Casos de Uso', 2)
+    add_heading(doc, '6.13 Casos de Uso', 2)
     if 'casos_uso' in data:
         add_paragraph_text(doc,
             'El plugin está diseñado para satisfacer los siguientes escenarios de uso:')
@@ -920,7 +959,7 @@ def generate_platform_usage_section(doc):
         add_table_with_caption(doc, casos_data, 'Casos de uso del plugin report_platform_usage')
 
     # Integración con el sistema
-    add_heading(doc, '6.13 Integración con Moodle e IOMAD', 2)
+    add_heading(doc, '6.14 Integración con Moodle e IOMAD', 2)
     if 'integracion_sistema' in data:
         integ = data['integracion_sistema']
         add_paragraph_text(doc,
