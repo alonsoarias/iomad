@@ -1,6 +1,6 @@
 /**
- * Modulo para generar las secciones introductorias del documento
- * Incluye: Introduccion, Objetivos, Metodologia, Alcance
+ * Módulo para generar las secciones introductorias del documento
+ * Incluye: Introducción, Objetivos, Metodología, Alcance
  */
 
 import {
@@ -24,33 +24,33 @@ import { COLORS } from './styles.js';
 export async function generarSeccionesIntroductorias() {
     const elementos = [];
 
-    // 1. Introduccion
+    // 1. Introducción
     elementos.push(...generarIntroduccion());
 
     // 2. Objetivos
     elementos.push(...generarObjetivos());
 
-    // 3. Metodologia
+    // 3. Metodología
     elementos.push(...generarMetodologia());
 
     // 4. Alcance
     elementos.push(...generarAlcance());
 
-    // 5. Tecnologias utilizadas
+    // 5. Tecnologías utilizadas
     elementos.push(...generarTecnologias());
 
     return elementos;
 }
 
 /**
- * Genera la seccion de introduccion general
+ * Genera la sección de introducción general
  */
 function generarIntroduccion() {
     const elementos = [];
 
     elementos.push(
         new Paragraph({
-            text: '1. INTRODUCCION',
+            text: '1. INTRODUCCIÓN',
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 400, after: 200 }
         })
@@ -60,7 +60,7 @@ function generarIntroduccion() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El Instituto Superior de Educacion Rural (ISER) ha desarrollado un conjunto de plugins personalizados para la plataforma Moodle con el objetivo de optimizar y automatizar procesos institucionales criticos. Estos desarrollos representan un esfuerzo significativo por adaptar la plataforma de aprendizaje a las necesidades especificas de la institucion, mejorando la experiencia tanto de administradores como de usuarios finales.',
+                    text: 'El Instituto Superior de Educación Rural (ISER) ha desarrollado un conjunto de plugins personalizados para la plataforma Moodle con el objetivo de optimizar y automatizar procesos institucionales críticos. Estos desarrollos representan un esfuerzo significativo por adaptar la plataforma de aprendizaje a las necesidades específicas de la institución, mejorando la experiencia tanto de administradores como de usuarios finales.',
                     size: 24
                 })
             ],
@@ -73,7 +73,7 @@ function generarIntroduccion() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El presente informe tecnico documenta de manera exhaustiva tres plugins desarrollados para el ecosistema Moodle de ISER:',
+                    text: 'El presente informe técnico documenta de manera exhaustiva tres plugins desarrollados para el ecosistema Moodle de ISER:',
                     size: 24
                 })
             ],
@@ -86,15 +86,15 @@ function generarIntroduccion() {
     const pluginsInfo = [
         {
             nombre: 'local_jobboard',
-            descripcion: 'Sistema integral de gestion de vacantes academicas y procesos de seleccion docente. Permite la publicacion de convocatorias, recepcion de postulaciones, validacion de documentos y seguimiento del proceso de contratacion.'
+            descripcion: 'Sistema integral de gestión de vacantes académicas y procesos de selección docente. Permite la publicación de convocatorias, recepción de postulaciones, validación de documentos y seguimiento del proceso de contratación.'
         },
         {
             nombre: 'report_platform_usage',
-            descripcion: 'Herramienta de analisis y reporteria que proporciona metricas detalladas sobre el uso de la plataforma, incluyendo tiempo de dedicacion, patrones de acceso y estadisticas de completitud de cursos.'
+            descripcion: 'Herramienta de análisis y reportería que proporciona métricas detalladas sobre el uso de la plataforma, incluyendo tiempo de dedicación, patrones de acceso y estadísticas de completitud de cursos.'
         },
         {
             nombre: 'local_platform_access',
-            descripcion: 'Utilidad para la generacion de datos de acceso de prueba, facilitando los procesos de testing, capacitacion y demostraciones del sistema sin afectar datos reales.'
+            descripcion: 'Utilidad para la generación de datos de acceso de prueba, facilitando los procesos de testing, capacitación y demostraciones del sistema sin afectar datos reales.'
         }
     ];
 
@@ -124,7 +124,7 @@ function generarIntroduccion() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'Esta documentacion ha sido elaborada siguiendo las normas ICONTEC (NTC 1486) para la presentacion de trabajos escritos, garantizando una estructura clara, coherente y profesional que facilite la comprension y mantenimiento futuro de los desarrollos.',
+                    text: 'Esta documentación ha sido elaborada siguiendo las normas ICONTEC (NTC 1486) para la presentación de trabajos escritos, garantizando una estructura clara, coherente y profesional que facilite la comprensión y mantenimiento futuro de los desarrollos.',
                     size: 24
                 })
             ],
@@ -137,7 +137,7 @@ function generarIntroduccion() {
 }
 
 /**
- * Genera la seccion de objetivos
+ * Genera la sección de objetivos
  */
 function generarObjetivos() {
     const elementos = [];
@@ -163,7 +163,7 @@ function generarObjetivos() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'Documentar de manera integral la arquitectura, funcionalidad y especificaciones tecnicas de los plugins Moodle desarrollados para ISER, proporcionando una referencia tecnica completa que facilite el mantenimiento, actualizacion y extension futura de estos componentes de software.',
+                    text: 'Documentar de manera integral la arquitectura, funcionalidad y especificaciones técnicas de los plugins Moodle desarrollados para ISER, proporcionando una referencia técnica completa que facilite el mantenimiento, actualización y extensión futura de estos componentes de software.',
                     size: 24
                 })
             ],
@@ -172,24 +172,24 @@ function generarObjetivos() {
         })
     );
 
-    // Objetivos Especificos
+    // Objetivos Específicos
     elementos.push(
         new Paragraph({
-            text: '2.2 Objetivos Especificos',
+            text: '2.2 Objetivos Específicos',
             heading: HeadingLevel.HEADING_2,
             spacing: { before: 300, after: 150 }
         })
     );
 
     const objetivosEspecificos = [
-        'Describir la estructura de directorios y organizacion de archivos de cada plugin, siguiendo las convenciones de desarrollo de Moodle.',
+        'Describir la estructura de directorios y organización de archivos de cada plugin, siguiendo las convenciones de desarrollo de Moodle.',
         'Documentar el modelo de datos, incluyendo tablas de base de datos, relaciones y campos relevantes.',
-        'Especificar las clases PHP principales, sus metodos, propiedades y responsabilidades dentro del sistema.',
-        'Detallar los servicios web (Web Services) expuestos por cada plugin, incluyendo parametros y respuestas.',
+        'Especificar las clases PHP principales, sus métodos, propiedades y responsabilidades dentro del sistema.',
+        'Detallar los servicios web (Web Services) expuestos por cada plugin, incluyendo parámetros y respuestas.',
         'Explicar el sistema de permisos y capabilities implementado para el control de acceso.',
         'Ilustrar los flujos de trabajo y estados posibles de las entidades principales.',
-        'Proporcionar diagramas tecnicos que faciliten la comprension visual de la arquitectura.',
-        'Establecer recomendaciones para el mantenimiento y actualizacion de los plugins.'
+        'Proporcionar diagramas técnicos que faciliten la comprensión visual de la arquitectura.',
+        'Establecer recomendaciones para el mantenimiento y actualización de los plugins.'
     ];
 
     for (let i = 0; i < objetivosEspecificos.length; i++) {
@@ -218,14 +218,14 @@ function generarObjetivos() {
 }
 
 /**
- * Genera la seccion de metodologia
+ * Genera la sección de metodología
  */
 function generarMetodologia() {
     const elementos = [];
 
     elementos.push(
         new Paragraph({
-            text: '3. METODOLOGIA',
+            text: '3. METODOLOGÍA',
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 400, after: 200 }
         })
@@ -235,7 +235,7 @@ function generarMetodologia() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'La elaboracion de este informe tecnico siguio una metodologia sistematica de analisis de codigo y documentacion que garantiza la precision y completitud de la informacion presentada.',
+                    text: 'La elaboración de este informe técnico siguió una metodología sistemática de análisis de código y documentación que garantiza la precisión y completitud de la información presentada.',
                     size: 24
                 })
             ],
@@ -244,7 +244,7 @@ function generarMetodologia() {
         })
     );
 
-    // Fases de la metodologia
+    // Fases de la metodología
     elementos.push(
         new Paragraph({
             text: '3.1 Fases del Proceso',
@@ -255,29 +255,29 @@ function generarMetodologia() {
 
     const fases = [
         {
-            nombre: 'Analisis de Codigo Fuente',
-            descripcion: 'Revision sistematica de todos los archivos PHP, JavaScript, XML y CSS de cada plugin, extrayendo informacion sobre clases, funciones, constantes y configuraciones.',
-            herramientas: 'Analisis estatico de codigo, parsing de archivos XML'
+            nombre: 'Análisis de Código Fuente',
+            descripcion: 'Revisión sistemática de todos los archivos PHP, JavaScript, XML y CSS de cada plugin, extrayendo información sobre clases, funciones, constantes y configuraciones.',
+            herramientas: 'Análisis estático de código, parsing de archivos XML'
         },
         {
-            nombre: 'Extraccion de Esquemas',
-            descripcion: 'Analisis de archivos install.xml y access.php para documentar la estructura de base de datos y el sistema de permisos.',
-            herramientas: 'Parsing XML, analisis de definiciones de capabilities'
+            nombre: 'Extracción de Esquemas',
+            descripcion: 'Análisis de archivos install.xml y access.php para documentar la estructura de base de datos y el sistema de permisos.',
+            herramientas: 'Parsing XML, análisis de definiciones de capabilities'
         },
         {
-            nombre: 'Generacion de Diagramas',
-            descripcion: 'Creacion de diagramas tecnicos en formato SVG que ilustran la arquitectura, flujos de trabajo y relaciones entre componentes.',
+            nombre: 'Generación de Diagramas',
+            descripcion: 'Creación de diagramas técnicos en formato SVG que ilustran la arquitectura, flujos de trabajo y relaciones entre componentes.',
             herramientas: 'Diseño vectorial SVG con colores corporativos ISER'
         },
         {
-            nombre: 'Consolidacion de Datos',
-            descripcion: 'Integracion de toda la informacion extraida en estructuras JSON que sirven como fuente de datos para el documento.',
-            herramientas: 'Procesamiento JSON, validacion de datos'
+            nombre: 'Consolidación de Datos',
+            descripcion: 'Integración de toda la información extraída en estructuras JSON que sirven como fuente de datos para el documento.',
+            herramientas: 'Procesamiento JSON, validación de datos'
         },
         {
-            nombre: 'Generacion del Documento',
-            descripcion: 'Produccion automatizada del documento Word (.docx) utilizando plantillas y estilos ICONTEC.',
-            herramientas: 'Libreria docx para Node.js, Sharp para procesamiento de imagenes'
+            nombre: 'Generación del Documento',
+            descripcion: 'Producción automatizada del documento Word (.docx) utilizando plantillas y estilos ICONTEC.',
+            herramientas: 'Librería docx para Node.js, Sharp para procesamiento de imágenes'
         }
     ];
 
@@ -336,7 +336,7 @@ function generarMetodologia() {
 }
 
 /**
- * Genera la seccion de alcance
+ * Genera la sección de alcance
  */
 function generarAlcance() {
     const elementos = [];
@@ -353,7 +353,7 @@ function generarAlcance() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'Este documento cubre la documentacion tecnica de los tres plugins mencionados en su version actual (2025). El alcance incluye:',
+                    text: 'Este documento cubre la documentación técnica de los tres plugins mencionados en su versión actual (2025). El alcance incluye:',
                     size: 24
                 })
             ],
@@ -365,11 +365,11 @@ function generarAlcance() {
     const alcanceIncluido = [
         'Arquitectura y estructura de cada plugin',
         'Modelo de datos completo con todas las tablas y campos',
-        'Clases PHP principales y sus metodos publicos',
+        'Clases PHP principales y sus métodos públicos',
         'Servicios web y APIs disponibles',
         'Sistema de permisos y capabilities',
-        'Flujos de trabajo y maquinas de estado',
-        'Diagramas tecnicos ilustrativos'
+        'Flujos de trabajo y máquinas de estado',
+        'Diagramas técnicos ilustrativos'
     ];
 
     elementos.push(
@@ -403,9 +403,9 @@ function generarAlcance() {
 
     const alcanceExcluido = [
         'Manual de usuario final',
-        'Guias de instalacion paso a paso',
-        'Codigo fuente completo (solo extractos relevantes)',
-        'Documentacion de la carpeta cli/ del plugin local_jobboard'
+        'Guías de instalación paso a paso',
+        'Código fuente completo (solo extractos relevantes)',
+        'Documentación de la carpeta cli/ del plugin local_jobboard'
     ];
 
     elementos.push(
@@ -441,14 +441,14 @@ function generarAlcance() {
 }
 
 /**
- * Genera la seccion de tecnologias utilizadas
+ * Genera la sección de tecnologías utilizadas
  */
 function generarTecnologias() {
     const elementos = [];
 
     elementos.push(
         new Paragraph({
-            text: '5. TECNOLOGIAS UTILIZADAS',
+            text: '5. TECNOLOGÍAS UTILIZADAS',
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 400, after: 200 }
         })
@@ -458,7 +458,7 @@ function generarTecnologias() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'Los plugins documentados utilizan las siguientes tecnologias y estandares:',
+                    text: 'Los plugins documentados utilizan las siguientes tecnologías y estándares:',
                     size: 24
                 })
             ],
@@ -467,18 +467,18 @@ function generarTecnologias() {
         })
     );
 
-    // Tabla de tecnologias
+    // Tabla de tecnologías
     const tecnologias = [
-        ['Categoria', 'Tecnologia', 'Version/Descripcion'],
+        ['Categoría', 'Tecnología', 'Versión/Descripción'],
         ['Plataforma Base', 'Moodle', '4.1+ (IOMAD)'],
         ['Lenguaje Backend', 'PHP', '8.0+'],
         ['Base de Datos', 'MariaDB/MySQL', '10.4+ / 8.0+'],
-        ['Frontend', 'JavaScript (AMD)', 'Modulos RequireJS'],
+        ['Frontend', 'JavaScript (AMD)', 'Módulos RequireJS'],
         ['Plantillas', 'Mustache', 'Motor de plantillas Moodle'],
         ['Estilos', 'CSS/SCSS', 'Integrado con tema Moodle'],
         ['Web Services', 'REST/AJAX', 'API Moodle External'],
-        ['Autenticacion', 'OAuth/Sesskey', 'Sistema nativo Moodle'],
-        ['Cache', 'MUC', 'Moodle Universal Cache'],
+        ['Autenticación', 'OAuth/Sesskey', 'Sistema nativo Moodle'],
+        ['Caché', 'MUC', 'Moodle Universal Cache'],
         ['Tareas', 'Cron Tasks', 'Sistema de tareas Moodle']
     ];
 
@@ -486,7 +486,7 @@ function generarTecnologias() {
 
     elementos.push(
         new Paragraph({
-            text: 'Tabla 1. Tecnologias utilizadas en los plugins',
+            text: 'Tabla 1. Tecnologías utilizadas en los plugins',
             style: 'PieTabla',
             spacing: { before: 100, after: 300 }
         })
@@ -496,7 +496,7 @@ function generarTecnologias() {
 }
 
 /**
- * Funcion auxiliar para crear tablas
+ * Función auxiliar para crear tablas
  */
 function crearTabla(datos, anchosColumnas = null) {
     const filas = [];

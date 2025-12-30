@@ -1,6 +1,6 @@
 /**
- * Modulo para generar las secciones del plugin local_jobboard
- * en el documento tecnico usando la biblioteca docx
+ * Módulo para generar las secciones del plugin local_jobboard
+ * en el documento técnico usando la biblioteca docx
  */
 
 import { readFile } from 'fs/promises';
@@ -33,29 +33,29 @@ export async function generarSeccionesJobboard() {
 
     const elementos = [];
 
-    // 1. Introduccion del plugin
+    // 1. Introducción del plugin
     elementos.push(...generarIntroduccion(data));
 
-    // 2. Estructura del plugin (async - con imagenes)
+    // 2. Estructura del plugin (async - con imágenes)
     elementos.push(...await generarEstructura(data));
 
-    // 3. Arquitectura (async - con imagenes)
+    // 3. Arquitectura (async - con imágenes)
     elementos.push(...await generarArquitectura(data));
 
-    // 4. Base de datos (async - con imagenes)
+    // 4. Base de datos (async - con imágenes)
     elementos.push(...await generarBaseDatos(data));
 
-    // 5. Clases principales (async - con imagenes)
+    // 5. Clases principales (async - con imágenes)
     elementos.push(...await generarClasesPrincipales(data));
 
-    // 6. Servicios web (async - con imagenes)
+    // 6. Servicios web (async - con imágenes)
     elementos.push(...await generarServiciosWeb(data));
 
     // 7. Capabilities y permisos
     elementos.push(...generarCapabilities(data));
 
-    // 8. Flujos de trabajo (async - con imagenes)
-    elementos.push(...await generarFlujosTrabalho(data));
+    // 8. Flujos de trabajo (async - con imágenes)
+    elementos.push(...await generarFlujosTrabajo(data));
 
     return elementos;
 }
@@ -120,7 +120,7 @@ function generarIntroduccion(data) {
 
     elementos.push(
         new Paragraph({
-            text: `Tabla 1. Información de versión del plugin local_jobboard`,
+            text: 'Tabla 2. Información de versión del plugin local_jobboard',
             style: 'PieTabla',
             spacing: { before: 100, after: 300 }
         })
@@ -130,7 +130,7 @@ function generarIntroduccion(data) {
 }
 
 /**
- * Genera la seccion de estructura del plugin
+ * Genera la sección de estructura del plugin
  */
 async function generarEstructura(data) {
     const elementos = [];
@@ -147,7 +147,7 @@ async function generarEstructura(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El plugin local_jobboard sigue la estructura estandar de plugins locales de Moodle. La organizacion de directorios y archivos esta diseñada para facilitar el mantenimiento y cumplir con las convenciones de Moodle. El plugin cuenta con 11 carpetas principales y 23 subcarpetas, organizando codigo PHP, modulos JavaScript AMD, plantillas Mustache y archivos de configuracion.',
+                    text: 'El plugin local_jobboard sigue la estructura estándar de plugins locales de Moodle. La organización de directorios y archivos está diseñada para facilitar el mantenimiento y cumplir con las convenciones de Moodle. El plugin cuenta con 11 carpetas principales y 23 subcarpetas, organizando código PHP, módulos JavaScript AMD, plantillas Mustache y archivos de configuración.',
                     size: 24
                 })
             ],
@@ -163,7 +163,7 @@ async function generarEstructura(data) {
             const imagenParrafo = await crearParrafoConImagen(svgPath, { width: 520 });
             elementos.push(imagenParrafo);
         } catch (error) {
-            console.warn(`No se pudo cargar imagen: ${svgPath}`);
+            console.warn(`No se pudo cargar imagen: ${svgPath}`, error.message);
         }
     }
 
@@ -179,7 +179,7 @@ async function generarEstructura(data) {
 }
 
 /**
- * Genera la seccion de arquitectura
+ * Genera la sección de arquitectura
  */
 async function generarArquitectura(data) {
     const elementos = [];
@@ -196,7 +196,7 @@ async function generarArquitectura(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El plugin implementa una arquitectura modular que separa las responsabilidades en capas: presentacion (paginas y formularios), logica de negocio (clases), acceso a datos (base de datos), y servicios web (APIs externas). Esta arquitectura facilita el mantenimiento, testing y escalabilidad del sistema.',
+                    text: 'El plugin implementa una arquitectura modular que separa las responsabilidades en capas: presentación (páginas y formularios), lógica de negocio (clases), acceso a datos (base de datos), y servicios web (APIs externas). Esta arquitectura facilita el mantenimiento, testing y escalabilidad del sistema.',
                     size: 24
                 })
             ],
@@ -212,7 +212,7 @@ async function generarArquitectura(data) {
             const imagenParrafo = await crearParrafoConImagen(svgPath, { width: 500 });
             elementos.push(imagenParrafo);
         } catch (error) {
-            console.warn(`No se pudo cargar imagen: ${svgPath}`);
+            console.warn(`No se pudo cargar imagen: ${svgPath}`, error.message);
         }
     }
 
@@ -237,7 +237,7 @@ async function generarArquitectura(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El sistema define cinco tipos de actores principales: Docente/Aspirante, Revisor de Documentos, Administrador, Decano de Facultad y Recursos Humanos. Cada actor tiene acceso a un conjunto especifico de funcionalidades del sistema.',
+                    text: 'El sistema define cinco tipos de actores principales: Docente/Aspirante, Revisor de Documentos, Administrador, Decano de Facultad y Recursos Humanos. Cada actor tiene acceso a un conjunto específico de funcionalidades del sistema.',
                     size: 24
                 })
             ],
@@ -252,7 +252,7 @@ async function generarArquitectura(data) {
             const imagenParrafo = await crearParrafoConImagen(casosUsoPath, { width: 520 });
             elementos.push(imagenParrafo);
         } catch (error) {
-            console.warn(`No se pudo cargar imagen: ${casosUsoPath}`);
+            console.warn(`No se pudo cargar imagen: ${casosUsoPath}`, error.message);
         }
     }
 
@@ -268,7 +268,7 @@ async function generarArquitectura(data) {
 }
 
 /**
- * Genera la seccion de base de datos
+ * Genera la sección de base de datos
  */
 async function generarBaseDatos(data) {
     const elementos = [];
@@ -295,7 +295,7 @@ async function generarBaseDatos(data) {
                     color: COLORS.VERDE
                 }),
                 new TextRun({
-                    text: ' tablas para almacenar la informacion de vacantes, postulaciones, documentos y configuraciones. Todas las tablas siguen las convenciones de nomenclatura de Moodle con el prefijo ',
+                    text: ' tablas para almacenar la información de vacantes, postulaciones, documentos y configuraciones. Todas las tablas siguen las convenciones de nomenclatura de Moodle con el prefijo ',
                     size: 24
                 }),
                 new TextRun({
@@ -323,7 +323,7 @@ async function generarBaseDatos(data) {
         })
     );
 
-    const tablasData = [['Tabla', 'Descripcion', 'Campos Clave']];
+    const tablasData = [['Tabla', 'Descripción', 'Campos Clave']];
 
     for (const tabla of data.database.tables) {
         const camposClave = tabla.fields
@@ -333,7 +333,7 @@ async function generarBaseDatos(data) {
 
         tablasData.push([
             tabla.name.replace('local_jobboard_', ''),
-            tabla.comment || 'Sin descripcion',
+            tabla.comment || 'Sin descripción',
             camposClave
         ]);
     }
@@ -344,7 +344,7 @@ async function generarBaseDatos(data) {
 
     elementos.push(
         new Paragraph({
-            text: `Tabla 2. Resumen de tablas de base de datos`,
+            text: 'Tabla 3. Resumen de tablas de base de datos',
             style: 'PieTabla',
             spacing: { before: 100, after: 300 }
         })
@@ -353,7 +353,7 @@ async function generarBaseDatos(data) {
     // Diagrama ER
     elementos.push(
         new Paragraph({
-            text: 'Diagrama Entidad-Relacion',
+            text: 'Diagrama Entidad-Relación',
             heading: HeadingLevel.HEADING_3,
             spacing: { before: 200, after: 100 }
         })
@@ -365,13 +365,13 @@ async function generarBaseDatos(data) {
             const imagenParrafo = await crearParrafoConImagen(erPath, { width: 550 });
             elementos.push(imagenParrafo);
         } catch (error) {
-            console.warn(`No se pudo cargar imagen: ${erPath}`);
+            console.warn(`No se pudo cargar imagen: ${erPath}`, error.message);
         }
     }
 
     elementos.push(
         new Paragraph({
-            text: 'Figura 4. Diagrama entidad-relacion del plugin local_jobboard',
+            text: 'Figura 4. Diagrama entidad-relación del plugin local_jobboard',
             style: 'PieIlustracion',
             spacing: { before: 100, after: 300 }
         })
@@ -411,7 +411,7 @@ function generarDetalleTabla(nombre, tabla) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: `Tabla: `,
+                    text: 'Tabla: ',
                     size: 24,
                     bold: true
                 }),
@@ -465,7 +465,7 @@ function generarDetalleTabla(nombre, tabla) {
 }
 
 /**
- * Genera la seccion de clases principales
+ * Genera la sección de clases principales
  */
 async function generarClasesPrincipales(data) {
     const elementos = [];
@@ -482,7 +482,7 @@ async function generarClasesPrincipales(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El plugin implementa un conjunto de clases PHP que encapsulan la logica de negocio del sistema. Las clases principales son ',
+                    text: 'El plugin implementa un conjunto de clases PHP que encapsulan la lógica de negocio del sistema. Las clases principales son ',
                     size: 24
                 }),
                 new TextRun({
@@ -520,7 +520,7 @@ async function generarClasesPrincipales(data) {
             const imagenParrafo = await crearParrafoConImagen(clasesPath, { width: 520 });
             elementos.push(imagenParrafo);
         } catch (error) {
-            console.warn(`No se pudo cargar imagen: ${clasesPath}`);
+            console.warn(`No se pudo cargar imagen: ${clasesPath}`, error.message);
         }
     }
 
@@ -563,7 +563,7 @@ function generarDetalleClase(nombre, clase) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: `Namespace: `,
+                    text: 'Namespace: ',
                     size: 24,
                     bold: true
                 }),
@@ -582,7 +582,7 @@ function generarDetalleClase(nombre, clase) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: `Archivo: `,
+                    text: 'Archivo: ',
                     size: 24,
                     bold: true
                 }),
@@ -687,7 +687,7 @@ function generarDetalleClase(nombre, clase) {
 }
 
 /**
- * Genera la seccion de servicios web
+ * Genera la sección de servicios web
  */
 async function generarServiciosWeb(data) {
     const elementos = [];
@@ -730,7 +730,7 @@ async function generarServiciosWeb(data) {
                     color: COLORS.VERDE
                 }),
                 new TextRun({
-                    text: ' servicios web (Web Services) que permiten la interaccion con el sistema mediante AJAX y APIs externas. Estos servicios estan protegidos por capabilities y requieren autenticacion.',
+                    text: ' servicios web (Web Services) que permiten la interacción con el sistema mediante AJAX y APIs externas. Estos servicios están protegidos por capabilities y requieren autenticación.',
                     size: 24
                 })
             ],
@@ -746,7 +746,7 @@ async function generarServiciosWeb(data) {
             const imagenParrafo = await crearParrafoConImagen(serviciosPath, { width: 480 });
             elementos.push(imagenParrafo);
         } catch (error) {
-            console.warn(`No se pudo cargar imagen: ${serviciosPath}`);
+            console.warn(`No se pudo cargar imagen: ${serviciosPath}`, error.message);
         }
     }
 
@@ -776,7 +776,7 @@ async function generarServiciosWeb(data) {
 
     elementos.push(
         new Paragraph({
-            text: `Tabla 3. Servicios web disponibles`,
+            text: 'Tabla 4. Servicios web disponibles',
             style: 'PieTabla',
             spacing: { before: 100, after: 300 }
         })
@@ -861,7 +861,7 @@ function generarCapabilities(data) {
 /**
  * Genera la sección de flujos de trabajo
  */
-async function generarFlujosTrabalho(data) {
+async function generarFlujosTrabajo(data) {
     const elementos = [];
 
     elementos.push(
@@ -920,7 +920,7 @@ async function generarFlujosTrabalho(data) {
 
     elementos.push(
         new Paragraph({
-            text: 'Figura 6. Flujo de estados de vacante',
+            text: 'Figura 7. Flujo de estados de vacante',
             style: 'PieIlustracion',
             spacing: { before: 100, after: 300 }
         })
@@ -961,7 +961,47 @@ async function generarFlujosTrabalho(data) {
 
     elementos.push(
         new Paragraph({
-            text: 'Figura 7. Flujo de postulación',
+            text: 'Figura 8. Flujo de postulación',
+            style: 'PieIlustracion',
+            spacing: { before: 100, after: 300 }
+        })
+    );
+
+    // Ciclo de vida de la aplicación
+    elementos.push(
+        new Paragraph({
+            text: 'Ciclo de Vida de la Aplicación',
+            heading: HeadingLevel.HEADING_3,
+            spacing: { before: 200, after: 100 }
+        })
+    );
+
+    elementos.push(
+        new Paragraph({
+            children: [
+                new TextRun({
+                    text: 'El ciclo de vida completo de una postulación abarca desde la creación de la vacante hasta la contratación del candidato seleccionado, pasando por múltiples estados y validaciones.',
+                    size: 24
+                })
+            ],
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 200 }
+        })
+    );
+
+    const cicloVidaPath = `${SVG_BASE}/ciclo_vida_aplicacion.svg`;
+    if (existeSVG(cicloVidaPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(cicloVidaPath, { width: 520 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${cicloVidaPath}`, error.message);
+        }
+    }
+
+    elementos.push(
+        new Paragraph({
+            text: 'Figura 9. Ciclo de vida de la aplicación',
             style: 'PieIlustracion',
             spacing: { before: 100, after: 300 }
         })

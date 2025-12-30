@@ -1,5 +1,5 @@
 /**
- * Generador de sección de Platform Access Generator
+ * Módulo para generar la sección de Platform Access Generator
  *
  * Lee data/local_platform_access/CONSOLIDADO.json y genera
  * las secciones del informe técnico en formato docx
@@ -8,6 +8,10 @@
 import { Paragraph, TextRun, Table, TableCell, TableRow, HeadingLevel, AlignmentType, WidthType, BorderStyle } from 'docx';
 import { readFile } from 'fs/promises';
 import { COLORS } from './styles.js';
+import { crearParrafoConImagen, existeSVG } from './image_utils.js';
+
+// Ruta base de SVG para este plugin
+const SVG_BASE = '/home/user/iomad/docs/informe_tecnico/svg/local_platform_access';
 
 /**
  * Genera la sección completa de Platform Access Generator
@@ -28,7 +32,7 @@ export async function generarSeccionPlatformAccess() {
     // ============================================================
     elementos.push(
         new Paragraph({
-            text: 'PLATFORM ACCESS GENERATOR',
+            text: 'PLUGIN LOCAL_PLATFORM_ACCESS',
             heading: HeadingLevel.HEADING_1,
             spacing: { before: 400, after: 200 }
         })
@@ -47,13 +51,16 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: `${datos.nombre_completo} es un plugin de tipo `,
+                    size: 24
                 }),
                 new TextRun({
                     text: datos.tipo,
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: ` cuyo propósito es ${datos.resumen_ejecutivo?.proposito || 'generar registros de acceso'}`
+                    text: ` cuyo propósito es ${datos.resumen_ejecutivo?.proposito || 'generar registros de acceso para pruebas y demostraciones'}.`,
+                    size: 24
                 })
             ],
             spacing: { after: 200 },
@@ -66,10 +73,12 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'Arquitectura: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: datos.resumen_ejecutivo.arquitectura
+                    text: datos.resumen_ejecutivo.arquitectura,
+                    size: 24
                 })
             ],
             spacing: { after: 200 },
@@ -79,7 +88,12 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: 'Características principales:',
+            children: [
+                new TextRun({
+                    text: 'Características principales:',
+                    size: 24
+                })
+            ],
             spacing: { before: 100, after: 100 }
         })
     );
@@ -87,9 +101,14 @@ export async function generarSeccionPlatformAccess() {
     datos.resumen_ejecutivo.caracteristicas_principales.forEach(caracteristica => {
         elementos.push(
             new Paragraph({
-                text: caracteristica,
-                bullet: { level: 0 },
-                spacing: { after: 100 }
+                children: [
+                    new TextRun({
+                        text: `• ${caracteristica}`,
+                        size: 24
+                    })
+                ],
+                spacing: { after: 100 },
+                indent: { left: 360 }
             })
         );
     });
@@ -99,10 +118,12 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'Estado de desarrollo: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: datos.resumen_ejecutivo.estado_desarrollo
+                    text: datos.resumen_ejecutivo.estado_desarrollo,
+                    size: 24
                 })
             ],
             spacing: { before: 200, after: 100 }
@@ -114,10 +135,12 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'Integración IOMAD: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: datos.resumen_ejecutivo.integracion_iomad
+                    text: datos.resumen_ejecutivo.integracion_iomad,
+                    size: 24
                 })
             ],
             spacing: { after: 200 }
@@ -135,11 +158,43 @@ export async function generarSeccionPlatformAccess() {
         })
     );
 
+    elementos.push(
+        new Paragraph({
+            children: [
+                new TextRun({
+                    text: 'El plugin local_platform_access utiliza una estructura moderna basada en namespaces y clases, sin depender de lib.php para sus funcionalidades principales.',
+                    size: 24
+                })
+            ],
+            spacing: { after: 200 },
+            alignment: AlignmentType.JUSTIFIED
+        })
+    );
+
+    // Insertar diagrama de estructura
+    const estructuraPath = `${SVG_BASE}/estructura_directorios.svg`;
+    if (existeSVG(estructuraPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(estructuraPath, { width: 480 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${estructuraPath}`, error.message);
+        }
+    }
+
+    elementos.push(
+        new Paragraph({
+            text: 'Figura 13. Estructura de directorios del plugin local_platform_access',
+            style: 'PieIlustracion',
+            spacing: { before: 100, after: 300 }
+        })
+    );
+
     // Tabla de información de versión
     elementos.push(
         new Paragraph({
-            text: 'Tabla 1. Información de versión - Platform Access Generator',
-            style: 'PieTabla',
+            text: 'Información de Versión',
+            heading: HeadingLevel.HEADING_3,
             spacing: { before: 200, after: 100 }
         })
     );
@@ -151,12 +206,12 @@ export async function generarSeccionPlatformAccess() {
                 tableHeader: true,
                 children: [
                     new TableCell({
-                        children: [new Paragraph({ text: 'Atributo', style: 'Normal' })],
+                        children: [new Paragraph({ children: [new TextRun({ text: 'Atributo', bold: true, color: 'FFFFFF' })] })],
                         shading: { fill: COLORS.VERDE },
                         margins: { top: 100, bottom: 100, left: 100, right: 100 }
                     }),
                     new TableCell({
-                        children: [new Paragraph({ text: 'Valor', style: 'Normal' })],
+                        children: [new Paragraph({ children: [new TextRun({ text: 'Valor', bold: true, color: 'FFFFFF' })] })],
                         shading: { fill: COLORS.VERDE },
                         margins: { top: 100, bottom: 100, left: 100, right: 100 }
                     })
@@ -211,14 +266,23 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
+            text: 'Tabla 8. Información de versión - Platform Access Generator',
+            style: 'PieTabla',
+            spacing: { before: 100, after: 300 }
+        })
+    );
+
+    elementos.push(
+        new Paragraph({
             children: [
                 new TextRun({
                     text: 'Nota importante: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: `Este plugin ${datos.arquitectura.sin_lib_php ? 'NO utiliza lib.php' : 'utiliza lib.php'}, ` +
-                          `adoptando un diseño moderno basado completamente en clases con namespaces.`
+                    text: `Este plugin ${datos.arquitectura.sin_lib_php ? 'NO utiliza lib.php' : 'utiliza lib.php'}, adoptando un diseño moderno basado completamente en clases con namespaces.`,
+                    size: 24
                 })
             ],
             spacing: { before: 200, after: 200 },
@@ -242,13 +306,16 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'El plugin implementa el patrón de diseño ',
+                    size: 24
                 }),
                 new TextRun({
                     text: datos.arquitectura.patron_diseno,
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: ', optimizado para operaciones masivas de inserción en base de datos.'
+                    text: ', optimizado para operaciones masivas de inserción en base de datos.',
+                    size: 24
                 })
             ],
             spacing: { after: 200 },
@@ -256,22 +323,22 @@ export async function generarSeccionPlatformAccess() {
         })
     );
 
-    // Referencia a diagrama SVG
-    elementos.push(
-        new Paragraph({
-            text: 'Ilustración 1. Diagrama de arquitectura - Platform Access Generator',
-            style: 'PieIlustracion',
-            spacing: { before: 200, after: 200 }
-        })
-    );
+    // Insertar diagrama de arquitectura
+    const arquitecturaPath = `${SVG_BASE}/arquitectura.svg`;
+    if (existeSVG(arquitecturaPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(arquitecturaPath, { width: 500 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${arquitecturaPath}`, error.message);
+        }
+    }
 
     elementos.push(
         new Paragraph({
-            text: '[Ver archivo: svg/local_platform_access/architecture_diagram.svg]',
-            italics: true,
-            color: COLORS.GRIS,
-            spacing: { after: 300 },
-            alignment: AlignmentType.CENTER
+            text: 'Figura 14. Diagrama de arquitectura - Platform Access Generator',
+            style: 'PieIlustracion',
+            spacing: { before: 100, after: 300 }
         })
     );
 
@@ -305,11 +372,13 @@ export async function generarSeccionPlatformAccess() {
                 children: [
                     new TextRun({
                         text: 'Namespace: ',
-                        bold: true
+                        bold: true,
+                        size: 24
                     }),
                     new TextRun({
                         text: clase.namespace,
-                        font: 'Courier New'
+                        font: 'Courier New',
+                        size: 24
                     })
                 ],
                 spacing: { after: 50 }
@@ -321,10 +390,12 @@ export async function generarSeccionPlatformAccess() {
                 children: [
                     new TextRun({
                         text: 'Tipo: ',
-                        bold: true
+                        bold: true,
+                        size: 24
                     }),
                     new TextRun({
-                        text: clase.tipo
+                        text: clase.tipo,
+                        size: 24
                     })
                 ],
                 spacing: { after: 50 }
@@ -336,10 +407,12 @@ export async function generarSeccionPlatformAccess() {
                 children: [
                     new TextRun({
                         text: 'Responsabilidad: ',
-                        bold: true
+                        bold: true,
+                        size: 24
                     }),
                     new TextRun({
-                        text: clase.responsabilidad
+                        text: clase.responsabilidad,
+                        size: 24
                     })
                 ],
                 spacing: { after: 100 },
@@ -350,7 +423,12 @@ export async function generarSeccionPlatformAccess() {
         if (clase.metodos_publicos_clave) {
             elementos.push(
                 new Paragraph({
-                    text: 'Métodos públicos clave:',
+                    children: [
+                        new TextRun({
+                            text: 'Métodos públicos clave:',
+                            size: 24
+                        })
+                    ],
                     spacing: { before: 100, after: 50 }
                 })
             );
@@ -360,13 +438,13 @@ export async function generarSeccionPlatformAccess() {
                     new Paragraph({
                         children: [
                             new TextRun({
-                                text: metodo,
+                                text: `• ${metodo}`,
                                 font: 'Courier New',
                                 size: 20
                             })
                         ],
-                        bullet: { level: 0 },
-                        spacing: { after: 50 }
+                        spacing: { after: 50 },
+                        indent: { left: 360 }
                     })
                 );
             });
@@ -375,7 +453,12 @@ export async function generarSeccionPlatformAccess() {
         if (clase.optimizaciones) {
             elementos.push(
                 new Paragraph({
-                    text: 'Optimizaciones implementadas:',
+                    children: [
+                        new TextRun({
+                            text: 'Optimizaciones implementadas:',
+                            size: 24
+                        })
+                    ],
                     spacing: { before: 100, after: 50 }
                 })
             );
@@ -383,9 +466,14 @@ export async function generarSeccionPlatformAccess() {
             clase.optimizaciones.forEach(opt => {
                 elementos.push(
                     new Paragraph({
-                        text: opt,
-                        bullet: { level: 0 },
-                        spacing: { after: 50 }
+                        children: [
+                            new TextRun({
+                                text: `• ${opt}`,
+                                size: 24
+                            })
+                        ],
+                        spacing: { after: 50 },
+                        indent: { left: 360 }
                     })
                 );
             });
@@ -394,7 +482,12 @@ export async function generarSeccionPlatformAccess() {
         if (clase.secciones) {
             elementos.push(
                 new Paragraph({
-                    text: 'Secciones del formulario:',
+                    children: [
+                        new TextRun({
+                            text: 'Secciones del formulario:',
+                            size: 24
+                        })
+                    ],
                     spacing: { before: 100, after: 50 }
                 })
             );
@@ -402,9 +495,14 @@ export async function generarSeccionPlatformAccess() {
             clase.secciones.forEach(seccion => {
                 elementos.push(
                     new Paragraph({
-                        text: seccion,
-                        bullet: { level: 0 },
-                        spacing: { after: 50 }
+                        children: [
+                            new TextRun({
+                                text: `• ${seccion}`,
+                                size: 24
+                            })
+                        ],
+                        spacing: { after: 50 },
+                        indent: { left: 360 }
                     })
                 );
             });
@@ -422,35 +520,27 @@ export async function generarSeccionPlatformAccess() {
         })
     );
 
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 2. Capabilities del plugin Platform Access Generator',
-            style: 'PieTabla',
-            spacing: { before: 200, after: 100 }
-        })
-    );
-
     const filasCapabilities = [
         new TableRow({
             tableHeader: true,
             children: [
                 new TableCell({
-                    children: [new Paragraph('Capability')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Capability', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 }),
                 new TableCell({
-                    children: [new Paragraph('Tipo')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Tipo', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 }),
                 new TableCell({
-                    children: [new Paragraph('Riesgos')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Riesgos', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 }),
                 new TableCell({
-                    children: [new Paragraph('Propósito')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Propósito', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 })
@@ -480,7 +570,20 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: 'Controles de seguridad implementados:',
+            text: 'Tabla 9. Capabilities del plugin Platform Access Generator',
+            style: 'PieTabla',
+            spacing: { before: 100, after: 200 }
+        })
+    );
+
+    elementos.push(
+        new Paragraph({
+            children: [
+                new TextRun({
+                    text: 'Controles de seguridad implementados:',
+                    size: 24
+                })
+            ],
             spacing: { before: 200, after: 100 }
         })
     );
@@ -488,9 +591,14 @@ export async function generarSeccionPlatformAccess() {
     datos.seguridad_privacidad.controles_seguridad.forEach(control => {
         elementos.push(
             new Paragraph({
-                text: control,
-                bullet: { level: 0 },
-                spacing: { after: 50 }
+                children: [
+                    new TextRun({
+                        text: `• ${control}`,
+                        size: 24
+                    })
+                ],
+                spacing: { after: 50 },
+                indent: { left: 360 }
             })
         );
     });
@@ -508,7 +616,12 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: 'El proceso completo de generación de registros de acceso sigue los siguientes pasos:',
+            children: [
+                new TextRun({
+                    text: 'El proceso completo de generación de registros de acceso sigue los siguientes pasos:',
+                    size: 24
+                })
+            ],
             spacing: { after: 200 },
             alignment: AlignmentType.JUSTIFIED
         })
@@ -522,28 +635,33 @@ export async function generarSeccionPlatformAccess() {
     pasosFlujo.forEach((paso, index) => {
         elementos.push(
             new Paragraph({
-                text: `${index + 1}. ${paso}`,
+                children: [
+                    new TextRun({
+                        text: `${index + 1}. ${paso}`,
+                        size: 24
+                    })
+                ],
                 spacing: { after: 100 }
             })
         );
     });
 
-    // Referencia a diagrama de flujo
-    elementos.push(
-        new Paragraph({
-            text: 'Ilustración 2. Diagrama de flujo de generación - Platform Access Generator',
-            style: 'PieIlustracion',
-            spacing: { before: 300, after: 200 }
-        })
-    );
+    // Insertar diagrama de generación
+    const diagramaGeneracionPath = `${SVG_BASE}/diagrama_generacion.svg`;
+    if (existeSVG(diagramaGeneracionPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(diagramaGeneracionPath, { width: 520 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${diagramaGeneracionPath}`, error.message);
+        }
+    }
 
     elementos.push(
         new Paragraph({
-            text: '[Ver archivo: svg/local_platform_access/generation_flow_diagram.svg]',
-            italics: true,
-            color: COLORS.GRIS,
-            spacing: { after: 300 },
-            alignment: AlignmentType.CENTER
+            text: 'Figura 15. Diagrama de flujo de generación - Platform Access Generator',
+            style: 'PieIlustracion',
+            spacing: { before: 100, after: 300 }
         })
     );
 
@@ -560,17 +678,14 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: 'El plugin implementa múltiples técnicas de optimización para garantizar rendimiento óptimo incluso con grandes volúmenes de datos:',
+            children: [
+                new TextRun({
+                    text: 'El plugin implementa múltiples técnicas de optimización para garantizar rendimiento óptimo incluso con grandes volúmenes de datos:',
+                    size: 24
+                })
+            ],
             spacing: { after: 200 },
             alignment: AlignmentType.JUSTIFIED
-        })
-    );
-
-    elementos.push(
-        new Paragraph({
-            text: 'Tabla 3. Técnicas de optimización implementadas',
-            style: 'PieTabla',
-            spacing: { before: 200, after: 100 }
         })
     );
 
@@ -579,17 +694,17 @@ export async function generarSeccionPlatformAccess() {
             tableHeader: true,
             children: [
                 new TableCell({
-                    children: [new Paragraph('Técnica')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Técnica', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 }),
                 new TableCell({
-                    children: [new Paragraph('Descripción')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Descripción', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 }),
                 new TableCell({
-                    children: [new Paragraph('Impacto')],
+                    children: [new Paragraph({ children: [new TextRun({ text: 'Impacto', bold: true, color: 'FFFFFF' })] })],
                     shading: { fill: COLORS.VERDE },
                     margins: { top: 100, bottom: 100, left: 100, right: 100 }
                 })
@@ -618,14 +733,23 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
+            text: 'Tabla 10. Técnicas de optimización implementadas',
+            style: 'PieTabla',
+            spacing: { before: 100, after: 200 }
+        })
+    );
+
+    elementos.push(
+        new Paragraph({
             children: [
                 new TextRun({
                     text: 'Constantes de configuración: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: `El plugin utiliza un tamaño de lote (BATCH_SIZE) de ${datos.optimizaciones_rendimiento.constantes.BATCH_SIZE} registros, ` +
-                          `memoria configurada como ${datos.optimizaciones_rendimiento.constantes.memoria} y tiempo de ejecución ${datos.optimizaciones_rendimiento.constantes.tiempo}.`
+                    text: `El plugin utiliza un tamaño de lote (BATCH_SIZE) de ${datos.optimizaciones_rendimiento.constantes.BATCH_SIZE} registros, memoria configurada como ${datos.optimizaciones_rendimiento.constantes.memoria} y tiempo de ejecución ${datos.optimizaciones_rendimiento.constantes.tiempo}.`,
+                    size: 24
                 })
             ],
             spacing: { before: 200, after: 200 },
@@ -646,7 +770,12 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: `El plugin está ${datos.integracion_iomad.compatibilidad}.`,
+            children: [
+                new TextRun({
+                    text: `El plugin está ${datos.integracion_iomad.compatibilidad}.`,
+                    size: 24
+                })
+            ],
             spacing: { after: 200 },
             alignment: AlignmentType.JUSTIFIED
         })
@@ -654,7 +783,12 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: 'Tablas IOMAD utilizadas:',
+            children: [
+                new TextRun({
+                    text: 'Tablas IOMAD utilizadas:',
+                    size: 24
+                })
+            ],
             spacing: { before: 100, after: 50 }
         })
     );
@@ -664,19 +798,25 @@ export async function generarSeccionPlatformAccess() {
             new Paragraph({
                 children: [
                     new TextRun({
-                        text: tabla,
-                        font: 'Courier New'
+                        text: `• ${tabla}`,
+                        font: 'Courier New',
+                        size: 22
                     })
                 ],
-                bullet: { level: 0 },
-                spacing: { after: 50 }
+                spacing: { after: 50 },
+                indent: { left: 360 }
             })
         );
     });
 
     elementos.push(
         new Paragraph({
-            text: 'Funcionalidades específicas de IOMAD:',
+            children: [
+                new TextRun({
+                    text: 'Funcionalidades específicas de IOMAD:',
+                    size: 24
+                })
+            ],
             spacing: { before: 200, after: 100 }
         })
     );
@@ -684,9 +824,14 @@ export async function generarSeccionPlatformAccess() {
     datos.integracion_iomad.funcionalidades.forEach(func => {
         elementos.push(
             new Paragraph({
-                text: func,
-                bullet: { level: 0 },
-                spacing: { after: 50 }
+                children: [
+                    new TextRun({
+                        text: `• ${func}`,
+                        size: 24
+                    })
+                ],
+                spacing: { after: 50 },
+                indent: { left: 360 }
             })
         );
     });
@@ -704,7 +849,12 @@ export async function generarSeccionPlatformAccess() {
 
     elementos.push(
         new Paragraph({
-            text: 'El plugin Platform Access Generator está diseñado para los siguientes casos de uso:',
+            children: [
+                new TextRun({
+                    text: 'El plugin Platform Access Generator está diseñado para los siguientes casos de uso:',
+                    size: 24
+                })
+            ],
             spacing: { after: 200 },
             alignment: AlignmentType.JUSTIFIED
         })
@@ -713,7 +863,12 @@ export async function generarSeccionPlatformAccess() {
     datos.casos_uso.forEach((caso, index) => {
         elementos.push(
             new Paragraph({
-                text: `${index + 1}. ${caso}`,
+                children: [
+                    new TextRun({
+                        text: `${index + 1}. ${caso}`,
+                        size: 24
+                    })
+                ],
                 spacing: { after: 100 }
             })
         );
@@ -735,10 +890,12 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'Calidad del código: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: datos.conclusion.calidad_codigo
+                    text: datos.conclusion.calidad_codigo,
+                    size: 24
                 })
             ],
             spacing: { after: 100 }
@@ -750,10 +907,12 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'Rendimiento: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: datos.conclusion.rendimiento
+                    text: datos.conclusion.rendimiento,
+                    size: 24
                 })
             ],
             spacing: { after: 100 }
@@ -765,10 +924,12 @@ export async function generarSeccionPlatformAccess() {
             children: [
                 new TextRun({
                     text: 'Integración IOMAD: ',
-                    bold: true
+                    bold: true,
+                    size: 24
                 }),
                 new TextRun({
-                    text: datos.conclusion.integracion_iomad
+                    text: datos.conclusion.integracion_iomad,
+                    size: 24
                 })
             ],
             spacing: { after: 100 }
@@ -779,8 +940,8 @@ export async function generarSeccionPlatformAccess() {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'Este plugin representa una solución robusta y bien diseñada para la generación de datos de prueba en entornos Moodle/IOMAD, ' +
-                          'con un enfoque especial en rendimiento y escalabilidad.'
+                    text: 'Este plugin representa una solución robusta y bien diseñada para la generación de datos de prueba en entornos Moodle/IOMAD, con un enfoque especial en rendimiento y escalabilidad.',
+                    size: 24
                 })
             ],
             spacing: { before: 200, after: 200 },
