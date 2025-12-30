@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500">
+  <defs>
+    <style>
+      .bg { fill: #FAFAFA; }
+      .header-bg { fill: #1B9E88; }
+      .header-text { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #FFFFFF; }
+      .step-box { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; rx: 8; }
+      .step-active { fill: #E8F5E9; stroke: #1B9E88; stroke-width: 3; }
+      .step-number { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #FFFFFF; }
+      .step-title { font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; fill: #333333; }
+      .step-desc { font-family: Arial, sans-serif; font-size: 9px; fill: #666666; }
+      .number-circle { fill: #1B9E88; }
+      .arrow-line { stroke: #FCBD05; stroke-width: 3; fill: none; }
+      .arrow { fill: #FCBD05; }
+      .output-box { fill: #FFF3E0; stroke: #FCBD05; stroke-width: 2; rx: 8; }
+      .warning-box { fill: #FFEBEE; stroke: #EB4335; stroke-width: 2; rx: 8; }
+      .info-text { font-family: Arial, sans-serif; font-size: 10px; fill: #333333; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="500" class="bg"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="900" height="50" class="header-bg"/>
+  <text x="450" y="32" text-anchor="middle" class="header-text">Proceso de Generacion de Datos - local_platform_access</text>
+
+  <!-- Step 1: Form Input -->
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="170" height="100" class="step-box"/>
+    <circle cx="15" cy="15" r="15" class="number-circle"/>
+    <text x="15" y="20" text-anchor="middle" class="step-number">1</text>
+    <text x="95" y="35" text-anchor="middle" class="step-title">Formulario de Entrada</text>
+    <text x="95" y="55" text-anchor="middle" class="step-desc">Administrador configura:</text>
+    <text x="95" y="70" text-anchor="middle" class="step-desc">- Numero de usuarios</text>
+    <text x="95" y="85" text-anchor="middle" class="step-desc">- Empresa destino</text>
+  </g>
+
+  <!-- Step 2: Validation -->
+  <g transform="translate(260, 80)">
+    <rect x="0" y="0" width="170" height="100" class="step-box"/>
+    <circle cx="15" cy="15" r="15" class="number-circle"/>
+    <text x="15" y="20" text-anchor="middle" class="step-number">2</text>
+    <text x="95" y="35" text-anchor="middle" class="step-title">Validacion</text>
+    <text x="95" y="55" text-anchor="middle" class="step-desc">Verificar permisos:</text>
+    <text x="95" y="70" text-anchor="middle" class="step-desc">local/platform_access</text>
+    <text x="95" y="85" text-anchor="middle" class="step-desc">:generate</text>
+  </g>
+
+  <!-- Step 3: Generator -->
+  <g transform="translate(470, 80)">
+    <rect x="0" y="0" width="170" height="100" class="step-active"/>
+    <circle cx="15" cy="15" r="15" class="number-circle"/>
+    <text x="15" y="20" text-anchor="middle" class="step-number">3</text>
+    <text x="95" y="35" text-anchor="middle" class="step-title">generator.php</text>
+    <text x="95" y="55" text-anchor="middle" class="step-desc">Crea usuarios ficticios</text>
+    <text x="95" y="70" text-anchor="middle" class="step-desc">Genera contrasenas</text>
+    <text x="95" y="85" text-anchor="middle" class="step-desc">Simula actividad</text>
+  </g>
+
+  <!-- Step 4: Database -->
+  <g transform="translate(680, 80)">
+    <rect x="0" y="0" width="170" height="100" class="step-box"/>
+    <circle cx="15" cy="15" r="15" class="number-circle"/>
+    <text x="15" y="20" text-anchor="middle" class="step-number">4</text>
+    <text x="95" y="35" text-anchor="middle" class="step-title">Inserciones BD</text>
+    <text x="95" y="55" text-anchor="middle" class="step-desc">mdl_user</text>
+    <text x="95" y="70" text-anchor="middle" class="step-desc">company_users</text>
+    <text x="95" y="85" text-anchor="middle" class="step-desc">logstore_standard_log</text>
+  </g>
+
+  <!-- Arrows between steps -->
+  <path d="M 220 130 L 255 130" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 430 130 L 465 130" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 640 130 L 675 130" class="arrow-line" marker-end="url(#arrowhead)"/>
+
+  <!-- Output Section -->
+  <g transform="translate(50, 220)">
+    <rect x="0" y="0" width="380" height="120" class="output-box"/>
+    <text x="190" y="25" text-anchor="middle" class="step-title">DATOS GENERADOS</text>
+
+    <text x="30" y="50" class="info-text">Usuario ejemplo:</text>
+    <text x="30" y="70" class="step-desc">Email: test_001@iser.edu.co</text>
+    <text x="30" y="85" class="step-desc">Password: Temp2025!xxx (temporal)</text>
+    <text x="30" y="100" class="step-desc">Nombre: Usuario Prueba 001</text>
+
+    <text x="220" y="50" class="info-text">Registros creados:</text>
+    <text x="220" y="70" class="step-desc">- N usuarios en mdl_user</text>
+    <text x="220" y="85" class="step-desc">- N asociaciones empresa</text>
+    <text x="220" y="100" class="step-desc">- Logs de acceso simulados</text>
+  </g>
+
+  <!-- Warning Section -->
+  <g transform="translate(470, 220)">
+    <rect x="0" y="0" width="380" height="120" class="warning-box"/>
+    <text x="190" y="25" text-anchor="middle" class="step-title">CONSIDERACIONES DE SEGURIDAD</text>
+
+    <text x="30" y="50" class="step-desc">- Capacidad con RISK_DATALOSS</text>
+    <text x="30" y="70" class="step-desc">- Solo para administradores</text>
+    <text x="30" y="85" class="step-desc">- Datos NO son usuarios reales</text>
+    <text x="30" y="100" class="step-desc">- Usar solo en entornos de prueba</text>
+  </g>
+
+  <!-- Use Cases -->
+  <g transform="translate(50, 370)">
+    <rect x="0" y="0" width="800" height="100" rx="8" fill="#E3F2FD" stroke="#1976D2" stroke-width="2"/>
+    <text x="400" y="25" text-anchor="middle" class="step-title">CASOS DE USO</text>
+
+    <text x="70" y="55" text-anchor="middle" class="info-text">Testing</text>
+    <text x="70" y="75" text-anchor="middle" class="step-desc">Pruebas de carga</text>
+    <text x="70" y="90" text-anchor="middle" class="step-desc">y rendimiento</text>
+
+    <text x="220" y="55" text-anchor="middle" class="info-text">Demostraciones</text>
+    <text x="220" y="75" text-anchor="middle" class="step-desc">Mostrar funcionalidad</text>
+    <text x="220" y="90" text-anchor="middle" class="step-desc">a stakeholders</text>
+
+    <text x="400" y="55" text-anchor="middle" class="info-text">Desarrollo</text>
+    <text x="400" y="75" text-anchor="middle" class="step-desc">Datos de prueba</text>
+    <text x="400" y="90" text-anchor="middle" class="step-desc">para desarrollo</text>
+
+    <text x="580" y="55" text-anchor="middle" class="info-text">QA</text>
+    <text x="580" y="75" text-anchor="middle" class="step-desc">Aseguramiento</text>
+    <text x="580" y="90" text-anchor="middle" class="step-desc">de calidad</text>
+
+    <text x="730" y="55" text-anchor="middle" class="info-text">Capacitacion</text>
+    <text x="730" y="75" text-anchor="middle" class="step-desc">Entrenar usuarios</text>
+    <text x="730" y="90" text-anchor="middle" class="step-desc">con datos seguros</text>
+  </g>
+</svg>

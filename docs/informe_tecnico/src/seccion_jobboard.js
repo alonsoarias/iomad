@@ -1,6 +1,6 @@
 /**
- * Módulo para generar las secciones del plugin local_jobboard
- * en el documento técnico usando la biblioteca docx
+ * Modulo para generar las secciones del plugin local_jobboard
+ * en el documento tecnico usando la biblioteca docx
  */
 
 import { readFile } from 'fs/promises';
@@ -17,6 +17,10 @@ import {
     VerticalAlign
 } from 'docx';
 import { COLORS } from './styles.js';
+import { crearParrafoConImagen, existeSVG } from './image_utils.js';
+
+// Rutas base de SVG
+const SVG_BASE = '/home/user/iomad/docs/informe_tecnico/svg/local_jobboard';
 
 /**
  * Genera todas las secciones del plugin local_jobboard
@@ -29,29 +33,29 @@ export async function generarSeccionesJobboard() {
 
     const elementos = [];
 
-    // 1. Introducción del plugin
+    // 1. Introduccion del plugin
     elementos.push(...generarIntroduccion(data));
 
-    // 2. Estructura del plugin
-    elementos.push(...generarEstructura(data));
+    // 2. Estructura del plugin (async - con imagenes)
+    elementos.push(...await generarEstructura(data));
 
-    // 3. Arquitectura
-    elementos.push(...generarArquitectura(data));
+    // 3. Arquitectura (async - con imagenes)
+    elementos.push(...await generarArquitectura(data));
 
-    // 4. Base de datos
-    elementos.push(...generarBaseDatos(data));
+    // 4. Base de datos (async - con imagenes)
+    elementos.push(...await generarBaseDatos(data));
 
-    // 5. Clases principales
-    elementos.push(...generarClasesPrincipales(data));
+    // 5. Clases principales (async - con imagenes)
+    elementos.push(...await generarClasesPrincipales(data));
 
-    // 6. Servicios web
-    elementos.push(...generarServiciosWeb(data));
+    // 6. Servicios web (async - con imagenes)
+    elementos.push(...await generarServiciosWeb(data));
 
     // 7. Capabilities y permisos
     elementos.push(...generarCapabilities(data));
 
-    // 8. Flujos de trabajo
-    elementos.push(...generarFlujosTrabalho(data));
+    // 8. Flujos de trabajo (async - con imagenes)
+    elementos.push(...await generarFlujosTrabalho(data));
 
     return elementos;
 }
@@ -126,9 +130,9 @@ function generarIntroduccion(data) {
 }
 
 /**
- * Genera la sección de estructura del plugin
+ * Genera la seccion de estructura del plugin
  */
-function generarEstructura(data) {
+async function generarEstructura(data) {
     const elementos = [];
 
     elementos.push(
@@ -143,7 +147,7 @@ function generarEstructura(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El plugin local_jobboard sigue la estructura estándar de plugins locales de Moodle. La organización de directorios y archivos está diseñada para facilitar el mantenimiento y cumplir con las convenciones de Moodle.',
+                    text: 'El plugin local_jobboard sigue la estructura estandar de plugins locales de Moodle. La organizacion de directorios y archivos esta diseñada para facilitar el mantenimiento y cumplir con las convenciones de Moodle. El plugin cuenta con 11 carpetas principales y 23 subcarpetas, organizando codigo PHP, modulos JavaScript AMD, plantillas Mustache y archivos de configuracion.',
                     size: 24
                 })
             ],
@@ -152,38 +156,16 @@ function generarEstructura(data) {
         })
     );
 
-    // Referencia al diagrama de estructura
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/estructura_directorios.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    // Insertar imagen SVG
+    const svgPath = `${SVG_BASE}/estructura_directorios.svg`;
+    if (existeSVG(svgPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(svgPath, { width: 520 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${svgPath}`);
+        }
+    }
 
     elementos.push(
         new Paragraph({
@@ -197,9 +179,9 @@ function generarEstructura(data) {
 }
 
 /**
- * Genera la sección de arquitectura
+ * Genera la seccion de arquitectura
  */
-function generarArquitectura(data) {
+async function generarArquitectura(data) {
     const elementos = [];
 
     elementos.push(
@@ -214,7 +196,7 @@ function generarArquitectura(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El plugin implementa una arquitectura modular que separa las responsabilidades en capas: presentación (páginas y formularios), lógica de negocio (clases), acceso a datos (base de datos), y servicios web (APIs externas). Esta arquitectura facilita el mantenimiento, testing y escalabilidad del sistema.',
+                    text: 'El plugin implementa una arquitectura modular que separa las responsabilidades en capas: presentacion (paginas y formularios), logica de negocio (clases), acceso a datos (base de datos), y servicios web (APIs externas). Esta arquitectura facilita el mantenimiento, testing y escalabilidad del sistema.',
                     size: 24
                 })
             ],
@@ -223,38 +205,16 @@ function generarArquitectura(data) {
         })
     );
 
-    // Referencia al diagrama de arquitectura
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/arquitectura.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    // Insertar imagen de arquitectura
+    const svgPath = `${SVG_BASE}/arquitectura.svg`;
+    if (existeSVG(svgPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(svgPath, { width: 500 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${svgPath}`);
+        }
+    }
 
     elementos.push(
         new Paragraph({
@@ -264,13 +224,53 @@ function generarArquitectura(data) {
         })
     );
 
+    // Casos de uso
+    elementos.push(
+        new Paragraph({
+            text: 'Casos de Uso',
+            heading: HeadingLevel.HEADING_3,
+            spacing: { before: 200, after: 100 }
+        })
+    );
+
+    elementos.push(
+        new Paragraph({
+            children: [
+                new TextRun({
+                    text: 'El sistema define cinco tipos de actores principales: Docente/Aspirante, Revisor de Documentos, Administrador, Decano de Facultad y Recursos Humanos. Cada actor tiene acceso a un conjunto especifico de funcionalidades del sistema.',
+                    size: 24
+                })
+            ],
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 200 }
+        })
+    );
+
+    const casosUsoPath = `${SVG_BASE}/casos_uso.svg`;
+    if (existeSVG(casosUsoPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(casosUsoPath, { width: 520 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${casosUsoPath}`);
+        }
+    }
+
+    elementos.push(
+        new Paragraph({
+            text: 'Figura 3. Diagrama de casos de uso',
+            style: 'PieIlustracion',
+            spacing: { before: 100, after: 300 }
+        })
+    );
+
     return elementos;
 }
 
 /**
- * Genera la sección de base de datos
+ * Genera la seccion de base de datos
  */
-function generarBaseDatos(data) {
+async function generarBaseDatos(data) {
     const elementos = [];
 
     elementos.push(
@@ -295,7 +295,7 @@ function generarBaseDatos(data) {
                     color: COLORS.VERDE
                 }),
                 new TextRun({
-                    text: ' tablas para almacenar la información de vacantes, postulaciones, documentos y configuraciones. Todas las tablas siguen las convenciones de nomenclatura de Moodle con el prefijo ',
+                    text: ' tablas para almacenar la informacion de vacantes, postulaciones, documentos y configuraciones. Todas las tablas siguen las convenciones de nomenclatura de Moodle con el prefijo ',
                     size: 24
                 }),
                 new TextRun({
@@ -323,7 +323,7 @@ function generarBaseDatos(data) {
         })
     );
 
-    const tablasData = [['Tabla', 'Descripción', 'Campos Clave']];
+    const tablasData = [['Tabla', 'Descripcion', 'Campos Clave']];
 
     for (const tabla of data.database.tables) {
         const camposClave = tabla.fields
@@ -333,7 +333,7 @@ function generarBaseDatos(data) {
 
         tablasData.push([
             tabla.name.replace('local_jobboard_', ''),
-            tabla.comment || 'Sin descripción',
+            tabla.comment || 'Sin descripcion',
             camposClave
         ]);
     }
@@ -353,47 +353,25 @@ function generarBaseDatos(data) {
     // Diagrama ER
     elementos.push(
         new Paragraph({
-            text: 'Diagrama Entidad-Relación',
+            text: 'Diagrama Entidad-Relacion',
             heading: HeadingLevel.HEADING_3,
             spacing: { before: 200, after: 100 }
         })
     );
 
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/diagrama_er.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    const erPath = `${SVG_BASE}/diagrama_er.svg`;
+    if (existeSVG(erPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(erPath, { width: 550 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${erPath}`);
+        }
+    }
 
     elementos.push(
         new Paragraph({
-            text: 'Figura 3. Diagrama entidad-relación del plugin local_jobboard',
+            text: 'Figura 4. Diagrama entidad-relacion del plugin local_jobboard',
             style: 'PieIlustracion',
             spacing: { before: 100, after: 300 }
         })
@@ -487,9 +465,9 @@ function generarDetalleTabla(nombre, tabla) {
 }
 
 /**
- * Genera la sección de clases principales
+ * Genera la seccion de clases principales
  */
-function generarClasesPrincipales(data) {
+async function generarClasesPrincipales(data) {
     const elementos = [];
 
     elementos.push(
@@ -504,7 +482,7 @@ function generarClasesPrincipales(data) {
         new Paragraph({
             children: [
                 new TextRun({
-                    text: 'El plugin implementa un conjunto de clases PHP que encapsulan la lógica de negocio del sistema. Las clases principales son ',
+                    text: 'El plugin implementa un conjunto de clases PHP que encapsulan la logica de negocio del sistema. Las clases principales son ',
                     size: 24
                 }),
                 new TextRun({
@@ -536,41 +514,19 @@ function generarClasesPrincipales(data) {
     );
 
     // Diagrama de clases
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/diagrama_clases.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    const clasesPath = `${SVG_BASE}/diagrama_clases.svg`;
+    if (existeSVG(clasesPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(clasesPath, { width: 520 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${clasesPath}`);
+        }
+    }
 
     elementos.push(
         new Paragraph({
-            text: 'Figura 4. Diagrama de clases principales',
+            text: 'Figura 5. Diagrama de clases principales',
             style: 'PieIlustracion',
             spacing: { before: 100, after: 300 }
         })
@@ -731,9 +687,9 @@ function generarDetalleClase(nombre, clase) {
 }
 
 /**
- * Genera la sección de servicios web
+ * Genera la seccion de servicios web
  */
-function generarServiciosWeb(data) {
+async function generarServiciosWeb(data) {
     const elementos = [];
 
     elementos.push(
@@ -774,7 +730,7 @@ function generarServiciosWeb(data) {
                     color: COLORS.VERDE
                 }),
                 new TextRun({
-                    text: ' servicios web (Web Services) que permiten la interacción con el sistema mediante AJAX y APIs externas. Estos servicios están protegidos por capabilities y requieren autenticación.',
+                    text: ' servicios web (Web Services) que permiten la interaccion con el sistema mediante AJAX y APIs externas. Estos servicios estan protegidos por capabilities y requieren autenticacion.',
                     size: 24
                 })
             ],
@@ -784,41 +740,19 @@ function generarServiciosWeb(data) {
     );
 
     // Diagrama de servicios web
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/servicios_web.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    const serviciosPath = `${SVG_BASE}/servicios_web.svg`;
+    if (existeSVG(serviciosPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(serviciosPath, { width: 480 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${serviciosPath}`);
+        }
+    }
 
     elementos.push(
         new Paragraph({
-            text: 'Figura 5. Servicios web disponibles',
+            text: 'Figura 6. Servicios web disponibles',
             style: 'PieIlustracion',
             spacing: { before: 100, after: 300 }
         })
@@ -927,7 +861,7 @@ function generarCapabilities(data) {
 /**
  * Genera la sección de flujos de trabajo
  */
-function generarFlujosTrabalho(data) {
+async function generarFlujosTrabalho(data) {
     const elementos = [];
 
     elementos.push(
@@ -973,37 +907,16 @@ function generarFlujosTrabalho(data) {
         })
     );
 
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/flujo_estados_vacante.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    // Insertar imagen SVG de flujo de estados de vacante
+    const flujoVacantePath = `${SVG_BASE}/flujo_estados_vacante.svg`;
+    if (existeSVG(flujoVacantePath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(flujoVacantePath, { width: 480 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${flujoVacantePath}`, error.message);
+        }
+    }
 
     elementos.push(
         new Paragraph({
@@ -1035,37 +948,16 @@ function generarFlujosTrabalho(data) {
         })
     );
 
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: '[Aquí se insertará el diagrama SVG: ',
-                    size: 24,
-                    italics: true
-                }),
-                new TextRun({
-                    text: 'svg/local_jobboard/flujo_postulacion.svg',
-                    size: 24,
-                    italics: true,
-                    color: COLORS.VERDE,
-                    bold: true
-                }),
-                new TextRun({
-                    text: ']',
-                    size: 24,
-                    italics: true
-                })
-            ],
-            alignment: AlignmentType.CENTER,
-            spacing: { before: 200, after: 200 },
-            border: {
-                top: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                bottom: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                left: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS },
-                right: { style: BorderStyle.SINGLE, size: 1, color: COLORS.GRIS }
-            }
-        })
-    );
+    // Insertar imagen SVG de flujo de postulación
+    const flujoPostulacionPath = `${SVG_BASE}/flujo_postulacion.svg`;
+    if (existeSVG(flujoPostulacionPath)) {
+        try {
+            const imagenParrafo = await crearParrafoConImagen(flujoPostulacionPath, { width: 480 });
+            elementos.push(imagenParrafo);
+        } catch (error) {
+            console.warn(`No se pudo cargar imagen: ${flujoPostulacionPath}`, error.message);
+        }
+    }
 
     elementos.push(
         new Paragraph({

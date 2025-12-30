@@ -27,12 +27,13 @@ import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Importar módulos
+// Importar modulos
 import { COLORS, MARGINS, DOCUMENT_STYLES } from './src/styles.js';
 import generarPortada from './src/portada.js';
 import generarTablaContenido from './src/tabla_contenido.js';
 import generarTablaIlustraciones from './src/tabla_ilustraciones.js';
 import generarTablaTablas from './src/tabla_tablas.js';
+import generarSeccionesIntroductorias from './src/seccion_introduccion.js';
 import generarSeccionesJobboard from './src/seccion_jobboard.js';
 import generarSeccionesPlatformUsage from './src/seccion_platform_usage.js';
 import generarSeccionesPlatformAccess from './src/seccion_platform_access.js';
@@ -66,25 +67,33 @@ async function generarDocumento(seccion = null) {
             if (!seccion || seccion === 'completo') children.push(saltoPagina());
         }
 
-        // Sección: Tabla de contenido
+        // Seccion: Tabla de contenido
         if (!seccion || seccion === 'tablas' || seccion === 'completo') {
-            console.log('  📑 Generando tabla de contenido...');
+            console.log('  Generando tabla de contenido...');
             const toc = generarTablaContenido();
             children.push(...toc);
             children.push(saltoPagina());
 
-            console.log('  📊 Generando tabla de ilustraciones...');
+            console.log('  Generando tabla de ilustraciones...');
             const ilustraciones = generarTablaIlustraciones();
             children.push(...ilustraciones);
             children.push(saltoPagina());
 
-            console.log('  📋 Generando tabla de tablas...');
+            console.log('  Generando tabla de tablas...');
             const tablas = generarTablaTablas();
             children.push(...tablas);
             if (!seccion || seccion === 'completo') children.push(saltoPagina());
         }
 
-        // Sección: local_jobboard
+        // Seccion: Introduccion, Objetivos, Metodologia
+        if (!seccion || seccion === 'introduccion' || seccion === 'completo') {
+            console.log('  Generando secciones introductorias...');
+            const intro = await generarSeccionesIntroductorias();
+            children.push(...intro);
+            if (!seccion || seccion === 'completo') children.push(saltoPagina());
+        }
+
+        // Seccion: local_jobboard
         if (!seccion || seccion === 'jobboard' || seccion === 'completo') {
             console.log('  🔧 Generando sección local_jobboard...');
             const jobboard = await generarSeccionesJobboard();

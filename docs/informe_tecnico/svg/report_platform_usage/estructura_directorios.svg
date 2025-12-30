@@ -1,147 +1,257 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="900" height="650">
   <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
-    </marker>
     <style>
-      .box-main { fill: #FFFFFF; stroke: #1B9E88; stroke-width: 2; }
-      .box-secondary { fill: #FFFFFF; stroke: #646363; stroke-width: 2; }
-      .box-filled-green { fill: #1B9E88; stroke: #1B9E88; stroke-width: 2; }
-      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #000000; }
-      .text-normal { font-family: Arial, sans-serif; font-size: 12px; fill: #000000; }
-      .text-small { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; }
-      .text-white { font-family: Arial, sans-serif; font-size: 12px; fill: #FFFFFF; }
-      .line { stroke: #646363; stroke-width: 2; fill: none; }
+      .bg { fill: #FAFAFA; }
+      .header-bg { fill: #1B9E88; }
+      .header-text { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #FFFFFF; }
+      .folder-icon { fill: #FCBD05; }
+      .folder-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; fill: #1B9E88; font-weight: bold; }
+      .subfolder-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; fill: #646363; }
+      .file-icon { fill: #EB4335; }
+      .file-text { font-family: 'Consolas', 'Monaco', monospace; font-size: 11px; fill: #333333; }
+      .tree-line { stroke: #CCCCCC; stroke-width: 1; fill: none; }
+      .badge { fill: #1B9E88; }
+      .badge-text { font-family: Arial, sans-serif; font-size: 9px; fill: #FFFFFF; }
+      .section-title { font-family: Arial, sans-serif; font-size: 11px; fill: #646363; font-weight: bold; }
+      .desc-text { font-family: Arial, sans-serif; font-size: 10px; fill: #666666; }
     </style>
+    <symbol id="folder" viewBox="0 0 24 24">
+      <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+    </symbol>
+    <symbol id="file" viewBox="0 0 24 24">
+      <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/>
+    </symbol>
   </defs>
 
-  <rect width="800" height="600" fill="#FFFFFF"/>
+  <!-- Background -->
+  <rect width="900" height="650" class="bg"/>
 
-  <!-- Raíz del plugin -->
-  <rect x="50" y="20" width="700" height="40" rx="5" ry="5" class="box-filled-green"/>
-  <text x="400" y="45" class="text-white" text-anchor="middle">/report/platform_usage/</text>
+  <!-- Header -->
+  <rect x="0" y="0" width="900" height="50" class="header-bg"/>
+  <text x="450" y="32" text-anchor="middle" class="header-text">Estructura de Directorios - report_platform_usage</text>
 
-  <!-- Columna izquierda: Páginas principales -->
-  <rect x="60" y="80" width="200" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="160" y="100" class="text-title" text-anchor="middle">Páginas</text>
+  <!-- Tree Structure -->
+  <g transform="translate(30, 70)">
+    <!-- Root folder -->
+    <use href="#folder" x="0" y="0" width="20" height="20" class="folder-icon"/>
+    <text x="28" y="15" class="folder-text">report/platform_usage/</text>
+    <rect x="195" y="3" width="85" height="16" rx="3" class="badge"/>
+    <text x="237" y="14" text-anchor="middle" class="badge-text">Plugin de reporte</text>
 
-  <rect x="70" y="120" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="160" y="137" class="text-normal" text-anchor="middle">index.php</text>
+    <!-- Vertical line from root -->
+    <line x1="10" y1="25" x2="10" y2="450" class="tree-line"/>
 
-  <rect x="70" y="150" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="160" y="167" class="text-normal" text-anchor="middle">ajax.php</text>
+    <!-- amd/ -->
+    <g transform="translate(0, 40)">
+      <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
+      <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
+      <text x="55" y="13" class="folder-text">amd/</text>
+      <text x="95" y="13" class="subfolder-text">(Modulos JavaScript AMD)</text>
 
-  <rect x="70" y="180" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="160" y="197" class="text-normal" text-anchor="middle">export.php</text>
+      <line x1="45" y1="25" x2="45" y2="70" class="tree-line"/>
 
-  <rect x="70" y="210" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="160" y="227" class="text-normal" text-anchor="middle">lib.php</text>
+      <!-- amd/build -->
+      <g transform="translate(15, 30)">
+        <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
+        <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
+        <text x="72" y="12" class="subfolder-text">build/</text>
+        <use href="#file" x="120" y="0" width="12" height="12" class="file-icon"/>
+        <text x="138" y="11" class="file-text">dashboard.min.js</text>
+      </g>
 
-  <rect x="70" y="240" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="160" y="257" class="text-normal" text-anchor="middle">settings.php</text>
+      <!-- amd/src -->
+      <g transform="translate(15, 55)">
+        <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
+        <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
+        <text x="72" y="12" class="subfolder-text">src/</text>
+        <use href="#file" x="105" y="0" width="12" height="12" class="file-icon"/>
+        <text x="123" y="11" class="file-text">dashboard.js</text>
+        <text x="210" y="11" class="desc-text">(interactividad del dashboard)</text>
+      </g>
+    </g>
 
-  <rect x="70" y="270" width="180" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="160" y="287" class="text-normal" text-anchor="middle">version.php</text>
+    <!-- classes/ -->
+    <g transform="translate(0, 145)">
+      <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
+      <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
+      <text x="55" y="13" class="folder-text">classes/</text>
+      <rect x="115" y="0" width="75" height="16" rx="3" class="badge"/>
+      <text x="152" y="11" text-anchor="middle" class="badge-text">Logica de negocio</text>
 
-  <!-- Columna central: Directorio classes -->
-  <rect x="280" y="80" width="220" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="390" y="100" class="text-title" text-anchor="middle">classes/</text>
+      <line x1="45" y1="25" x2="45" y2="95" class="tree-line"/>
 
-  <rect x="290" y="120" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="390" y="137" class="text-normal" text-anchor="middle">report.php</text>
+      <!-- classes/privacy -->
+      <g transform="translate(15, 30)">
+        <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
+        <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
+        <text x="72" y="12" class="subfolder-text">privacy/</text>
+        <use href="#file" x="130" y="0" width="12" height="12" class="file-icon"/>
+        <text x="148" y="11" class="file-text">provider.php</text>
+        <text x="235" y="11" class="desc-text">(cumplimiento GDPR)</text>
+      </g>
 
-  <rect x="290" y="150" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="390" y="167" class="text-normal" text-anchor="middle">exporter.php</text>
+      <!-- classes/task -->
+      <g transform="translate(15, 55)">
+        <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
+        <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
+        <text x="72" y="12" class="subfolder-text">task/</text>
+        <use href="#file" x="110" y="0" width="12" height="12" class="file-icon"/>
+        <text x="128" y="11" class="file-text">dedication_collector.php</text>
+        <text x="295" y="11" class="desc-text">(tarea cron)</text>
+      </g>
 
-  <rect x="290" y="180" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="390" y="197" class="text-normal" text-anchor="middle">excel_exporter.php</text>
+      <!-- Main classes -->
+      <g transform="translate(15, 85)">
+        <use href="#file" x="45" y="0" width="12" height="12" class="file-icon"/>
+        <text x="63" y="10" class="file-text">report.php</text>
+        <text x="145" y="10" class="desc-text">(generacion de reportes)</text>
+      </g>
+      <g transform="translate(15, 102)">
+        <use href="#file" x="45" y="0" width="12" height="12" class="file-icon"/>
+        <text x="63" y="10" class="file-text">exporter.php</text>
+        <text x="155" y="10" class="desc-text">(exportacion general)</text>
+      </g>
+      <g transform="translate(15, 119)">
+        <use href="#file" x="45" y="0" width="12" height="12" class="file-icon"/>
+        <text x="63" y="10" class="file-text">excel_exporter.php</text>
+        <text x="185" y="10" class="desc-text">(exportacion Excel)</text>
+      </g>
+    </g>
 
-  <!-- Subdirectorio task -->
-  <rect x="295" y="210" width="190" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="390" y="230" class="text-title" text-anchor="middle">task/</text>
+    <!-- db/ -->
+    <g transform="translate(0, 290)">
+      <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
+      <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
+      <text x="55" y="13" class="folder-text">db/</text>
+      <rect x="80" y="0" width="70" height="16" rx="3" class="badge"/>
+      <text x="115" y="11" text-anchor="middle" class="badge-text">Base de datos</text>
 
-  <rect x="305" y="245" width="170" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="390" y="262" class="text-normal" text-anchor="middle">dedication_collector.php</text>
+      <g transform="translate(35, 25)">
+        <use href="#file" x="0" y="0" width="12" height="12" class="file-icon"/>
+        <text x="18" y="10" class="file-text">access.php</text>
+        <text x="100" y="10" class="desc-text">(2 capacidades: view, viewall)</text>
+      </g>
+      <g transform="translate(35, 42)">
+        <use href="#file" x="0" y="0" width="12" height="12" class="file-icon"/>
+        <text x="18" y="10" class="file-text">caches.php</text>
+        <text x="100" y="10" class="desc-text">(definicion de caches)</text>
+      </g>
+      <g transform="translate(35, 59)">
+        <use href="#file" x="0" y="0" width="12" height="12" class="file-icon"/>
+        <text x="18" y="10" class="file-text">install.xml</text>
+        <text x="100" y="10" class="desc-text">(2 tablas: dedication, course_details)</text>
+      </g>
+      <g transform="translate(35, 76)">
+        <use href="#file" x="0" y="0" width="12" height="12" class="file-icon"/>
+        <text x="18" y="10" class="file-text">tasks.php</text>
+        <text x="95" y="10" class="desc-text">(tarea programada de recoleccion)</text>
+      </g>
+      <g transform="translate(35, 93)">
+        <use href="#file" x="0" y="0" width="12" height="12" class="file-icon"/>
+        <text x="18" y="10" class="file-text">upgrade.php</text>
+        <text x="110" y="10" class="desc-text">(migraciones de BD)</text>
+      </g>
+    </g>
 
-  <!-- Subdirectorio privacy -->
-  <rect x="295" y="280" width="190" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="390" y="300" class="text-title" text-anchor="middle">privacy/</text>
+    <!-- lang/ -->
+    <g transform="translate(0, 410)">
+      <line x1="10" y1="10" x2="30" y2="10" class="tree-line"/>
+      <use href="#folder" x="30" y="0" width="18" height="18" class="folder-icon"/>
+      <text x="55" y="13" class="folder-text">lang/</text>
+      <text x="95" y="13" class="subfolder-text">(Traducciones)</text>
 
-  <rect x="305" y="315" width="170" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="390" y="332" class="text-normal" text-anchor="middle">provider.php</text>
+      <line x1="45" y1="25" x2="45" y2="55" class="tree-line"/>
 
-  <!-- Columna derecha superior: Directorio db -->
-  <rect x="520" y="80" width="220" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="630" y="100" class="text-title" text-anchor="middle">db/</text>
+      <g transform="translate(15, 30)">
+        <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
+        <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
+        <text x="72" y="12" class="subfolder-text">en/</text>
+        <use href="#file" x="95" y="0" width="12" height="12" class="file-icon"/>
+        <text x="113" y="11" class="file-text">report_platform_usage.php</text>
+      </g>
 
-  <rect x="530" y="120" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="630" y="137" class="text-normal" text-anchor="middle">access.php</text>
+      <g transform="translate(15, 55)">
+        <line x1="30" y1="10" x2="50" y2="10" class="tree-line"/>
+        <use href="#folder" x="50" y="0" width="16" height="16" class="folder-icon"/>
+        <text x="72" y="12" class="subfolder-text">es/</text>
+        <use href="#file" x="95" y="0" width="12" height="12" class="file-icon"/>
+        <text x="113" y="11" class="file-text">report_platform_usage.php</text>
+      </g>
+    </g>
+  </g>
 
-  <rect x="530" y="150" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="630" y="167" class="text-normal" text-anchor="middle">caches.php</text>
+  <!-- Root files section -->
+  <g transform="translate(500, 70)">
+    <text x="0" y="0" class="section-title">ARCHIVOS RAIZ:</text>
 
-  <rect x="530" y="180" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="630" y="197" class="text-normal" text-anchor="middle">tasks.php</text>
+    <g transform="translate(0, 25)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">version.php</text>
+      <text x="120" y="11" class="desc-text">(v2024111800)</text>
+    </g>
 
-  <rect x="530" y="210" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="630" y="227" class="text-normal" text-anchor="middle">upgrade.php</text>
+    <g transform="translate(0, 48)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">lib.php</text>
+      <text x="80" y="11" class="desc-text">(callbacks de navegacion)</text>
+    </g>
 
-  <rect x="530" y="240" width="200" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="630" y="257" class="text-normal" text-anchor="middle">install.xml</text>
+    <g transform="translate(0, 71)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">index.php</text>
+      <text x="95" y="11" class="desc-text">(punto de entrada principal)</text>
+    </g>
 
-  <!-- Directorio lang -->
-  <rect x="520" y="280" width="220" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="630" y="300" class="text-title" text-anchor="middle">lang/</text>
+    <g transform="translate(0, 94)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">export.php</text>
+      <text x="100" y="11" class="desc-text">(exportacion de datos)</text>
+    </g>
 
-  <rect x="530" y="315" width="90" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="575" y="332" class="text-normal" text-anchor="middle">en/</text>
+    <g transform="translate(0, 117)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">ajax.php</text>
+      <text x="85" y="11" class="desc-text">(endpoints AJAX)</text>
+    </g>
 
-  <rect x="640" y="315" width="90" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="685" y="332" class="text-normal" text-anchor="middle">es/</text>
+    <g transform="translate(0, 140)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">settings.php</text>
+      <text x="105" y="11" class="desc-text">(configuracion admin)</text>
+    </g>
 
-  <!-- Base de datos -->
-  <rect x="50" y="370" width="340" height="40" rx="5" ry="5" class="box-filled-green"/>
-  <text x="220" y="395" class="text-white" text-anchor="middle">Tabla de Base de Datos</text>
+    <g transform="translate(0, 163)">
+      <use href="#file" x="0" y="0" width="14" height="14" class="file-icon"/>
+      <text x="20" y="11" class="file-text">styles.css</text>
+      <text x="95" y="11" class="desc-text">(estilos del dashboard)</text>
+    </g>
+  </g>
 
-  <rect x="60" y="420" width="320" height="50" rx="5" ry="5" class="box-secondary"/>
-  <text x="220" y="440" class="text-normal" text-anchor="middle">report_platform_usage_ded</text>
-  <text x="220" y="458" class="text-small" text-anchor="middle">Almacena datos pre-calculados de dedicación</text>
+  <!-- Statistics Box -->
+  <g transform="translate(500, 280)">
+    <rect x="0" y="0" width="370" height="170" rx="8" fill="#F0F0F0" stroke="#1B9E88" stroke-width="2"/>
+    <text x="185" y="25" text-anchor="middle" class="section-title">ESTADISTICAS DEL PLUGIN</text>
 
-  <!-- Tablas externas -->
-  <rect x="410" y="370" width="340" height="40" rx="5" ry="5" class="box-filled-green"/>
-  <text x="580" y="395" class="text-white" text-anchor="middle">Tablas Externas Utilizadas</text>
+    <text x="20" y="55" class="file-text">Carpetas: 5</text>
+    <text x="20" y="75" class="file-text">Subcarpetas: 4</text>
+    <text x="20" y="95" class="file-text">Archivos PHP: 15</text>
+    <text x="20" y="115" class="file-text">Tablas en BD: 2</text>
+    <text x="20" y="135" class="file-text">Capacidades: 2</text>
 
-  <rect x="420" y="420" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="495" y="437" class="text-small" text-anchor="middle">logstore_standard_log</text>
+    <text x="200" y="55" class="file-text">Clases PHP: 5</text>
+    <text x="200" y="75" class="file-text">Modulos AMD: 1</text>
+    <text x="200" y="95" class="file-text">Tareas Cron: 1</text>
+    <text x="200" y="115" class="file-text">Idiomas: 2 (es, en)</text>
+    <text x="200" y="135" class="file-text">Exportadores: 2</text>
 
-  <rect x="590" y="420" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="665" y="437" class="text-small" text-anchor="middle">user</text>
+    <line x1="20" y1="150" x2="350" y2="150" stroke="#DDD" stroke-width="1"/>
+    <text x="185" y="165" text-anchor="middle" class="desc-text">Tipo: report | Requiere: Moodle 4.1+</text>
+  </g>
 
-  <rect x="420" y="450" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="495" y="467" class="text-small" text-anchor="middle">course</text>
-
-  <rect x="590" y="450" width="150" height="25" rx="5" ry="5" class="box-secondary"/>
-  <text x="665" y="467" class="text-small" text-anchor="middle">course_completions</text>
-
-  <!-- Capabilities -->
-  <rect x="50" y="500" width="340" height="40" rx="5" ry="5" class="box-filled-green"/>
-  <text x="220" y="525" class="text-white" text-anchor="middle">Capabilities</text>
-
-  <rect x="60" y="550" width="150" height="30" rx="5" ry="5" class="box-secondary"/>
-  <text x="135" y="569" class="text-small" text-anchor="middle">:view</text>
-
-  <rect x="230" y="550" width="150" height="30" rx="5" ry="5" class="box-secondary"/>
-  <text x="305" y="569" class="text-small" text-anchor="middle">:export</text>
-
-  <!-- Sistema de Caché -->
-  <rect x="410" y="500" width="340" height="40" rx="5" ry="5" class="box-filled-green"/>
-  <text x="580" y="525" class="text-white" text-anchor="middle">Sistema de Caché (MUC)</text>
-
-  <rect x="420" y="550" width="150" height="30" rx="5" ry="5" class="box-secondary"/>
-  <text x="495" y="569" class="text-small" text-anchor="middle">reportdata (5 min)</text>
-
-  <rect x="590" y="550" width="150" height="30" rx="5" ry="5" class="box-secondary"/>
-  <text x="665" y="569" class="text-small" text-anchor="middle">companyusers (10 min)</text>
-
+  <!-- Footer note -->
+  <rect x="20" y="610" width="860" height="30" rx="5" fill="#E8F5E9" stroke="#1B9E88" stroke-width="1"/>
+  <text x="450" y="630" text-anchor="middle" style="font-family: Arial; font-size: 11px; fill: #646363;">
+    Plugin de reportes para metricas de uso de la plataforma Moodle. Estructura optimizada para Moodle 4.x
+  </text>
 </svg>

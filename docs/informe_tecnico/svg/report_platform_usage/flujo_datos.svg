@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <defs>
+    <style>
+      .bg { fill: #FAFAFA; }
+      .header-bg { fill: #1B9E88; }
+      .header-text { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #FFFFFF; }
+      .source-box { fill: #E3F2FD; stroke: #1976D2; stroke-width: 2; rx: 8; }
+      .process-box { fill: #FFF3E0; stroke: #FCBD05; stroke-width: 2; rx: 8; }
+      .output-box { fill: #E8F5E9; stroke: #1B9E88; stroke-width: 2; rx: 8; }
+      .cache-box { fill: #F3E5F5; stroke: #9C27B0; stroke-width: 2; rx: 8; }
+      .db-cylinder { fill: #FFEBEE; stroke: #EB4335; stroke-width: 2; }
+      .box-title { font-family: Arial, sans-serif; font-size: 11px; fill: #333333; font-weight: bold; }
+      .box-desc { font-family: Arial, sans-serif; font-size: 9px; fill: #666666; }
+      .arrow-line { stroke: #646363; stroke-width: 2; fill: none; }
+      .arrow { fill: #646363; }
+      .label { font-family: Arial, sans-serif; font-size: 9px; fill: #646363; }
+      .section-title { font-family: Arial, sans-serif; font-size: 12px; fill: #1B9E88; font-weight: bold; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="600" class="bg"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="900" height="50" class="header-bg"/>
+  <text x="450" y="32" text-anchor="middle" class="header-text">Flujo de Datos - report_platform_usage</text>
+
+  <!-- Section Labels -->
+  <text x="150" y="80" text-anchor="middle" class="section-title">FUENTES DE DATOS</text>
+  <text x="450" y="80" text-anchor="middle" class="section-title">PROCESAMIENTO</text>
+  <text x="750" y="80" text-anchor="middle" class="section-title">SALIDAS</text>
+
+  <!-- Data Sources -->
+  <!-- logstore_standard_log -->
+  <g transform="translate(30, 100)">
+    <ellipse cx="60" cy="15" rx="60" ry="15" class="db-cylinder"/>
+    <rect x="0" y="15" width="120" height="45" class="db-cylinder"/>
+    <ellipse cx="60" cy="60" rx="60" ry="15" class="db-cylinder"/>
+    <text x="60" y="40" text-anchor="middle" class="box-title">logstore_standard_log</text>
+    <text x="60" y="55" text-anchor="middle" class="box-desc">Eventos de usuario</text>
+  </g>
+
+  <!-- mdl_user -->
+  <g transform="translate(30, 200)">
+    <ellipse cx="60" cy="15" rx="60" ry="15" class="db-cylinder"/>
+    <rect x="0" y="15" width="120" height="45" class="db-cylinder"/>
+    <ellipse cx="60" cy="60" rx="60" ry="15" class="db-cylinder"/>
+    <text x="60" y="40" text-anchor="middle" class="box-title">mdl_user</text>
+    <text x="60" y="55" text-anchor="middle" class="box-desc">Datos de usuarios</text>
+  </g>
+
+  <!-- mdl_course -->
+  <g transform="translate(30, 300)">
+    <ellipse cx="60" cy="15" rx="60" ry="15" class="db-cylinder"/>
+    <rect x="0" y="15" width="120" height="45" class="db-cylinder"/>
+    <ellipse cx="60" cy="60" rx="60" ry="15" class="db-cylinder"/>
+    <text x="60" y="40" text-anchor="middle" class="box-title">mdl_course</text>
+    <text x="60" y="55" text-anchor="middle" class="box-desc">Informacion de cursos</text>
+  </g>
+
+  <!-- company_users -->
+  <g transform="translate(30, 400)">
+    <ellipse cx="60" cy="15" rx="60" ry="15" class="db-cylinder"/>
+    <rect x="0" y="15" width="120" height="45" class="db-cylinder"/>
+    <ellipse cx="60" cy="60" rx="60" ry="15" class="db-cylinder"/>
+    <text x="60" y="40" text-anchor="middle" class="box-title">company_users</text>
+    <text x="60" y="55" text-anchor="middle" class="box-desc">Usuarios IOMAD</text>
+  </g>
+
+  <!-- Processing Components -->
+  <!-- Dedication Collector Task -->
+  <rect x="270" y="100" width="150" height="70" class="process-box"/>
+  <text x="345" y="125" text-anchor="middle" class="box-title">dedication_collector</text>
+  <text x="345" y="145" text-anchor="middle" class="box-desc">Tarea programada</text>
+  <text x="345" y="158" text-anchor="middle" class="box-desc">Cada 15 min (cron)</text>
+
+  <!-- Report Class -->
+  <rect x="270" y="200" width="150" height="70" class="process-box"/>
+  <text x="345" y="225" text-anchor="middle" class="box-title">report.php</text>
+  <text x="345" y="245" text-anchor="middle" class="box-desc">Clase principal</text>
+  <text x="345" y="258" text-anchor="middle" class="box-desc">Genera metricas</text>
+
+  <!-- Cache -->
+  <rect x="270" y="310" width="150" height="70" class="cache-box"/>
+  <text x="345" y="335" text-anchor="middle" class="box-title">MUC Cache</text>
+  <text x="345" y="355" text-anchor="middle" class="box-desc">reportdata (5 min)</text>
+  <text x="345" y="368" text-anchor="middle" class="box-desc">companyusers (10 min)</text>
+
+  <!-- Dedication Table -->
+  <g transform="translate(270, 410)">
+    <ellipse cx="75" cy="15" rx="75" ry="15" class="db-cylinder"/>
+    <rect x="0" y="15" width="150" height="45" class="db-cylinder"/>
+    <ellipse cx="75" cy="60" rx="75" ry="15" class="db-cylinder"/>
+    <text x="75" y="40" text-anchor="middle" class="box-title">platform_usage_ded</text>
+    <text x="75" y="55" text-anchor="middle" class="box-desc">Datos precalculados</text>
+  </g>
+
+  <!-- Aggregation -->
+  <rect x="480" y="200" width="150" height="70" class="process-box"/>
+  <text x="555" y="225" text-anchor="middle" class="box-title">Agregacion</text>
+  <text x="555" y="245" text-anchor="middle" class="box-desc">Por empresa/curso/</text>
+  <text x="555" y="258" text-anchor="middle" class="box-desc">usuario/periodo</text>
+
+  <!-- Output Components -->
+  <!-- Dashboard -->
+  <rect x="680" y="100" width="180" height="70" class="output-box"/>
+  <text x="770" y="125" text-anchor="middle" class="box-title">Dashboard Interactivo</text>
+  <text x="770" y="145" text-anchor="middle" class="box-desc">Graficos Chart.js</text>
+  <text x="770" y="158" text-anchor="middle" class="box-desc">Filtros dinamicos AJAX</text>
+
+  <!-- Excel Export -->
+  <rect x="680" y="200" width="180" height="70" class="output-box"/>
+  <text x="770" y="225" text-anchor="middle" class="box-title">Exportacion Excel</text>
+  <text x="770" y="245" text-anchor="middle" class="box-desc">excel_exporter.php</text>
+  <text x="770" y="258" text-anchor="middle" class="box-desc">Formato .xlsx</text>
+
+  <!-- Admin Report -->
+  <rect x="680" y="300" width="180" height="70" class="output-box"/>
+  <text x="770" y="325" text-anchor="middle" class="box-title">Reporte Administrador</text>
+  <text x="770" y="345" text-anchor="middle" class="box-desc">Vista consolidada</text>
+  <text x="770" y="358" text-anchor="middle" class="box-desc">Todas las empresas</text>
+
+  <!-- Arrows - Data flow -->
+  <path d="M 150 140 L 265 135" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 150 240 L 265 235" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 150 340 L 265 340" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 150 440 L 265 440" class="arrow-line" marker-end="url(#arrowhead)"/>
+
+  <!-- Processing arrows -->
+  <path d="M 420 135 L 420 195" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 345 170 L 345 195" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 345 270 L 345 305" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 345 380 L 345 405" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 420 235 L 475 235" class="arrow-line" marker-end="url(#arrowhead)"/>
+
+  <!-- Output arrows -->
+  <path d="M 630 235 L 675 135" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 630 235 L 675 235" class="arrow-line" marker-end="url(#arrowhead)"/>
+  <path d="M 630 235 L 675 335" class="arrow-line" marker-end="url(#arrowhead)"/>
+
+  <!-- Legend -->
+  <g transform="translate(50, 510)">
+    <rect x="0" y="0" width="800" height="70" rx="8" fill="#F5F5F5" stroke="#CCCCCC" stroke-width="1"/>
+    <text x="400" y="20" text-anchor="middle" style="font-family: Arial; font-size: 11px; font-weight: bold; fill: #333;">Leyenda</text>
+
+    <rect x="30" y="35" width="60" height="25" class="source-box"/>
+    <text x="60" y="52" text-anchor="middle" class="box-desc">Base datos</text>
+
+    <rect x="120" y="35" width="60" height="25" class="process-box"/>
+    <text x="150" y="52" text-anchor="middle" class="box-desc">Proceso</text>
+
+    <rect x="210" y="35" width="60" height="25" class="cache-box"/>
+    <text x="240" y="52" text-anchor="middle" class="box-desc">Cache</text>
+
+    <rect x="300" y="35" width="60" height="25" class="output-box"/>
+    <text x="330" y="52" text-anchor="middle" class="box-desc">Salida</text>
+
+    <text x="450" y="52" class="box-desc">Metricas: tiempo dedicacion, accesos, completitud, logins</text>
+  </g>
+</svg>
