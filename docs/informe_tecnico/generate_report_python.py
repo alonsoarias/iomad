@@ -694,6 +694,57 @@ def generate_jobboard_section(doc):
     svg_path = SVG_DIR / 'local_jobboard' / 'ciclo_vida_aplicacion.svg'
     add_figure(doc, svg_path, 'Ciclo de vida completo de una aplicación')
 
+    # Eventos del sistema
+    add_heading(doc, '5.10 Eventos del Sistema', 2)
+    if 'events' in data:
+        events = data['events']
+        add_paragraph_text(doc,
+            'El plugin dispara eventos del sistema de Moodle para permitir la integración '
+            'con otros componentes y el registro de actividad en los logs.')
+
+        if 'eventos' in events:
+            events_data = [['Evento', 'Tipo', 'Descripción']]
+            for ev in events['eventos'][:8]:
+                events_data.append([
+                    ev.get('nombre', 'N/A'),
+                    ev.get('tipo_accion', 'N/A'),
+                    ev.get('descripcion', 'N/A')[:40] + '...' if len(ev.get('descripcion', '')) > 40 else ev.get('descripcion', 'N/A')
+                ])
+            add_table_with_caption(doc, events_data, 'Eventos del sistema del plugin local_jobboard')
+
+    # Templates de notificación
+    add_heading(doc, '5.11 Sistema de Notificaciones', 2)
+    add_paragraph_text(doc,
+        'El plugin incluye un sistema de plantillas de correo electrónico personalizables '
+        'con soporte multi-tenant para IOMAD. Las plantillas permiten usar marcadores '
+        'que se reemplazan dinámicamente con información del contexto.')
+
+    notification_cats = [
+        'application: Notificaciones relacionadas con postulaciones',
+        'documents: Notificaciones sobre documentos y validación',
+        'interview: Notificaciones de programación de entrevistas',
+        'selection: Notificaciones de resultados de selección',
+        'system: Notificaciones del sistema'
+    ]
+    add_bullet_list(doc, notification_cats)
+
+    # Capabilities
+    add_heading(doc, '5.12 Sistema de Permisos', 2)
+    if 'capabilities' in data:
+        caps = data['capabilities']
+        add_paragraph_text(doc,
+            f'El plugin define {len(caps)} capabilities para controlar el acceso a las diferentes '
+            'funcionalidades del sistema.')
+
+        caps_data = [['Capability', 'Tipo', 'Propósito']]
+        for cap in caps[:8]:
+            caps_data.append([
+                cap.get('name', 'N/A').replace('local/jobboard:', ''),
+                cap.get('captype', 'N/A'),
+                cap.get('title', cap.get('name', 'N/A'))[:35] + '...' if len(cap.get('title', cap.get('name', ''))) > 35 else cap.get('title', cap.get('name', 'N/A'))
+            ])
+        add_table_with_caption(doc, caps_data, 'Principales capabilities del plugin local_jobboard')
+
     doc.add_page_break()
 
 
@@ -789,6 +840,98 @@ def generate_platform_usage_section(doc):
     svg_path = SVG_DIR / 'report_platform_usage' / 'flujo_datos.svg'
     add_figure(doc, svg_path, 'Diagrama de flujo de datos del plugin report_platform_usage')
 
+    # Flujo del reporte
+    add_heading(doc, '6.8 Flujo del Reporte', 2)
+    add_paragraph_text(doc,
+        'El flujo de generación de reportes incluye la recopilación de métricas, '
+        'el procesamiento de datos y la presentación en múltiples formatos de exportación.')
+
+    svg_path = SVG_DIR / 'report_platform_usage' / 'flujo_reporte.svg'
+    add_figure(doc, svg_path, 'Diagrama de flujo del reporte de uso de plataforma')
+
+    # Métricas disponibles
+    add_heading(doc, '6.9 Métricas Disponibles', 2)
+    if 'metricas_informes' in data:
+        metricas = data['metricas_informes']
+        add_paragraph_text(doc,
+            'El plugin proporciona diversas métricas organizadas en categorías para el análisis '
+            'del uso de la plataforma:')
+
+        if 'categorias' in metricas:
+            categorias_data = [['Categoría', 'Métricas principales']]
+            for cat in metricas['categorias'][:6]:
+                nombre = cat.get('nombre', 'N/A')
+                mets = cat.get('metricas', [])
+                mets_str = ', '.join(mets[:3]) if mets else 'N/A'
+                if len(mets_str) > 60:
+                    mets_str = mets_str[:57] + '...'
+                categorias_data.append([nombre, mets_str])
+            add_table_with_caption(doc, categorias_data, 'Categorías de métricas del plugin report_platform_usage')
+
+    # Algoritmo de dedicación
+    add_heading(doc, '6.10 Algoritmo de Cálculo de Dedicación', 2)
+    if 'algoritmo_dedicacion' in data:
+        alg = data['algoritmo_dedicacion']
+        add_paragraph_text(doc,
+            f'{alg.get("descripcion", "Algoritmo basado en sesiones para calcular tiempo de dedicación.")}')
+
+        if 'parametros' in alg:
+            params = alg['parametros']
+            params_data = [['Parámetro', 'Descripción', 'Valor por defecto']]
+            for key, val in params.items():
+                params_data.append([
+                    key,
+                    val.get('descripcion', 'N/A')[:40] + '...' if len(val.get('descripcion', '')) > 40 else val.get('descripcion', 'N/A'),
+                    val.get('defecto', 'N/A')
+                ])
+            add_table_with_caption(doc, params_data, 'Parámetros del algoritmo de dedicación')
+
+    # Sistema de caché
+    add_heading(doc, '6.11 Sistema de Caché', 2)
+    if 'sistema_cache' in data:
+        cache = data['sistema_cache']
+        add_paragraph_text(doc,
+            f'El plugin implementa un sistema de caché con estrategia "{cache.get("estrategia", "cache-aside")}" '
+            'para optimizar el rendimiento de las consultas.')
+
+        if 'definiciones' in cache:
+            cache_data = [['Nombre', 'Modo', 'TTL', 'Propósito']]
+            for c in cache['definiciones']:
+                cache_data.append([
+                    c.get('nombre', 'N/A'),
+                    c.get('modo', 'N/A'),
+                    c.get('ttl', 'N/A'),
+                    c.get('proposito', 'N/A')[:35] + '...' if len(c.get('proposito', '')) > 35 else c.get('proposito', 'N/A')
+                ])
+            add_table_with_caption(doc, cache_data, 'Definiciones de caché del plugin report_platform_usage')
+
+    # Casos de uso
+    add_heading(doc, '6.12 Casos de Uso', 2)
+    if 'casos_uso' in data:
+        add_paragraph_text(doc,
+            'El plugin está diseñado para satisfacer los siguientes escenarios de uso:')
+
+        casos_data = [['Caso de Uso', 'Beneficio']]
+        for caso in data['casos_uso'][:4]:
+            casos_data.append([
+                caso.get('caso', 'N/A'),
+                caso.get('beneficio', 'N/A')
+            ])
+        add_table_with_caption(doc, casos_data, 'Casos de uso del plugin report_platform_usage')
+
+    # Integración con el sistema
+    add_heading(doc, '6.13 Integración con Moodle e IOMAD', 2)
+    if 'integracion_sistema' in data:
+        integ = data['integracion_sistema']
+        add_paragraph_text(doc,
+            'El plugin se integra con los sistemas de navegación de Moodle y detecta '
+            'automáticamente la presencia de IOMAD para habilitar el filtrado por empresas.')
+
+        if 'integracion_iomad' in integ:
+            iomad = integ['integracion_iomad']
+            if 'funcionalidad' in iomad:
+                add_bullet_list(doc, iomad['funcionalidad'])
+
     doc.add_page_break()
 
 
@@ -871,8 +1014,17 @@ def generate_platform_access_section(doc):
     svg_path = SVG_DIR / 'local_platform_access' / 'diagrama_generacion.svg'
     add_figure(doc, svg_path, 'Diagrama de flujo de generación del plugin local_platform_access')
 
+    # Flujo de acceso
+    add_heading(doc, '7.7 Flujo de Acceso al Plugin', 2)
+    add_paragraph_text(doc,
+        'El acceso al plugin sigue un flujo controlado que incluye validación de permisos, '
+        'confirmación del usuario y ejecución supervisada con barra de progreso.')
+
+    svg_path = SVG_DIR / 'local_platform_access' / 'flujo_acceso.svg'
+    add_figure(doc, svg_path, 'Flujo de acceso y ejecución del plugin local_platform_access')
+
     # Optimizaciones
-    add_heading(doc, '7.7 Optimizaciones de Rendimiento', 2)
+    add_heading(doc, '7.8 Optimizaciones de Rendimiento', 2)
     if 'optimizaciones_rendimiento' in data and 'tecnicas' in data['optimizaciones_rendimiento']:
         opt = data['optimizaciones_rendimiento']
         add_paragraph_text(doc,
@@ -887,6 +1039,45 @@ def generate_platform_access_section(doc):
                 t.get('impacto', 'N/A')
             ])
         add_table_with_caption(doc, opt_data, 'Técnicas de optimización implementadas')
+
+    # Base de datos utilizada
+    add_heading(doc, '7.9 Base de Datos', 2)
+    add_paragraph_text(doc,
+        'Este plugin no crea tablas propias, pero utiliza múltiples tablas existentes de Moodle '
+        'e IOMAD para generar e insertar los registros de acceso.')
+
+    if 'base_datos' in data:
+        bd = data['base_datos']
+        if 'tablas_estandar_utilizadas' in bd:
+            tables_data = [['Tabla', 'Operación', 'Propósito']]
+            for t in bd['tablas_estandar_utilizadas']:
+                tables_data.append([
+                    t.get('tabla', 'N/A'),
+                    t.get('operacion', 'N/A'),
+                    t.get('proposito', 'N/A')[:50] + '...' if len(t.get('proposito', '')) > 50 else t.get('proposito', 'N/A')
+                ])
+            add_table_with_caption(doc, tables_data, 'Tablas de Moodle utilizadas por local_platform_access')
+
+    # Casos de uso
+    add_heading(doc, '7.10 Casos de Uso', 2)
+    if 'casos_uso' in data:
+        add_paragraph_text(doc,
+            'El plugin está diseñado para los siguientes escenarios:')
+        add_bullet_list(doc, data['casos_uso'])
+
+    # Integración IOMAD
+    add_heading(doc, '7.11 Integración con IOMAD', 2)
+    if 'integracion_iomad' in data:
+        iomad = data['integracion_iomad']
+        add_paragraph_text(doc,
+            'El plugin se integra completamente con IOMAD para entornos multi-empresa, '
+            'permitiendo filtrar y generar datos por empresa específica.')
+
+        if 'funcionalidades' in iomad:
+            add_bullet_list(doc, iomad['funcionalidades'])
+
+        add_paragraph_text(doc,
+            f'{iomad.get("compatibilidad", "Compatible con Moodle estándar.")}')
 
     doc.add_page_break()
 
