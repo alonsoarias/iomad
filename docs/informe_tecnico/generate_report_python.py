@@ -310,22 +310,80 @@ def load_json_data(plugin_name: str) -> dict:
         return json.load(f)
 
 
+def ensure_heading_styles(doc):
+    """
+    Asegura que los estilos de encabezado existan en el documento.
+    Crea los estilos Heading 1, 2, 3 si no existen.
+    """
+    styles = doc.styles
+
+    heading_configs = {
+        'Heading 1': {'size': 16, 'color': COLORS['VERDE'], 'bold': True},
+        'Heading 2': {'size': 14, 'color': COLORS['NEGRO'], 'bold': True},
+        'Heading 3': {'size': 12, 'color': COLORS['NEGRO'], 'bold': True},
+    }
+
+    for style_name, config in heading_configs.items():
+        try:
+            style = styles[style_name]
+        except KeyError:
+            # Crear el estilo si no existe
+            from docx.enum.style import WD_STYLE_TYPE
+            style = styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+            style.base_style = styles['Normal']
+
+        # Configurar el estilo
+        style.font.bold = config['bold']
+        style.font.size = Pt(config['size'])
+        style.font.color.rgb = config['color']
+
+
+def set_paragraph_outline_level(paragraph, level: int):
+    """
+    Establece el nivel de esquema (outline level) del párrafo.
+    Esto es necesario para que Word reconozca el párrafo como encabezado en la TOC.
+    """
+    pPr = paragraph._p.get_or_add_pPr()
+
+    # Buscar o crear el elemento outlineLvl
+    outline_lvl = pPr.find(qn('w:outlineLvl'))
+    if outline_lvl is None:
+        outline_lvl = create_element('w:outlineLvl')
+        pPr.append(outline_lvl)
+
+    # El nivel de outline es 0-indexed (Heading 1 = nivel 0)
+    create_attribute(outline_lvl, 'w:val', str(level - 1))
+
+
 def add_heading(doc, text: str, level: int = 1):
-    """Agrega un encabezado con formato."""
-    p = doc.add_paragraph()
-    run = p.add_run(text)
-    run.bold = True
+    """
+    Agrega un encabezado con estilo de Word para la TOC.
+    Usa estilos Heading 1/2/3 y establece outline level.
+    """
+    # Intentar usar el estilo de heading nativo
+    style_name = f'Heading {level}'
 
-    # Tamaños según nivel
-    sizes = {1: 16, 2: 14, 3: 12}
-    run.font.size = Pt(sizes.get(level, 12))
+    try:
+        p = doc.add_paragraph(text, style=style_name)
+    except KeyError:
+        # Si el estilo no existe, crear párrafo normal y configurar manualmente
+        p = doc.add_paragraph()
+        run = p.add_run(text)
+        run.bold = True
 
-    # Color verde para títulos principales
-    if level == 1:
-        run.font.color.rgb = COLORS['VERDE']
+        # Tamaños según nivel
+        sizes = {1: 16, 2: 14, 3: 12}
+        run.font.size = Pt(sizes.get(level, 12))
 
-    # Espacio antes del heading
-    p.paragraph_format.space_before = Pt(12 if level > 1 else 18)
+        # Color verde para títulos principales
+        if level == 1:
+            run.font.color.rgb = COLORS['VERDE']
+
+    # Establecer outline level para TOC (crítico para que funcione)
+    set_paragraph_outline_level(p, level)
+
+    # Formato de espaciado
+    p.paragraph_format.space_before = Pt(18 if level == 1 else 12)
     p.paragraph_format.space_after = Pt(6)
 
     return p
