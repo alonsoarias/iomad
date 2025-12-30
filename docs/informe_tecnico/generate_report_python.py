@@ -11,14 +11,16 @@ import json
 import os
 from pathlib import Path
 from io import BytesIO
+from copy import deepcopy
 
 from docx import Document
-from docx.shared import Inches, Pt, Cm, Twips
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt, Cm, Twips, RGBColor
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.ns import qn, nsmap
-from docx.oxml import OxmlElement
+from docx.oxml import OxmlElement, register_element_cls
+from docx.oxml.text.paragraph import CT_P
 from PIL import Image
 import cairosvg
 
@@ -32,17 +34,21 @@ IMAGES_DIR = BASE_DIR / 'images'
 
 # Colores corporativos ISER (RGB)
 COLORS = {
-    'VERDE': (27, 158, 136),
-    'AMARILLO': (252, 189, 5),
-    'ROJO': (235, 67, 53),
-    'GRIS': (100, 99, 99),
-    'NEGRO': (0, 0, 0),
-    'BLANCO': (255, 255, 255)
+    'VERDE': RGBColor(27, 158, 136),
+    'AMARILLO': RGBColor(252, 189, 5),
+    'ROJO': RGBColor(235, 67, 53),
+    'GRIS': RGBColor(100, 99, 99),
+    'NEGRO': RGBColor(0, 0, 0),
+    'BLANCO': RGBColor(255, 255, 255)
 }
 
 # Contadores globales para numeración
 figura_counter = 0
 tabla_counter = 0
+
+# Registros para las tablas de contenido
+figuras_registro = []  # [(numero, titulo), ...]
+tablas_registro = []   # [(numero, titulo), ...]
 
 
 def svg_to_png(svg_path: Path, width: int = 600) -> bytes:
@@ -58,103 +64,178 @@ def svg_to_png(svg_path: Path, width: int = 600) -> bytes:
         return None
 
 
-def add_caption_field(paragraph, caption_type: str, title: str):
-    """
-    Agrega un campo de título con SEQ para Word.
-    caption_type: 'Figura' o 'Tabla'
-    """
-    global figura_counter, tabla_counter
+def create_element(name):
+    """Crea un elemento XML con namespace correcto."""
+    return OxmlElement(name)
 
-    # Incrementar contador
-    if caption_type == 'Figura':
-        figura_counter += 1
-        num = figura_counter
-    else:
-        tabla_counter += 1
-        num = tabla_counter
 
-    # Crear el campo SEQ usando XML directo
+def create_attribute(element, name, value):
+    """Establece un atributo con namespace."""
+    element.set(qn(name), value)
+
+
+def add_field_code(paragraph, field_code: str, display_text: str = ""):
+    """
+    Agrega un campo de Word (field code) de manera segura.
+    Esta implementación crea los elementos XML correctamente.
+    """
     run = paragraph.add_run()
+    r = run._r
 
-    # Texto inicial
-    run.add_text(f"{caption_type} ")
+    # fldChar begin
+    fld_char_begin = create_element('w:fldChar')
+    create_attribute(fld_char_begin, 'w:fldCharType', 'begin')
+    r.append(fld_char_begin)
 
-    # Campo SEQ
-    fld_char_begin = OxmlElement('w:fldChar')
-    fld_char_begin.set(qn('w:fldCharType'), 'begin')
+    # Nuevo run para instrText
+    run2 = paragraph.add_run()
+    r2 = run2._r
+    instr_text = create_element('w:instrText')
+    create_attribute(instr_text, 'xml:space', 'preserve')
+    instr_text.text = f' {field_code} '
+    r2.append(instr_text)
 
-    instr_text = OxmlElement('w:instrText')
-    instr_text.set(qn('xml:space'), 'preserve')
-    instr_text.text = f' SEQ {caption_type} \\* ARABIC '
+    # fldChar separate
+    run3 = paragraph.add_run()
+    r3 = run3._r
+    fld_char_sep = create_element('w:fldChar')
+    create_attribute(fld_char_sep, 'w:fldCharType', 'separate')
+    r3.append(fld_char_sep)
 
-    fld_char_separate = OxmlElement('w:fldChar')
-    fld_char_separate.set(qn('w:fldCharType'), 'separate')
+    # Texto visible
+    if display_text:
+        run4 = paragraph.add_run(display_text)
 
-    # Texto del número (valor actual)
-    num_run = OxmlElement('w:r')
-    num_text = OxmlElement('w:t')
-    num_text.text = str(num)
-    num_run.append(num_text)
+    # fldChar end
+    run5 = paragraph.add_run()
+    r5 = run5._r
+    fld_char_end = create_element('w:fldChar')
+    create_attribute(fld_char_end, 'w:fldCharType', 'end')
+    r5.append(fld_char_end)
 
-    fld_char_end = OxmlElement('w:fldChar')
-    fld_char_end.set(qn('w:fldCharType'), 'end')
+    return paragraph
 
-    # Agregar elementos al run
-    run._r.append(fld_char_begin)
-    run._r.append(instr_text)
-    run._r.append(fld_char_separate)
-    run._r.append(num_run)
-    run._r.append(fld_char_end)
 
-    # Agregar punto y título
-    run.add_text(f". {title}")
+def add_seq_field(paragraph, seq_name: str, number: int):
+    """
+    Agrega un campo SEQ de Word para numeración automática.
+    Cada elemento se agrega en su propio run para evitar corrupción.
+    """
+    # Run 1: fldChar begin
+    r1 = paragraph.add_run()._r
+    fld_begin = create_element('w:fldChar')
+    create_attribute(fld_begin, 'w:fldCharType', 'begin')
+    r1.append(fld_begin)
+
+    # Run 2: instrText
+    r2 = paragraph.add_run()._r
+    instr = create_element('w:instrText')
+    create_attribute(instr, 'xml:space', 'preserve')
+    instr.text = f' SEQ {seq_name} \\* ARABIC '
+    r2.append(instr)
+
+    # Run 3: fldChar separate
+    r3 = paragraph.add_run()._r
+    fld_sep = create_element('w:fldChar')
+    create_attribute(fld_sep, 'w:fldCharType', 'separate')
+    r3.append(fld_sep)
+
+    # Run 4: número visible
+    paragraph.add_run(str(number))
+
+    # Run 5: fldChar end
+    r5 = paragraph.add_run()._r
+    fld_end = create_element('w:fldChar')
+    create_attribute(fld_end, 'w:fldCharType', 'end')
+    r5.append(fld_end)
+
+
+def add_caption_with_seq(paragraph, caption_type: str, number: int, title: str):
+    """
+    Agrega un título con campo SEQ para que Word pueda actualizar las TOC.
+    Formato: "Figura SEQ. Título de la figura"
+    """
+    # Registrar para la tabla de contenido
+    if caption_type == 'Figura':
+        figuras_registro.append((number, title))
+    else:
+        tablas_registro.append((number, title))
+
+    # Agregar prefijo "Figura " o "Tabla "
+    run_prefix = paragraph.add_run(f'{caption_type} ')
+    run_prefix.italic = True
+    run_prefix.font.size = Pt(10)
+    run_prefix.font.color.rgb = COLORS['GRIS']
+
+    # Agregar campo SEQ
+    add_seq_field(paragraph, caption_type, number)
+
+    # Agregar ". título"
+    run_suffix = paragraph.add_run(f'. {title}')
+    run_suffix.italic = True
+    run_suffix.font.size = Pt(10)
+    run_suffix.font.color.rgb = COLORS['GRIS']
+
+    return paragraph
+
+
+def add_simple_caption(paragraph, caption_type: str, number: int, title: str):
+    """
+    Agrega un título con numeración usando campos SEQ de Word.
+    Esto permite que Word actualice automáticamente las tablas de contenido.
+    """
+    return add_caption_with_seq(paragraph, caption_type, number, title)
+
+
+def add_figure_caption(doc, title: str):
+    """Agrega un título de figura con numeración automática."""
+    global figura_counter
+    figura_counter += 1
+
+    caption = doc.add_paragraph()
+    caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    add_simple_caption(caption, 'Figura', figura_counter, title)
+
+    return caption
+
+
+def add_table_caption(doc, title: str):
+    """Agrega un título de tabla con numeración automática."""
+    global tabla_counter
+    tabla_counter += 1
+
+    caption = doc.add_paragraph()
+    add_simple_caption(caption, 'Tabla', tabla_counter, title)
+
+    return caption
 
 
 def add_toc_field(doc, toc_type: str):
     """
-    Agrega un campo TOC para tabla de contenido, ilustraciones o tablas.
+    Agrega un campo TOC para tabla de contenido.
     toc_type: 'content', 'figure', 'table'
     """
     paragraph = doc.add_paragraph()
-    run = paragraph.add_run()
-
-    # Crear campo TOC
-    fld_char_begin = OxmlElement('w:fldChar')
-    fld_char_begin.set(qn('w:fldCharType'), 'begin')
-
-    instr_text = OxmlElement('w:instrText')
-    instr_text.set(qn('xml:space'), 'preserve')
 
     if toc_type == 'content':
-        instr_text.text = ' TOC \\o "1-3" \\h \\z \\u '
+        field_code = 'TOC \\o "1-3" \\h \\z \\u'
+        display = "Actualice el campo presionando F9"
     elif toc_type == 'figure':
-        instr_text.text = ' TOC \\h \\z \\c "Figura" '
+        field_code = 'TOC \\h \\z \\c "Figura"'
+        display = "Actualice el campo presionando F9"
     elif toc_type == 'table':
-        instr_text.text = ' TOC \\h \\z \\c "Tabla" '
+        field_code = 'TOC \\h \\z \\c "Tabla"'
+        display = "Actualice el campo presionando F9"
+    else:
+        return paragraph
 
-    fld_char_separate = OxmlElement('w:fldChar')
-    fld_char_separate.set(qn('w:fldCharType'), 'separate')
-
-    # Texto placeholder
-    placeholder = OxmlElement('w:r')
-    placeholder_text = OxmlElement('w:t')
-    placeholder_text.text = "Actualice este campo (Ctrl+A, F9)"
-    placeholder.append(placeholder_text)
-
-    fld_char_end = OxmlElement('w:fldChar')
-    fld_char_end.set(qn('w:fldCharType'), 'end')
-
-    run._r.append(fld_char_begin)
-    run._r.append(instr_text)
-    run._r.append(fld_char_separate)
-    run._r.append(placeholder)
-    run._r.append(fld_char_end)
+    add_field_code(paragraph, field_code, display)
 
     return paragraph
 
 
 def add_figure(doc, svg_path: Path, title: str, width_inches: float = 5.5):
-    """Agrega una figura con su título usando campos SEQ."""
+    """Agrega una figura con su título."""
     if not svg_path.exists():
         print(f"  ⚠️  SVG no encontrado: {svg_path}")
         return
@@ -170,29 +251,22 @@ def add_figure(doc, svg_path: Path, title: str, width_inches: float = 5.5):
     run = paragraph.add_run()
     run.add_picture(BytesIO(png_data), width=Inches(width_inches))
 
-    # Agregar título con campo SEQ
-    caption = doc.add_paragraph()
-    caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    # Formato de caption (italic, gris)
-    add_caption_field(caption, 'Figura', title)
-    for run in caption.runs:
-        run.italic = True
-        run.font.size = Pt(10)
+    # Agregar título
+    add_figure_caption(doc, title)
+
+    # Espacio después
+    doc.add_paragraph()
 
 
 def add_table_with_caption(doc, data: list, title: str, col_widths: list = None):
-    """Agrega una tabla con su título usando campos SEQ."""
-    # Título de la tabla (antes de la tabla)
-    caption = doc.add_paragraph()
-    add_caption_field(caption, 'Tabla', title)
-    for run in caption.runs:
-        run.bold = True
-        run.font.size = Pt(10)
-
-    # Crear tabla
+    """Agrega una tabla con su título."""
     if not data:
         return
 
+    # Título de la tabla (antes de la tabla)
+    add_table_caption(doc, title)
+
+    # Crear tabla
     table = doc.add_table(rows=len(data), cols=len(data[0]))
     table.style = 'Table Grid'
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -204,17 +278,23 @@ def add_table_with_caption(doc, data: list, title: str, col_widths: list = None)
             cell = row.cells[j]
             cell.text = str(cell_data) if cell_data else ''
 
-            # Estilo de encabezado
+            # Estilo de encabezado (primera fila)
             if i == 0:
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
                         run.bold = True
+                        run.font.color.rgb = COLORS['BLANCO']
+                # Fondo verde para encabezado
+                shading = OxmlElement('w:shd')
+                shading.set(qn('w:fill'), '1B9E88')  # Verde ISER
+                cell._tc.get_or_add_tcPr().append(shading)
 
     # Aplicar anchos de columna si se especifican
     if col_widths:
         for i, width in enumerate(col_widths):
             for row in table.rows:
-                row.cells[i].width = Inches(width)
+                if i < len(row.cells):
+                    row.cells[i].width = Inches(width)
 
     doc.add_paragraph()  # Espacio después de la tabla
 
@@ -231,7 +311,7 @@ def load_json_data(plugin_name: str) -> dict:
 
 
 def add_heading(doc, text: str, level: int = 1):
-    """Agrega un encabezado con formato manual."""
+    """Agrega un encabezado con formato."""
     p = doc.add_paragraph()
     run = p.add_run(text)
     run.bold = True
@@ -241,25 +321,28 @@ def add_heading(doc, text: str, level: int = 1):
     run.font.size = Pt(sizes.get(level, 12))
 
     # Color verde para títulos principales
-    if level <= 2:
-        run.font.color.rgb = None  # Reset to let Word handle it
+    if level == 1:
+        run.font.color.rgb = COLORS['VERDE']
 
-    # Configurar como estilo de encabezado para TOC
-    try:
-        p.style = f'Heading {level}'
-    except KeyError:
-        # Si no existe el estilo, crear uno básico
-        pass
+    # Espacio antes del heading
+    p.paragraph_format.space_before = Pt(12 if level > 1 else 18)
+    p.paragraph_format.space_after = Pt(6)
 
     return p
 
 
-def add_paragraph(doc, text: str, bold: bool = False, italic: bool = False):
-    """Agrega un párrafo."""
+def add_paragraph_text(doc, text: str, bold: bool = False, italic: bool = False):
+    """Agrega un párrafo de texto."""
     p = doc.add_paragraph()
     run = p.add_run(text)
     run.bold = bold
     run.italic = italic
+    run.font.size = Pt(11)
+
+    # Justificado
+    p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    p.paragraph_format.space_after = Pt(6)
+
     return p
 
 
@@ -267,14 +350,16 @@ def add_bullet_list(doc, items: list):
     """Agrega una lista con viñetas."""
     for item in items:
         p = doc.add_paragraph()
-        p.add_run(f'• {item}')
+        run = p.add_run(f'• {item}')
+        run.font.size = Pt(11)
         p.paragraph_format.left_indent = Inches(0.5)
+        p.paragraph_format.space_after = Pt(3)
 
 
 def generate_cover_page(doc):
     """Genera la portada del documento."""
     # Espacio inicial
-    for _ in range(3):
+    for _ in range(4):
         doc.add_paragraph()
 
     # Título principal
@@ -282,34 +367,45 @@ def generate_cover_page(doc):
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = title.add_run('INFORME TÉCNICO')
     run.bold = True
-    run.font.size = Pt(24)
+    run.font.size = Pt(28)
+    run.font.color.rgb = COLORS['VERDE']
+
+    doc.add_paragraph()
 
     # Subtítulo
     subtitle = doc.add_paragraph()
     subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = subtitle.add_run('Documentación de Plugins Moodle')
     run.bold = True
-    run.font.size = Pt(16)
+    run.font.size = Pt(18)
 
     # Plataforma
     platform = doc.add_paragraph()
     platform.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = platform.add_run('Plataforma Virtual ISER')
     run.font.size = Pt(14)
+    run.font.color.rgb = COLORS['GRIS']
 
-    doc.add_paragraph()
+    for _ in range(2):
+        doc.add_paragraph()
 
     # Plugins
+    plugins_title = doc.add_paragraph()
+    plugins_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = plugins_title.add_run('Plugins documentados:')
+    run.bold = True
+    run.font.size = Pt(12)
+
     plugins = ['local_jobboard', 'report_platform_usage', 'local_platform_access']
     for plugin in plugins:
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p.add_run(f'• {plugin}')
-        run.bold = True
+        run = p.add_run(f'▪ {plugin}')
         run.font.size = Pt(12)
+        run.font.color.rgb = COLORS['VERDE']
 
     # Espacio
-    for _ in range(3):
+    for _ in range(4):
         doc.add_paragraph()
 
     # Año
@@ -317,7 +413,8 @@ def generate_cover_page(doc):
     year.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = year.add_run('2025')
     run.bold = True
-    run.font.size = Pt(18)
+    run.font.size = Pt(20)
+    run.font.color.rgb = COLORS['VERDE']
 
     doc.add_page_break()
 
@@ -344,56 +441,60 @@ def generate_introduction(doc):
     """Genera las secciones introductorias."""
     add_heading(doc, '1. INTRODUCCIÓN', 1)
 
-    add_paragraph(doc,
+    add_paragraph_text(doc,
         'El presente documento técnico describe la implementación, arquitectura y '
         'funcionamiento de tres plugins desarrollados para la plataforma Moodle del '
         'Instituto Superior de Educación Rural (ISER). Estos plugins extienden las '
         'funcionalidades de la plataforma virtual para satisfacer necesidades específicas '
-        'de la institución.')
+        'de la institución en áreas como la gestión de vacantes docentes, reportes de uso '
+        'y generación de datos de acceso para pruebas.')
 
     add_heading(doc, '2. OBJETIVOS', 1)
 
     add_heading(doc, '2.1 Objetivo General', 2)
-    add_paragraph(doc,
+    add_paragraph_text(doc,
         'Documentar técnicamente los plugins desarrollados para la plataforma Moodle ISER, '
         'proporcionando información detallada sobre su arquitectura, funcionamiento e '
-        'integración con el sistema.')
+        'integración con el sistema, de manera que sirva como referencia para su mantenimiento '
+        'y evolución futura.')
 
     add_heading(doc, '2.2 Objetivos Específicos', 2)
     objectives = [
-        'Describir la estructura y organización de cada plugin',
+        'Describir la estructura y organización de archivos de cada plugin',
         'Documentar la arquitectura de base de datos utilizada',
-        'Explicar los flujos de trabajo implementados',
+        'Explicar los flujos de trabajo y casos de uso implementados',
         'Detallar las APIs y servicios web disponibles',
-        'Proporcionar guías de mantenimiento y extensión'
+        'Proporcionar guías de mantenimiento y extensión del código'
     ]
     add_bullet_list(doc, objectives)
 
     add_heading(doc, '3. ALCANCE', 1)
-    add_paragraph(doc,
-        'Este documento cubre la documentación técnica de los siguientes plugins:')
+    add_paragraph_text(doc,
+        'Este documento cubre la documentación técnica completa de los siguientes plugins '
+        'desarrollados específicamente para el ISER:')
 
     plugins_info = [
         'local_jobboard: Sistema de gestión de vacantes y postulaciones docentes',
         'report_platform_usage: Generador de reportes de uso de la plataforma',
-        'local_platform_access: Generador de registros de acceso para pruebas'
+        'local_platform_access: Generador de registros de acceso para pruebas de carga'
     ]
     add_bullet_list(doc, plugins_info)
 
     add_heading(doc, '4. TECNOLOGÍAS UTILIZADAS', 1)
-    add_paragraph(doc,
-        'Los plugins han sido desarrollados utilizando las siguientes tecnologías:')
+    add_paragraph_text(doc,
+        'Los plugins han sido desarrollados siguiendo los estándares de desarrollo de Moodle '
+        'y utilizando las siguientes tecnologías:')
 
     tech_data = [
         ['Categoría', 'Tecnología', 'Descripción'],
-        ['Backend', 'PHP 8.x', 'Lenguaje principal de Moodle'],
-        ['Base de datos', 'MySQL/MariaDB', 'DBAL de Moodle'],
-        ['Frontend', 'JavaScript (AMD)', 'Módulos RequireJS'],
-        ['Plantillas', 'Mustache', 'Motor de plantillas Moodle'],
-        ['Web Services', 'REST/AJAX', 'API Moodle External'],
-        ['Caché', 'MUC', 'Moodle Universal Cache']
+        ['Backend', 'PHP 8.x', 'Lenguaje principal del core de Moodle'],
+        ['Base de datos', 'MySQL/MariaDB', 'Acceso mediante DBAL de Moodle'],
+        ['Frontend', 'JavaScript (AMD)', 'Módulos RequireJS para interactividad'],
+        ['Plantillas', 'Mustache', 'Motor de plantillas nativo de Moodle'],
+        ['Web Services', 'REST/AJAX', 'API External de Moodle'],
+        ['Caché', 'MUC', 'Moodle Universal Cache para optimización']
     ]
-    add_table_with_caption(doc, tech_data, 'Tecnologías utilizadas en los plugins', [1.5, 1.5, 3])
+    add_table_with_caption(doc, tech_data, 'Tecnologías utilizadas en los plugins')
 
     doc.add_page_break()
 
@@ -404,113 +505,136 @@ def generate_jobboard_section(doc):
     if not data:
         return
 
-    add_heading(doc, 'PLUGIN LOCAL_JOBBOARD', 1)
+    add_heading(doc, '5. PLUGIN LOCAL_JOBBOARD', 1)
 
     # Descripción
+    add_heading(doc, '5.1 Descripción General', 2)
     if 'version' in data:
-        add_paragraph(doc, data['version'].get('description', ''))
+        desc = data['version'].get('description', '')
+        if desc:
+            add_paragraph_text(doc, desc)
+
+    add_paragraph_text(doc,
+        'Este plugin proporciona un sistema completo para la publicación de vacantes docentes, '
+        'gestión de postulaciones, revisión de documentos y seguimiento de todo el proceso de '
+        'selección de personal académico.')
 
     # Información de versión
-    add_heading(doc, 'Información de Versión', 2)
+    add_heading(doc, '5.2 Información de Versión', 2)
     if 'version' in data:
         v = data['version']
         version_data = [
             ['Campo', 'Valor'],
-            ['Versión', v.get('release', '')],
-            ['Build', str(v.get('version', ''))],
-            ['Madurez', v.get('maturity', '')],
-            ['Moodle requerido', v.get('requires_description', '')],
-            ['Autor', v.get('author', '')],
-            ['Licencia', v.get('license', '')]
+            ['Componente', 'local_jobboard'],
+            ['Versión', v.get('release', 'N/A')],
+            ['Build', str(v.get('version', 'N/A'))],
+            ['Madurez', v.get('maturity', 'N/A')],
+            ['Moodle requerido', v.get('requires_description', 'N/A')],
+            ['Autor', v.get('author', 'N/A')],
+            ['Licencia', v.get('license', 'GPLv3')]
         ]
-        add_table_with_caption(doc, version_data, 'Información de versión del plugin local_jobboard', [2, 4])
+        add_table_with_caption(doc, version_data, 'Información de versión del plugin local_jobboard')
 
     # Estructura del plugin
-    add_heading(doc, 'Estructura del Plugin', 2)
-    add_paragraph(doc,
+    add_heading(doc, '5.3 Estructura del Plugin', 2)
+    add_paragraph_text(doc,
         'El plugin local_jobboard sigue la estructura estándar de plugins locales de Moodle. '
         'La organización de directorios y archivos está diseñada para facilitar el mantenimiento '
-        'y cumplir con las convenciones de Moodle.')
+        'y cumplir con las convenciones de desarrollo de Moodle.')
 
     svg_path = SVG_DIR / 'local_jobboard' / 'estructura_directorios.svg'
     add_figure(doc, svg_path, 'Estructura de directorios del plugin local_jobboard')
 
     # Arquitectura
-    add_heading(doc, 'Arquitectura del Sistema', 2)
-    add_paragraph(doc,
+    add_heading(doc, '5.4 Arquitectura del Sistema', 2)
+    add_paragraph_text(doc,
         'El plugin implementa una arquitectura modular que separa las responsabilidades en capas: '
-        'presentación, lógica de negocio, acceso a datos, y servicios web.')
+        'presentación (templates Mustache y JavaScript), lógica de negocio (clases PHP), '
+        'acceso a datos (Moodle DBAL), y servicios web (External API).')
 
     svg_path = SVG_DIR / 'local_jobboard' / 'arquitectura.svg'
     add_figure(doc, svg_path, 'Arquitectura del plugin local_jobboard')
 
     # Casos de uso
-    add_heading(doc, 'Casos de Uso', 3)
-    add_paragraph(doc,
-        'El sistema define cinco tipos de actores principales: Docente/Aspirante, Revisor de '
-        'Documentos, Administrador, Decano de Facultad y Recursos Humanos.')
+    add_heading(doc, '5.5 Casos de Uso', 2)
+    add_paragraph_text(doc,
+        'El sistema define cinco tipos de actores principales: Docente/Aspirante (quien postula), '
+        'Revisor de Documentos (valida requisitos), Administrador (gestiona el sistema), '
+        'Decano de Facultad (aprueba contrataciones) y Recursos Humanos (formaliza contratos).')
 
     svg_path = SVG_DIR / 'local_jobboard' / 'casos_uso.svg'
-    add_figure(doc, svg_path, 'Diagrama de casos de uso')
+    add_figure(doc, svg_path, 'Diagrama de casos de uso del sistema de vacantes')
 
     # Base de datos
-    add_heading(doc, 'Base de Datos', 2)
+    add_heading(doc, '5.6 Base de Datos', 2)
     if 'database' in data:
         tables = data['database'].get('tables', [])
-        add_paragraph(doc,
+        add_paragraph_text(doc,
             f'El plugin utiliza {len(tables)} tablas para almacenar la información de vacantes, '
-            'postulaciones, documentos y configuraciones.')
+            'postulaciones, documentos y configuraciones del sistema.')
 
         table_summary = [['Tabla', 'Descripción']]
-        for t in tables[:6]:
+        for t in tables[:8]:
             name = t.get('name', '').replace('local_jobboard_', '')
             comment = t.get('comment', 'Sin descripción')
-            table_summary.append([name, comment])
+            table_summary.append([name, comment[:60] + '...' if len(comment) > 60 else comment])
 
-        add_table_with_caption(doc, table_summary, 'Resumen de tablas de base de datos', [2, 4])
+        add_table_with_caption(doc, table_summary, 'Resumen de tablas de base de datos del plugin local_jobboard')
 
     # Diagrama ER
     svg_path = SVG_DIR / 'local_jobboard' / 'diagrama_er.svg'
     add_figure(doc, svg_path, 'Diagrama entidad-relación del plugin local_jobboard')
 
     # Diagrama de clases
-    add_heading(doc, 'Clases Principales', 2)
+    add_heading(doc, '5.7 Clases Principales', 2)
+    add_paragraph_text(doc,
+        'El plugin define varias clases PHP que encapsulan la lógica de negocio, '
+        'siguiendo los patrones de diseño recomendados por Moodle.')
+
     svg_path = SVG_DIR / 'local_jobboard' / 'diagrama_clases.svg'
-    add_figure(doc, svg_path, 'Diagrama de clases principales')
+    add_figure(doc, svg_path, 'Diagrama de clases principales del plugin local_jobboard')
 
     # Servicios web
-    add_heading(doc, 'Servicios Web', 2)
+    add_heading(doc, '5.8 Servicios Web', 2)
     if 'services' in data and data['services']:
-        add_paragraph(doc,
+        add_paragraph_text(doc,
             f'El plugin expone {len(data["services"])} servicios web que permiten la interacción '
-            'con el sistema mediante AJAX y APIs externas.')
+            'con el sistema mediante llamadas AJAX desde el frontend y APIs externas.')
 
         svg_path = SVG_DIR / 'local_jobboard' / 'servicios_web.svg'
-        add_figure(doc, svg_path, 'Servicios web disponibles')
+        add_figure(doc, svg_path, 'Servicios web disponibles del plugin local_jobboard')
 
         services_data = [['Función', 'Tipo', 'Descripción']]
-        for s in data['services'][:5]:
+        for s in data['services'][:6]:
             services_data.append([
-                s.get('function_name', ''),
+                s.get('function_name', '')[:30],
                 s.get('type', ''),
-                s.get('description', '')
+                s.get('description', '')[:40] + '...' if len(s.get('description', '')) > 40 else s.get('description', '')
             ])
-        add_table_with_caption(doc, services_data, 'Servicios web disponibles', [2.5, 1, 2.5])
+        add_table_with_caption(doc, services_data, 'Servicios web del plugin local_jobboard')
 
     # Flujos de trabajo
-    add_heading(doc, 'Flujos de Trabajo', 2)
+    add_heading(doc, '5.9 Flujos de Trabajo', 2)
 
-    add_heading(doc, 'Flujo de Estados de Vacante', 3)
+    add_heading(doc, '5.9.1 Flujo de Estados de Vacante', 3)
+    add_paragraph_text(doc,
+        'Las vacantes siguen un ciclo de vida definido que va desde su creación como borrador '
+        'hasta su cierre una vez completado el proceso de selección.')
+
     svg_path = SVG_DIR / 'local_jobboard' / 'flujo_estados_vacante.svg'
-    add_figure(doc, svg_path, 'Flujo de estados de vacante')
+    add_figure(doc, svg_path, 'Flujo de estados de una vacante')
 
-    add_heading(doc, 'Flujo de Postulación', 3)
+    add_heading(doc, '5.9.2 Flujo de Postulación', 3)
+    add_paragraph_text(doc,
+        'El proceso de postulación permite a los docentes enviar su candidatura, '
+        'adjuntar documentos requeridos y hacer seguimiento del estado de su aplicación.')
+
     svg_path = SVG_DIR / 'local_jobboard' / 'flujo_postulacion.svg'
-    add_figure(doc, svg_path, 'Flujo de postulación')
+    add_figure(doc, svg_path, 'Flujo del proceso de postulación')
 
-    add_heading(doc, 'Ciclo de Vida de la Aplicación', 3)
+    add_heading(doc, '5.9.3 Ciclo de Vida de la Aplicación', 3)
     svg_path = SVG_DIR / 'local_jobboard' / 'ciclo_vida_aplicacion.svg'
-    add_figure(doc, svg_path, 'Ciclo de vida de la aplicación')
+    add_figure(doc, svg_path, 'Ciclo de vida completo de una aplicación')
 
     doc.add_page_break()
 
@@ -521,72 +645,91 @@ def generate_platform_usage_section(doc):
     if not data:
         return
 
-    add_heading(doc, 'PLUGIN REPORT_PLATFORM_USAGE', 1)
+    add_heading(doc, '6. PLUGIN REPORT_PLATFORM_USAGE', 1)
 
     # Introducción
-    add_heading(doc, 'Introducción', 2)
+    add_heading(doc, '6.1 Descripción General', 2)
     if 'resumen_ejecutivo' in data:
         resumen = data['resumen_ejecutivo']
-        add_paragraph(doc,
-            f'{resumen.get("nombre_plugin", "")} es un {resumen.get("tipo", "")} diseñado para '
-            f'proporcionar {resumen.get("proposito", "")}.')
+        add_paragraph_text(doc,
+            f'{resumen.get("nombre_plugin", "Report Platform Usage")} es un plugin de tipo '
+            f'{resumen.get("tipo", "reporte")} diseñado para proporcionar '
+            f'{resumen.get("proposito", "informes detallados sobre el uso de la plataforma")}.')
+
+    add_paragraph_text(doc,
+        'Este plugin permite a los administradores generar reportes estadísticos sobre '
+        'el uso de la plataforma, incluyendo métricas de acceso, actividad de usuarios '
+        'y utilización de recursos educativos.')
 
     # Estructura
-    add_heading(doc, 'Estructura del Plugin', 2)
+    add_heading(doc, '6.2 Estructura del Plugin', 2)
     svg_path = SVG_DIR / 'report_platform_usage' / 'estructura_directorios.svg'
     add_figure(doc, svg_path, 'Estructura de directorios del plugin report_platform_usage')
 
     # Información de versión
-    add_heading(doc, 'Información de Versión', 3)
+    add_heading(doc, '6.3 Información de Versión', 2)
     if 'informacion_version' in data:
         v = data['informacion_version']
         version_data = [
             ['Atributo', 'Valor'],
-            ['Plugin', v.get('plugin', '')],
-            ['Versión', v.get('version_release', '')],
-            ['Moodle requerido', v.get('moodle_requerido', '')],
-            ['Madurez', v.get('madurez', '')],
-            ['Licencia', v.get('licencia', '')]
+            ['Plugin', v.get('plugin', 'report_platform_usage')],
+            ['Versión', v.get('version_release', 'N/A')],
+            ['Moodle requerido', v.get('moodle_requerido', 'N/A')],
+            ['Madurez', v.get('madurez', 'N/A')],
+            ['Licencia', v.get('licencia', 'GPLv3')]
         ]
-        add_table_with_caption(doc, version_data, 'Información de versión - Platform Usage Report', [2, 4])
+        add_table_with_caption(doc, version_data, 'Información de versión del plugin report_platform_usage')
 
     # Arquitectura
-    add_heading(doc, 'Arquitectura del Sistema', 2)
+    add_heading(doc, '6.4 Arquitectura del Sistema', 2)
+    add_paragraph_text(doc,
+        'El plugin sigue la arquitectura estándar de reportes de Moodle, integrándose '
+        'con el sistema de reportes del sitio y utilizando las APIs de logging para '
+        'extraer información de uso.')
+
     svg_path = SVG_DIR / 'report_platform_usage' / 'arquitectura.svg'
-    add_figure(doc, svg_path, 'Diagrama de arquitectura - Platform Usage Report')
+    add_figure(doc, svg_path, 'Diagrama de arquitectura del plugin report_platform_usage')
 
     # Base de datos
-    add_heading(doc, 'Arquitectura de Base de Datos', 2)
+    add_heading(doc, '6.5 Arquitectura de Base de Datos', 2)
     if 'arquitectura_base_datos' in data:
         db = data['arquitectura_base_datos']
         if 'tablas_propias' in db:
             for tabla in db['tablas_propias']:
                 tabla_data = [
                     ['Campo', 'Descripción'],
-                    ['Nombre', tabla.get('nombre', '')],
-                    ['Propósito', tabla.get('proposito', '')],
-                    ['Poblada por', tabla.get('poblada_por', '')],
-                    ['Frecuencia', tabla.get('frecuencia_actualizacion', '')]
+                    ['Nombre', tabla.get('nombre', 'N/A')],
+                    ['Propósito', tabla.get('proposito', 'N/A')],
+                    ['Poblada por', tabla.get('poblada_por', 'N/A')],
+                    ['Frecuencia', tabla.get('frecuencia_actualizacion', 'N/A')]
                 ]
-                add_table_with_caption(doc, tabla_data, f'Tabla {tabla.get("nombre", "")}', [2, 4])
+                add_table_with_caption(doc, tabla_data, f'Estructura de la tabla {tabla.get("nombre", "de datos")}')
 
     # Capabilities
-    add_heading(doc, 'Capabilities y Seguridad', 2)
+    add_heading(doc, '6.6 Capabilities y Seguridad', 2)
+    add_paragraph_text(doc,
+        'El plugin define capabilities específicas para controlar el acceso a los reportes '
+        'y la visualización de información sensible.')
+
     if 'seguridad_permisos' in data and 'capabilities' in data['seguridad_permisos']:
         caps = data['seguridad_permisos']['capabilities']
         caps_data = [['Capability', 'Tipo', 'Propósito']]
         for cap in caps:
             caps_data.append([
-                cap.get('nombre', ''),
-                cap.get('tipo', ''),
-                cap.get('proposito', '')
+                cap.get('nombre', 'N/A'),
+                cap.get('tipo', 'N/A'),
+                cap.get('proposito', 'N/A')
             ])
-        add_table_with_caption(doc, caps_data, 'Capabilities del plugin Platform Usage Report', [2.5, 1, 2.5])
+        add_table_with_caption(doc, caps_data, 'Capabilities del plugin report_platform_usage')
 
     # Flujo de datos
-    add_heading(doc, 'Flujo de Datos', 2)
+    add_heading(doc, '6.7 Flujo de Datos', 2)
+    add_paragraph_text(doc,
+        'El reporte recopila datos de múltiples tablas del sistema de logging de Moodle, '
+        'los procesa y presenta en formatos tabulares y gráficos.')
+
     svg_path = SVG_DIR / 'report_platform_usage' / 'flujo_datos.svg'
-    add_figure(doc, svg_path, 'Diagrama de flujo de datos - Platform Usage Report')
+    add_figure(doc, svg_path, 'Diagrama de flujo de datos del plugin report_platform_usage')
 
     doc.add_page_break()
 
@@ -597,75 +740,128 @@ def generate_platform_access_section(doc):
     if not data:
         return
 
-    add_heading(doc, 'PLUGIN LOCAL_PLATFORM_ACCESS', 1)
+    add_heading(doc, '7. PLUGIN LOCAL_PLATFORM_ACCESS', 1)
 
     # Introducción
-    add_heading(doc, 'Introducción', 2)
-    add_paragraph(doc,
-        f'{data.get("nombre_completo", "")} es un plugin de tipo {data.get("tipo", "")} '
-        f'cuyo propósito es {data.get("resumen_ejecutivo", {}).get("proposito", "")}.')
+    add_heading(doc, '7.1 Descripción General', 2)
+    if 'resumen_ejecutivo' in data:
+        resumen = data['resumen_ejecutivo']
+        add_paragraph_text(doc,
+            f'{data.get("nombre_completo", "Local Platform Access")} es un plugin de tipo '
+            f'{data.get("tipo", "local")} cuyo propósito es '
+            f'{resumen.get("proposito", "generar datos de acceso para pruebas")}.')
+    else:
+        add_paragraph_text(doc,
+            'Este plugin permite generar registros de acceso simulados para realizar pruebas '
+            'de carga y validar el rendimiento del sistema de reportes.')
 
     # Estructura
-    add_heading(doc, 'Estructura del Plugin', 2)
+    add_heading(doc, '7.2 Estructura del Plugin', 2)
     svg_path = SVG_DIR / 'local_platform_access' / 'estructura_directorios.svg'
     add_figure(doc, svg_path, 'Estructura de directorios del plugin local_platform_access')
 
     # Información de versión
-    add_heading(doc, 'Información de Versión', 3)
+    add_heading(doc, '7.3 Información de Versión', 2)
     if 'version' in data:
         v = data['version']
         version_data = [
             ['Atributo', 'Valor'],
-            ['Plugin', data.get('plugin', '')],
-            ['Versión', v.get('release', '')],
-            ['Moodle requerido', v.get('requires', '')],
-            ['Madurez', v.get('maturity', '')],
-            ['Licencia', v.get('licencia', '')]
+            ['Plugin', data.get('plugin', 'local_platform_access')],
+            ['Versión', v.get('release', 'N/A')],
+            ['Moodle requerido', v.get('requires', 'N/A')],
+            ['Madurez', v.get('maturity', 'N/A')],
+            ['Licencia', v.get('licencia', 'GPLv3')]
         ]
-        add_table_with_caption(doc, version_data, 'Información de versión - Platform Access Generator', [2, 4])
+        add_table_with_caption(doc, version_data, 'Información de versión del plugin local_platform_access')
 
     # Arquitectura
-    add_heading(doc, 'Arquitectura del Sistema', 2)
+    add_heading(doc, '7.4 Arquitectura del Sistema', 2)
     if 'arquitectura' in data:
         arq = data['arquitectura']
-        add_paragraph(doc,
-            f'El plugin implementa el patrón de diseño {arq.get("patron_diseno", "")}, '
-            'optimizado para operaciones masivas de inserción en base de datos.')
+        add_paragraph_text(doc,
+            f'El plugin implementa el patrón de diseño {arq.get("patron_diseno", "Singleton")}, '
+            'optimizado para operaciones masivas de inserción en base de datos y generación '
+            'eficiente de datos aleatorios.')
 
     svg_path = SVG_DIR / 'local_platform_access' / 'arquitectura.svg'
-    add_figure(doc, svg_path, 'Diagrama de arquitectura - Platform Access Generator')
+    add_figure(doc, svg_path, 'Diagrama de arquitectura del plugin local_platform_access')
 
     # Capabilities
-    add_heading(doc, 'Capabilities y Seguridad', 2)
+    add_heading(doc, '7.5 Capabilities y Seguridad', 2)
+    add_paragraph_text(doc,
+        'Dado el potencial impacto en el rendimiento de la base de datos, el plugin '
+        'implementa controles estrictos de acceso.')
+
     if 'capacidades' in data and 'lista' in data['capacidades']:
         caps = data['capacidades']['lista']
         caps_data = [['Capability', 'Tipo', 'Propósito']]
         for cap in caps:
             caps_data.append([
-                cap.get('nombre', ''),
-                cap.get('tipo', ''),
-                cap.get('proposito', '')
+                cap.get('nombre', 'N/A'),
+                cap.get('tipo', 'N/A'),
+                cap.get('proposito', 'N/A')
             ])
-        add_table_with_caption(doc, caps_data, 'Capabilities del plugin Platform Access Generator', [2.5, 1, 2.5])
+        add_table_with_caption(doc, caps_data, 'Capabilities del plugin local_platform_access')
 
     # Flujo de generación
-    add_heading(doc, 'Flujo de Generación de Datos', 2)
+    add_heading(doc, '7.6 Flujo de Generación de Datos', 2)
+    add_paragraph_text(doc,
+        'El proceso de generación permite configurar la cantidad de registros, '
+        'el rango de fechas y los usuarios afectados, optimizando las inserciones '
+        'mediante procesamiento por lotes.')
+
     svg_path = SVG_DIR / 'local_platform_access' / 'diagrama_generacion.svg'
-    add_figure(doc, svg_path, 'Diagrama de flujo de generación - Platform Access Generator')
+    add_figure(doc, svg_path, 'Diagrama de flujo de generación del plugin local_platform_access')
 
     # Optimizaciones
-    add_heading(doc, 'Optimizaciones de Rendimiento', 2)
-    if 'optimizaciones_rendimiento' in data:
+    add_heading(doc, '7.7 Optimizaciones de Rendimiento', 2)
+    if 'optimizaciones_rendimiento' in data and 'tecnicas' in data['optimizaciones_rendimiento']:
         opt = data['optimizaciones_rendimiento']
-        if 'tecnicas' in opt:
-            opt_data = [['Técnica', 'Descripción', 'Impacto']]
-            for t in opt['tecnicas']:
-                opt_data.append([
-                    t.get('nombre', ''),
-                    t.get('descripcion', ''),
-                    t.get('impacto', '')
-                ])
-            add_table_with_caption(doc, opt_data, 'Técnicas de optimización implementadas', [2, 2.5, 1.5])
+        add_paragraph_text(doc,
+            'Para manejar la generación masiva de registros, el plugin implementa '
+            'varias técnicas de optimización:')
+
+        opt_data = [['Técnica', 'Descripción', 'Impacto']]
+        for t in opt['tecnicas']:
+            opt_data.append([
+                t.get('nombre', 'N/A'),
+                t.get('descripcion', 'N/A')[:40] + '...' if len(t.get('descripcion', '')) > 40 else t.get('descripcion', 'N/A'),
+                t.get('impacto', 'N/A')
+            ])
+        add_table_with_caption(doc, opt_data, 'Técnicas de optimización implementadas')
+
+    doc.add_page_break()
+
+
+def generate_conclusions(doc):
+    """Genera la sección de conclusiones."""
+    add_heading(doc, '8. CONCLUSIONES', 1)
+
+    add_paragraph_text(doc,
+        'Los tres plugins documentados en este informe representan extensiones significativas '
+        'de la plataforma Moodle ISER, cada uno cumpliendo un propósito específico dentro del '
+        'ecosistema de gestión académica de la institución.')
+
+    conclusions = [
+        'El plugin local_jobboard proporciona una solución completa para la gestión del proceso '
+        'de contratación docente, desde la publicación de vacantes hasta la formalización de contratos.',
+        'El plugin report_platform_usage permite monitorear el uso efectivo de la plataforma, '
+        'proporcionando métricas valiosas para la toma de decisiones institucionales.',
+        'El plugin local_platform_access facilita las pruebas de carga y rendimiento mediante '
+        'la generación controlada de datos de acceso simulados.'
+    ]
+    add_bullet_list(doc, conclusions)
+
+    add_heading(doc, '9. RECOMENDACIONES', 1)
+
+    recommendations = [
+        'Mantener actualizada la documentación técnica ante cualquier cambio en los plugins.',
+        'Realizar pruebas de regresión antes de cada actualización de Moodle.',
+        'Implementar pruebas automatizadas para los servicios web críticos.',
+        'Monitorear el rendimiento de las consultas a base de datos en producción.',
+        'Establecer un proceso de revisión de código para cualquier modificación.'
+    ]
+    add_bullet_list(doc, recommendations)
 
 
 def main():
@@ -705,6 +901,9 @@ def main():
     print('  🔐 Generando sección local_platform_access...')
     generate_platform_access_section(doc)
 
+    print('  📋 Generando conclusiones...')
+    generate_conclusions(doc)
+
     # Guardar documento
     print(f'  💾 Guardando documento: {OUTPUT_PATH.name}')
     doc.save(str(OUTPUT_PATH))
@@ -714,10 +913,15 @@ def main():
     print('✅ Documento generado exitosamente:')
     print(f'   {OUTPUT_PATH}')
     print()
+    print(f'📊 Estadísticas:')
+    print(f'   - Figuras generadas: {figura_counter}')
+    print(f'   - Tablas generadas: {tabla_counter}')
+    print()
     print('📋 Instrucciones post-generación:')
     print('   1. Abra el documento en Microsoft Word')
     print('   2. Presione Ctrl+A para seleccionar todo')
     print('   3. Presione F9 para actualizar los campos')
+    print('   4. Verifique las tablas de contenido')
     print('=' * 60)
 
     return 0
