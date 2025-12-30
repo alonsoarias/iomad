@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 650" width="800" height="650">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 720" width="850" height="720">
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
@@ -22,7 +22,7 @@
     </style>
   </defs>
 
-  <rect width="800" height="650" fill="#FFFFFF"/>
+  <rect width="850" height="720" fill="#FFFFFF"/>
 
   <!-- Título -->
   <rect x="200" y="20" width="400" height="40" rx="5" ry="5" class="box-filled-green"/>
@@ -95,57 +95,57 @@
   <line x1="230" y1="365" x2="230" y2="410" class="line-green" marker-end="url(#arrowhead-green)"/>
 
   <!-- Capa de datos -->
-  <rect x="50" y="410" width="700" height="220" rx="5" ry="5" class="box-filled-green"/>
+  <rect x="50" y="410" width="750" height="290" rx="5" ry="5" class="box-filled-green"/>
   <text x="70" y="430" class="text-white" font-weight="bold">Capa de Datos (Inserciones Masivas)</text>
 
   <!-- Tablas Moodle -->
-  <rect x="70" y="445" width="330" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="235" y="465" class="text-title" text-anchor="middle">Tablas Moodle (INSERT/UPDATE)</text>
+  <rect x="70" y="450" width="340" height="35" rx="5" ry="5" class="box-main"/>
+  <text x="240" y="472" class="text-title" text-anchor="middle">Tablas Moodle (INSERT/UPDATE)</text>
 
-  <rect x="80" y="485" width="140" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="150" y="505" class="text-small" text-anchor="middle">logstore_standard_log</text>
-  <text x="150" y="517" class="text-small" text-anchor="middle" font-style="italic">INSERT masivo</text>
+  <rect x="80" y="495" width="150" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="155" y="515" class="text-small" text-anchor="middle">logstore_standard_log</text>
+  <text x="155" y="530" class="text-small" text-anchor="middle" font-style="italic">INSERT masivo</text>
 
-  <rect x="230" y="485" width="160" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="310" y="505" class="text-small" text-anchor="middle">user</text>
-  <text x="310" y="517" class="text-small" text-anchor="middle" font-style="italic">UPDATE lastaccess, etc</text>
+  <rect x="245" y="495" width="155" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="322" y="515" class="text-small" text-anchor="middle">user</text>
+  <text x="322" y="530" class="text-small" text-anchor="middle" font-style="italic">UPDATE lastaccess, etc</text>
 
-  <rect x="80" y="530" width="140" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="150" y="550" class="text-small" text-anchor="middle">user_lastaccess</text>
-  <text x="150" y="562" class="text-small" text-anchor="middle" font-style="italic">INSERT/UPDATE</text>
+  <rect x="80" y="550" width="150" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="155" y="570" class="text-small" text-anchor="middle">user_lastaccess</text>
+  <text x="155" y="585" class="text-small" text-anchor="middle" font-style="italic">INSERT/UPDATE</text>
 
-  <rect x="230" y="530" width="160" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="310" y="550" class="text-small" text-anchor="middle">course_completions</text>
-  <text x="310" y="562" class="text-small" text-anchor="middle" font-style="italic">INSERT</text>
+  <rect x="245" y="550" width="155" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="322" y="570" class="text-small" text-anchor="middle">course_completions</text>
+  <text x="322" y="585" class="text-small" text-anchor="middle" font-style="italic">INSERT</text>
 
-  <rect x="80" y="575" width="310" height="45" rx="5" ry="5" class="box-secondary"/>
-  <text x="235" y="593" class="text-small" text-anchor="middle">course_modules_completion</text>
-  <text x="235" y="605" class="text-small" text-anchor="middle">course_modules_viewed</text>
-  <text x="235" y="617" class="text-small" text-anchor="middle" font-style="italic">INSERT masivo (si existen)</text>
+  <rect x="80" y="605" width="320" height="55" rx="5" ry="5" class="box-secondary"/>
+  <text x="240" y="625" class="text-small" text-anchor="middle">course_modules_completion</text>
+  <text x="240" y="640" class="text-small" text-anchor="middle">course_modules_viewed</text>
+  <text x="240" y="655" class="text-small" text-anchor="middle" font-style="italic">INSERT masivo (si existen)</text>
 
   <!-- Tablas IOMAD -->
-  <rect x="420" y="445" width="310" height="30" rx="5" ry="5" class="box-main"/>
-  <text x="575" y="465" class="text-title" text-anchor="middle">Tablas IOMAD (SELECT/INSERT)</text>
+  <rect x="430" y="450" width="350" height="35" rx="5" ry="5" class="box-main"/>
+  <text x="605" y="472" class="text-title" text-anchor="middle">Tablas IOMAD (SELECT/INSERT)</text>
 
-  <rect x="430" y="485" width="140" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="500" y="505" class="text-small" text-anchor="middle">company</text>
-  <text x="500" y="517" class="text-small" text-anchor="middle" font-style="italic">SELECT</text>
+  <rect x="440" y="495" width="155" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="517" y="515" class="text-small" text-anchor="middle">company</text>
+  <text x="517" y="530" class="text-small" text-anchor="middle" font-style="italic">SELECT</text>
 
-  <rect x="580" y="485" width="140" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="650" y="505" class="text-small" text-anchor="middle">company_users</text>
-  <text x="650" y="517" class="text-small" text-anchor="middle" font-style="italic">SELECT</text>
+  <rect x="610" y="495" width="160" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="690" y="515" class="text-small" text-anchor="middle">company_users</text>
+  <text x="690" y="530" class="text-small" text-anchor="middle" font-style="italic">SELECT</text>
 
-  <rect x="430" y="530" width="140" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="500" y="550" class="text-small" text-anchor="middle">company_course</text>
-  <text x="500" y="562" class="text-small" text-anchor="middle" font-style="italic">SELECT</text>
+  <rect x="440" y="550" width="155" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="517" y="570" class="text-small" text-anchor="middle">company_course</text>
+  <text x="517" y="585" class="text-small" text-anchor="middle" font-style="italic">SELECT</text>
 
-  <rect x="580" y="530" width="140" height="35" rx="5" ry="5" class="box-secondary"/>
-  <text x="650" y="550" class="text-small" text-anchor="middle">local_report_</text>
-  <text x="650" y="562" class="text-small" text-anchor="middle">user_logins (INSERT)</text>
+  <rect x="610" y="550" width="160" height="45" rx="5" ry="5" class="box-secondary"/>
+  <text x="690" y="570" class="text-small" text-anchor="middle">local_report_</text>
+  <text x="690" y="585" class="text-small" text-anchor="middle">user_logins (INSERT)</text>
 
-  <rect x="430" y="575" width="290" height="45" rx="5" ry="5" class="box-action"/>
-  <text x="575" y="593" class="text-small" text-anchor="middle" font-weight="bold">Compatibilidad: Funciona sin IOMAD</text>
-  <text x="575" y="610" class="text-small" text-anchor="middle">Detecta automáticamente si tablas existen</text>
+  <rect x="440" y="605" width="330" height="55" rx="5" ry="5" class="box-action"/>
+  <text x="605" y="628" class="text-small" text-anchor="middle" font-weight="bold">Compatibilidad: Funciona sin IOMAD</text>
+  <text x="605" y="648" class="text-small" text-anchor="middle">Detecta automáticamente si tablas existen</text>
 
   <!-- Flecha de generator a tablas IOMAD -->
   <line x1="400" y1="300" x2="575" y2="410" class="line-green" marker-end="url(#arrowhead-green)"/>

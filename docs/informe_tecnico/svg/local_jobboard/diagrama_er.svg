@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" width="1200" height="950">
   <defs>
     <!-- Marcadores de flechas -->
     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -27,7 +27,7 @@
   </defs>
 
   <!-- Fondo blanco -->
-  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <rect width="1200" height="950" fill="#FFFFFF"/>
 
   <!-- ========== CONVOCATORIA (Superior Centro) ========== -->
   <g id="convocatoria">
@@ -350,28 +350,28 @@
 
   <!-- ========== LEYENDA ========== -->
   <g id="legend">
-    <rect x="50" y="840" width="600" height="50" rx="5" ry="5" fill="#F5F5F5" stroke="#646363" stroke-width="1"/>
-    <text x="60" y="858" class="text-legend" font-weight="bold">Leyenda:</text>
+    <rect x="50" y="870" width="600" height="55" rx="5" ry="5" fill="#F5F5F5" stroke="#646363" stroke-width="1"/>
+    <text x="60" y="892" class="text-legend" font-weight="bold">Leyenda:</text>
 
-    <rect x="120" y="848" width="50" height="14" rx="2" ry="2" class="pk-field"/>
-    <text x="175" y="859" class="text-legend">= Primary Key (PK)</text>
+    <rect x="120" y="883" width="50" height="14" rx="2" ry="2" class="pk-field"/>
+    <text x="175" y="894" class="text-legend">= Primary Key (PK)</text>
 
-    <rect x="310" y="848" width="50" height="14" rx="2" ry="2" class="fk-field"/>
-    <text x="365" y="859" class="text-legend">= Foreign Key (FK)</text>
+    <rect x="310" y="883" width="50" height="14" rx="2" ry="2" class="fk-field"/>
+    <text x="365" y="894" class="text-legend">= Foreign Key (FK)</text>
 
-    <line x1="60" y1="875" x2="110" y2="875" class="line-green" marker-end="url(#arrowhead-green)"/>
-    <text x="115" y="879" class="text-legend">= Relación 1:N (uno a muchos)</text>
+    <line x1="60" y1="912" x2="110" y2="912" class="line-green" marker-end="url(#arrowhead-green)"/>
+    <text x="115" y="916" class="text-legend">= Relación 1:N (uno a muchos)</text>
 
-    <line x1="310" y1="875" x2="360" y2="875" stroke="#646363" stroke-width="1.5" stroke-dasharray="5,5" fill="none" marker-end="url(#arrowhead)"/>
-    <text x="365" y="879" class="text-legend">= Referencia lógica</text>
+    <line x1="310" y1="912" x2="360" y2="912" stroke="#646363" stroke-width="1.5" stroke-dasharray="5,5" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="365" y="916" class="text-legend">= Referencia lógica</text>
   </g>
 
   <!-- Nota técnica -->
-  <rect x="700" y="840" width="450" height="50" rx="5" ry="5" fill="#F5F5F5" stroke="#1B9E88" stroke-width="1"/>
-  <text x="925" y="858" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 11px; fill: #000000; font-weight: bold;">
+  <rect x="700" y="870" width="450" height="55" rx="5" ry="5" fill="#F5F5F5" stroke="#1B9E88" stroke-width="1"/>
+  <text x="925" y="892" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 11px; fill: #000000; font-weight: bold;">
     Diagrama ER - local_jobboard
   </text>
-  <text x="925" y="873" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 10px; fill: #646363;">
+  <text x="925" y="910" text-anchor="middle" style="font-family: Arial, sans-serif; font-size: 10px; fill: #646363;">
     Muestra las 7 tablas principales y sus relaciones. Total: 25 tablas en el esquema completo.
   </text>
 </svg>

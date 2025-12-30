@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" width="900" height="550">
   <defs>
     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#646363"/>
@@ -32,7 +32,7 @@
     </style>
   </defs>
 
-  <rect width="800" height="500" fill="#FFFFFF"/>
+  <rect width="900" height="550" fill="#FFFFFF"/>
 
   <!-- Title -->
   <text x="400" y="25" text-anchor="middle" class="text-title" style="font-size: 16px; font-weight: bold;">Flujo de Postulación (Application Workflow)</text>
@@ -111,12 +111,12 @@
   <text x="340" y="245" text-anchor="middle" class="text-small">reject()</text>
 
   <!-- Legend -->
-  <rect x="50" y="380" width="700" height="100" rx="5" ry="5" fill="#F9F9F9" stroke="#646363" stroke-width="1"/>
-  <text x="60" y="400" class="text-normal" style="font-weight: bold;">Flujo de Estados de Postulación:</text>
+  <rect x="50" y="380" width="800" height="130" rx="5" ry="5" fill="#F9F9F9" stroke="#646363" stroke-width="1"/>
+  <text x="60" y="402" class="text-normal" style="font-weight: bold;">Flujo de Estados de Postulación:</text>
 
-  <text x="60" y="418" class="text-small">1. SUBMITTED: Postulación enviada por el aplicante</text>
-  <text x="60" y="432" class="text-small">2. UNDER_REVIEW: Documentos siendo revisados por revisor asignado</text>
-  <text x="60" y="446" class="text-small">3. DOCS_VALIDATED/DOCS_REJECTED: Todos los documentos aprobados o uno o más rechazados (puede resubir)</text>
-  <text x="60" y="460" class="text-small">4. INTERVIEW: Programado para entrevista (opcional)</text>
-  <text x="60" y="474" class="text-small">5. SELECTED/REJECTED: Decisión final - seleccionado o rechazado</text>
+  <text x="60" y="425" class="text-small">1. SUBMITTED: Postulación enviada por el aplicante</text>
+  <text x="60" y="445" class="text-small">2. UNDER_REVIEW: Documentos siendo revisados por revisor asignado</text>
+  <text x="60" y="465" class="text-small">3. DOCS_VALIDATED/DOCS_REJECTED: Todos los documentos aprobados o uno o más rechazados (puede resubir)</text>
+  <text x="60" y="485" class="text-small">4. INTERVIEW: Programado para entrevista (opcional)</text>
+  <text x="60" y="505" class="text-small">5. SELECTED/REJECTED: Decisión final - seleccionado o rechazado</text>
 </svg>
