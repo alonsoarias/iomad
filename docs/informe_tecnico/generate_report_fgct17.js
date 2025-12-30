@@ -42,6 +42,8 @@ import generarSeccionesIntroductorias from './src/seccion_introduccion.js';
 import generarSeccionesJobboard from './src/seccion_jobboard.js';
 import generarSeccionesPlatformUsage from './src/seccion_platform_usage.js';
 import generarSeccionesPlatformAccess from './src/seccion_platform_access.js';
+import generarTablaIlustraciones from './src/tabla_ilustraciones.js';
+import generarTablaTablas from './src/tabla_tablas.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -391,73 +393,19 @@ function generarTablaContenidoNavegable() {
 }
 
 /**
- * Genera la tabla de ilustraciones navegable
- * Usa el campo TOC con switch \c para recopilar figuras
+ * Genera la tabla de ilustraciones con contenido
+ * Usa la función generarTablaIlustraciones del módulo correspondiente
  */
-function generarTablaIlustracionesNavegable() {
-    const elementos = [];
-
-    elementos.push(
-        new Paragraph({
-            text: 'TABLA DE ILUSTRACIONES',
-            heading: HeadingLevel.HEADING_1,
-            spacing: { before: 400, after: 400 }
-        })
-    );
-
-    // Campo TOC para ilustraciones - requiere que las figuras usen Caption con "Figura"
-    elementos.push(
-        new Paragraph({
-            children: [
-                new SimpleField({ instruction: 'TOC \\c "Figura" \\h' })
-            ],
-            spacing: { after: 200 }
-        })
-    );
-
-    // Nota explicativa
-    elementos.push(
-        new Paragraph({
-            children: [
-                new TextRun({
-                    text: 'Nota: Presione Ctrl+A y luego F9 para actualizar los campos después de abrir el documento.',
-                    size: 18,
-                    italics: true,
-                    color: COLORS.GRIS
-                })
-            ],
-            spacing: { before: 200, after: 200 }
-        })
-    );
-
-    return elementos;
+function generarTablaIlustracionesCompleta() {
+    return generarTablaIlustraciones();
 }
 
 /**
- * Genera la tabla de tablas navegable
+ * Genera la tabla de tablas con contenido
+ * Usa la función generarTablaTablas del módulo correspondiente
  */
-function generarTablaTablasNavegable() {
-    const elementos = [];
-
-    elementos.push(
-        new Paragraph({
-            text: 'TABLA DE TABLAS',
-            heading: HeadingLevel.HEADING_1,
-            spacing: { before: 400, after: 400 }
-        })
-    );
-
-    // Campo TOC para tablas
-    elementos.push(
-        new Paragraph({
-            children: [
-                new SimpleField({ instruction: 'TOC \\c "Tabla" \\h' })
-            ],
-            spacing: { after: 200 }
-        })
-    );
-
-    return elementos;
+function generarTablaTablasCompleta() {
+    return generarTablaTablas();
 }
 
 /**
@@ -481,12 +429,12 @@ async function generarDocumentoFGCT17() {
 
         // Tabla de ilustraciones navegable
         console.log('  🖼️  Generando tabla de ilustraciones navegable...');
-        children.push(...generarTablaIlustracionesNavegable());
+        children.push(...generarTablaIlustracionesCompleta());
         children.push(saltoPagina());
 
         // Tabla de tablas navegable
         console.log('  📊 Generando tabla de tablas navegable...');
-        children.push(...generarTablaTablasNavegable());
+        children.push(...generarTablaTablasCompleta());
         children.push(saltoPagina());
 
         // Secciones introductorias
@@ -646,7 +594,9 @@ async function main() {
         console.log('📋 Instrucciones post-generación:');
         console.log('   1. Abra el documento en Microsoft Word');
         console.log('   2. Presione Ctrl+A para seleccionar todo');
-        console.log('   3. Presione F9 para actualizar los campos TOC');
+        console.log('   3. Presione F9 para actualizar la tabla de contenido');
+        console.log('');
+        console.log('📊 Las listas de ilustraciones y tablas están pre-pobladas');
         console.log('═══════════════════════════════════════════════════════════');
 
     } catch (error) {
