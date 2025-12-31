@@ -15,13 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CLI script for managing and deleting job applications.
+ * CLI script for COMPLETE deletion of job applications.
  *
- * This script provides comprehensive functionality for:
- * - Listing applications by user idnumber or application ID
- * - Deleting applications with full cascade (documents, validations, workflow logs, etc.)
- * - Dry-run mode for safe preview
- * - Detailed audit logging
+ * This script provides TOTAL elimination of applications with NO traces left:
+ * - Interviewers and interviews
+ * - Document validations
+ * - Document files from Moodle storage
+ * - Document records
+ * - Workflow history logs
+ * - Evaluation records
+ * - Notification records
+ * - Audit log entries (optional with --purge-audit)
+ * - The application record itself
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -32,10 +37,6 @@ define('CLI_SCRIPT', true);
 
 require(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
-
-use local_jobboard\application;
-use local_jobboard\document;
-use local_jobboard\audit;
 
 // CLI options.
 list($options, $unrecognized) = cli_get_params([
@@ -49,10 +50,11 @@ list($options, $unrecognized) = cli_get_params([
     'dryrun' => false,
     'verbose' => false,
     'force' => false,
-    'reason' => 'CLI deletion by administrator',
-    'all-for-user' => false,
+    'reason' => 'CLI complete deletion by administrator',
+    'purge-audit' => false,
     'show-documents' => false,
     'show-history' => false,
+    'show-interviews' => false,
     'export-json' => null,
 ], [
     'h' => 'help',
@@ -66,9 +68,10 @@ list($options, $unrecognized) = cli_get_params([
     'V' => 'verbose',
     'f' => 'force',
     'r' => 'reason',
-    'A' => 'all-for-user',
+    'P' => 'purge-audit',
     'D' => 'show-documents',
     'H' => 'show-history',
+    'I' => 'show-interviews',
     'e' => 'export-json',
 ]);
 
@@ -78,12 +81,12 @@ if (!empty($unrecognized)) {
 }
 
 $help = <<<EOT
-==============================================================================
-ISER Job Board - Application Management CLI v1.0
-==============================================================================
+================================================================================
+ISER Job Board - COMPLETE Application Deletion CLI v2.0
+================================================================================
 
-Comprehensive tool for managing and deleting job applications from the system.
-Supports deletion by application ID or user idnumber with full cascade.
+TOTAL ELIMINATION of job applications with NO TRACES LEFT in the database.
+This script removes ALL related records from ALL tables.
 
 USAGE:
   php delete_applications.php [options]
@@ -103,68 +106,89 @@ FILTER OPTIONS:
 
 ACTION OPTIONS:
   -l, --list                List applications (default if no action specified)
-  -d, --delete              Delete matching applications
+  -d, --delete              Delete matching applications COMPLETELY
   -n, --dryrun              Simulate deletion without making changes
   -f, --force               Skip confirmation prompt (use with caution!)
-  -r, --reason=TEXT         Reason for deletion (for audit log)
-                            Default: "CLI deletion by administrator"
-  -A, --all-for-user        Delete ALL applications for the user (requires --idnumber)
+  -r, --reason=TEXT         Reason for deletion (logged before purge)
+                            Default: "CLI complete deletion by administrator"
+  -P, --purge-audit         ALSO delete audit log entries (complete purge)
+                            Without this flag, audit entries are preserved
 
 DISPLAY OPTIONS:
-  -V, --verbose             Show detailed output
+  -V, --verbose             Show detailed output for each deletion step
   -D, --show-documents      Show documents for each application
   -H, --show-history        Show workflow history for each application
+  -I, --show-interviews     Show scheduled interviews for each application
   -e, --export-json=FILE    Export application data to JSON before deletion
 
 GENERAL OPTIONS:
   -h, --help                Show this help message
 
-DATA DELETED (CASCADE):
-  When deleting an application, the following data is removed:
-  1. Document validation records (local_jobboard_doc_validation)
-  2. Document files from Moodle file storage
-  3. Document records (local_jobboard_document)
-  4. Workflow history logs (local_jobboard_workflow_log)
-  5. Evaluation records (local_jobboard_evaluation) if table exists
-  6. Related notifications (local_jobboard_notification)
-  7. The application record itself (local_jobboard_application)
+================================================================================
+DATA DELETED (COMPLETE CASCADE - NO TRACES LEFT):
+================================================================================
 
-  An audit log entry is created for each deletion.
+  1. INTERVIEWERS        (local_jobboard_interviewer)
+     - Panel members assigned to interviews
 
+  2. INTERVIEWS          (local_jobboard_interview)
+     - Scheduled interviews, feedback, ratings
+
+  3. DOCUMENT VALIDATIONS (local_jobboard_doc_validation)
+     - Validation status, reviewer notes, rejection reasons
+
+  4. DOCUMENT FILES      (Moodle file storage)
+     - Physical files: PDFs, images, etc.
+
+  5. DOCUMENTS           (local_jobboard_document)
+     - Document metadata records
+
+  6. WORKFLOW LOGS       (local_jobboard_workflow_log)
+     - Status change history
+
+  7. EVALUATIONS         (local_jobboard_evaluation)
+     - If table exists, evaluation scores
+
+  8. NOTIFICATIONS       (local_jobboard_notification)
+     - Email notifications sent/pending
+
+  9. AUDIT LOGS          (local_jobboard_audit) [with --purge-audit]
+     - Create, update, delete, transition logs
+     - Document validation audit entries
+
+  10. APPLICATION        (local_jobboard_application)
+      - The application record itself
+
+================================================================================
 EXAMPLES:
+================================================================================
 
   # List all applications for a user by idnumber
-  php delete_applications.php --list --idnumber=1234567890
+  php delete_applications.php --list --idnumber=1234567890 --verbose
 
-  # List applications with documents and history
-  php delete_applications.php --list --idnumber=1234567890 --show-documents --show-history
+  # List with all details (documents, history, interviews)
+  php delete_applications.php -l -i 1234567890 -D -H -I -V
 
-  # List applications for multiple users
-  php delete_applications.php --list --idnumber=1234567890,0987654321
-
-  # Preview deletion (dry run)
+  # Preview COMPLETE deletion (dry run)
   php delete_applications.php --delete --idnumber=1234567890 --dryrun --verbose
 
-  # Delete a specific application by ID
-  php delete_applications.php --delete --application-id=123 --reason="User requested deletion"
+  # Delete a specific application by ID (keeps audit logs)
+  php delete_applications.php --delete --application-id=123
 
-  # Delete multiple applications by ID
-  php delete_applications.php --delete --application-id=123,124,125
+  # TOTAL PURGE - Delete application AND all audit records
+  php delete_applications.php --delete --application-id=123 --purge-audit --force
 
-  # Delete applications for a user in a specific vacancy
-  php delete_applications.php --delete --idnumber=1234567890 --vacancy-id=42
+  # Delete multiple applications completely
+  php delete_applications.php --delete --application-id=123,124,125 --purge-audit
 
-  # Delete applications with a specific status
-  php delete_applications.php --delete --idnumber=1234567890 --status=draft
+  # Delete all applications for a user in a specific vacancy
+  php delete_applications.php --delete --idnumber=1234567890 --vacancy-id=42 --purge-audit
 
-  # Force delete without confirmation
-  php delete_applications.php --delete --idnumber=1234567890 --force
+  # Export backup to JSON, then delete completely
+  php delete_applications.php --delete --idnumber=1234567890 --export-json=backup.json --purge-audit
 
-  # Export to JSON before deletion
-  php delete_applications.php --delete --idnumber=1234567890 --export-json=backup.json
-
-  # Delete ALL applications for a user (dangerous!)
-  php delete_applications.php --delete --idnumber=1234567890 --all-for-user --force
+  # Force delete without confirmation (DANGEROUS!)
+  php delete_applications.php --delete --idnumber=1234567890 --purge-audit --force
 
 EOT;
 
@@ -190,14 +214,14 @@ if (!$dolist && !$dodelete) {
 $verbose = $options['verbose'];
 $dryrun = $options['dryrun'];
 $force = $options['force'];
+$purgeaudit = $options['purge-audit'];
 $showdocs = $options['show-documents'];
 $showhistory = $options['show-history'];
+$showinterviews = $options['show-interviews'];
 $reason = $options['reason'];
 
 /**
  * Display a formatted table header.
- *
- * @param array $columns Column definitions with widths.
  */
 function display_table_header(array $columns): void {
     $line = '';
@@ -213,9 +237,6 @@ function display_table_header(array $columns): void {
 
 /**
  * Display a table row.
- *
- * @param array $values Values for each column.
- * @param array $columns Column definitions with widths.
  */
 function display_table_row(array $values, array $columns): void {
     $row = '';
@@ -233,9 +254,6 @@ function display_table_row(array $values, array $columns): void {
 
 /**
  * Get applications based on criteria.
- *
- * @param array $options CLI options.
- * @return array Array of application records.
  */
 function get_applications(array $options): array {
     global $DB;
@@ -243,7 +261,6 @@ function get_applications(array $options): array {
     $params = [];
     $where = ['1=1'];
 
-    // Filter by application ID(s).
     if (!empty($options['application-id'])) {
         $appids = array_map('intval', explode(',', $options['application-id']));
         list($insql, $inparams) = $DB->get_in_or_equal($appids, SQL_PARAMS_NAMED, 'appid');
@@ -251,7 +268,6 @@ function get_applications(array $options): array {
         $params = array_merge($params, $inparams);
     }
 
-    // Filter by user idnumber(s).
     if (!empty($options['idnumber'])) {
         $idnumbers = array_map('trim', explode(',', $options['idnumber']));
         list($insql, $inparams) = $DB->get_in_or_equal($idnumbers, SQL_PARAMS_NAMED, 'idn');
@@ -259,13 +275,11 @@ function get_applications(array $options): array {
         $params = array_merge($params, $inparams);
     }
 
-    // Filter by vacancy ID.
     if (!empty($options['vacancy-id'])) {
         $where[] = 'a.vacancyid = :vacancyid';
         $params['vacancyid'] = (int) $options['vacancy-id'];
     }
 
-    // Filter by status.
     if (!empty($options['status'])) {
         $where[] = 'a.status = :status';
         $params['status'] = $options['status'];
@@ -298,9 +312,6 @@ function get_applications(array $options): array {
 
 /**
  * Get documents for an application.
- *
- * @param int $applicationid Application ID.
- * @return array Array of document records.
  */
 function get_application_documents(int $applicationid): array {
     global $DB;
@@ -322,9 +333,6 @@ function get_application_documents(int $applicationid): array {
 
 /**
  * Get workflow history for an application.
- *
- * @param int $applicationid Application ID.
- * @return array Array of workflow log records.
  */
 function get_workflow_history(int $applicationid): array {
     global $DB;
@@ -341,28 +349,54 @@ function get_workflow_history(int $applicationid): array {
 }
 
 /**
- * Count related records for an application.
- *
- * @param int $applicationid Application ID.
- * @return array Counts of related records.
+ * Get interviews for an application.
  */
-function count_related_records(int $applicationid): array {
+function get_application_interviews(int $applicationid): array {
+    global $DB;
+
+    $sql = "SELECT i.*,
+                   (SELECT COUNT(*) FROM {local_jobboard_interviewer} iv WHERE iv.interviewid = i.id) as interviewer_count
+            FROM {local_jobboard_interview} i
+            WHERE i.applicationid = :applicationid
+            ORDER BY i.scheduledtime DESC";
+
+    return $DB->get_records_sql($sql, ['applicationid' => $applicationid]);
+}
+
+/**
+ * Count ALL related records for an application (complete cascade).
+ */
+function count_all_related_records(int $applicationid, bool $includeaudit = false): array {
     global $DB;
 
     $counts = [
+        'interviewers' => 0,
+        'interviews' => 0,
         'documents' => 0,
         'validations' => 0,
         'workflow_logs' => 0,
         'evaluations' => 0,
         'notifications' => 0,
+        'audit_logs' => 0,
         'files' => 0,
     ];
 
-    // Count documents.
-    $counts['documents'] = $DB->count_records('local_jobboard_document', ['applicationid' => $applicationid]);
+    // Get interviews.
+    $interviews = $DB->get_records('local_jobboard_interview', ['applicationid' => $applicationid], '', 'id');
+    $counts['interviews'] = count($interviews);
+
+    // Count interviewers.
+    if (!empty($interviews)) {
+        $intids = array_keys($interviews);
+        list($insql, $params) = $DB->get_in_or_equal($intids, SQL_PARAMS_NAMED);
+        $counts['interviewers'] = $DB->count_records_select('local_jobboard_interviewer', "interviewid $insql", $params);
+    }
+
+    // Get documents.
+    $documents = $DB->get_records('local_jobboard_document', ['applicationid' => $applicationid], '', 'id');
+    $counts['documents'] = count($documents);
 
     // Count validations.
-    $documents = $DB->get_records('local_jobboard_document', ['applicationid' => $applicationid], '', 'id');
     if (!empty($documents)) {
         $docids = array_keys($documents);
         list($insql, $params) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED);
@@ -385,27 +419,56 @@ function count_related_records(int $applicationid): array {
         $counts['files'] += count($files);
     }
 
+    // Count notifications.
+    try {
+        $likeparam = '%"applicationid":' . $applicationid . '%';
+        $counts['notifications'] = $DB->count_records_sql(
+            "SELECT COUNT(*) FROM {local_jobboard_notification} WHERE " . $DB->sql_like('data', ':pattern'),
+            ['pattern' => $likeparam]
+        );
+    } catch (Exception $e) {
+        // Table structure may differ.
+    }
+
+    // Count audit logs if requested.
+    if ($includeaudit) {
+        // Application audit entries.
+        $counts['audit_logs'] += $DB->count_records('local_jobboard_audit', [
+            'entitytype' => 'application',
+            'entityid' => $applicationid,
+        ]);
+
+        // Document audit entries.
+        if (!empty($documents)) {
+            $docids = array_keys($documents);
+            list($insql, $params) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED);
+            $params['entitytype'] = 'document';
+            $counts['audit_logs'] += $DB->count_records_select(
+                'local_jobboard_audit',
+                "entitytype = :entitytype AND entityid $insql",
+                $params
+            );
+        }
+    }
+
     return $counts;
 }
 
 /**
- * Delete an application with full cascade.
- *
- * @param object $app Application record.
- * @param string $reason Reason for deletion.
- * @param bool $dryrun If true, don't actually delete.
- * @param bool $verbose Show detailed output.
- * @return array Statistics of deleted records.
+ * COMPLETE deletion of an application - NO TRACES LEFT.
  */
-function delete_application_cascade(object $app, string $reason, bool $dryrun, bool $verbose): array {
+function delete_application_complete(object $app, string $reason, bool $dryrun, bool $verbose, bool $purgeaudit): array {
     global $DB, $USER;
 
     $stats = [
+        'interviewers' => 0,
+        'interviews' => 0,
         'documents' => 0,
         'validations' => 0,
         'workflow_logs' => 0,
         'evaluations' => 0,
         'notifications' => 0,
+        'audit_logs' => 0,
         'files' => 0,
         'application' => 0,
     ];
@@ -413,22 +476,51 @@ function delete_application_cascade(object $app, string $reason, bool $dryrun, b
     $fs = get_file_storage();
     $context = context_system::instance();
 
-    // Get documents.
+    // Get all related data first.
+    $interviews = $DB->get_records('local_jobboard_interview', ['applicationid' => $app->id]);
     $documents = $DB->get_records('local_jobboard_document', ['applicationid' => $app->id]);
 
     if (!$dryrun) {
-        // 1. Delete document validations.
+        // ================================================================
+        // 1. DELETE INTERVIEWERS (panel members)
+        // ================================================================
+        if (!empty($interviews)) {
+            $intids = array_keys($interviews);
+            list($insql, $params) = $DB->get_in_or_equal($intids, SQL_PARAMS_NAMED);
+            $stats['interviewers'] = $DB->count_records_select('local_jobboard_interviewer', "interviewid $insql", $params);
+            $DB->delete_records_select('local_jobboard_interviewer', "interviewid $insql", $params);
+            if ($verbose && $stats['interviewers'] > 0) {
+                echo "    [1/10] Deleted {$stats['interviewers']} interviewer(s)\n";
+            }
+        }
+
+        // ================================================================
+        // 2. DELETE INTERVIEWS
+        // ================================================================
+        $stats['interviews'] = count($interviews);
+        if ($stats['interviews'] > 0) {
+            $DB->delete_records('local_jobboard_interview', ['applicationid' => $app->id]);
+            if ($verbose) {
+                echo "    [2/10] Deleted {$stats['interviews']} interview(s)\n";
+            }
+        }
+
+        // ================================================================
+        // 3. DELETE DOCUMENT VALIDATIONS
+        // ================================================================
         if (!empty($documents)) {
             $docids = array_keys($documents);
             list($insql, $params) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED);
             $stats['validations'] = $DB->count_records_select('local_jobboard_doc_validation', "documentid $insql", $params);
             $DB->delete_records_select('local_jobboard_doc_validation', "documentid $insql", $params);
-            if ($verbose) {
-                echo "    - Deleted {$stats['validations']} document validation(s)\n";
+            if ($verbose && $stats['validations'] > 0) {
+                echo "    [3/10] Deleted {$stats['validations']} document validation(s)\n";
             }
         }
 
-        // 2. Delete document files from storage.
+        // ================================================================
+        // 4. DELETE DOCUMENT FILES FROM MOODLE STORAGE
+        // ================================================================
         foreach ($documents as $doc) {
             $files = $fs->get_area_files($context->id, 'local_jobboard', 'application_documents', $doc->id, 'id', false);
             foreach ($files as $file) {
@@ -437,128 +529,160 @@ function delete_application_cascade(object $app, string $reason, bool $dryrun, b
             }
         }
         if ($verbose && $stats['files'] > 0) {
-            echo "    - Deleted {$stats['files']} file(s) from storage\n";
+            echo "    [4/10] Deleted {$stats['files']} physical file(s) from storage\n";
         }
 
-        // 3. Delete document records.
+        // ================================================================
+        // 5. DELETE DOCUMENT RECORDS
+        // ================================================================
         $stats['documents'] = count($documents);
-        $DB->delete_records('local_jobboard_document', ['applicationid' => $app->id]);
-        if ($verbose && $stats['documents'] > 0) {
-            echo "    - Deleted {$stats['documents']} document record(s)\n";
+        if ($stats['documents'] > 0) {
+            // First delete audit entries for documents if purging.
+            if ($purgeaudit && !empty($documents)) {
+                $docids = array_keys($documents);
+                list($insql, $params) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED);
+                $params['entitytype'] = 'document';
+                $docauditcount = $DB->count_records_select(
+                    'local_jobboard_audit',
+                    "entitytype = :entitytype AND entityid $insql",
+                    $params
+                );
+                $DB->delete_records_select(
+                    'local_jobboard_audit',
+                    "entitytype = :entitytype AND entityid $insql",
+                    $params
+                );
+                $stats['audit_logs'] += $docauditcount;
+            }
+
+            $DB->delete_records('local_jobboard_document', ['applicationid' => $app->id]);
+            if ($verbose) {
+                echo "    [5/10] Deleted {$stats['documents']} document record(s)\n";
+            }
         }
 
-        // 4. Delete workflow logs.
+        // ================================================================
+        // 6. DELETE WORKFLOW LOGS
+        // ================================================================
         $stats['workflow_logs'] = $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
-        $DB->delete_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
-        if ($verbose && $stats['workflow_logs'] > 0) {
-            echo "    - Deleted {$stats['workflow_logs']} workflow log(s)\n";
+        if ($stats['workflow_logs'] > 0) {
+            $DB->delete_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+            if ($verbose) {
+                echo "    [6/10] Deleted {$stats['workflow_logs']} workflow log(s)\n";
+            }
         }
 
-        // 5. Delete evaluations (if table exists).
+        // ================================================================
+        // 7. DELETE EVALUATIONS (if table exists)
+        // ================================================================
         if ($DB->get_manager()->table_exists('local_jobboard_evaluation')) {
             $stats['evaluations'] = $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
             if ($stats['evaluations'] > 0) {
                 $DB->delete_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
                 if ($verbose) {
-                    echo "    - Deleted {$stats['evaluations']} evaluation(s)\n";
+                    echo "    [7/10] Deleted {$stats['evaluations']} evaluation(s)\n";
                 }
             }
         }
 
-        // 6. Delete related notifications.
+        // ================================================================
+        // 8. DELETE NOTIFICATIONS
+        // ================================================================
         try {
-            // Notifications may reference applicationid in JSON data field.
+            // Notifications reference applicationid in JSON data field.
             $likeparam = '%"applicationid":' . $app->id . '%';
             $notifcount = $DB->count_records_sql(
-                "SELECT COUNT(*) FROM {local_jobboard_notification}
-                 WHERE userid = :userid AND " . $DB->sql_like('data', ':pattern'),
-                ['userid' => $app->userid, 'pattern' => $likeparam]
+                "SELECT COUNT(*) FROM {local_jobboard_notification} WHERE " . $DB->sql_like('data', ':pattern'),
+                ['pattern' => $likeparam]
             );
             if ($notifcount > 0) {
-                $sql = "DELETE FROM {local_jobboard_notification}
-                        WHERE userid = ? AND " . $DB->sql_like('data', '?');
-                $DB->execute($sql, [$app->userid, $likeparam]);
+                $sql = "DELETE FROM {local_jobboard_notification} WHERE " . $DB->sql_like('data', '?');
+                $DB->execute($sql, [$likeparam]);
                 $stats['notifications'] = $notifcount;
                 if ($verbose) {
-                    echo "    - Deleted {$stats['notifications']} notification(s)\n";
+                    echo "    [8/10] Deleted {$stats['notifications']} notification(s)\n";
                 }
             }
         } catch (Exception $e) {
             if ($verbose) {
-                echo "    - Note: Could not process notifications ({$e->getMessage()})\n";
+                echo "    [8/10] Note: Could not process notifications ({$e->getMessage()})\n";
             }
         }
 
-        // 7. Capture full state for audit before deletion.
-        $previousstate = [
-            'id' => $app->id,
-            'vacancyid' => $app->vacancyid,
-            'userid' => $app->userid,
-            'status' => $app->status,
-            'vacancy_code' => $app->vacancy_code,
-            'vacancy_title' => $app->vacancy_title,
-            'user_idnumber' => $app->user_idnumber,
-            'user_name' => $app->firstname . ' ' . $app->lastname,
-            'user_email' => $app->email,
-            'timecreated' => $app->timecreated,
-            'documents_deleted' => $stats['documents'],
-            'files_deleted' => $stats['files'],
-            'reason' => $reason,
-        ];
+        // ================================================================
+        // 9. DELETE AUDIT LOGS (if --purge-audit)
+        // ================================================================
+        if ($purgeaudit) {
+            // Delete application audit entries.
+            $appauditcount = $DB->count_records('local_jobboard_audit', [
+                'entitytype' => 'application',
+                'entityid' => $app->id,
+            ]);
+            if ($appauditcount > 0) {
+                $DB->delete_records('local_jobboard_audit', [
+                    'entitytype' => 'application',
+                    'entityid' => $app->id,
+                ]);
+                $stats['audit_logs'] += $appauditcount;
+            }
 
-        // 8. Delete the application record.
+            // Also delete any audit entries that reference this application in extradata.
+            try {
+                $likeparam = '%"applicationid":' . $app->id . '%';
+                $extraaudit = $DB->count_records_sql(
+                    "SELECT COUNT(*) FROM {local_jobboard_audit} WHERE " . $DB->sql_like('extradata', ':pattern'),
+                    ['pattern' => $likeparam]
+                );
+                if ($extraaudit > 0) {
+                    $sql = "DELETE FROM {local_jobboard_audit} WHERE " . $DB->sql_like('extradata', '?');
+                    $DB->execute($sql, [$likeparam]);
+                    $stats['audit_logs'] += $extraaudit;
+                }
+            } catch (Exception $e) {
+                // Ignore.
+            }
+
+            if ($verbose && $stats['audit_logs'] > 0) {
+                echo "    [9/10] PURGED {$stats['audit_logs']} audit log(s)\n";
+            }
+        } else {
+            if ($verbose) {
+                echo "    [9/10] Audit logs PRESERVED (use --purge-audit to remove)\n";
+            }
+        }
+
+        // ================================================================
+        // 10. DELETE THE APPLICATION RECORD
+        // ================================================================
         $DB->delete_records('local_jobboard_application', ['id' => $app->id]);
         $stats['application'] = 1;
-
-        // 9. Log audit entry.
-        audit::log(
-            audit::ACTION_DELETE,
-            audit::ENTITY_APPLICATION,
-            $app->id,
-            [
-                'vacancyid' => $app->vacancyid,
-                'userid' => $app->userid,
-                'user_idnumber' => $app->user_idnumber,
-                'reason' => $reason,
-                'deleted_via' => 'CLI',
-                'deletedby' => $USER->id,
-            ],
-            $previousstate,
-            null
-        );
-
-        // 10. Trigger event.
-        try {
-            $event = \local_jobboard\event\application_deleted::create([
-                'objectid' => $app->id,
-                'context' => context_system::instance(),
-                'userid' => $USER->id,
-                'other' => [
-                    'vacancyid' => $app->vacancyid,
-                    'applicantuserid' => $app->userid,
-                    'user_idnumber' => $app->user_idnumber,
-                    'reason' => $reason,
-                    'via' => 'CLI',
-                ],
-            ]);
-            $event->trigger();
-        } catch (Exception $e) {
-            // Event triggering is not critical.
-            if ($verbose) {
-                echo "    - Note: Could not trigger event ({$e->getMessage()})\n";
-            }
+        if ($verbose) {
+            echo "    [10/10] DELETED application record ID: {$app->id}\n";
         }
 
     } else {
-        // Dry run - just count.
+        // ================================================================
+        // DRY RUN - Just count everything
+        // ================================================================
+
+        // Count interviewers.
+        if (!empty($interviews)) {
+            $intids = array_keys($interviews);
+            list($insql, $params) = $DB->get_in_or_equal($intids, SQL_PARAMS_NAMED);
+            $stats['interviewers'] = $DB->count_records_select('local_jobboard_interviewer', "interviewid $insql", $params);
+        }
+
+        $stats['interviews'] = count($interviews);
         $stats['documents'] = count($documents);
 
+        // Count validations.
         if (!empty($documents)) {
             $docids = array_keys($documents);
             list($insql, $params) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED);
             $stats['validations'] = $DB->count_records_select('local_jobboard_doc_validation', "documentid $insql", $params);
         }
 
+        // Count files.
         foreach ($documents as $doc) {
             $files = $fs->get_area_files($context->id, 'local_jobboard', 'application_documents', $doc->id, 'id', false);
             $stats['files'] += count($files);
@@ -570,15 +694,44 @@ function delete_application_cascade(object $app, string $reason, bool $dryrun, b
             $stats['evaluations'] = $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
         }
 
+        // Count notifications.
         try {
             $likeparam = '%"applicationid":' . $app->id . '%';
             $stats['notifications'] = $DB->count_records_sql(
-                "SELECT COUNT(*) FROM {local_jobboard_notification}
-                 WHERE userid = :userid AND " . $DB->sql_like('data', ':pattern'),
-                ['userid' => $app->userid, 'pattern' => $likeparam]
+                "SELECT COUNT(*) FROM {local_jobboard_notification} WHERE " . $DB->sql_like('data', ':pattern'),
+                ['pattern' => $likeparam]
             );
         } catch (Exception $e) {
             // Ignore.
+        }
+
+        // Count audit logs.
+        if ($purgeaudit) {
+            $stats['audit_logs'] += $DB->count_records('local_jobboard_audit', [
+                'entitytype' => 'application',
+                'entityid' => $app->id,
+            ]);
+
+            if (!empty($documents)) {
+                $docids = array_keys($documents);
+                list($insql, $params) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED);
+                $params['entitytype'] = 'document';
+                $stats['audit_logs'] += $DB->count_records_select(
+                    'local_jobboard_audit',
+                    "entitytype = :entitytype AND entityid $insql",
+                    $params
+                );
+            }
+
+            try {
+                $likeparam = '%"applicationid":' . $app->id . '%';
+                $stats['audit_logs'] += $DB->count_records_sql(
+                    "SELECT COUNT(*) FROM {local_jobboard_audit} WHERE " . $DB->sql_like('extradata', ':pattern'),
+                    ['pattern' => $likeparam]
+                );
+            } catch (Exception $e) {
+                // Ignore.
+            }
         }
 
         $stats['application'] = 1;
@@ -588,15 +741,16 @@ function delete_application_cascade(object $app, string $reason, bool $dryrun, b
 }
 
 /**
- * Export applications to JSON.
- *
- * @param array $applications Array of application records.
- * @param string $filename Output filename.
+ * Export applications to JSON (complete backup before deletion).
  */
 function export_to_json(array $applications, string $filename): void {
     global $DB;
 
-    $export = [];
+    $export = [
+        'export_date' => date('Y-m-d H:i:s'),
+        'export_reason' => 'Backup before complete deletion',
+        'applications' => [],
+    ];
 
     foreach ($applications as $app) {
         $appdata = [
@@ -625,6 +779,7 @@ function export_to_json(array $applications, string $filename): void {
             'timemodified' => $app->timemodified ? date('Y-m-d H:i:s', $app->timemodified) : null,
             'documents' => [],
             'workflow_history' => [],
+            'interviews' => [],
         ];
 
         // Add documents.
@@ -639,6 +794,7 @@ function export_to_json(array $applications, string $filename): void {
                 'mimetype' => $doc->mimetype,
                 'validation_status' => $doc->validation_status,
                 'validation_notes' => $doc->validation_notes,
+                'reject_reason' => $doc->rejectreason,
                 'timecreated' => date('Y-m-d H:i:s', $doc->timecreated),
             ];
         }
@@ -649,13 +805,30 @@ function export_to_json(array $applications, string $filename): void {
             $appdata['workflow_history'][] = [
                 'previous_status' => $entry->previousstatus,
                 'new_status' => $entry->newstatus,
-                'changed_by' => $entry->firstname . ' ' . $entry->lastname,
+                'changed_by' => trim($entry->firstname . ' ' . $entry->lastname),
                 'comments' => $entry->comments,
                 'timestamp' => date('Y-m-d H:i:s', $entry->timecreated),
             ];
         }
 
-        $export[] = $appdata;
+        // Add interviews.
+        $interviews = get_application_interviews($app->id);
+        foreach ($interviews as $int) {
+            $appdata['interviews'][] = [
+                'id' => $int->id,
+                'scheduled_time' => date('Y-m-d H:i:s', $int->scheduledtime),
+                'duration' => $int->duration,
+                'type' => $int->interviewtype,
+                'location' => $int->location,
+                'status' => $int->status,
+                'rating' => $int->rating,
+                'feedback' => $int->feedback,
+                'recommendation' => $int->recommendation,
+                'interviewer_count' => $int->interviewer_count,
+            ];
+        }
+
+        $export['applications'][] = $appdata;
     }
 
     $json = json_encode($export, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -667,7 +840,7 @@ function export_to_json(array $applications, string $filename): void {
 // MAIN EXECUTION
 // ============================================================================
 
-cli_heading('ISER Job Board - Application Management CLI v1.0');
+cli_heading('ISER Job Board - COMPLETE Application Deletion CLI v2.0');
 
 // Get applications.
 $applications = get_applications($options);
@@ -697,7 +870,13 @@ foreach ($applications as $app) {
     $byuser[$key]['applications'][] = $app;
 }
 
-echo "Found $totalapps application(s) for " . count($byuser) . " user(s)\n\n";
+echo "Found $totalapps application(s) for " . count($byuser) . " user(s)\n";
+if ($purgeaudit) {
+    echo "AUDIT PURGE: Enabled (--purge-audit) - ALL traces will be removed\n";
+} else {
+    echo "AUDIT PURGE: Disabled - Audit logs will be preserved\n";
+}
+echo "\n";
 
 // Export to JSON if requested.
 if (!empty($options['export-json'])) {
@@ -710,20 +889,20 @@ if (!empty($options['export-json'])) {
 
 if ($dolist || ($dodelete && $verbose)) {
     foreach ($byuser as $userkey => $userdata) {
-        echo str_repeat('=', 80) . "\n";
-        echo "User: {$userdata['user']['name']}\n";
+        echo str_repeat('=', 100) . "\n";
+        echo "USER: {$userdata['user']['name']}\n";
         echo "  ID Number: {$userdata['user']['idnumber']}\n";
         echo "  Email: {$userdata['user']['email']}\n";
         echo "  Moodle User ID: {$userdata['user']['id']}\n";
         echo "  Applications: " . count($userdata['applications']) . "\n";
-        echo str_repeat('-', 80) . "\n";
+        echo str_repeat('-', 100) . "\n";
 
         $columns = [
             ['title' => 'App ID', 'width' => 7],
-            ['title' => 'Status', 'width' => 20],
+            ['title' => 'Status', 'width' => 22],
             ['title' => 'Vacancy Code', 'width' => 15],
-            ['title' => 'Vacancy Title', 'width' => 30],
-            ['title' => 'Location', 'width' => 15],
+            ['title' => 'Vacancy Title', 'width' => 28],
+            ['title' => 'Location', 'width' => 12],
             ['title' => 'Created', 'width' => 19],
         ];
 
@@ -743,7 +922,7 @@ if ($dolist || ($dodelete && $verbose)) {
             if ($showdocs) {
                 $documents = get_application_documents($app->id);
                 if (!empty($documents)) {
-                    echo "  Documents (" . count($documents) . "):\n";
+                    echo "  DOCUMENTS (" . count($documents) . "):\n";
                     foreach ($documents as $doc) {
                         $status = $doc->validation_status ?? 'pending';
                         $size = round($doc->filesize / 1024, 1) . ' KB';
@@ -756,23 +935,40 @@ if ($dolist || ($dodelete && $verbose)) {
             if ($showhistory) {
                 $history = get_workflow_history($app->id);
                 if (!empty($history)) {
-                    echo "  Workflow History:\n";
+                    echo "  WORKFLOW HISTORY (" . count($history) . "):\n";
                     foreach ($history as $entry) {
                         $date = date('Y-m-d H:i', $entry->timecreated);
-                        $by = $entry->firstname . ' ' . $entry->lastname;
+                        $by = trim($entry->firstname . ' ' . $entry->lastname);
                         echo "    - [$date] {$entry->previousstatus} -> {$entry->newstatus} (by $by)\n";
+                    }
+                }
+            }
+
+            // Show interviews.
+            if ($showinterviews) {
+                $interviews = get_application_interviews($app->id);
+                if (!empty($interviews)) {
+                    echo "  INTERVIEWS (" . count($interviews) . "):\n";
+                    foreach ($interviews as $int) {
+                        $date = date('Y-m-d H:i', $int->scheduledtime);
+                        echo "    - [$date] {$int->interviewtype} | Status: {$int->status} | ";
+                        echo "Panelists: {$int->interviewer_count}\n";
                     }
                 }
             }
 
             // Show related record counts.
             if ($verbose) {
-                $counts = count_related_records($app->id);
-                echo "  Related Records: ";
-                echo "Docs: {$counts['documents']}, ";
-                echo "Validations: {$counts['validations']}, ";
-                echo "Workflow: {$counts['workflow_logs']}, ";
-                echo "Files: {$counts['files']}\n";
+                $counts = count_all_related_records($app->id, $purgeaudit);
+                echo "  RELATED RECORDS TO DELETE:\n";
+                echo "    Interviews: {$counts['interviews']}, Interviewers: {$counts['interviewers']}\n";
+                echo "    Documents: {$counts['documents']}, Validations: {$counts['validations']}, Files: {$counts['files']}\n";
+                echo "    Workflow logs: {$counts['workflow_logs']}, Evaluations: {$counts['evaluations']}\n";
+                echo "    Notifications: {$counts['notifications']}";
+                if ($purgeaudit) {
+                    echo ", Audit logs: {$counts['audit_logs']}";
+                }
+                echo "\n";
             }
         }
 
@@ -785,11 +981,12 @@ if ($dolist || ($dodelete && $verbose)) {
 // ============================================================================
 
 if ($dodelete) {
-    echo str_repeat('=', 80) . "\n";
-    echo $dryrun ? "DRY RUN - DELETION PREVIEW\n" : "DELETION MODE\n";
-    echo str_repeat('=', 80) . "\n";
+    echo str_repeat('=', 100) . "\n";
+    echo $dryrun ? "DRY RUN - DELETION PREVIEW (NO CHANGES)\n" : "COMPLETE DELETION MODE\n";
+    echo str_repeat('=', 100) . "\n";
     echo "Applications to delete: $totalapps\n";
     echo "Reason: $reason\n";
+    echo "Audit purge: " . ($purgeaudit ? "YES - ALL traces removed" : "NO - Audit logs preserved") . "\n";
 
     if ($dryrun) {
         echo "\n*** DRY RUN - No changes will be made ***\n";
@@ -798,16 +995,22 @@ if ($dodelete) {
     // Confirmation (unless force mode).
     if (!$force && !$dryrun) {
         echo "\n";
-        echo "WARNING: This will permanently delete $totalapps application(s) and ALL related data!\n";
-        echo "This action CANNOT be undone.\n\n";
+        echo str_repeat('!', 100) . "\n";
+        echo "WARNING: This will PERMANENTLY delete $totalapps application(s) and ALL related data!\n";
+        if ($purgeaudit) {
+            echo "         INCLUDING ALL AUDIT LOGS - NO TRACE WILL REMAIN!\n";
+        }
+        echo "         This action CANNOT be undone.\n";
+        echo str_repeat('!', 100) . "\n\n";
 
-        echo "Type 'DELETE' to confirm: ";
+        echo "Type 'DELETE' to confirm (or 'PURGE' if using --purge-audit): ";
         $handle = fopen("php://stdin", "r");
-        $line = fgets($handle);
+        $line = trim(fgets($handle));
         fclose($handle);
 
-        if (trim($line) !== 'DELETE') {
-            echo "\nDeletion cancelled.\n";
+        $expectedconfirm = $purgeaudit ? 'PURGE' : 'DELETE';
+        if ($line !== $expectedconfirm) {
+            echo "\nDeletion cancelled. Expected '$expectedconfirm'.\n";
             exit(0);
         }
         echo "\n";
@@ -815,55 +1018,77 @@ if ($dodelete) {
 
     // Process deletions.
     $totals = [
-        'applications' => 0,
+        'interviewers' => 0,
+        'interviews' => 0,
         'documents' => 0,
         'validations' => 0,
         'workflow_logs' => 0,
         'evaluations' => 0,
         'notifications' => 0,
+        'audit_logs' => 0,
         'files' => 0,
+        'applications' => 0,
     ];
 
     foreach ($applications as $app) {
+        echo str_repeat('-', 80) . "\n";
         echo "Processing Application ID: {$app->id}\n";
         echo "  User: {$app->firstname} {$app->lastname} ({$app->user_idnumber})\n";
         echo "  Vacancy: {$app->vacancy_code} - {$app->vacancy_title}\n";
         echo "  Status: {$app->status}\n";
+        echo "  Created: " . date('Y-m-d H:i:s', $app->timecreated) . "\n";
 
-        $stats = delete_application_cascade($app, $reason, $dryrun, $verbose);
+        $stats = delete_application_complete($app, $reason, $dryrun, $verbose, $purgeaudit);
 
         foreach ($stats as $key => $value) {
-            if (isset($totals[$key])) {
+            if ($key === 'application') {
+                $totals['applications'] += $value;
+            } else if (isset($totals[$key])) {
                 $totals[$key] += $value;
             }
         }
 
         if ($dryrun) {
-            echo "  -> Would DELETE this application\n";
+            echo "  -> Would DELETE this application completely\n";
         } else {
-            echo "  -> DELETED\n";
+            echo "  -> DELETED COMPLETELY" . ($purgeaudit ? " (no traces)" : "") . "\n";
         }
-        echo "\n";
     }
 
     // Summary.
-    echo str_repeat('=', 80) . "\n";
-    echo $dryrun ? "DRY RUN SUMMARY (no changes made):\n" : "DELETION SUMMARY:\n";
-    echo str_repeat('=', 80) . "\n";
-    printf("  Applications:        %d\n", $totals['applications']);
-    printf("  Documents:           %d\n", $totals['documents']);
-    printf("  Document Validations: %d\n", $totals['validations']);
-    printf("  Workflow Logs:       %d\n", $totals['workflow_logs']);
-    printf("  Evaluations:         %d\n", $totals['evaluations']);
-    printf("  Notifications:       %d\n", $totals['notifications']);
-    printf("  Files Removed:       %d\n", $totals['files']);
-    echo str_repeat('=', 80) . "\n";
+    echo "\n" . str_repeat('=', 100) . "\n";
+    echo $dryrun ? "DRY RUN SUMMARY (no changes made):\n" : "COMPLETE DELETION SUMMARY:\n";
+    echo str_repeat('=', 100) . "\n";
+    printf("  Applications deleted:        %d\n", $totals['applications']);
+    echo str_repeat('-', 50) . "\n";
+    printf("  Interviews:                  %d\n", $totals['interviews']);
+    printf("  Interview panelists:         %d\n", $totals['interviewers']);
+    printf("  Documents:                   %d\n", $totals['documents']);
+    printf("  Document validations:        %d\n", $totals['validations']);
+    printf("  Physical files removed:      %d\n", $totals['files']);
+    printf("  Workflow logs:               %d\n", $totals['workflow_logs']);
+    printf("  Evaluations:                 %d\n", $totals['evaluations']);
+    printf("  Notifications:               %d\n", $totals['notifications']);
+    if ($purgeaudit) {
+        printf("  Audit logs PURGED:           %d\n", $totals['audit_logs']);
+    } else {
+        echo "  Audit logs:                  PRESERVED\n";
+    }
+    echo str_repeat('=', 100) . "\n";
+
+    // Calculate total records.
+    $totalrecords = array_sum($totals);
+    printf("\nTOTAL RECORDS DELETED: %d\n", $totalrecords);
 
     if ($dryrun) {
         echo "\n*** DRY RUN - Run without --dryrun to actually delete ***\n";
     } else {
-        echo "\n=== DELETION COMPLETE ===\n";
-        echo "All deletions have been logged in the audit table.\n";
+        echo "\n=== COMPLETE DELETION FINISHED ===\n";
+        if ($purgeaudit) {
+            echo "All traces have been permanently removed from the database.\n";
+        } else {
+            echo "Audit logs have been preserved for compliance.\n";
+        }
     }
 }
 
