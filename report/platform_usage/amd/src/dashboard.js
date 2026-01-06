@@ -394,7 +394,35 @@ define(['jquery', 'core/notification'], function($, Notification) {
          */
         createDedicationChart: function(data) {
             var canvas = document.getElementById('dedicationChart');
-            if (!canvas || !data.top_dedication || data.top_dedication.length === 0) {
+            var $container = canvas ? $(canvas).parent() : null;
+
+            // Handle no data case - show message
+            if (!data.top_dedication || data.top_dedication.length === 0) {
+                if ($container && $container.length) {
+                    // Hide canvas and show no-data message
+                    $(canvas).hide();
+                    var $noData = $container.find('.dedication-no-data');
+                    if (!$noData.length) {
+                        $noData = $('<div class="dedication-no-data d-flex align-items-center justify-content-center" ' +
+                            'style="height: 260px;">' +
+                            '<div class="text-center text-muted">' +
+                            '<i class="fa fa-clock-o fa-3x mb-2"></i>' +
+                            '<p>' + (this.strings.nodata || 'No hay datos disponibles') + '</p>' +
+                            '</div></div>');
+                        $container.append($noData);
+                    }
+                    $noData.show();
+                }
+                return;
+            }
+
+            // Has data - show canvas, hide no-data message
+            if ($container && $container.length) {
+                $(canvas).show();
+                $container.find('.dedication-no-data').hide();
+            }
+
+            if (!canvas) {
                 return;
             }
 
