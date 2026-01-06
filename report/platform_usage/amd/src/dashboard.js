@@ -6,10 +6,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/* global Chart */
-
-define(['jquery', 'core/ajax', 'core/notification'],
-    function($, Ajax, Notification) {
+define(['jquery', 'core/notification'], function($, Notification) {
     'use strict';
 
     /**
@@ -20,8 +17,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
         config: {
             ajaxUrl: '',
             courseId: 0,
-            inCourseContext: false,
-            sesskey: ''
+            inCourseContext: false
         },
 
         // Chart instances
@@ -38,19 +34,23 @@ define(['jquery', 'core/ajax', 'core/notification'],
             brand: {
                 primary: '#6366f1',
                 primaryLight: '#818cf8',
-                primaryDark: '#4f46e5'
+                primaryDark: '#4f46e5',
+                gradient: ['rgba(99, 102, 241, 0.8)', 'rgba(129, 140, 248, 0.8)']
             },
             success: {
                 primary: '#10b981',
-                light: '#34d399'
+                light: '#34d399',
+                gradient: ['rgba(16, 185, 129, 0.8)', 'rgba(52, 211, 153, 0.8)']
             },
             warning: {
                 primary: '#f59e0b',
-                light: '#fbbf24'
+                light: '#fbbf24',
+                gradient: ['rgba(245, 158, 11, 0.8)', 'rgba(251, 191, 36, 0.8)']
             },
             info: {
                 primary: '#06b6d4',
-                light: '#22d3ee'
+                light: '#22d3ee',
+                gradient: ['rgba(6, 182, 212, 0.8)', 'rgba(34, 211, 238, 0.8)']
             },
             error: {
                 primary: '#f43f5e',
@@ -60,8 +60,12 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 50: '#f8fafc',
                 100: '#f1f5f9',
                 200: '#e2e8f0',
+                300: '#cbd5e1',
+                400: '#94a3b8',
                 500: '#64748b',
+                600: '#475569',
                 700: '#334155',
+                800: '#1e293b',
                 900: '#0f172a'
             }
         },
@@ -81,52 +85,76 @@ define(['jquery', 'core/ajax', 'core/notification'],
             this.setupChartDefaults();
             this.initCharts(initialData);
             this.bindEvents();
-            this.initTooltips();
+            this.initTooltipsWithRetry(10);
         },
 
         /**
          * Setup Chart.js global defaults
          */
         setupChartDefaults: function() {
-            if (typeof Chart === 'undefined') {
+            if (typeof window.Chart === 'undefined') {
                 return;
             }
 
-            Chart.defaults.font.family = "'Inter', system-ui, -apple-system, sans-serif";
-            Chart.defaults.font.size = 12;
-            Chart.defaults.color = this.colors.gray[500];
-            Chart.defaults.plugins.legend.labels.usePointStyle = true;
-            Chart.defaults.plugins.legend.labels.padding = 16;
-            Chart.defaults.plugins.tooltip.backgroundColor = this.colors.gray[900];
-            Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
-            Chart.defaults.plugins.tooltip.bodyColor = '#e2e8f0';
-            Chart.defaults.plugins.tooltip.borderColor = this.colors.gray[700];
-            Chart.defaults.plugins.tooltip.borderWidth = 1;
-            Chart.defaults.plugins.tooltip.padding = 12;
-            Chart.defaults.plugins.tooltip.cornerRadius = 8;
-            Chart.defaults.plugins.tooltip.displayColors = true;
-            Chart.defaults.plugins.tooltip.boxPadding = 4;
+            window.Chart.defaults.font.family = "'Inter', system-ui, -apple-system, sans-serif";
+            window.Chart.defaults.font.size = 12;
+            window.Chart.defaults.color = this.colors.gray[500];
+            window.Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            window.Chart.defaults.plugins.legend.labels.padding = 16;
+            window.Chart.defaults.plugins.tooltip.backgroundColor = this.colors.gray[900];
+            window.Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
+            window.Chart.defaults.plugins.tooltip.bodyColor = '#e2e8f0';
+            window.Chart.defaults.plugins.tooltip.borderColor = this.colors.gray[700];
+            window.Chart.defaults.plugins.tooltip.borderWidth = 1;
+            window.Chart.defaults.plugins.tooltip.padding = 12;
+            window.Chart.defaults.plugins.tooltip.cornerRadius = 8;
+            window.Chart.defaults.plugins.tooltip.displayColors = true;
+            window.Chart.defaults.plugins.tooltip.boxPadding = 4;
         },
 
         /**
          * Initialize Bootstrap tooltips
+         *
+         * @returns {boolean} True if initialization succeeded
          */
         initTooltips: function() {
-            // Initialize all tooltips
-            $('[data-toggle="tooltip"]').tooltip({
-                container: 'body',
-                html: true,
-                trigger: 'hover focus'
-            });
-
-            // Re-initialize on dynamic content
-            $(document).on('shown.bs.tab', function() {
-                $('[data-toggle="tooltip"]').tooltip('dispose').tooltip({
+            if (typeof $.fn.tooltip !== 'undefined') {
+                // Dispose existing tooltips first to prevent duplicates.
+                $('[data-toggle="tooltip"]').each(function() {
+                    var $el = $(this);
+                    if ($el.data('bs.tooltip')) {
+                        $el.tooltip('dispose');
+                    }
+                });
+                // Initialize new tooltips.
+                $('[data-toggle="tooltip"]').tooltip({
                     container: 'body',
                     html: true,
-                    trigger: 'hover focus'
+                    trigger: 'hover focus',
+                    delay: {show: 100, hide: 100},
+                    boundary: 'window',
+                    fallbackPlacement: ['top', 'bottom', 'right', 'left']
                 });
-            });
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Initialize tooltips with retry mechanism
+         *
+         * @param {number} retries Number of retries
+         */
+        initTooltipsWithRetry: function(retries) {
+            var self = this;
+            if (this.initTooltips()) {
+                return;
+            }
+            if (retries > 0) {
+                setTimeout(function() {
+                    self.initTooltipsWithRetry(retries - 1);
+                }, 200);
+            }
         },
 
         /**
@@ -141,6 +169,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 var datefrom = $('#global-datefrom').val();
                 var dateto = $('#global-dateto').val();
                 self.loadReportData(companyId, datefrom, dateto);
+                self.updateExportLinks(companyId, datefrom, dateto);
             });
 
             // Company filter change
@@ -149,6 +178,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 var datefrom = $('#global-datefrom').val();
                 var dateto = $('#global-dateto').val();
                 self.loadReportData(companyId, datefrom, dateto);
+                self.updateExportLinks(companyId, datefrom, dateto);
             });
 
             // Course context filter button
@@ -156,6 +186,12 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 var datefrom = $('#course-datefrom').val();
                 var dateto = $('#course-dateto').val();
                 self.loadCourseReportData(datefrom, dateto);
+                self.updateCourseExportLinks(datefrom, dateto);
+            });
+
+            // Re-initialize tooltips after dynamic content updates
+            $(document).on('tooltipsNeedRefresh', function() {
+                self.initTooltips();
             });
         },
 
@@ -167,7 +203,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
         initCharts: function(data) {
             var self = this;
 
-            // Destroy existing charts
+            // Destroy existing charts to avoid duplicates
             Object.keys(this.charts).forEach(function(key) {
                 if (self.charts[key] && typeof self.charts[key].destroy === 'function') {
                     self.charts[key].destroy();
@@ -203,7 +239,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             }
 
             var ctx = canvas.getContext('2d');
-            this.charts.dailyLogins = new Chart(ctx, {
+            this.charts.dailyLogins = new window.Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.daily_logins.labels,
@@ -260,7 +296,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             }
 
             var ctx = canvas.getContext('2d');
-            this.charts.userActivity = new Chart(ctx, {
+            this.charts.userActivity = new window.Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: [
@@ -293,7 +329,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             }
 
             var ctx = canvas.getContext('2d');
-            this.charts.courseAccess = new Chart(ctx, {
+            this.charts.courseAccess = new window.Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.course_access_trends.labels,
@@ -328,7 +364,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             }
 
             var ctx = canvas.getContext('2d');
-            this.charts.completionTrends = new Chart(ctx, {
+            this.charts.completionTrends = new window.Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.completion_trends.labels,
@@ -363,7 +399,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             }
 
             var ctx = canvas.getContext('2d');
-            this.charts.dedication = new Chart(ctx, {
+            this.charts.dedication = new window.Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: data.top_dedication.map(function(c) {
@@ -429,7 +465,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 self.updateSummaryCards(data);
                 self.initCharts(data);
                 self.updateTables(data);
-                self.updateExportLinks(companyId, datefrom, dateto);
+                $(document).trigger('tooltipsNeedRefresh');
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 Notification.exception({message: 'Error loading report data: ' + errorThrown});
             }).always(function() {
@@ -465,7 +501,8 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 self.updateSummaryCards(data);
                 self.initCharts(data);
                 self.updateTables(data);
-                self.updateCourseExportLinks(datefrom, dateto);
+                self.updateCourseCards(data);
+                $(document).trigger('tooltipsNeedRefresh');
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 Notification.exception({message: 'Error loading course data: ' + errorThrown});
             }).always(function() {
@@ -479,12 +516,20 @@ define(['jquery', 'core/ajax', 'core/notification'],
          * @param {Object} data Report data
          */
         updateSummaryCards: function(data) {
-            // Platform Access card
-            this.updateElement('logins-today', this.formatNumber(data.login_summary.logins_today));
-            this.updateElement('logins-week', this.formatNumber(data.login_summary.logins_week));
-            this.updateElement('logins-month', this.formatNumber(data.login_summary.logins_month));
-            this.updateElement('unique-month', this.formatNumber(data.login_summary.unique_users_month));
-            this.updateElement('unique-week', this.formatNumber(data.login_summary.unique_users_week));
+            // Platform Access card - new structure
+            if (data.login_summary) {
+                this.updateElement('total-logins', this.formatNumber(data.login_summary.total_logins || 0));
+                this.updateElement('unique-users-login', this.formatNumber(data.login_summary.unique_users || 0));
+                this.updateElement('avg-logins-day', (data.login_summary.avg_logins_per_day || 0).toFixed(1));
+                this.updateElement('avg-logins-user', (data.login_summary.avg_logins_per_user || 0).toFixed(1));
+
+                // Legacy element IDs for compatibility
+                this.updateElement('logins-today', this.formatNumber(data.login_summary.logins_today));
+                this.updateElement('logins-week', this.formatNumber(data.login_summary.logins_week));
+                this.updateElement('logins-month', this.formatNumber(data.login_summary.logins_month));
+                this.updateElement('unique-month', this.formatNumber(data.login_summary.unique_users_month));
+                this.updateElement('unique-week', this.formatNumber(data.login_summary.unique_users_week));
+            }
 
             // User Summary card
             if (data.user_summary) {
@@ -493,16 +538,20 @@ define(['jquery', 'core/ajax', 'core/notification'],
                 this.updateElement('inactive-users', this.formatNumber(data.user_summary.inactive));
             }
 
-            // Completions card
+            // Completions card - new structure
             if (data.completions_summary) {
-                this.updateElement('completions-today',
-                    this.formatNumber(data.completions_summary.completions_today));
-                this.updateElement('completions-week',
-                    this.formatNumber(data.completions_summary.completions_week));
-                this.updateElement('completions-month',
-                    this.formatNumber(data.completions_summary.completions_month));
-                this.updateElement('total-completions',
-                    this.formatNumber(data.completions_summary.total_completions));
+                this.updateElement('total-completions', this.formatNumber(data.completions_summary.total_completions || 0));
+                this.updateElement('unique-courses', this.formatNumber(data.completions_summary.unique_courses || 0));
+                this.updateElement('completions-avg', (data.completions_summary.avg_per_day || 0).toFixed(1));
+                this.updateElement('completions-today', this.formatNumber(data.completions_summary.completions_today));
+                this.updateElement('completions-week', this.formatNumber(data.completions_summary.completions_week));
+                this.updateElement('completions-month', this.formatNumber(data.completions_summary.completions_month));
+
+                // Update completion rate
+                var total = data.user_summary ? data.user_summary.total : 0;
+                var completionRate = total > 0 ?
+                    ((data.completions_summary.total_completions / total) * 100).toFixed(1) : '0';
+                this.updateElement('completion-rate', completionRate + '%');
             }
 
             // Daily Users card
@@ -523,6 +572,18 @@ define(['jquery', 'core/ajax', 'core/notification'],
             if (data.course_stats) {
                 this.updateElement('course-accesses', this.formatNumber(data.course_stats.accesses || 0));
             }
+        },
+
+        /**
+         * Update course-specific cards
+         *
+         * @param {Object} data Report data
+         */
+        updateCourseCards: function(data) {
+            if (!this.config.inCourseContext || !data.course_stats) {
+                return;
+            }
+            this.updateElement('course-accesses', this.formatNumber(data.course_stats.accesses || 0));
         },
 
         /**
@@ -596,6 +657,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             var html = '<div class="table-responsive"><table class="table table-striped table-sm">';
             html += '<thead class="thead-light"><tr>';
             html += '<th>' + (this.strings.activityname || 'Activity') + '</th>';
+            html += '<th>' + (this.strings.coursename || 'Course') + '</th>';
             html += '<th>' + (this.strings.activitytype || 'Type') + '</th>';
             html += '<th class="text-right">' + (this.strings.activityaccesses || 'Views') + '</th>';
             html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
@@ -605,6 +667,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             activities.forEach(function(activity) {
                 html += '<tr>';
                 html += '<td>' + self.escapeHtml(activity.name) + '</td>';
+                html += '<td><small class="text-muted">' + self.escapeHtml(activity.course_name || '') + '</small></td>';
                 html += '<td><span class="badge badge-secondary">';
                 html += self.escapeHtml(activity.type_name || activity.type) + '</span></td>';
                 html += '<td class="text-right">' + self.formatNumber(activity.access_count) + '</td>';
@@ -666,10 +729,12 @@ define(['jquery', 'core/ajax', 'core/notification'],
             $('#export-excel, #export-pdf').each(function() {
                 var $link = $(this);
                 var url = $link.attr('href');
-                url = url.replace(/companyid=\d+/, 'companyid=' + companyId);
-                url = url.replace(/datefrom=\d+/, 'datefrom=' + datefromTs);
-                url = url.replace(/dateto=\d+/, 'dateto=' + datetoTs);
-                $link.attr('href', url);
+                if (url) {
+                    url = url.replace(/companyid=\d+/, 'companyid=' + companyId);
+                    url = url.replace(/datefrom=\d+/, 'datefrom=' + datefromTs);
+                    url = url.replace(/dateto=\d+/, 'dateto=' + datetoTs);
+                    $link.attr('href', url);
+                }
             });
         },
 
@@ -686,9 +751,11 @@ define(['jquery', 'core/ajax', 'core/notification'],
             $('#export-excel-course, #export-pdf-course').each(function() {
                 var $link = $(this);
                 var url = $link.attr('href');
-                url = url.replace(/datefrom=\d+/, 'datefrom=' + datefromTs);
-                url = url.replace(/dateto=\d+/, 'dateto=' + datetoTs);
-                $link.attr('href', url);
+                if (url) {
+                    url = url.replace(/datefrom=\d+/, 'datefrom=' + datefromTs);
+                    url = url.replace(/dateto=\d+/, 'dateto=' + datetoTs);
+                    $link.attr('href', url);
+                }
             });
         },
 
