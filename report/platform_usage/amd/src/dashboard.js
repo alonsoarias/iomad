@@ -245,7 +245,7 @@ define(['jquery', 'core/notification'], function($, Notification) {
                     labels: data.daily_logins.labels,
                     datasets: [
                         {
-                            label: this.strings.logins || 'Logins',
+                            label: this.strings.logins,
                             data: data.daily_logins.logins,
                             borderColor: this.colors.brand.primary,
                             backgroundColor: 'rgba(99, 102, 241, 0.1)',
@@ -253,7 +253,7 @@ define(['jquery', 'core/notification'], function($, Notification) {
                             tension: 0.4
                         },
                         {
-                            label: this.strings.uniqueusers || 'Unique users',
+                            label: this.strings.uniqueusers,
                             data: data.daily_logins.unique_users,
                             borderColor: this.colors.success.primary,
                             backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -300,8 +300,8 @@ define(['jquery', 'core/notification'], function($, Notification) {
                 type: 'doughnut',
                 data: {
                     labels: [
-                        this.strings.activeusers || 'Active users',
-                        this.strings.inactiveusers || 'Inactive users'
+                        this.strings.activeusers,
+                        this.strings.inactiveusers
                     ],
                     datasets: [{
                         data: [activeUsers, inactiveUsers],
@@ -334,7 +334,7 @@ define(['jquery', 'core/notification'], function($, Notification) {
                 data: {
                     labels: data.course_access_trends.labels,
                     datasets: [{
-                        label: this.strings.courseaccesses || 'Course accesses',
+                        label: this.strings.courseaccesses,
                         data: data.course_access_trends.data,
                         borderColor: this.colors.warning.primary,
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
@@ -369,7 +369,7 @@ define(['jquery', 'core/notification'], function($, Notification) {
                 data: {
                     labels: data.completion_trends.labels,
                     datasets: [{
-                        label: this.strings.completions || 'Completions',
+                        label: this.strings.completions,
                         data: data.completion_trends.data,
                         borderColor: this.colors.info.primary,
                         backgroundColor: 'rgba(6, 182, 212, 0.1)',
@@ -394,37 +394,31 @@ define(['jquery', 'core/notification'], function($, Notification) {
          */
         createDedicationChart: function(data) {
             var canvas = document.getElementById('dedicationChart');
-            var $container = canvas ? $(canvas).parent() : null;
-
-            // Handle no data case - show message
-            if (!data.top_dedication || data.top_dedication.length === 0) {
-                if ($container && $container.length) {
-                    // Hide canvas and show no-data message
-                    $(canvas).hide();
-                    var $noData = $container.find('.dedication-no-data');
-                    if (!$noData.length) {
-                        $noData = $('<div class="dedication-no-data d-flex align-items-center justify-content-center" ' +
-                            'style="height: 260px;">' +
-                            '<div class="text-center text-muted">' +
-                            '<i class="fa fa-clock-o fa-3x mb-2"></i>' +
-                            '<p>' + (this.strings.nodata || 'No hay datos disponibles') + '</p>' +
-                            '</div></div>');
-                        $container.append($noData);
-                    }
-                    $noData.show();
-                }
-                return;
-            }
-
-            // Has data - show canvas, hide no-data message
-            if ($container && $container.length) {
-                $(canvas).show();
-                $container.find('.dedication-no-data').hide();
-            }
-
             if (!canvas) {
                 return;
             }
+
+            var $canvas = $(canvas);
+            var $container = $canvas.parent();
+
+            // Remove any existing no-data message
+            $container.find('.dedication-no-data').remove();
+
+            // Handle no data case - show message instead of chart
+            if (!data.top_dedication || data.top_dedication.length === 0) {
+                $canvas.css('display', 'none');
+                var noDataHtml = '<div class="dedication-no-data d-flex align-items-center justify-content-center" ' +
+                    'style="height: 260px;">' +
+                    '<div class="text-center text-muted">' +
+                    '<i class="fa fa-clock-o fa-3x mb-2"></i>' +
+                    '<p class="mb-0">' + this.strings.nodata + '</p>' +
+                    '</div></div>';
+                $container.append(noDataHtml);
+                return;
+            }
+
+            // Has data - ensure canvas is visible
+            $canvas.css('display', 'block');
 
             var ctx = canvas.getContext('2d');
             this.charts.dedication = new window.Chart(ctx, {
@@ -435,7 +429,7 @@ define(['jquery', 'core/notification'], function($, Notification) {
                         return name.length > 18 ? name.substring(0, 15) + '...' : name;
                     }),
                     datasets: [{
-                        label: this.strings.dedicationpercent || 'Share',
+                        label: this.strings.dedicationpercent,
                         data: data.top_dedication.map(function(c) {
                             return c.dedication_percent;
                         }),
@@ -642,15 +636,15 @@ define(['jquery', 'core/notification'], function($, Notification) {
             }
 
             if (courses.length === 0) {
-                $container.html('<p class="text-muted">' + (this.strings.nodata || 'No data') + '</p>');
+                $container.html('<p class="text-muted">' + this.strings.nodata + '</p>');
                 return;
             }
 
             var html = '<div class="table-responsive"><table class="table table-striped table-sm">';
             html += '<thead class="thead-light"><tr>';
-            html += '<th>' + (this.strings.coursename || 'Course') + '</th>';
-            html += '<th class="text-right">' + (this.strings.courseaccesses || 'Accesses') + '</th>';
-            html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
+            html += '<th>' + this.strings.coursename + '</th>';
+            html += '<th class="text-right">' + this.strings.courseaccesses + '</th>';
+            html += '<th class="text-right">' + this.strings.uniqueusers + '</th>';
             html += '</tr></thead><tbody>';
 
             var self = this;
@@ -678,17 +672,17 @@ define(['jquery', 'core/notification'], function($, Notification) {
             }
 
             if (activities.length === 0) {
-                $container.html('<p class="text-muted">' + (this.strings.nodata || 'No data') + '</p>');
+                $container.html('<p class="text-muted">' + this.strings.nodata + '</p>');
                 return;
             }
 
             var html = '<div class="table-responsive"><table class="table table-striped table-sm">';
             html += '<thead class="thead-light"><tr>';
-            html += '<th>' + (this.strings.activityname || 'Activity') + '</th>';
-            html += '<th>' + (this.strings.coursename || 'Course') + '</th>';
-            html += '<th>' + (this.strings.activitytype || 'Type') + '</th>';
-            html += '<th class="text-right">' + (this.strings.activityaccesses || 'Views') + '</th>';
-            html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
+            html += '<th>' + this.strings.activityname + '</th>';
+            html += '<th>' + this.strings.coursename + '</th>';
+            html += '<th>' + this.strings.activitytype + '</th>';
+            html += '<th class="text-right">' + this.strings.activityaccesses + '</th>';
+            html += '<th class="text-right">' + this.strings.uniqueusers + '</th>';
             html += '</tr></thead><tbody>';
 
             var self = this;
@@ -719,15 +713,15 @@ define(['jquery', 'core/notification'], function($, Notification) {
             }
 
             if (dailyUsers.records.length === 0) {
-                $container.html('<p class="text-muted p-3">' + (this.strings.nodata || 'No data') + '</p>');
+                $container.html('<p class="text-muted p-3">' + this.strings.nodata + '</p>');
                 return;
             }
 
             var html = '<div class="table-responsive" style="max-height: 250px; overflow-y: auto;">';
             html += '<table class="table table-striped table-sm mb-0">';
             html += '<thead class="thead-light" style="position: sticky; top: 0;"><tr>';
-            html += '<th>' + (this.strings.date || 'Date') + '</th>';
-            html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
+            html += '<th>' + this.strings.date + '</th>';
+            html += '<th class="text-right">' + this.strings.uniqueusers + '</th>';
             html += '</tr></thead><tbody>';
 
             var self = this;

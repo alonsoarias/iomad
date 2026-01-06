@@ -117,6 +117,7 @@ $jsstrings = [
     'completions' => get_string('completions', 'report_platform_usage'),
     'dailyusers' => get_string('dailyusers', 'report_platform_usage'),
     'dedicationpercent' => get_string('dedicationpercent', 'report_platform_usage'),
+    'date' => get_string('date', 'report_platform_usage'),
 ];
 
 // Tooltip strings.
@@ -189,24 +190,22 @@ if (!$incoursecontext) {
     }
 
     // Date filters for global context.
-    echo '<div class="filter-section">';
-    echo '<div class="form-group">';
-    echo '<label for="global-datefrom">' . get_string('datefrom', 'report_platform_usage') . '</label>';
-    echo '<input type="date" id="global-datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
+    echo '<div class="form-group mb-0 mr-3">';
+    echo '<label for="global-datefrom" class="mr-2 mb-0">' . get_string('datefrom', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="global-datefrom" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $datefrom) . '">';
     echo '</div>';
-    echo '<div class="form-group">';
-    echo '<label for="global-dateto">' . get_string('dateto', 'report_platform_usage') . '</label>';
-    echo '<input type="date" id="global-dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
+    echo '<div class="form-group mb-0 mr-3">';
+    echo '<label for="global-dateto" class="mr-2 mb-0">' . get_string('dateto', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="global-dateto" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $dateto) . '">';
     echo '</div>';
-    echo '<button type="button" id="apply-global-filter" class="btn btn-filter">';
+    echo '<button type="button" id="apply-global-filter" class="btn btn-primary btn-sm">';
     echo '<i class="fa fa-filter"></i> ' . get_string('filter', 'report_platform_usage');
     echo '</button>';
 
     // Loading indicator.
-    echo '<div id="loading-indicator" style="display: none;">';
+    echo '<div id="loading-indicator" class="ml-2" style="display: none;">';
     echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
     echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
-    echo '</div>';
     echo '</div>';
 
     // Export buttons.
@@ -216,11 +215,11 @@ if (!$incoursecontext) {
             'dateto' => $dateto,
             'sesskey' => sesskey(),
         ]);
-        echo '<div class="export-buttons ml-auto">';
-        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn-export btn-export-excel">';
+        echo '<div class="ml-auto">';
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn btn-success btn-sm mr-2">';
         echo '<i class="fa fa-file-excel-o"></i> ' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=pdf" id="export-pdf" class="btn-export btn-export-pdf">';
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=pdf" id="export-pdf" class="btn btn-danger btn-sm">';
         echo '<i class="fa fa-file-pdf-o"></i> ' . get_string('exportpdf', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
@@ -246,11 +245,11 @@ if (!$incoursecontext) {
             'dateto' => $dateto,
             'sesskey' => sesskey(),
         ]);
-        echo '<div class="export-buttons">';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" id="export-excel-course" class="btn-export btn-export-excel">';
+        echo '<div>';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" id="export-excel-course" class="btn btn-success btn-sm mr-2">';
         echo '<i class="fa fa-file-excel-o"></i> ' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=pdf" id="export-pdf-course" class="btn-export btn-export-pdf">';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=pdf" id="export-pdf-course" class="btn btn-danger btn-sm">';
         echo '<i class="fa fa-file-pdf-o"></i> ' . get_string('exportpdf', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
@@ -258,19 +257,19 @@ if (!$incoursecontext) {
     echo '</div>';
 
     // Date filter row for course context.
-    echo '<div class="filter-section">';
-    echo '<div class="form-group">';
-    echo '<label for="course-datefrom">' . get_string('datefrom', 'report_platform_usage') . '</label>';
-    echo '<input type="date" id="course-datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
+    echo '<div class="d-flex flex-wrap align-items-center mt-3">';
+    echo '<div class="form-group mb-0 mr-3">';
+    echo '<label for="course-datefrom" class="mr-2 mb-0">' . get_string('datefrom', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="course-datefrom" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $datefrom) . '">';
     echo '</div>';
-    echo '<div class="form-group">';
-    echo '<label for="course-dateto">' . get_string('dateto', 'report_platform_usage') . '</label>';
-    echo '<input type="date" id="course-dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
+    echo '<div class="form-group mb-0 mr-3">';
+    echo '<label for="course-dateto" class="mr-2 mb-0">' . get_string('dateto', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="course-dateto" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $dateto) . '">';
     echo '</div>';
-    echo '<button type="button" id="apply-course-filter" class="btn btn-filter">';
+    echo '<button type="button" id="apply-course-filter" class="btn btn-primary btn-sm">';
     echo '<i class="fa fa-filter"></i> ' . get_string('filter', 'report_platform_usage');
     echo '</button>';
-    echo '<div id="course-loading-indicator" style="display: none;">';
+    echo '<div id="course-loading-indicator" class="ml-2" style="display: none;">';
     echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
     echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
     echo '</div>';
