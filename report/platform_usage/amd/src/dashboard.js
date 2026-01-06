@@ -663,7 +663,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             var datefromTs = Math.floor(new Date(datefrom).getTime() / 1000);
             var datetoTs = Math.floor(new Date(dateto).getTime() / 1000 + 86399);
 
-            $('#export-excel, #export-csv').each(function() {
+            $('#export-excel, #export-pdf').each(function() {
                 var $link = $(this);
                 var url = $link.attr('href');
                 url = url.replace(/companyid=\d+/, 'companyid=' + companyId);
@@ -683,7 +683,7 @@ define(['jquery', 'core/ajax', 'core/notification'],
             var datefromTs = Math.floor(new Date(datefrom).getTime() / 1000);
             var datetoTs = Math.floor(new Date(dateto).getTime() / 1000 + 86399);
 
-            $('#export-excel-course, #export-csv-course').each(function() {
+            $('#export-excel-course, #export-pdf-course').each(function() {
                 var $link = $(this);
                 var url = $link.attr('href');
                 url = url.replace(/datefrom=\d+/, 'datefrom=' + datefromTs);

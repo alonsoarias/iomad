@@ -220,8 +220,8 @@ if (!$incoursecontext) {
         echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn btn-success btn-export mb-2 mr-2">';
         echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=csv" id="export-csv" class="btn btn-secondary btn-export mb-2">';
-        echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=pdf" id="export-pdf" class="btn btn-danger btn-export mb-2">';
+        echo '<i class="fa fa-file-pdf-o"></i> ' . get_string('exportpdf', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
     }
@@ -250,8 +250,8 @@ if (!$incoursecontext) {
         echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" id="export-excel-course" class="btn btn-success btn-export mr-2">';
         echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=csv" id="export-csv-course" class="btn btn-secondary btn-export">';
-        echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=pdf" id="export-pdf-course" class="btn btn-danger btn-export">';
+        echo '<i class="fa fa-file-pdf-o"></i> ' . get_string('exportpdf', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
     }
@@ -1196,7 +1196,7 @@ function updateCharts(data) {
      */
     function updateGlobalExportLinks(companyId, datefrom, dateto) {
         var excelLink = document.getElementById('export-excel');
-        var csvLink = document.getElementById('export-csv');
+        var pdfLink = document.getElementById('export-pdf');
 
         var datefromTs = new Date(datefrom).getTime() / 1000;
         var datetoTs = new Date(dateto).getTime() / 1000 + 86399;
@@ -1208,12 +1208,12 @@ function updateCharts(data) {
                 .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
             excelLink.href = url;
         }
-        if (csvLink) {
-            var url = csvLink.href
+        if (pdfLink) {
+            var url = pdfLink.href
                 .replace(/companyid=\d+/, 'companyid=' + companyId)
                 .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
                 .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
-            csvLink.href = url;
+            pdfLink.href = url;
         }
     }
 
@@ -1272,7 +1272,7 @@ function updateCharts(data) {
      */
     function updateCourseExportLinks(datefrom, dateto) {
         var excelLink = document.getElementById('export-excel-course');
-        var csvLink = document.getElementById('export-csv-course');
+        var pdfLink = document.getElementById('export-pdf-course');
 
         var datefromTs = new Date(datefrom).getTime() / 1000;
         var datetoTs = new Date(dateto).getTime() / 1000 + 86399;
@@ -1283,11 +1283,11 @@ function updateCharts(data) {
                 .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
             excelLink.href = url;
         }
-        if (csvLink) {
-            var url = csvLink.href
+        if (pdfLink) {
+            var url = pdfLink.href
                 .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
                 .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
-            csvLink.href = url;
+            pdfLink.href = url;
         }
     }
 
