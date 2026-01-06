@@ -406,19 +406,20 @@ define(['jquery', 'core/notification'], function($, Notification) {
 
             // Handle no data case - show message instead of chart
             if (!data.top_dedication || data.top_dedication.length === 0) {
-                $canvas.css('display', 'none');
-                var noDataHtml = '<div class="dedication-no-data d-flex align-items-center justify-content-center" ' +
-                    'style="height: 260px;">' +
-                    '<div class="text-center text-muted">' +
-                    '<i class="fa fa-clock-o fa-3x mb-2"></i>' +
-                    '<p class="mb-0">' + this.strings.nodata + '</p>' +
+                $canvas.hide();
+                var noDataHtml = '<div class="dedication-no-data" ' +
+                    'style="display: flex; align-items: center; justify-content: center; ' +
+                    'height: 260px; width: 100%;">' +
+                    '<div style="text-align: center;">' +
+                    '<i class="fa fa-clock-o" style="font-size: 3rem; color: #94a3b8; display: block; margin-bottom: 0.75rem;"></i>' +
+                    '<p style="color: #64748b; margin: 0;">' + this.strings.nodata + '</p>' +
                     '</div></div>';
                 $container.append(noDataHtml);
                 return;
             }
 
             // Has data - ensure canvas is visible
-            $canvas.css('display', 'block');
+            $canvas.show();
 
             var ctx = canvas.getContext('2d');
             this.charts.dedication = new window.Chart(ctx, {
