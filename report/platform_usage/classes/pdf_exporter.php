@@ -637,7 +637,7 @@ class pdf_exporter {
      * Add enrolled users table for course context.
      */
     protected function addEnrolledUsersTable(): void {
-        $users = $this->report->get_course_enrolled_users_details();
+        $users = $this->report->get_course_users_details();
 
         if (empty($users)) {
             $this->pdf->SetFont('helvetica', 'I', 10);
