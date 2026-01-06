@@ -669,18 +669,21 @@ class pdf_exporter {
 
             $this->pdf->SetTextColor(...$this->colors['black']);
 
-            $fullname = mb_strlen($user->fullname) > 28 ? mb_substr($user->fullname, 0, 25) . '...' : $user->fullname;
-            $email = mb_strlen($user->email) > 28 ? mb_substr($user->email, 0, 25) . '...' : $user->email;
-            $lastAccess = $user->lastcourseaccess ? userdate($user->lastcourseaccess, '%d/%m/%Y') : '-';
+            $userfullname = $user['fullname'] ?? '';
+            $useremail = $user['email'] ?? '';
+            $fullname = mb_strlen($userfullname) > 28 ? mb_substr($userfullname, 0, 25) . '...' : $userfullname;
+            $email = mb_strlen($useremail) > 28 ? mb_substr($useremail, 0, 25) . '...' : $useremail;
+            $lastAccess = !empty($user['last_course_access']) ? userdate($user['last_course_access'], '%d/%m/%Y') : '-';
 
             $this->pdf->Cell(50, 6, $fullname, 1, 0, 'L', true);
             $this->pdf->Cell(50, 6, $email, 1, 0, 'L', true);
             $this->pdf->Cell(30, 6, $lastAccess, 1, 0, 'C', true);
-            $this->pdf->Cell(25, 6, $user->dedication_formatted ?? '-', 1, 0, 'R', true);
+            $this->pdf->Cell(25, 6, $user['dedication_formatted'] ?? '-', 1, 0, 'R', true);
 
             // Status with color.
-            $status = $user->completed ? get_string('completed', 'report_platform_usage') : get_string('notcompleted', 'report_platform_usage');
-            if ($user->completed) {
+            $isCompleted = !empty($user['is_completed']);
+            $status = $isCompleted ? get_string('completed', 'report_platform_usage') : get_string('notcompleted', 'report_platform_usage');
+            if ($isCompleted) {
                 $this->pdf->SetTextColor(...$this->colors['success']);
             } else {
                 $this->pdf->SetTextColor(...$this->colors['error']);
@@ -695,7 +698,7 @@ class pdf_exporter {
      * Add course activities table.
      */
     protected function addCourseActivitiesTable(): void {
-        $activities = $this->report->get_course_top_activities(20);
+        $activities = $this->report->get_top_activities(20);
 
         if (empty($activities)) {
             $this->pdf->SetFont('helvetica', 'I', 10);
