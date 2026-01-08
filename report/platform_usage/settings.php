@@ -32,8 +32,11 @@ $ADMIN->add('reports', new admin_externalpage(
     'report/platform_usage:view'
 ));
 
-// Add settings page.
-if ($hassiteconfig) {
+// Add settings page - only if not already added by Moodle's standard loading.
+// Using defined() check to prevent duplicate registration.
+if ($hassiteconfig && !defined('REPORT_PLATFORM_USAGE_SETTINGS_LOADED')) {
+    define('REPORT_PLATFORM_USAGE_SETTINGS_LOADED', true);
+
     $settings = new admin_settingpage('report_platform_usage_settings',
         get_string('settings', 'report_platform_usage'));
 
