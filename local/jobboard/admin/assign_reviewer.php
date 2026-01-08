@@ -15,7 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Assign reviewers to applications.
+ * Assign reviewers to applications and faculties.
+ *
+ * Supports two modes:
+ * - applications: Assign reviewers to specific applications (default)
+ * - faculties: Assign deans/reviewers to faculties for dean review workflow
  *
  * Migrated to renderer + template pattern in v3.1.21.
  *
@@ -27,9 +31,11 @@
 require_once(__DIR__ . '/../../../config.php');
 
 use local_jobboard\reviewer;
+use local_jobboard\faculty_reviewer;
 
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
+$mode = optional_param('mode', 'applications', PARAM_ALPHA);
 
 require_login();
 
@@ -37,14 +43,20 @@ $context = context_system::instance();
 require_capability('local/jobboard:manageworkflow', $context);
 
 // Set up page.
-$urlparams = [];
+$urlparams = ['mode' => $mode];
 if ($vacancyid) {
     $urlparams['vacancyid'] = $vacancyid;
 }
 $PAGE->set_url(new moodle_url('/local/jobboard/admin/assign_reviewer.php', $urlparams));
 $PAGE->set_context($context);
-$PAGE->set_title(get_string('assignreviewer', 'local_jobboard'));
-$PAGE->set_heading(get_string('assignreviewer', 'local_jobboard'));
+
+if ($mode === 'faculties') {
+    $PAGE->set_title(get_string('managefacultyreviewers', 'local_jobboard'));
+    $PAGE->set_heading(get_string('managefacultyreviewers', 'local_jobboard'));
+} else {
+    $PAGE->set_title(get_string('assignreviewer', 'local_jobboard'));
+    $PAGE->set_heading(get_string('assignreviewer', 'local_jobboard'));
+}
 $PAGE->set_pagelayout('admin');
 
 // Add breadcrumbs for navigation.
@@ -52,9 +64,14 @@ $PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
     new moodle_url('/local/jobboard/'));
 $PAGE->navbar->add(get_string('review', 'local_jobboard'),
     new moodle_url('/local/jobboard/views/myreviews.php'));
-$PAGE->navbar->add(get_string('assignreviewer', 'local_jobboard'));
+if ($mode === 'faculties') {
+    $PAGE->navbar->add(get_string('managefacultyreviewers', 'local_jobboard'));
+} else {
+    $PAGE->navbar->add(get_string('assignreviewer', 'local_jobboard'));
+}
 
 // Handle actions (before output).
+// === APPLICATION REVIEWER ACTIONS ===
 if ($action === 'assign') {
     require_sesskey();
 
@@ -87,12 +104,55 @@ if ($action === 'unassign') {
         \core\output\notification::NOTIFY_SUCCESS);
 }
 
+// === FACULTY REVIEWER ACTIONS ===
+if ($action === 'assignfaculty') {
+    require_sesskey();
+
+    $facultyid = required_param('facultyid', PARAM_INT);
+    $selecteduserids = required_param_array('userids', PARAM_INT);
+    $facultyrole = optional_param('facultyrole', 'dean', PARAM_ALPHA);
+
+    $assigned = 0;
+    foreach ($selecteduserids as $uid) {
+        try {
+            faculty_reviewer::assign($facultyid, $uid, $facultyrole);
+            $assigned++;
+        } catch (\moodle_exception $e) {
+            // User already assigned, skip.
+        }
+    }
+
+    if ($assigned > 0) {
+        $message = get_string('facultyreviewersassigned', 'local_jobboard', $assigned);
+        redirect($PAGE->url, $message, null, \core\output\notification::NOTIFY_SUCCESS);
+    }
+    redirect($PAGE->url);
+}
+
+if ($action === 'unassignfaculty') {
+    require_sesskey();
+
+    $assignmentid = required_param('id', PARAM_INT);
+    $assignment = faculty_reviewer::get($assignmentid);
+    if ($assignment) {
+        $assignment->deactivate();
+        redirect($PAGE->url, get_string('facultyreviewerunassigned', 'local_jobboard'), null,
+            \core\output\notification::NOTIFY_SUCCESS);
+    }
+    redirect($PAGE->url);
+}
+
 // Render page using renderer + template pattern.
 // Output header first, then get renderer (Moodle standard pattern).
 echo $OUTPUT->header();
 
 $renderer = $PAGE->get_renderer('local_jobboard');
-$data = $renderer->prepare_assign_reviewer_page_data($vacancyid);
-echo $renderer->render_assign_reviewer_page($data);
+if ($mode === 'faculties') {
+    $data = $renderer->prepare_faculty_assignment_page_data();
+    echo $renderer->render_faculty_assignment_page($data);
+} else {
+    $data = $renderer->prepare_assign_reviewer_page_data($vacancyid);
+    echo $renderer->render_assign_reviewer_page($data);
+}
 
 echo $OUTPUT->footer();

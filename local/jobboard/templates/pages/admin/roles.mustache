@@ -133,93 +133,25 @@
         </div>
     </div>
 
-    {{! Faculty Assignment Section (for Dean role only) }}
-    {{#showfacultyassignment}}
-    <section class="jb-section jb-faculty-section">
-        <div class="jb-section-header">
-            <h2 class="jb-section-header__title">
-                <i class="fa fa-building"></i> {{#str}}facultyassignments, local_jobboard{{/str}}
-            </h2>
-            <span class="jb-badge jb-badge--info">{{facultycount}} {{#str}}faculties, local_jobboard{{/str}}</span>
-        </div>
-
-        {{#hasfaculties}}
-        <div class="jb-grid jb-grid--2">
-            {{#faculties}}
-            <div class="jb-card jb-faculty-card">
-                <div class="jb-card__header">
-                    <div class="jb-card__header-icon jb-card__header-icon--success">
-                        <i class="fa fa-building"></i>
-                    </div>
-                    <div class="jb-faculty-card__title">
-                        <h4>{{name}}</h4>
-                        <span class="jb-badge jb-badge--secondary">{{code}}</span>
-                    </div>
-                    <span class="jb-badge jb-badge--primary">{{reviewercount}} {{#str}}assigned, local_jobboard{{/str}}</span>
+    {{! Faculty Assignment Link (for Dean role only) }}
+    {{#hasfacultyassignment}}
+    <div class="jb-card jb-faculty-link-card">
+        <div class="jb-card__body">
+            <div class="jb-faculty-link">
+                <div class="jb-faculty-link__icon">
+                    <i class="fa fa-building"></i>
                 </div>
-                <div class="jb-card__body">
-                    {{#hasreviewers}}
-                    <div class="jb-reviewer-list">
-                        {{#reviewers}}
-                        <div class="jb-reviewer-item">
-                            <div class="jb-reviewer-item__info">
-                                <strong>{{fullname}}</strong>
-                                <span class="jb-badge {{#isdean}}jb-badge--warning{{/isdean}}{{^isdean}}jb-badge--secondary{{/isdean}}">{{roledisplay}}</span>
-                            </div>
-                            <a href="{{unassignurl}}" class="jb-btn jb-btn--danger jb-btn--icon jb-btn--sm"
-                               title="{{#str}}unassign, local_jobboard{{/str}}"
-                               onclick="return confirm('{{#str}}confirmunassignfaculty, local_jobboard{{/str}}');">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
-                        {{/reviewers}}
-                    </div>
-                    {{/hasreviewers}}
-                    {{^hasreviewers}}
-                    <div class="jb-empty-inline">
-                        <i class="fa fa-user-slash"></i>
-                        <span>{{#str}}nofacultyreviewers, local_jobboard{{/str}}</span>
-                    </div>
-                    {{/hasreviewers}}
-
-                    {{! Assign dean form for this faculty }}
-                    {{#hasavailabledeans}}
-                    <form method="post" action="{{assignformurl}}" class="jb-inline-form">
-                        <input type="hidden" name="sesskey" value="{{sesskey}}">
-                        <input type="hidden" name="action" value="assignfaculty">
-                        <input type="hidden" name="role" value="{{selectedrole.shortname}}">
-                        <input type="hidden" name="facultyid" value="{{id}}">
-                        <div class="jb-inline-form__row">
-                            <select name="userids[]" class="jb-select jb-select--sm">
-                                <option value="">{{#str}}selectdean, local_jobboard{{/str}}</option>
-                                {{#availabledeans}}
-                                <option value="{{id}}">{{fullname}}</option>
-                                {{/availabledeans}}
-                            </select>
-                            <select name="facultyrole" class="jb-select jb-select--sm">
-                                {{#facultyroles}}
-                                <option value="{{value}}">{{label}}</option>
-                                {{/facultyroles}}
-                            </select>
-                            <button type="submit" class="jb-btn jb-btn--success jb-btn--sm">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </form>
-                    {{/hasavailabledeans}}
+                <div class="jb-faculty-link__text">
+                    <h4>{{#str}}facultyassignments, local_jobboard{{/str}}</h4>
+                    <p>{{#str}}managefacultyreviewers_desc, local_jobboard{{/str}}</p>
                 </div>
+                <a href="{{facultyassignmenturl}}" class="jb-btn jb-btn--primary">
+                    <i class="fa fa-arrow-right"></i> {{#str}}managefacultyreviewers, local_jobboard{{/str}}
+                </a>
             </div>
-            {{/faculties}}
         </div>
-        {{/hasfaculties}}
-        {{^hasfaculties}}
-        <div class="jb-alert jb-alert--warning">
-            <i class="fa fa-exclamation-triangle"></i>
-            {{#str}}nofacultiesavailable, local_jobboard{{/str}}
-        </div>
-        {{/hasfaculties}}
-    </section>
-    {{/showfacultyassignment}}
+    </div>
+    {{/hasfacultyassignment}}
 
     <div class="jb-grid jb-grid--2-1">
         {{! Assigned Users }}
@@ -493,21 +425,13 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 /* Footer Nav */
 .jb-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
 
-/* Faculty Section */
-.jb-faculty-section { margin-bottom: 1.5rem; }
-.jb-grid--2 { grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); }
-.jb-faculty-card__title { flex: 1; display: flex; align-items: center; gap: 0.5rem; }
-.jb-faculty-card__title h4 { margin: 0; font-size: 0.9375rem; font-weight: 600; }
-.jb-reviewer-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-.jb-reviewer-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: #f9fafb; border-radius: 6px; }
-.jb-reviewer-item__info { display: flex; align-items: center; gap: 0.5rem; }
-.jb-empty-inline { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: #f9fafb; border-radius: 6px; color: var(--iser-gris-medio, #666); font-size: 0.875rem; margin-bottom: 0.75rem; }
-.jb-empty-inline i { opacity: 0.5; }
-.jb-inline-form { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #f0f0f0; }
-.jb-inline-form__row { display: flex; gap: 0.5rem; align-items: center; }
-.jb-select--sm { padding: 0.375rem 0.5rem; font-size: 0.8125rem; flex: 1; }
-.jb-alert { padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 0.75rem; }
-.jb-alert--warning { background: rgba(255, 193, 7, 0.15); color: #856404; border: 1px solid rgba(255, 193, 7, 0.3); }
+/* Faculty Link Card */
+.jb-faculty-link-card { margin-bottom: 1.5rem; border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-faculty-link { display: flex; align-items: center; gap: 1rem; }
+.jb-faculty-link__icon { width: 48px; height: 48px; border-radius: 10px; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.jb-faculty-link__text { flex: 1; }
+.jb-faculty-link__text h4 { margin: 0 0 0.25rem; font-size: 1rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); }
+.jb-faculty-link__text p { margin: 0; font-size: 0.8125rem; color: var(--iser-gris-medio, #666); }
 
 /* Mobile */
 @media (max-width: 992px) {

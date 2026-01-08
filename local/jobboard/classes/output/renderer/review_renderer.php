@@ -1580,4 +1580,139 @@ trait review_renderer {
     public function render_assign_reviewer_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/review/assign_reviewer', $data);
     }
+
+    /**
+     * Prepare data for faculty assignment page (mode=faculties).
+     *
+     * @return array Template data.
+     */
+    public function prepare_faculty_assignment_page_data(): array {
+        global $DB;
+
+        $pageurl = new \moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties']);
+
+        // Get all faculties.
+        $faculties = $DB->get_records('local_jobboard_faculty', ['enabled' => 1], 'name ASC');
+        $facultiesdata = [];
+        $totalreviewers = 0;
+
+        foreach ($faculties as $faculty) {
+            // Get reviewers assigned to this faculty.
+            $assignedsql = "SELECT fr.*, u.firstname, u.lastname, u.email
+                            FROM {local_jobboard_faculty_reviewer} fr
+                            JOIN {user} u ON u.id = fr.userid
+                            WHERE fr.facultyid = :facultyid AND fr.status = 'active'
+                            ORDER BY fr.role ASC, u.lastname ASC";
+            $assignedreviewers = $DB->get_records_sql($assignedsql, ['facultyid' => $faculty->id]);
+
+            $reviewersdata = [];
+            foreach ($assignedreviewers as $reviewer) {
+                $reviewersdata[] = [
+                    'id' => $reviewer->id,
+                    'userid' => $reviewer->userid,
+                    'fullname' => fullname($reviewer),
+                    'email' => $reviewer->email,
+                    'role' => $reviewer->role,
+                    'roledisplay' => get_string('faculty_reviewer_role_' . $reviewer->role, 'local_jobboard'),
+                    'isdean' => $reviewer->role === 'dean',
+                    'unassignurl' => (new \moodle_url('/local/jobboard/admin/assign_reviewer.php', [
+                        'mode' => 'faculties',
+                        'action' => 'unassignfaculty',
+                        'id' => $reviewer->id,
+                        'sesskey' => sesskey(),
+                    ]))->out(false),
+                ];
+                $totalreviewers++;
+            }
+
+            // Count programs in this faculty.
+            $programcount = $DB->count_records('local_jobboard_program', ['facultyid' => $faculty->id, 'enabled' => 1]);
+
+            // Count vacancies linked to programs in this faculty.
+            $vacancycount = 0;
+            if ($programcount > 0) {
+                $vacancycount = $DB->count_records_sql(
+                    "SELECT COUNT(DISTINCT v.id)
+                       FROM {local_jobboard_vacancy} v
+                       JOIN {local_jobboard_program} p ON v.programid = p.id
+                      WHERE p.facultyid = :facultyid AND v.status = 'published'",
+                    ['facultyid' => $faculty->id]
+                );
+            }
+
+            $facultiesdata[] = [
+                'id' => $faculty->id,
+                'code' => $faculty->code,
+                'name' => format_string($faculty->name),
+                'shortname' => $faculty->shortname ?? $faculty->code,
+                'reviewers' => $reviewersdata,
+                'hasreviewers' => !empty($reviewersdata),
+                'reviewercount' => count($reviewersdata),
+                'programcount' => $programcount,
+                'vacancycount' => $vacancycount,
+            ];
+        }
+
+        // Get users with dean role for assignment dropdown.
+        $deanrole = $DB->get_record('role', ['shortname' => 'jobboard_dean']);
+        $availabledeans = [];
+        if ($deanrole) {
+            $systemcontext = \context_system::instance();
+            $deanusers = get_role_users($deanrole->id, $systemcontext, false, 'u.id, u.firstname, u.lastname, u.email');
+            foreach ($deanusers as $user) {
+                $availabledeans[] = [
+                    'id' => $user->id,
+                    'fullname' => fullname($user),
+                    'email' => $user->email,
+                ];
+            }
+        }
+
+        // If no deans available, get users who could be deans (with approve capability).
+        if (empty($availabledeans)) {
+            $systemcontext = \context_system::instance();
+            $potentialusers = get_users_by_capability($systemcontext, 'local/jobboard:approveprofile', 'u.id, u.firstname, u.lastname, u.email');
+            foreach ($potentialusers as $user) {
+                $availabledeans[] = [
+                    'id' => $user->id,
+                    'fullname' => fullname($user),
+                    'email' => $user->email,
+                ];
+            }
+        }
+
+        // Faculty reviewer roles for dropdown.
+        $facultyroles = [
+            ['value' => 'dean', 'label' => get_string('faculty_reviewer_role_dean', 'local_jobboard')],
+            ['value' => 'lead_reviewer', 'label' => get_string('faculty_reviewer_role_lead_reviewer', 'local_jobboard')],
+            ['value' => 'reviewer', 'label' => get_string('faculty_reviewer_role_reviewer', 'local_jobboard')],
+        ];
+
+        return [
+            'pagetitle' => get_string('managefacultyreviewers', 'local_jobboard'),
+            'pagedesc' => get_string('managefacultyreviewers_desc', 'local_jobboard'),
+            'faculties' => $facultiesdata,
+            'hasfaculties' => !empty($facultiesdata),
+            'facultycount' => count($facultiesdata),
+            'totalreviewers' => $totalreviewers,
+            'availabledeans' => $availabledeans,
+            'hasavailabledeans' => !empty($availabledeans),
+            'facultyroles' => $facultyroles,
+            'actionformurl' => $pageurl->out(false),
+            'dashboardurl' => (new \moodle_url('/local/jobboard/'))->out(false),
+            'rolesurl' => (new \moodle_url('/local/jobboard/admin/roles.php'))->out(false),
+            'assignurl' => (new \moodle_url('/local/jobboard/admin/assign_reviewer.php'))->out(false),
+            'sesskey' => sesskey(),
+        ];
+    }
+
+    /**
+     * Render the faculty assignment page.
+     *
+     * @param array $data Template data from prepare_faculty_assignment_page_data.
+     * @return string Rendered HTML.
+     */
+    public function render_faculty_assignment_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/review/faculty_assignment', $data);
+    }
 }

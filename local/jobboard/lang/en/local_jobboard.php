@@ -1787,7 +1787,8 @@ $string['facultyassignments'] = 'Faculty assignments';
 $string['faculties'] = 'faculties';
 $string['confirmunassignfaculty'] = 'Are you sure you want to remove this reviewer from the faculty?';
 $string['selectdean'] = 'Select dean...';
-$string['nofacultiesavailable'] = 'No faculties available. Faculties are auto-created when importing vacancies with faculty codes (e.g., FCAS, FII).';
+$string['nofacultiesavailable'] = 'No faculties available';
+$string['nofacultiesavailable_desc'] = 'Faculties are auto-created when importing vacancies with faculty codes (e.g., FCAS, FII). Import vacancies first to create faculties.';
 
 // =============================================================================
 // ADDITIONAL STRINGS - COMMITTEES

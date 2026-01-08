@@ -292,74 +292,12 @@ trait admin_renderer {
 
                 $data['availableusers'] = $availableusersdata;
 
-                // Add faculty assignment data for dean role.
+                // For dean role, add link to faculty assignment page.
                 if ($selectedroleshortname === 'jobboard_dean') {
                     $data['hasfacultyassignment'] = true;
-                    $data['showfacultyassignment'] = true;
-
-                    // Get all faculties.
-                    $faculties = $DB->get_records('local_jobboard_faculty', ['enabled' => 1], 'name ASC');
-                    $facultiesdata = [];
-                    foreach ($faculties as $faculty) {
-                        // Get deans assigned to this faculty.
-                        $assignedsql = "SELECT fr.*, u.firstname, u.lastname, u.email
-                                        FROM {local_jobboard_faculty_reviewer} fr
-                                        JOIN {user} u ON u.id = fr.userid
-                                        WHERE fr.facultyid = :facultyid AND fr.status = 'active'
-                                        ORDER BY fr.role ASC, u.lastname ASC";
-                        $assignedreviewers = $DB->get_records_sql($assignedsql, ['facultyid' => $faculty->id]);
-
-                        $reviewersdata = [];
-                        foreach ($assignedreviewers as $reviewer) {
-                            $reviewersdata[] = [
-                                'id' => $reviewer->id,
-                                'userid' => $reviewer->userid,
-                                'fullname' => fullname($reviewer),
-                                'email' => $reviewer->email,
-                                'role' => $reviewer->role,
-                                'roledisplay' => get_string('faculty_reviewer_role_' . $reviewer->role, 'local_jobboard'),
-                                'isdean' => $reviewer->role === 'dean',
-                                'unassignurl' => (new moodle_url('/local/jobboard/admin/roles.php', [
-                                    'action' => 'unassignfaculty',
-                                    'role' => $selectedroleshortname,
-                                    'id' => $reviewer->id,
-                                    'sesskey' => sesskey(),
-                                ]))->out(false),
-                            ];
-                        }
-
-                        $facultiesdata[] = [
-                            'id' => $faculty->id,
-                            'code' => $faculty->code,
-                            'name' => format_string($faculty->name),
-                            'shortname' => $faculty->shortname ?? $faculty->code,
-                            'reviewers' => $reviewersdata,
-                            'hasreviewers' => !empty($reviewersdata),
-                            'reviewercount' => count($reviewersdata),
-                        ];
-                    }
-                    $data['faculties'] = $facultiesdata;
-                    $data['hasfaculties'] = !empty($facultiesdata);
-                    $data['facultycount'] = count($facultiesdata);
-
-                    // For the assign form, provide list of deans not yet assigned to any faculty.
-                    $deanuserids = array_column($assignedusersdata, 'id');
-                    $data['availabledeans'] = [];
-                    foreach ($assignedusersdata as $deanuser) {
-                        $data['availabledeans'][] = [
-                            'id' => $deanuser['id'],
-                            'fullname' => $deanuser['fullname'],
-                            'email' => $deanuser['email'],
-                        ];
-                    }
-                    $data['hasavailabledeans'] = !empty($data['availabledeans']);
-
-                    // Faculty reviewer roles for dropdown.
-                    $data['facultyroles'] = [
-                        ['value' => 'dean', 'label' => get_string('faculty_reviewer_role_dean', 'local_jobboard')],
-                        ['value' => 'lead_reviewer', 'label' => get_string('faculty_reviewer_role_lead_reviewer', 'local_jobboard')],
-                        ['value' => 'reviewer', 'label' => get_string('faculty_reviewer_role_reviewer', 'local_jobboard')],
-                    ];
+                    $data['facultyassignmenturl'] = (new moodle_url('/local/jobboard/admin/assign_reviewer.php', [
+                        'mode' => 'faculties'
+                    ]))->out(false);
                 }
             }
         }

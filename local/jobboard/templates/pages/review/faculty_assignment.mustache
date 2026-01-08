@@ -1,0 +1,273 @@
+{{!
+    @template local_jobboard/pages/review/faculty_assignment
+
+    Faculty dean/reviewer assignment page template.
+    Clean design following jb-* pattern.
+
+    Context variables:
+    * pagetitle - Page title string
+    * pagedesc - Page description string
+    * faculties - Array of faculties with reviewers
+    * hasfaculties - Boolean if has faculties
+    * facultycount - Number of faculties
+    * totalreviewers - Total assigned reviewers count
+    * availabledeans - Array of available deans for assignment
+    * hasavailabledeans - Boolean if has available deans
+    * facultyroles - Array of role options for dropdown
+    * actionformurl - URL for action form
+    * dashboardurl - URL to dashboard
+    * rolesurl - URL to roles management
+    * assignurl - URL to application reviewer assignment
+    * sesskey - Session key
+}}
+<div class="jb-faculty-assign" id="jobboard-faculty-assign">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
+                <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <div class="jb-mode-toggle">
+                <a href="{{assignurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                    <i class="fa fa-user-plus"></i> {{#str}}assignreviewer, local_jobboard{{/str}}
+                </a>
+                <span class="jb-btn jb-btn--primary jb-btn--sm">
+                    <i class="fa fa-building"></i> {{#str}}managefacultyreviewers, local_jobboard{{/str}}
+                </span>
+            </div>
+        </div>
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-building"></i> {{pagetitle}}
+        </h1>
+        <p class="jb-public-header__subtitle">{{pagedesc}}</p>
+    </div>
+
+    {{! ================================================================ }}
+    {{! STATISTICS SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-stats">
+        <div class="jb-stat jb-stat--primary">
+            <i class="fa fa-building"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{facultycount}}</span>
+                <span class="jb-stat__label">{{#str}}faculties, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+        <div class="jb-stat jb-stat--success">
+            <i class="fa fa-user-graduate"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{totalreviewers}}</span>
+                <span class="jb-stat__label">{{#str}}totalassigned, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+    </div>
+
+    {{! ================================================================ }}
+    {{! FACULTIES SECTION }}
+    {{! ================================================================ }}
+    {{#hasfaculties}}
+    <div class="jb-faculties-grid">
+        {{#faculties}}
+        <div class="jb-card jb-faculty-card">
+            <div class="jb-card__header">
+                <div class="jb-faculty-card__title">
+                    <i class="fa fa-building"></i>
+                    <div>
+                        <h4>{{name}}</h4>
+                        <span class="jb-badge jb-badge--secondary">{{code}}</span>
+                    </div>
+                </div>
+                <div class="jb-faculty-card__stats">
+                    <span class="jb-badge jb-badge--info" title="{{#str}}programs, local_jobboard{{/str}}">
+                        <i class="fa fa-graduation-cap"></i> {{programcount}}
+                    </span>
+                    <span class="jb-badge jb-badge--primary" title="{{#str}}vacancies, local_jobboard{{/str}}">
+                        <i class="fa fa-briefcase"></i> {{vacancycount}}
+                    </span>
+                </div>
+            </div>
+            <div class="jb-card__body">
+                {{! Assigned Reviewers }}
+                {{#hasreviewers}}
+                <div class="jb-reviewer-list">
+                    {{#reviewers}}
+                    <div class="jb-reviewer-item">
+                        <div class="jb-reviewer-item__info">
+                            <i class="fa fa-user"></i>
+                            <strong>{{fullname}}</strong>
+                            <span class="jb-badge {{#isdean}}jb-badge--warning{{/isdean}}{{^isdean}}jb-badge--secondary{{/isdean}}">{{roledisplay}}</span>
+                        </div>
+                        <a href="{{unassignurl}}" class="jb-btn jb-btn--danger jb-btn--icon jb-btn--sm"
+                           title="{{#str}}unassign, local_jobboard{{/str}}"
+                           onclick="return confirm('{{#str}}confirmunassignfaculty, local_jobboard{{/str}}');">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                    {{/reviewers}}
+                </div>
+                {{/hasreviewers}}
+                {{^hasreviewers}}
+                <div class="jb-empty-inline">
+                    <i class="fa fa-user-slash"></i>
+                    <span>{{#str}}nofacultyreviewers, local_jobboard{{/str}}</span>
+                </div>
+                {{/hasreviewers}}
+
+                {{! Assign Form }}
+                {{#hasavailabledeans}}
+                <form method="post" action="{{actionformurl}}" class="jb-inline-form">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="action" value="assignfaculty">
+                    <input type="hidden" name="facultyid" value="{{id}}">
+                    <div class="jb-inline-form__row">
+                        <select name="userids[]" class="jb-select jb-select--sm" required>
+                            <option value="">{{#str}}selectdean, local_jobboard{{/str}}</option>
+                            {{#availabledeans}}
+                            <option value="{{id}}">{{fullname}}</option>
+                            {{/availabledeans}}
+                        </select>
+                        <select name="facultyrole" class="jb-select jb-select--sm">
+                            {{#facultyroles}}
+                            <option value="{{value}}">{{label}}</option>
+                            {{/facultyroles}}
+                        </select>
+                        <button type="submit" class="jb-btn jb-btn--success jb-btn--sm">
+                            <i class="fa fa-plus"></i> {{#str}}add{{/str}}
+                        </button>
+                    </div>
+                </form>
+                {{/hasavailabledeans}}
+            </div>
+        </div>
+        {{/faculties}}
+    </div>
+    {{/hasfaculties}}
+    {{^hasfaculties}}
+    <div class="jb-empty">
+        <i class="fa fa-building"></i>
+        <h3>{{#str}}nofacultiesavailable, local_jobboard{{/str}}</h3>
+        <p>{{#str}}nofacultiesavailable_desc, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasfaculties}}
+
+    {{! ================================================================ }}
+    {{! FOOTER NAVIGATION }}
+    {{! ================================================================ }}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-arrow-left"></i> {{#str}}backtodashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{rolesurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-user-tag"></i> {{#str}}manageroles, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>
+
+<style>
+/* Faculty Assignment Page - Following jb-* pattern */
+.jb-faculty-assign { max-width: 1200px; padding: 1rem; }
+
+/* Header */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Mode Toggle */
+.jb-mode-toggle { display: flex; gap: 0.5rem; }
+
+/* Stats */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 160px; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+
+/* Faculties Grid */
+.jb-faculties-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 1rem; }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; }
+.jb-card__header { padding: 0.75rem 1rem; background: #f9fafb; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center; }
+.jb-card__body { padding: 1rem; }
+
+/* Faculty Card */
+.jb-faculty-card { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-faculty-card__title { display: flex; align-items: center; gap: 0.75rem; }
+.jb-faculty-card__title i { color: var(--iser-verde, #1b9e88); font-size: 1.25rem; }
+.jb-faculty-card__title h4 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); }
+.jb-faculty-card__stats { display: flex; gap: 0.5rem; }
+
+/* Reviewer List */
+.jb-reviewer-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.jb-reviewer-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: #f9fafb; border-radius: 6px; }
+.jb-reviewer-item__info { display: flex; align-items: center; gap: 0.5rem; }
+.jb-reviewer-item__info i { color: var(--iser-gris-medio, #666); }
+
+/* Empty States */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0; max-width: 500px; margin: 0 auto; }
+.jb-empty-inline { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: #f9fafb; border-radius: 6px; color: var(--iser-gris-medio, #666); font-size: 0.875rem; margin-bottom: 0.75rem; }
+.jb-empty-inline i { opacity: 0.5; }
+
+/* Inline Form */
+.jb-inline-form { padding-top: 0.75rem; border-top: 1px solid #f0f0f0; }
+.jb-inline-form__row { display: flex; gap: 0.5rem; align-items: center; }
+
+/* Form Elements */
+.jb-select { padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; transition: border-color 0.15s; }
+.jb-select:focus { outline: none; border-color: var(--iser-verde, #1b9e88); box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15); }
+.jb-select--sm { padding: 0.375rem 0.5rem; font-size: 0.8125rem; flex: 1; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+.jb-badge--info { background: rgba(23, 162, 184, 0.15); color: #0c5460; }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--icon { padding: 0.375rem; width: 28px; height: 28px; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; border-color: var(--iser-verde, #1b9e88); }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--success { background: #28a745; color: #fff; }
+.jb-btn--success:hover { background: #218838; color: #fff; }
+.jb-btn--danger { background: #dc3545; color: #fff; }
+.jb-btn--danger:hover { background: #c82333; color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; flex-wrap: wrap; gap: 0.75rem; }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jb-public-header__nav { flex-direction: column; align-items: flex-start; }
+    .jb-mode-toggle { width: 100%; }
+    .jb-mode-toggle .jb-btn { flex: 1; }
+    .jb-public-header__title { font-size: 1.25rem; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
+    .jb-faculties-grid { grid-template-columns: 1fr; }
+    .jb-inline-form__row { flex-direction: column; align-items: stretch; }
+    .jb-inline-form__row .jb-select--sm { width: 100%; }
+    .jb-footer-nav { flex-direction: column; }
+    .jb-footer-nav .jb-btn { width: 100%; }
+}
+</style>
