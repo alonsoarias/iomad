@@ -234,7 +234,9 @@ trait admin_renderer {
                 $data['selectedrole'] = $selectedroledata;
 
                 // Get assigned users.
-                $sql = "SELECT u.id, u.firstname, u.lastname, u.email, ra.timemodified as assigneddate
+                $sql = "SELECT u.id, u.firstname, u.lastname, u.email,
+                               u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename,
+                               ra.timemodified as assigneddate
                           FROM {role_assignments} ra
                           JOIN {user} u ON u.id = ra.userid
                          WHERE ra.roleid = :roleid AND ra.contextid = :contextid
@@ -271,7 +273,8 @@ trait admin_renderer {
                     $assigneduserids = [0];
                 }
 
-                $sql = "SELECT u.id, u.firstname, u.lastname, u.email
+                $sql = "SELECT u.id, u.firstname, u.lastname, u.email,
+                               u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename
                           FROM {user} u
                          WHERE u.deleted = 0
                            AND u.suspended = 0
