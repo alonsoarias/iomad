@@ -1781,6 +1781,7 @@ $string['dateadded'] = 'Fecha de asignación';
 $string['confirmdelete'] = '¿Está seguro de que desea eliminar permanentemente esta asignación?';
 $string['facultyassignments'] = 'Asignaciones de facultad';
 $string['faculties'] = 'facultades';
+$string['programs'] = 'Programas';
 $string['confirmunassignfaculty'] = '¿Está seguro de que desea eliminar este revisor de la facultad?';
 $string['selectdean'] = 'Seleccionar decano...';
 $string['nofacultiesavailable'] = 'No hay facultades disponibles';

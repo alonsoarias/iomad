@@ -1786,6 +1786,7 @@ $string['dateadded'] = 'Date added';
 $string['confirmdelete'] = 'Are you sure you want to permanently remove this assignment?';
 $string['facultyassignments'] = 'Faculty assignments';
 $string['faculties'] = 'faculties';
+$string['programs'] = 'Programs';
 $string['confirmunassignfaculty'] = 'Are you sure you want to remove this reviewer from the faculty?';
 $string['selectdean'] = 'Select dean...';
 $string['nofacultiesavailable'] = 'No faculties available';
