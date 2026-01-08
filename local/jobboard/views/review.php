@@ -32,6 +32,7 @@ use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\vacancy;
 use local_jobboard\review_notifier;
+use local_jobboard\faculty_reviewer;
 use local_jobboard\helper\iomad_helper;
 use local_jobboard\helper\role_access_helper;
 
@@ -488,6 +489,23 @@ if (!$applicationid) {
         }
     }
 
+    // Faculty-based filter for deans.
+    // Deans can only see applications for vacancies in programs belonging to their assigned faculties.
+    if ($is_dean && !$is_admin) {
+        $facultyids = faculty_reviewer::get_faculty_ids_for_user($USER->id);
+        if (!empty($facultyids)) {
+            // Join with program table and filter by faculty.
+            list($facultyinsql, $facultyparams) = $DB->get_in_or_equal($facultyids, SQL_PARAMS_NAMED, 'fac');
+            $where .= " AND v.programid IN (
+                SELECT p.id FROM {local_jobboard_program} p WHERE p.facultyid $facultyinsql
+            )";
+            $sqlparams = array_merge($sqlparams, $facultyparams);
+        } else {
+            // Dean has no faculty assignments - show no applications.
+            $where .= " AND 1=0";
+        }
+    }
+
     // Count total records for pagination.
     $countsql = "SELECT COUNT(*)
                    FROM {local_jobboard_application} a
@@ -550,6 +568,26 @@ if (!$applicationid) {
     }
 
     $vacancyobj = new vacancy($application->vacancyid);
+
+    // Faculty-based access check for deans.
+    // Deans can only view applications for vacancies in their assigned faculties.
+    if ($is_dean && !$is_admin) {
+        $facultyids = faculty_reviewer::get_faculty_ids_for_user($USER->id);
+        $canaccess = false;
+
+        if (!empty($facultyids) && $vacancyobj->programid) {
+            // Get the program and check if its faculty is in the dean's assigned faculties.
+            $program = $DB->get_record('local_jobboard_program', ['id' => $vacancyobj->programid]);
+            if ($program && in_array($program->facultyid, $facultyids)) {
+                $canaccess = true;
+            }
+        }
+
+        if (!$canaccess) {
+            throw new moodle_exception('error:noaccesstoapplication', 'local_jobboard');
+        }
+    }
+
     $applicant = $DB->get_record('user', ['id' => $application->userid]);
     if (!$applicant) {
         throw new moodle_exception('error:usernotfound', 'local_jobboard');

@@ -2205,6 +2205,7 @@ $string['error:invalidpublicationtype'] = 'Invalid publication type';
 $string['error:invalidstatus'] = 'Invalid status';
 $string['error:invalidurl'] = 'Invalid URL format';
 $string['error:invalidapplication'] = 'Invalid application';
+$string['error:noaccesstoapplication'] = 'You do not have access to this application. The vacancy is not in your assigned faculty.';
 $string['error:invaliduser'] = 'Invalid user';
 $string['error:nodocuments'] = 'No documents found for this application';
 $string['error:nodocumentstodownload'] = 'No documents available to download';

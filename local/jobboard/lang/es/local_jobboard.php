@@ -2198,6 +2198,7 @@ $string['error:invalidpublicationtype'] = 'Tipo de publicación inválido';
 $string['error:invalidstatus'] = 'Estado inválido';
 $string['error:invalidurl'] = 'Formato de URL inválido';
 $string['error:invalidapplication'] = 'Postulación inválida';
+$string['error:noaccesstoapplication'] = 'No tiene acceso a esta postulación. La vacante no pertenece a su facultad asignada.';
 $string['error:invaliduser'] = 'Usuario inválido';
 $string['error:nodocuments'] = 'No se encontraron documentos para esta postulación';
 $string['error:nodocumentstodownload'] = 'No hay documentos disponibles para descargar';

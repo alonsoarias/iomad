@@ -71,6 +71,9 @@ class vacancy {
     /** @var int|null The parent convocatoria ID. */
     public $convocatoriaid = null;
 
+    /** @var int|null The academic program ID (for faculty-based review). */
+    public $programid = null;
+
     /** @var \stdClass|null Cached convocatoria record. */
     protected $convocatoria_cache = null;
 
