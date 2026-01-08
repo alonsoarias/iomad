@@ -66,6 +66,7 @@ $string['copypaste_roles'] = 'Roles to protect';
 $string['copypaste_rolesdesc'] = 'Select the roles to which content protection (copy/paste, screenshots, etc.) will be applied.';
 
 // Carousel settings
+$string['carousel'] = 'Carousel';
 $string['carouselsettings'] = 'Carousel settings';
 $string['carouselsettings_desc'] = 'Configure the slides for the login page carousel.';
 $string['numberofslides'] = 'Number of slides';
@@ -78,6 +79,8 @@ $string['slideurl'] = 'Slide {$a} link';
 $string['slideurldesc'] = 'URL that slide {$a} will link to.';
 $string['carouselinterval'] = 'Carousel interval';
 $string['carouselintervaldesc'] = 'Time in milliseconds between slide transitions.';
+$string['previous'] = 'Previous';
+$string['next'] = 'Next';
 
 // Personal area headers
 $string['showpersonalareaheader'] = 'Show personal area header';

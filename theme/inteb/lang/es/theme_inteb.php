@@ -66,6 +66,7 @@ $string['copypaste_roles'] = 'Roles a proteger';
 $string['copypaste_rolesdesc'] = 'Selecciona los roles a los que se aplicará la protección de contenido (copiar/pegar, capturas de pantalla, etc.).';
 
 // Configuración del carrusel
+$string['carousel'] = 'Carrusel';
 $string['carouselsettings'] = 'Configuración del carrusel';
 $string['carouselsettings_desc'] = 'Configura las diapositivas del carrusel en la página de acceso.';
 $string['numberofslides'] = 'Número de diapositivas';
@@ -78,6 +79,8 @@ $string['slideurl'] = 'Enlace de diapositiva {$a}';
 $string['slideurldesc'] = 'URL a la que enlazará la diapositiva {$a}.';
 $string['carouselinterval'] = 'Intervalo del carrusel';
 $string['carouselintervaldesc'] = 'Tiempo en milisegundos entre cambios de diapositivas.';
+$string['previous'] = 'Anterior';
+$string['next'] = 'Siguiente';
 
 // Encabezados de área personal
 $string['showpersonalareaheader'] = 'Mostrar encabezado de área personal';

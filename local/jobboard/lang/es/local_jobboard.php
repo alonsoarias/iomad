@@ -375,6 +375,7 @@ $string['closevacancy'] = 'Cerrar vacante';
 $string['reopenvacancy'] = 'Reabrir vacante';
 $string['duplicatevacancy'] = 'Duplicar vacante';
 $string['novacancies'] = 'No se encontraron vacantes';
+$string['novacancies_desc'] = 'No hay vacantes disponibles en este momento. Por favor, vuelva a consultar más tarde.';
 $string['selectvacancy'] = 'Seleccione vacante';
 $string['allvacancies'] = 'Todas las vacantes';
 $string['activevacancies'] = 'Vacantes activas';
