@@ -29,8 +29,13 @@ defined('MOODLE_INTERNAL') || die();
 
 use local_jobboard\reviewer;
 
-// Require review capability.
-require_capability('local/jobboard:reviewdocuments', $context);
+// Require review capability - allow both document reviewers and deans.
+$isreviewer = has_capability('local/jobboard:reviewdocuments', $context);
+$isdean = has_capability('local/jobboard:reviewprofiles', $context) || has_capability('local/jobboard:approveprofile', $context);
+
+if (!$isreviewer && !$isdean) {
+    throw new required_capability_exception($context, 'local/jobboard:reviewdocuments', 'nopermissions', '');
+}
 
 // Filter parameters.
 $status = optional_param('status', '', PARAM_ALPHA);
@@ -50,13 +55,70 @@ $PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
     new moodle_url('/local/jobboard/index.php'));
 $PAGE->navbar->add(get_string('myreviews', 'local_jobboard'));
 
-// Get my stats.
-$mystats = reviewer::get_reviewer_stats($USER->id);
-$myworkload = reviewer::get_reviewer_workload($USER->id);
+// Build query for applications based on role (reviewer vs dean).
+$params = [];
+$whereclauses = [];
+$deanfaculties = [];
 
-// Build query for assigned applications.
-$params = ['reviewerid' => $USER->id];
-$whereclauses = ['a.reviewerid = :reviewerid'];
+if ($isdean && !$isreviewer) {
+    // Dean: show applications from vacancies in their assigned faculties.
+    $deanfaculties = $DB->get_records_sql(
+        "SELECT fr.facultyid, f.code as facultycode
+           FROM {local_jobboard_faculty_reviewer} fr
+           JOIN {local_jobboard_faculty} f ON f.id = fr.facultyid
+          WHERE fr.userid = :userid AND fr.status = 'active'",
+        ['userid' => $USER->id]
+    );
+
+    if (!empty($deanfaculties)) {
+        // Build vacancy code patterns for dean's faculties.
+        $codepatterns = [];
+        $i = 0;
+        foreach ($deanfaculties as $fac) {
+            $paramname = 'faccode' . $i;
+            $codepatterns[] = "v.code LIKE :{$paramname}";
+            $params[$paramname] = $fac->facultycode . '%';
+            $i++;
+        }
+        $whereclauses[] = '(' . implode(' OR ', $codepatterns) . ')';
+        // Dean sees applications that are submitted or under review.
+        $whereclauses[] = "a.status IN ('submitted', 'under_review')";
+    } else {
+        // Dean with no faculty assignments - show nothing.
+        $whereclauses[] = '1=0';
+    }
+
+    // Dean stats (simplified).
+    $mystats = ['validated' => 0, 'rejected' => 0, 'avg_time_hours' => 0];
+    $myworkload = 0;
+    if (!empty($deanfaculties)) {
+        // Count pending applications in dean's faculties.
+        $countparams = [];
+        $countpatterns = [];
+        $i = 0;
+        foreach ($deanfaculties as $fac) {
+            $paramname = 'fc' . $i;
+            $countpatterns[] = "v.code LIKE :{$paramname}";
+            $countparams[$paramname] = $fac->facultycode . '%';
+            $i++;
+        }
+        $myworkload = $DB->count_records_sql(
+            "SELECT COUNT(DISTINCT a.id)
+               FROM {local_jobboard_application} a
+               JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+              WHERE (" . implode(' OR ', $countpatterns) . ")
+                AND a.status IN ('submitted', 'under_review')",
+            $countparams
+        );
+    }
+} else {
+    // Reviewer: show applications assigned to them.
+    $mystats = reviewer::get_reviewer_stats($USER->id);
+    $myworkload = reviewer::get_reviewer_workload($USER->id);
+
+    $params['reviewerid'] = $USER->id;
+    $whereclauses[] = 'a.reviewerid = :reviewerid';
+}
 
 if ($status) {
     $whereclauses[] = 'a.status = :status';
@@ -116,12 +178,33 @@ $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title,
 $applications = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
 // Get vacancies for filter.
-$vacancysql = "SELECT DISTINCT v.id, v.code, v.title
-                 FROM {local_jobboard_vacancy} v
-                 JOIN {local_jobboard_application} a ON a.vacancyid = v.id
-                WHERE a.reviewerid = :reviewerid
-                ORDER BY v.code";
-$vacancies = $DB->get_records_sql($vacancysql, ['reviewerid' => $USER->id]);
+if ($isdean && !$isreviewer && !empty($deanfaculties)) {
+    // Dean: show vacancies from their assigned faculties.
+    $vacfilterparams = [];
+    $vacfilterpatterns = [];
+    $i = 0;
+    foreach ($deanfaculties as $fac) {
+        $paramname = 'vfc' . $i;
+        $vacfilterpatterns[] = "v.code LIKE :{$paramname}";
+        $vacfilterparams[$paramname] = $fac->facultycode . '%';
+        $i++;
+    }
+    $vacancysql = "SELECT DISTINCT v.id, v.code, v.title
+                     FROM {local_jobboard_vacancy} v
+                     JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+                    WHERE (" . implode(' OR ', $vacfilterpatterns) . ")
+                      AND a.status IN ('submitted', 'under_review')
+                    ORDER BY v.code";
+    $vacancies = $DB->get_records_sql($vacancysql, $vacfilterparams);
+} else {
+    // Reviewer: show vacancies assigned to them.
+    $vacancysql = "SELECT DISTINCT v.id, v.code, v.title
+                     FROM {local_jobboard_vacancy} v
+                     JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+                    WHERE a.reviewerid = :reviewerid
+                    ORDER BY v.code";
+    $vacancies = $DB->get_records_sql($vacancysql, ['reviewerid' => $USER->id]);
+}
 
 // Build stats array.
 $stats = [
@@ -145,6 +228,16 @@ $data = $renderer->prepare_myreviews_page_data(
     $page,
     $perpage
 );
+
+// Add dean-specific data.
+$data['isdean'] = $isdean && !$isreviewer;
+$data['isreviewer'] = $isreviewer;
+if ($isdean && !$isreviewer) {
+    $data['deanfaculties'] = array_values(array_map(function($f) {
+        return ['code' => $f->facultycode];
+    }, $deanfaculties));
+    $data['hasdeanfaculties'] = !empty($deanfaculties);
+}
 
 // Output the page.
 echo $OUTPUT->header();
