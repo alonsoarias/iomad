@@ -2273,6 +2273,7 @@ $string['dashboard_admin_welcome'] = 'Bienvenido, Administrador';
 $string['dashboard_applicant_welcome'] = 'Bienvenido a su panel de postulante';
 $string['dashboard_manager_welcome'] = 'Bienvenido al panel de gestión';
 $string['dashboard_reviewer_welcome'] = 'Bienvenido al panel de revisor';
+$string['dashboard_dean_welcome'] = 'Bienvenido al panel de decano';
 
 // =============================================================================
 // CADENAS ADICIONALES - NOTIFICACIONES
@@ -2486,6 +2487,7 @@ $string['role_applicant'] = 'Postulante';
 $string['role_evaluator'] = 'Evaluador';
 $string['role_secretary'] = 'Secretario';
 $string['role_director'] = 'Director';
+$string['role_dean'] = 'Decano';
 
 // =============================================================================
 // RAZONES DE RECHAZO
@@ -2903,6 +2905,15 @@ $string['reviewdocuments_desc'] = 'Revisar y validar documentos de postulantes';
 $string['reviewed'] = 'Revisado';
 $string['reviewedby'] = 'Revisado por';
 $string['reviewertasks'] = 'Tareas del revisor';
+$string['deantasks'] = 'Tareas del decano';
+$string['deansection_title'] = 'Panel de Revisión del Decano';
+$string['deansection_desc'] = 'Revisar y aprobar postulaciones de sus facultades asignadas';
+$string['assignedfaculties'] = 'Facultades asignadas';
+$string['nofacultiesassigned'] = 'Sin facultades asignadas';
+$string['nofacultiesassigned_desc'] = 'Aún no se le han asignado facultades. Por favor, contacte al administrador para solicitar la asignación de facultades.';
+$string['viewfacultyassignments'] = 'Ver asignaciones de facultades';
+$string['pendingdeanreviews'] = 'Revisiones de decano pendientes';
+$string['completeddeanreviews'] = 'Revisiones de decano completadas';
 $string['reviewobservations'] = 'Observaciones de revisión';
 $string['reviewobservations_placeholder'] = 'Ingrese sus observaciones...';
 $string['reviewprogress'] = 'Progreso de revisión';

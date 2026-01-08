@@ -74,6 +74,10 @@ $caps = [
     'apply' => has_capability('local/jobboard:apply', $context),
     'viewownapplications' => has_capability('local/jobboard:viewownapplications', $context),
 
+    // Dean review (profile approval workflow).
+    'reviewprofiles' => has_capability('local/jobboard:reviewprofiles', $context),
+    'approveprofile' => has_capability('local/jobboard:approveprofile', $context),
+
     // General view.
     'view' => has_capability('local/jobboard:view', $context),
     'viewinternalvacancies' => has_capability('local/jobboard:viewinternalvacancies', $context),

@@ -2283,6 +2283,7 @@ $string['dashboard_admin_welcome'] = 'Welcome, Administrator';
 $string['dashboard_applicant_welcome'] = 'Welcome to your applicant dashboard';
 $string['dashboard_manager_welcome'] = 'Welcome to the management dashboard';
 $string['dashboard_reviewer_welcome'] = 'Welcome to the reviewer dashboard';
+$string['dashboard_dean_welcome'] = 'Welcome to the dean dashboard';
 
 // =============================================================================
 // ADDITIONAL STRINGS - NOTIFICATIONS
@@ -2483,6 +2484,7 @@ $string['role_applicant'] = 'Applicant';
 $string['role_evaluator'] = 'Evaluator';
 $string['role_secretary'] = 'Secretary';
 $string['role_director'] = 'Director';
+$string['role_dean'] = 'Dean';
 
 // =============================================================================
 // REJECTION REASONS
@@ -2900,6 +2902,15 @@ $string['reviewdocuments_desc'] = 'Review and validate applicant documents';
 $string['reviewed'] = 'Reviewed';
 $string['reviewedby'] = 'Reviewed by';
 $string['reviewertasks'] = 'Reviewer tasks';
+$string['deantasks'] = 'Dean tasks';
+$string['deansection_title'] = 'Dean Review Panel';
+$string['deansection_desc'] = 'Review and approve applications for your assigned faculties';
+$string['assignedfaculties'] = 'Assigned faculties';
+$string['nofacultiesassigned'] = 'No faculties assigned';
+$string['nofacultiesassigned_desc'] = 'You have not been assigned to any faculties yet. Please contact the administrator to request faculty assignment.';
+$string['viewfacultyassignments'] = 'View faculty assignments';
+$string['pendingdeanreviews'] = 'Pending dean reviews';
+$string['completeddeanreviews'] = 'Completed dean reviews';
 $string['reviewobservations'] = 'Review observations';
 $string['reviewobservations_placeholder'] = 'Enter your observations...';
 $string['reviewprogress'] = 'Review progress';

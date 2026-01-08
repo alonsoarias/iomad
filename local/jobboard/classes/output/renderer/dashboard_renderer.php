@@ -60,6 +60,7 @@ trait dashboard_renderer {
         $isadmin = $caps['configure'] ?? false;
         $ismanager = ($caps['createvacancy'] ?? false) || ($caps['manageconvocatorias'] ?? false);
         $isreviewer = ($caps['reviewdocuments'] ?? false) || ($caps['validatedocuments'] ?? false);
+        $isdean = ($caps['reviewprofiles'] ?? false) || ($caps['approveprofile'] ?? false);
         $isapplicant = $caps['apply'] ?? false;
         $canmanagecontent = $isadmin || $ismanager;
 
@@ -72,6 +73,9 @@ trait dashboard_renderer {
         } else if ($ismanager) {
             $rolelabel = get_string('role_manager', 'local_jobboard');
             $welcomemsg = get_string('dashboard_manager_welcome', 'local_jobboard');
+        } else if ($isdean) {
+            $rolelabel = get_string('role_dean', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_dean_welcome', 'local_jobboard');
         } else if ($isreviewer) {
             $rolelabel = get_string('role_reviewer', 'local_jobboard');
             $welcomemsg = get_string('dashboard_reviewer_welcome', 'local_jobboard');
@@ -85,9 +89,10 @@ trait dashboard_renderer {
 
         $data = [
             'isadmin' => $canmanagecontent,
-            'isreviewer' => $isreviewer && !$canmanagecontent,
-            'isapplicant' => $isapplicant && !$canmanagecontent && !$isreviewer,
-            'isvieweronly' => !$canmanagecontent && !$isreviewer && !$isapplicant && ($caps['view'] ?? false),
+            'isreviewer' => $isreviewer && !$canmanagecontent && !$isdean,
+            'isdean' => $isdean && !$canmanagecontent,
+            'isapplicant' => $isapplicant && !$canmanagecontent && !$isreviewer && !$isdean,
+            'isvieweronly' => !$canmanagecontent && !$isreviewer && !$isdean && !$isapplicant && ($caps['view'] ?? false),
             'welcome' => [
                 'rolelabel' => $rolelabel,
                 'message' => $welcomemsg,
@@ -102,6 +107,7 @@ trait dashboard_renderer {
             'reportsections' => [],
             'configsections' => [],
             'reviewersection' => null,
+            'deansection' => null,
             'applicantstats' => [],
             'applicantsections' => [],
             'alerts' => [],
@@ -163,6 +169,11 @@ trait dashboard_renderer {
                 'haspendingreview' => ($stats['my_pending_reviews'] ?? 0) > 0,
                 'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']))->out(false),
             ];
+        }
+
+        // Dean section.
+        if ($isdean) {
+            $data['deansection'] = $this->prepare_dean_section($userid);
         }
 
         // Applicant statistics and sections.
@@ -771,5 +782,78 @@ trait dashboard_renderer {
         ];
 
         return $sections;
+    }
+
+    /**
+     * Prepare dean section data for dashboard.
+     *
+     * @param int $userid User ID.
+     * @return array Dean section data.
+     */
+    protected function prepare_dean_section(int $userid): array {
+        global $DB;
+
+        // Get assigned faculties for this dean.
+        $faculties = $DB->get_records_sql(
+            "SELECT fr.id, fr.facultyid, f.name as facultyname, f.code as facultycode,
+                    c.id as convocatoriaid, c.name as convocatorianame, c.code as convocatoriacode
+               FROM {local_jobboard_faculty_reviewer} fr
+               JOIN {local_jobboard_faculty} f ON f.id = fr.facultyid
+               LEFT JOIN {local_jobboard_convocatoria} c ON c.id = fr.convocatoriaid
+              WHERE fr.userid = :userid
+                AND fr.active = 1
+              ORDER BY c.name, f.name",
+            ['userid' => $userid]
+        );
+
+        $assignedfaculties = [];
+        foreach ($faculties as $fac) {
+            $assignedfaculties[] = [
+                'id' => $fac->id,
+                'facultyid' => $fac->facultyid,
+                'facultyname' => $fac->facultyname,
+                'facultycode' => $fac->facultycode,
+                'convocatorianame' => $fac->convocatorianame ?? '',
+                'convocatoriacode' => $fac->convocatoriacode ?? '',
+            ];
+        }
+
+        // Count pending reviews for this dean's faculties.
+        $pendingcount = 0;
+        $completedcount = 0;
+
+        if (!empty($faculties)) {
+            $facultyids = array_column((array)$faculties, 'facultyid');
+            list($insql, $params) = $DB->get_in_or_equal($facultyids, SQL_PARAMS_NAMED);
+
+            // Get pending applications in dean's faculties.
+            $pendingcount = $DB->count_records_sql(
+                "SELECT COUNT(DISTINCT a.id)
+                   FROM {local_jobboard_application} a
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                  WHERE a.status IN ('submitted', 'under_review')
+                    AND v.facultyid $insql",
+                $params
+            );
+
+            // Get completed reviews by this dean.
+            $completedcount = $DB->count_records_sql(
+                "SELECT COUNT(DISTINCT dr.id)
+                   FROM {local_jobboard_dean_review} dr
+                  WHERE dr.reviewerid = :userid",
+                ['userid' => $userid]
+            );
+        }
+
+        return [
+            'assignedfaculties' => $assignedfaculties,
+            'hasfaculties' => !empty($assignedfaculties),
+            'facultycount' => count($assignedfaculties),
+            'pendingcount' => $pendingcount,
+            'completedcount' => $completedcount,
+            'haspending' => $pendingcount > 0,
+            'myreviewsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']))->out(false),
+            'facultyassignmenturl' => (new moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties']))->out(false),
+        ];
     }
 }

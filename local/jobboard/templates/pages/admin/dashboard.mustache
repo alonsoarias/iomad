@@ -188,6 +188,68 @@
     </section>
     {{/isreviewer}}
 
+    {{! Dean Section }}
+    {{#isdean}}
+    <section class="jb-section">
+        <div class="jb-section-header">
+            <h2 class="jb-section-header__title"><i class="fa fa-graduation-cap"></i> {{#str}}deantasks, local_jobboard{{/str}}</h2>
+        </div>
+        <div class="jb-dean-grid">
+            {{! Main Dean Card }}
+            <div class="jb-card jb-dean-card">
+                <div class="jb-dean-card__header">
+                    <div class="jb-dean-card__icon"><i class="fa fa-graduation-cap"></i></div>
+                    <div class="jb-dean-card__title">
+                        <h3>{{#str}}deansection_title, local_jobboard{{/str}}</h3>
+                        {{#deansection.haspending}}<span class="jb-badge jb-badge--warning">{{deansection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>{{/deansection.haspending}}
+                    </div>
+                </div>
+                <div class="jb-dean-card__body">
+                    <p>{{#str}}deansection_desc, local_jobboard{{/str}}</p>
+
+                    {{#deansection.hasfaculties}}
+                    <div class="jb-dean-faculties">
+                        <h4><i class="fa fa-building-columns"></i> {{#str}}assignedfaculties, local_jobboard{{/str}} ({{deansection.facultycount}})</h4>
+                        <ul class="jb-faculty-list">
+                            {{#deansection.assignedfaculties}}
+                            <li>
+                                <span class="jb-faculty-name"><i class="fa fa-university"></i> {{facultyname}}</span>
+                                {{#convocatorianame}}<span class="jb-badge jb-badge--info">{{convocatorianame}}</span>{{/convocatorianame}}
+                            </li>
+                            {{/deansection.assignedfaculties}}
+                        </ul>
+                    </div>
+                    {{/deansection.hasfaculties}}
+
+                    {{^deansection.hasfaculties}}
+                    <div class="jb-alert jb-alert--info jb-alert--compact">
+                        <i class="fa fa-info-circle"></i>
+                        <span>{{#str}}nofacultiesassigned_desc, local_jobboard{{/str}}</span>
+                    </div>
+                    {{/deansection.hasfaculties}}
+
+                    {{#deansection.haspending}}
+                    <div class="jb-alert jb-alert--warning jb-alert--compact">
+                        <i class="fa fa-triangle-exclamation"></i>
+                        <span>{{#str}}pending_reviews_alert, local_jobboard, {{deansection.pendingcount}}{{/str}}</span>
+                    </div>
+                    {{/deansection.haspending}}
+                </div>
+                <div class="jb-dean-card__footer">
+                    <a href="{{deansection.myreviewsurl}}" class="jb-btn jb-btn--primary"><i class="fa fa-clipboard-list"></i> {{#str}}viewmyreviews, local_jobboard{{/str}}</a>
+                    <a href="{{deansection.facultyassignmenturl}}" class="jb-btn jb-btn--outline"><i class="fa fa-building-columns"></i> {{#str}}viewfacultyassignments, local_jobboard{{/str}}</a>
+                </div>
+            </div>
+            {{! Stats Card }}
+            <div class="jb-card jb-stat-card jb-stat-card--dean">
+                <div class="jb-stat-card__icon"><i class="fa fa-check-double"></i></div>
+                <span class="jb-stat-card__value">{{deansection.completedcount}}</span>
+                <span class="jb-stat-card__label">{{#str}}completeddeanreviews, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+    </section>
+    {{/isdean}}
+
     {{! Applicant Section }}
     {{#isapplicant}}
     <section class="jb-section">
@@ -390,6 +452,26 @@
 .jb-reviewer-card__body p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1rem; }
 .jb-reviewer-card__footer { padding: 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; }
 
+/* Dean Section */
+.jb-dean-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
+.jb-dean-card { border-top: 3px solid #6f42c1; }
+.jb-dean-card__header { padding: 1rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #f0f0f0; }
+.jb-dean-card__icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; background: rgba(111, 66, 193, 0.15); color: #6f42c1; }
+.jb-dean-card__title { flex: 1; }
+.jb-dean-card__title h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+.jb-dean-card__body { padding: 1rem; }
+.jb-dean-card__body > p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1rem; }
+.jb-dean-card__footer { padding: 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.jb-dean-faculties { margin-bottom: 1rem; }
+.jb-dean-faculties h4 { font-size: 0.875rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); margin: 0 0 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.jb-dean-faculties h4 i { color: #6f42c1; }
+.jb-faculty-list { list-style: none; padding: 0; margin: 0; }
+.jb-faculty-list li { padding: 0.5rem 0.75rem; background: #f8f9fa; border-radius: 6px; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.jb-faculty-list li:last-child { margin-bottom: 0; }
+.jb-faculty-name { font-size: 0.875rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.5rem; }
+.jb-faculty-name i { color: #6f42c1; font-size: 0.75rem; }
+.jb-stat-card--dean { background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); }
+
 /* Stat Card */
 .jb-stat-card { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%); color: #fff; }
 .jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: rgba(255,255,255,0.2); margin-bottom: 0.75rem; }
@@ -446,7 +528,7 @@
 .jb-pulse { animation: jb-pulse 1.5s infinite; }
 
 /* Mobile */
-@media (max-width: 992px) { .jb-reviewer-grid { grid-template-columns: 1fr; } }
+@media (max-width: 992px) { .jb-reviewer-grid, .jb-dean-grid { grid-template-columns: 1fr; } }
 @media (max-width: 768px) {
     .jb-dashboard-header__nav { flex-direction: column; align-items: flex-start; }
     .jb-dashboard-header__title { font-size: 1.25rem; }
