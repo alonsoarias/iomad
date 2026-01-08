@@ -2,7 +2,7 @@
 
 ## Fecha: 2026-01-08
 ## Versión Anterior: 2025122301 (release 4.0.1)
-## Versión Nueva: 2026010803 (release 4.1.0)
+## Versión Nueva: 2026010804 (release 4.1.0)
 
 ---
 
@@ -12,6 +12,7 @@
 |---|------------|--------|------|--------------|
 | 1 | Bug de repostulación después de retiro | COMPLETADO | Bug fix | ⚠️ TEMPORAL |
 | 2 | Asignación de revisores por facultad | COMPLETADO | Nueva funcionalidad + BD | Permanente |
+| 3 | Aviso de postulación retirada en vacante | COMPLETADO | UX Improvement | ⚠️ TEMPORAL |
 
 ---
 
@@ -42,10 +43,18 @@ Al remover esta funcionalidad temporal, se deben realizar los siguientes cambios
    - `classes/output/renderer/convocatoria_renderer.php`
    - `ajax/filter_public_vacancies.php`
 
-4. **Cadenas de idioma** (opcional, pueden mantenerse para histórico):
+4. **`views/vacancy.php`**:
+   - Eliminar verificación de `$haswithdrawn`
+   - Remover parámetro `$haswithdrawn` de la llamada a `prepare_vacancy_detail_page_data()`
+
+5. **`templates/pages/vacancies/detail.mustache`**:
+   - Eliminar bloque `{{#haswithdrawn}}...{{/haswithdrawn}}`
+
+6. **Cadenas de idioma** (opcional, pueden mantenerse para histórico):
    - `applicationreactivated`
    - `applicationreactivated_notice`
    - `error:cannotreactivate`
+   - `withdrawnapplication_reapply_notice`
 
 ---
 
@@ -257,6 +266,61 @@ $reviewers = faculty_reviewer::get_by_faculty($facultyid);
 
 ---
 
+## Corrección 3: Aviso de Postulación Retirada en Vacante
+
+> ⚠️ **FUNCIONALIDAD TEMPORAL** - Parte de la funcionalidad de repostulación.
+
+### Problema Reportado
+Cuando un usuario con una postulación retirada visita la página de detalle de una vacante, no recibe información clara sobre qué sucederá al hacer clic en "Aplicar".
+
+### Solución Implementada
+Se agregó un aviso informativo en la página de detalle de la vacante que explica al usuario que su postulación retirada será reactivada como borrador si decide aplicar nuevamente.
+
+### Archivos Modificados
+
+#### `views/vacancy.php`
+- Verificación de postulación retirada cuando el usuario puede aplicar
+
+```php
+// TEMPORARY FEATURE: Check if user has a withdrawn application.
+$haswithdrawn = false;
+if ($canapply && !$hasapplied) {
+    $withdrawnapp = \local_jobboard\application::get_withdrawn((int) $vacancy->id, (int) $USER->id);
+    $haswithdrawn = ($withdrawnapp !== null);
+}
+```
+
+#### `classes/output/renderer/vacancy_renderer.php`
+- Nuevo parámetro `$haswithdrawn` en `prepare_vacancy_detail_page_data()`
+- Retorna `haswithdrawn` y `withdrawnnotice` en el array de datos
+
+#### `templates/pages/vacancies/detail.mustache`
+- Bloque de alerta informativa para usuarios con postulación retirada
+
+```mustache
+{{#haswithdrawn}}
+<div class="jb-alert jb-alert--info">
+    <i class="fa fa-info-circle"></i>
+    <div class="jb-alert__content">
+        <strong>{{#str}}notice{{/str}}</strong>
+        <span>{{withdrawnnotice}}</span>
+    </div>
+</div>
+{{/haswithdrawn}}
+```
+
+#### `lang/en/local_jobboard.php` y `lang/es/local_jobboard.php`
+- Nueva cadena `withdrawnapplication_reapply_notice`
+
+### Comportamiento
+1. Usuario retira su postulación
+2. Usuario visita la página de detalle de la vacante
+3. Sistema detecta la postulación retirada
+4. Se muestra aviso informativo explicando el proceso de reactivación
+5. Usuario puede tomar decisión informada antes de hacer clic en "Aplicar"
+
+---
+
 ## Cambios en version.php
 
 ```php
@@ -278,6 +342,12 @@ $plugin->release = '4.1.0';
 2. Retirar la postulación (estado → withdrawn)
 3. Intentar postular de nuevo a la misma vacante
 4. **Resultado esperado**: Sistema reactiva la postulación anterior y permite editarla
+
+### Para Aviso de Postulación Retirada
+1. Crear postulación y enviarla
+2. Retirar la postulación (estado → withdrawn)
+3. Visitar la página de detalle de la vacante
+4. **Resultado esperado**: Se muestra un aviso informativo indicando que la postulación será reactivada
 
 ### Para Revisores por Facultad
 1. Acceder a la administración del plugin
