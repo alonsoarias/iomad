@@ -69,10 +69,12 @@ class send_observations_email extends external_api {
         $context = \context_system::instance();
         self::validate_context($context);
 
-        // Check for either reviewdocuments or manageworkflow capability.
+        // Check for review capabilities: reviewdocuments, manageworkflow, or dean capabilities.
         $canreview = has_capability('local/jobboard:reviewdocuments', $context);
         $canmanage = has_capability('local/jobboard:manageworkflow', $context);
-        if (!$canreview && !$canmanage) {
+        $isdean = has_capability('local/jobboard:reviewprofiles', $context) ||
+                  has_capability('local/jobboard:approveprofile', $context);
+        if (!$canreview && !$canmanage && !$isdean) {
             throw new \required_capability_exception($context, 'local/jobboard:reviewdocuments', 'nopermissions', '');
         }
 
