@@ -506,7 +506,7 @@ trait review_renderer {
 
             $documentsdata = [];
             foreach ($documents as $doc) {
-                $docobj = \local_jobboard\document::get($doc->id);
+                $docobj = \local_jobboard\document::get((int) $doc->id);
                 $downloadurl = $docobj ? $docobj->get_download_url() : null;
 
                 $documentsdata[] = [
