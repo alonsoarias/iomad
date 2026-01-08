@@ -97,6 +97,42 @@ if ($action === 'unassign' && confirm_sesskey() && $userid) {
     redirect(new moodle_url('/local/jobboard/admin/roles.php', ['role' => $roleshortname]));
 }
 
+// Faculty assignment actions (for dean role).
+$facultyid = optional_param('facultyid', 0, PARAM_INT);
+$assignmentid = optional_param('id', 0, PARAM_INT);
+$facultyrole = optional_param('facultyrole', 'dean', PARAM_ALPHA);
+
+if ($action === 'assignfaculty' && confirm_sesskey()) {
+    $selecteduserids = required_param_array('userids', PARAM_INT);
+
+    if ($facultyid && !empty($selecteduserids)) {
+        $assigned = 0;
+        foreach ($selecteduserids as $uid) {
+            try {
+                \local_jobboard\faculty_reviewer::assign($facultyid, $uid, $facultyrole);
+                $assigned++;
+            } catch (\moodle_exception $e) {
+                // User already assigned, skip.
+            }
+        }
+        if ($assigned > 0) {
+            \core\notification::success(
+                get_string('facultyreviewersassigned', 'local_jobboard', $assigned)
+            );
+        }
+    }
+    redirect(new moodle_url('/local/jobboard/admin/roles.php', ['role' => $roleshortname]));
+}
+
+if ($action === 'unassignfaculty' && confirm_sesskey() && $assignmentid) {
+    $assignment = \local_jobboard\faculty_reviewer::get($assignmentid);
+    if ($assignment) {
+        $assignment->deactivate();
+        \core\notification::success(get_string('facultyreviewerunassigned', 'local_jobboard'));
+    }
+    redirect(new moodle_url('/local/jobboard/admin/roles.php', ['role' => $roleshortname]));
+}
+
 // Get the renderer.
 $renderer = $PAGE->get_renderer('local_jobboard');
 

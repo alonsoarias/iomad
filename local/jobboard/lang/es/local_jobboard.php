@@ -1778,6 +1778,11 @@ $string['nousersavailableforassignment'] = 'No hay usuarios disponibles para asi
 $string['assignrole'] = 'Rol';
 $string['dateadded'] = 'Fecha de asignación';
 $string['confirmdelete'] = '¿Está seguro de que desea eliminar permanentemente esta asignación?';
+$string['facultyassignments'] = 'Asignaciones de facultad';
+$string['faculties'] = 'facultades';
+$string['confirmunassignfaculty'] = '¿Está seguro de que desea eliminar este revisor de la facultad?';
+$string['selectdean'] = 'Seleccionar decano...';
+$string['nofacultiesavailable'] = 'No hay facultades disponibles. Las facultades se crean automáticamente al importar vacantes con códigos de facultad (ej: FCAS, FII).';
 
 // =============================================================================
 // CADENAS ADICIONALES - COMITÉS

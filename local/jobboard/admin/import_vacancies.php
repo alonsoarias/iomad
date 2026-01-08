@@ -337,6 +337,52 @@ if ($mform->is_cancelled()) {
             $faculty = strpos($code, 'FCAS') === 0 ? 'FCAS' : (strpos($code, 'FII') === 0 ? 'FII' : '');
         }
 
+        // Create/get faculty record in the database.
+        $facultyid = null;
+        if (!empty($faculty)) {
+            $facultyrecord = $DB->get_record('local_jobboard_faculty', ['code' => $faculty]);
+            if (!$facultyrecord) {
+                // Auto-create faculty.
+                $facultyname = ($faculty === 'FCAS') ? 'Ciencias Administrativas y Sociales' :
+                               (($faculty === 'FII') ? 'Ingenierías e Informática' : $faculty);
+                $newfaculty = new stdClass();
+                $newfaculty->companyid = $convocatoria->companyid ?? 0;
+                $newfaculty->code = $faculty;
+                $newfaculty->name = $facultyname;
+                $newfaculty->shortname = $faculty;
+                $newfaculty->enabled = 1;
+                $newfaculty->sortorder = 0;
+                $newfaculty->timecreated = $now;
+                $newfaculty->id = $DB->insert_record('local_jobboard_faculty', $newfaculty);
+                $facultyid = $newfaculty->id;
+            } else {
+                $facultyid = $facultyrecord->id;
+            }
+        }
+
+        // Create/get program record in the database (links to faculty).
+        $programid = null;
+        if ($facultyid && !empty($program)) {
+            $programcode = substr(preg_replace('/[^A-Z0-9]/', '', strtoupper($program)), 0, 40);
+            $programrecord = $DB->get_record('local_jobboard_program', ['facultyid' => $facultyid, 'code' => $programcode]);
+            if (!$programrecord) {
+                // Auto-create program.
+                $newprogram = new stdClass();
+                $newprogram->facultyid = $facultyid;
+                $newprogram->code = $programcode;
+                $newprogram->name = $program;
+                $newprogram->shortname = substr($program, 0, 100);
+                $newprogram->modality = stripos($modality, 'DISTANCIA') !== false ? 'virtual' : 'presencial';
+                $newprogram->enabled = 1;
+                $newprogram->sortorder = 0;
+                $newprogram->timecreated = $now;
+                $newprogram->id = $DB->insert_record('local_jobboard_program', $newprogram);
+                $programid = $newprogram->id;
+            } else {
+                $programid = $programrecord->id;
+            }
+        }
+
         // Parse courses.
         $courses = [];
         if (!empty($coursesstr)) {
@@ -432,6 +478,7 @@ if ($mform->is_cancelled()) {
             $record->location = $locationinfo['name'];
             $record->department = $program ?: $facultyname;
             $record->convocatoriaid = $data->convocatoriaid;
+            $record->programid = $programid;
             // Note: opendate and closedate are inherited from convocatoria.
             $record->positions = 1;
             $record->status = $data->status;

@@ -1783,6 +1783,11 @@ $string['nousersavailableforassignment'] = 'No users available for assignment. U
 $string['assignrole'] = 'Role';
 $string['dateadded'] = 'Date added';
 $string['confirmdelete'] = 'Are you sure you want to permanently remove this assignment?';
+$string['facultyassignments'] = 'Faculty assignments';
+$string['faculties'] = 'faculties';
+$string['confirmunassignfaculty'] = 'Are you sure you want to remove this reviewer from the faculty?';
+$string['selectdean'] = 'Select dean...';
+$string['nofacultiesavailable'] = 'No faculties available. Faculties are auto-created when importing vacancies with faculty codes (e.g., FCAS, FII).';
 
 // =============================================================================
 // ADDITIONAL STRINGS - COMMITTEES

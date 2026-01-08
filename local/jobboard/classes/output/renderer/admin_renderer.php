@@ -145,6 +145,7 @@ trait admin_renderer {
                 'description' => get_string('role_dean_desc', 'local_jobboard'),
                 'icon' => 'user-graduate',
                 'color' => 'success',
+                'hasfacultyassignment' => true,
                 'capspreview' => [
                     get_string('cap_reviewprofiles', 'local_jobboard'),
                     get_string('cap_approveprofile', 'local_jobboard'),
@@ -156,6 +157,7 @@ trait admin_renderer {
                 'description' => get_string('role_hr_desc', 'local_jobboard'),
                 'icon' => 'user-check',
                 'color' => 'info',
+                'hasfacultyassignment' => false,
                 'capspreview' => [
                     get_string('cap_validatehr', 'local_jobboard'),
                     get_string('cap_validate', 'local_jobboard'),
@@ -192,6 +194,7 @@ trait admin_renderer {
                 'roleid' => $role->id ?? 0,
                 'capspreview' => $roledef['capspreview'],
                 'hascaps' => !empty($roledef['capspreview']),
+                'hasfacultyassignment' => $roledef['hasfacultyassignment'] ?? false,
                 'manageurl' => (new moodle_url('/local/jobboard/admin/roles.php', ['role' => $shortname]))->out(false),
             ];
         }
@@ -288,6 +291,76 @@ trait admin_renderer {
                 }
 
                 $data['availableusers'] = $availableusersdata;
+
+                // Add faculty assignment data for dean role.
+                if ($selectedroleshortname === 'jobboard_dean') {
+                    $data['hasfacultyassignment'] = true;
+                    $data['showfacultyassignment'] = true;
+
+                    // Get all faculties.
+                    $faculties = $DB->get_records('local_jobboard_faculty', ['enabled' => 1], 'name ASC');
+                    $facultiesdata = [];
+                    foreach ($faculties as $faculty) {
+                        // Get deans assigned to this faculty.
+                        $assignedsql = "SELECT fr.*, u.firstname, u.lastname, u.email
+                                        FROM {local_jobboard_faculty_reviewer} fr
+                                        JOIN {user} u ON u.id = fr.userid
+                                        WHERE fr.facultyid = :facultyid AND fr.status = 'active'
+                                        ORDER BY fr.role ASC, u.lastname ASC";
+                        $assignedreviewers = $DB->get_records_sql($assignedsql, ['facultyid' => $faculty->id]);
+
+                        $reviewersdata = [];
+                        foreach ($assignedreviewers as $reviewer) {
+                            $reviewersdata[] = [
+                                'id' => $reviewer->id,
+                                'userid' => $reviewer->userid,
+                                'fullname' => fullname($reviewer),
+                                'email' => $reviewer->email,
+                                'role' => $reviewer->role,
+                                'roledisplay' => get_string('faculty_reviewer_role_' . $reviewer->role, 'local_jobboard'),
+                                'isdean' => $reviewer->role === 'dean',
+                                'unassignurl' => (new moodle_url('/local/jobboard/admin/roles.php', [
+                                    'action' => 'unassignfaculty',
+                                    'role' => $selectedroleshortname,
+                                    'id' => $reviewer->id,
+                                    'sesskey' => sesskey(),
+                                ]))->out(false),
+                            ];
+                        }
+
+                        $facultiesdata[] = [
+                            'id' => $faculty->id,
+                            'code' => $faculty->code,
+                            'name' => format_string($faculty->name),
+                            'shortname' => $faculty->shortname ?? $faculty->code,
+                            'reviewers' => $reviewersdata,
+                            'hasreviewers' => !empty($reviewersdata),
+                            'reviewercount' => count($reviewersdata),
+                        ];
+                    }
+                    $data['faculties'] = $facultiesdata;
+                    $data['hasfaculties'] = !empty($facultiesdata);
+                    $data['facultycount'] = count($facultiesdata);
+
+                    // For the assign form, provide list of deans not yet assigned to any faculty.
+                    $deanuserids = array_column($assignedusersdata, 'id');
+                    $data['availabledeans'] = [];
+                    foreach ($assignedusersdata as $deanuser) {
+                        $data['availabledeans'][] = [
+                            'id' => $deanuser['id'],
+                            'fullname' => $deanuser['fullname'],
+                            'email' => $deanuser['email'],
+                        ];
+                    }
+                    $data['hasavailabledeans'] = !empty($data['availabledeans']);
+
+                    // Faculty reviewer roles for dropdown.
+                    $data['facultyroles'] = [
+                        ['value' => 'dean', 'label' => get_string('faculty_reviewer_role_dean', 'local_jobboard')],
+                        ['value' => 'lead_reviewer', 'label' => get_string('faculty_reviewer_role_lead_reviewer', 'local_jobboard')],
+                        ['value' => 'reviewer', 'label' => get_string('faculty_reviewer_role_reviewer', 'local_jobboard')],
+                    ];
+                }
             }
         }
 
