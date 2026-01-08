@@ -238,9 +238,10 @@ class application {
         if ($excludedrafts) {
             // Exclude both draft and withdrawn applications.
             // Users with withdrawn applications can reapply.
+            // Use explicit AND conditions instead of NOT IN for better compatibility.
             return $DB->record_exists_select(
                 'local_jobboard_application',
-                'vacancyid = :vacancyid AND userid = :userid AND status NOT IN (:draft, :withdrawn)',
+                'vacancyid = :vacancyid AND userid = :userid AND status != :draft AND status != :withdrawn',
                 ['vacancyid' => $vacancyid, 'userid' => $userid, 'draft' => 'draft', 'withdrawn' => 'withdrawn']
             );
         }

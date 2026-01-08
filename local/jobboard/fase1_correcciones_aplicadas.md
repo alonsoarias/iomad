@@ -2,7 +2,7 @@
 
 ## Fecha: 2026-01-08
 ## Versión Anterior: 2025122301 (release 4.0.1)
-## Versión Nueva: 2026010800 (release 4.1.0)
+## Versión Nueva: 2026010801 (release 4.1.0)
 
 ---
 
