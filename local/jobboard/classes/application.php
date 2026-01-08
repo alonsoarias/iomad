@@ -230,6 +230,7 @@ class application {
      * @param int $vacancyid The vacancy ID.
      * @param int $userid The user ID.
      * @param bool $excludedrafts If true, exclude draft applications from check.
+     *                            TEMPORARY: Also excludes 'withdrawn' to allow reapplication.
      * @return bool True if already applied.
      */
     public static function user_has_applied(int $vacancyid, int $userid, bool $excludedrafts = false): bool {
@@ -237,7 +238,8 @@ class application {
 
         if ($excludedrafts) {
             // Exclude both draft and withdrawn applications.
-            // Users with withdrawn applications can reapply.
+            // TEMPORARY FEATURE: Withdrawn exclusion allows reapplication after withdrawal.
+            // @todo When reapplication feature is removed, only exclude 'draft' here.
             // Use explicit AND conditions instead of NOT IN for better compatibility.
             return $DB->record_exists_select(
                 'local_jobboard_application',
@@ -255,6 +257,15 @@ class application {
     /**
      * Check if user has a submitted (non-draft, non-withdrawn) application to vacancy.
      *
+     * TEMPORARY FEATURE: The exclusion of 'withdrawn' status allows users to reapply
+     * after withdrawing their application. This behavior is temporary and will be
+     * removed in a future version. When removed, withdrawn applications should be
+     * treated as final (no reapplication allowed).
+     *
+     * @todo Remove withdrawn exclusion when reapplication feature is deprecated.
+     * @see get_withdrawn() - Related temporary method
+     * @see reactivate() - Related temporary method
+     *
      * @param int $vacancyid The vacancy ID.
      * @param int $userid The user ID.
      * @return bool True if has active submitted application.
@@ -266,8 +277,14 @@ class application {
     /**
      * Get user's withdrawn application for a vacancy.
      *
-     * This is used to allow reapplication after withdrawal by reactivating
-     * the previous application record.
+     * TEMPORARY FEATURE: This method supports the reapplication after withdrawal
+     * functionality. It will be removed in a future version when this feature
+     * is deprecated. Once removed, users will not be able to reapply to vacancies
+     * from which they have withdrawn.
+     *
+     * @todo Remove this method when reapplication feature is deprecated.
+     * @see reactivate() - Related temporary method
+     * @see user_has_submitted_application() - Uses withdrawn exclusion
      *
      * @param int $vacancyid The vacancy ID.
      * @param int $userid The user ID.
@@ -292,8 +309,19 @@ class application {
     /**
      * Reactivate a withdrawn application for reapplication.
      *
-     * This allows a user to reapply to the same vacancy after withdrawing
-     * by resetting their previous application to draft status.
+     * TEMPORARY FEATURE: This method allows users to reapply to the same vacancy
+     * after withdrawing by resetting their previous application to draft status.
+     * This feature is temporary and will be removed in a future version.
+     *
+     * When this feature is removed:
+     * - This method should be deleted
+     * - get_withdrawn() should be deleted
+     * - user_has_submitted_application() should no longer exclude 'withdrawn' status
+     * - The reactivation logic in views/apply.php should be removed
+     *
+     * @todo Remove this method when reapplication feature is deprecated.
+     * @see get_withdrawn() - Related temporary method
+     * @see user_has_submitted_application() - Uses withdrawn exclusion
      *
      * @return self This application (reactivated as draft).
      * @throws \moodle_exception If application is not withdrawn.

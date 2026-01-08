@@ -2,20 +2,56 @@
 
 ## Fecha: 2026-01-08
 ## Versión Anterior: 2025122301 (release 4.0.1)
-## Versión Nueva: 2026010802 (release 4.1.0)
+## Versión Nueva: 2026010803 (release 4.1.0)
 
 ---
 
 ## Resumen de Correcciones
 
-| # | Corrección | Estado | Tipo |
-|---|------------|--------|------|
-| 1 | Bug de repostulación después de retiro | COMPLETADO | Bug fix |
-| 2 | Asignación de revisores por facultad | COMPLETADO | Nueva funcionalidad + BD |
+| # | Corrección | Estado | Tipo | Temporalidad |
+|---|------------|--------|------|--------------|
+| 1 | Bug de repostulación después de retiro | COMPLETADO | Bug fix | ⚠️ TEMPORAL |
+| 2 | Asignación de revisores por facultad | COMPLETADO | Nueva funcionalidad + BD | Permanente |
+
+---
+
+## ⚠️ AVISO IMPORTANTE: Funcionalidad Temporal
+
+### Corrección 1 - Repostulación Después de Retiro
+
+**Esta funcionalidad es TEMPORAL y será removida en una versión futura.**
+
+La corrección que permite a los usuarios repostularse a una vacante después de haber retirado su postulación es una solución provisional. En una versión futura del plugin, esta funcionalidad será eliminada y las postulaciones retiradas serán consideradas como finales (sin posibilidad de repostulación).
+
+### Archivos a Modificar Cuando se Elimine Esta Funcionalidad
+
+Al remover esta funcionalidad temporal, se deben realizar los siguientes cambios:
+
+1. **`classes/application.php`**:
+   - `user_has_applied()`: Remover exclusión de estado `withdrawn`
+   - `user_has_submitted_application()`: Remover exclusión de estado `withdrawn`
+   - `get_withdrawn()`: Eliminar método completo
+   - `reactivate()`: Eliminar método completo
+
+2. **`views/apply.php`**:
+   - Eliminar bloque completo de reactivación (líneas 68-90)
+
+3. **Renderers** (revertir a verificación simple con `record_exists`):
+   - `classes/output/renderer/vacancy_renderer.php`
+   - `classes/output/renderer/public_renderer.php`
+   - `classes/output/renderer/convocatoria_renderer.php`
+   - `ajax/filter_public_vacancies.php`
+
+4. **Cadenas de idioma** (opcional, pueden mantenerse para histórico):
+   - `applicationreactivated`
+   - `applicationreactivated_notice`
+   - `error:cannotreactivate`
 
 ---
 
 ## Corrección 1: Bug de Repostulación Después de Retiro
+
+> ⚠️ **FUNCIONALIDAD TEMPORAL** - Ver aviso importante arriba.
 
 ### Problema Reportado
 Los usuarios que retiraban una postulación no podían volver a postularse a la misma convocatoria.
