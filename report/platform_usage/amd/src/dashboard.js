@@ -74,16 +74,23 @@ define(['jquery', 'core/notification'], function($, Notification) {
          * Initialize the dashboard
          *
          * @param {Object} config Configuration object
-         * @param {Object} initialData Initial report data
-         * @param {Object} strings Language strings
+         * @param {Object} initialData Initial report data (optional, reads from window.platformUsageData)
+         * @param {Object} strings Language strings (optional, reads from window.platformUsageData)
          */
         init: function(config, initialData, strings) {
-            this.config = $.extend(this.config, config);
-            this.currentData = initialData;
-            this.strings = strings;
+            // Support reading data from window.platformUsageData (to avoid AMD size limit warning).
+            if (!config && window.platformUsageData) {
+                config = window.platformUsageData.config || {};
+                initialData = window.platformUsageData.initialdata || {};
+                strings = window.platformUsageData.strings || {};
+            }
+
+            this.config = $.extend(this.config, config || {});
+            this.currentData = initialData || {};
+            this.strings = strings || {};
 
             this.setupChartDefaults();
-            this.initCharts(initialData);
+            this.initCharts(initialData || {});
             this.bindEvents();
             this.initTooltipsWithRetry(10);
         },

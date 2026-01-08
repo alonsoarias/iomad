@@ -823,11 +823,21 @@ $config = [
 // Load Chart.js from CDN.
 echo '<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
 
-// Initialize the AMD module.
+// Embed data as a script tag instead of passing via js_call_amd to avoid size warning.
+// The AMD module will read from window.platformUsageData.
+echo '<script type="text/javascript">';
+echo 'window.platformUsageData = ' . json_encode([
+    'config' => $config,
+    'initialdata' => $initialdata,
+    'strings' => $jsstrings,
+], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) . ';';
+echo '</script>';
+
+// Initialize the AMD module without passing large data (it reads from window.platformUsageData).
 $PAGE->requires->js_call_amd(
     'report_platform_usage/dashboard',
     'init',
-    [$config, $initialdata, $jsstrings]
+    []
 );
 
 // Close report wrapper div.
