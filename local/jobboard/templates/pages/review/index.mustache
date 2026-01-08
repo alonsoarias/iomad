@@ -225,6 +225,8 @@
                     </div>
                     {{/documents}}
                 </div>
+                {{! Footer with download and actions - NOT visible for deans }}
+                {{^is_dean}}
                 <div class="jb-card__footer">
                     <a href="{{downloadzipurl}}" class="jb-link"><i class="fa fa-file-zipper"></i> {{#str}}downloadzip, local_jobboard{{/str}}</a>
                     <div class="jb-footer-actions">
@@ -238,6 +240,7 @@
                         </button>
                     </div>
                 </div>
+                {{/is_dean}}
             </div>
 
             {{! Vacancy Details (visible for Deans) }}
