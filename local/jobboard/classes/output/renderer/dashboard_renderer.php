@@ -824,12 +824,13 @@ trait dashboard_renderer {
             $facultycodes = array_column($assignedfaculties, 'facultycode');
 
             // Count pending applications matching faculty vacancy codes.
+            // Dean only sees 'submitted' status applications.
             foreach ($facultycodes as $code) {
                 $pendingcount += $DB->count_records_sql(
                     "SELECT COUNT(DISTINCT a.id)
                        FROM {local_jobboard_application} a
                        JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
-                      WHERE a.status IN ('submitted', 'under_review')
+                      WHERE a.status = 'submitted'
                         AND v.code LIKE :codepattern",
                     ['codepattern' => $code . '%']
                 );
