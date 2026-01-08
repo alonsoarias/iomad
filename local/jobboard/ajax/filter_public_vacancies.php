@@ -149,7 +149,7 @@ foreach ($vacancies as $vacancy) {
     // Users with withdrawn applications can reapply.
     $hasApplied = false;
     if ($isloggedin) {
-        $hasApplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
+        $hasApplied = \local_jobboard\application::user_has_submitted_application((int) $vacancy->id, (int) $USER->id);
     }
 
     // Location from company.

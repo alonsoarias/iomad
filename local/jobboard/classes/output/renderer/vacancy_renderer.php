@@ -158,7 +158,7 @@ trait vacancy_renderer {
 
             // Check if user has applied (excluding draft and withdrawn applications).
             // Users with withdrawn applications can reapply.
-            $hasApplied = \local_jobboard\application::user_has_submitted_application($v->id, $USER->id);
+            $hasApplied = \local_jobboard\application::user_has_submitted_application((int) $v->id, (int) $USER->id);
 
             // Get convocatoria code if exists.
             $convocatoriacode = null;

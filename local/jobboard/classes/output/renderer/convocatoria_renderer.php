@@ -560,7 +560,7 @@ trait convocatoria_renderer {
 
             // Check if user already applied (excluding draft and withdrawn applications).
             // Users with withdrawn applications can reapply.
-            $hasapplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
+            $hasapplied = \local_jobboard\application::user_has_submitted_application((int) $vacancy->id, (int) $USER->id);
 
             $vacanciesdata[] = [
                 'id' => $vacancy->id,

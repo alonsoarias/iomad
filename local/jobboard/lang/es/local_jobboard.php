@@ -4166,3 +4166,39 @@ $string['confirm_email_step4'] = 'Postúlese a las vacantes de su interés';
 $string['confirm_email_help'] = 'Si tiene alguna duda, visite nuestra página de soporte o contáctenos.';
 $string['confirm_email_ignore'] = 'Si usted no solicitó esta cuenta, puede ignorar este correo de forma segura.';
 $string['confirm_email_footer'] = 'Este es un mensaje automático. Por favor no responda a este correo.';
+
+// =============================================================================
+// CADENAS DE AYUDA PARA FORMULARIO DE CONVOCATORIA
+// =============================================================================
+
+$string['convocatoriacode_help'] = 'Código identificador único de la convocatoria. Use un código corto y descriptivo (ej., CONV-2026-001).';
+$string['convocatorianame_help'] = 'El nombre oficial de la convocatoria que se mostrará a los postulantes.';
+$string['briefdescription'] = 'Descripción breve';
+$string['briefdescription_help'] = 'Un resumen corto de la convocatoria que se mostrará en listados y vistas previas.';
+$string['convocatoriadescription_help'] = 'Descripción detallada de la convocatoria, incluyendo objetivos, alcance y cualquier información relevante para los postulantes.';
+$string['convocatoriastartdate_help'] = 'La fecha de apertura de la convocatoria para postulaciones. Los postulantes pueden comenzar a enviar desde esta fecha.';
+$string['convocatoriaenddate_help'] = 'Fecha límite para enviar postulaciones. No se aceptarán postulaciones después de esta fecha.';
+
+// Sección de fechas de revisión.
+$string['reviewdates'] = 'Fechas de revisión';
+$string['dean_review_startdate'] = 'Fecha de inicio de revisión del decano';
+$string['dean_review_startdate_help'] = 'La fecha cuando los decanos pueden comenzar a revisar las postulaciones asignadas a su facultad.';
+$string['dean_review_enddate'] = 'Fecha de fin de revisión del decano';
+$string['dean_review_enddate_help'] = 'Fecha límite para que los decanos completen sus revisiones.';
+$string['hr_review_startdate'] = 'Fecha de inicio de revisión de RRHH';
+$string['hr_review_startdate_help'] = 'La fecha cuando Recursos Humanos puede comenzar a validar las postulaciones aprobadas por los decanos.';
+$string['hr_review_enddate'] = 'Fecha de fin de revisión de RRHH';
+$string['hr_review_enddate_help'] = 'Fecha límite para que Recursos Humanos complete sus validaciones.';
+
+// Publicación y alcance.
+$string['publicationtype_help'] = 'Seleccione si esta convocatoria es pública (visible para todos) o interna (solo visible para miembros de la organización).';
+$string['convocatoria_companyid'] = 'Empresa/Institución';
+$string['convocatoria_companyid_help'] = 'Seleccione la empresa o institución a la que pertenece esta convocatoria. Esto determina qué usuarios pueden ver y postularse.';
+$string['convocatoria_departmentid'] = 'Departamento';
+$string['convocatoria_departmentid_help'] = 'Opcional. Seleccione un departamento específico para restringir esta convocatoria a una unidad particular.';
+
+// Términos y configuración.
+$string['convocatoriaterms_help'] = 'Los términos y condiciones legales que los postulantes deben aceptar antes de enviar su postulación.';
+$string['maxapplicationsperuser_help'] = 'Número máximo de postulaciones que un usuario puede enviar a vacantes en esta convocatoria. Configure en 0 para ilimitado.';
+$string['exempteddoctypes_help'] = 'Tipos de documentos que pueden ser eximidos para postulantes con estado de exención válido.';
+$string['exemptionreason_help'] = 'La razón o criterio para otorgar exenciones de documentos a los postulantes.';

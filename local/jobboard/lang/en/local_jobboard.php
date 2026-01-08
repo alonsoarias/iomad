@@ -4130,3 +4130,39 @@ $string['confirm_email_step4'] = 'Apply to vacancies that interest you';
 $string['confirm_email_help'] = 'If you have any questions, visit our support page or contact us.';
 $string['confirm_email_ignore'] = 'If you did not request this account, you can safely ignore this email.';
 $string['confirm_email_footer'] = 'This is an automated message. Please do not reply to this email.';
+
+// =============================================================================
+// CONVOCATORIA FORM HELP STRINGS
+// =============================================================================
+
+$string['convocatoriacode_help'] = 'Unique identifier code for the convocatoria. Use a short, descriptive code (e.g., CONV-2026-001).';
+$string['convocatorianame_help'] = 'The official name of the convocatoria that will be displayed to applicants.';
+$string['briefdescription'] = 'Brief description';
+$string['briefdescription_help'] = 'A short summary of the convocatoria that will be shown in listings and previews.';
+$string['convocatoriadescription_help'] = 'Detailed description of the convocatoria, including objectives, scope, and any relevant information for applicants.';
+$string['convocatoriastartdate_help'] = 'The date when the convocatoria opens for applications. Applicants can start submitting from this date.';
+$string['convocatoriaenddate_help'] = 'The deadline for submitting applications. No applications will be accepted after this date.';
+
+// Review dates section.
+$string['reviewdates'] = 'Review dates';
+$string['dean_review_startdate'] = 'Dean review start date';
+$string['dean_review_startdate_help'] = 'The date when deans can start reviewing applications assigned to their faculty.';
+$string['dean_review_enddate'] = 'Dean review end date';
+$string['dean_review_enddate_help'] = 'The deadline for deans to complete their reviews.';
+$string['hr_review_startdate'] = 'HR review start date';
+$string['hr_review_startdate_help'] = 'The date when Human Resources can start validating applications approved by deans.';
+$string['hr_review_enddate'] = 'HR review end date';
+$string['hr_review_enddate_help'] = 'The deadline for Human Resources to complete their validations.';
+
+// Publication and scope.
+$string['publicationtype_help'] = 'Select whether this convocatoria is public (visible to everyone) or internal (only visible to organization members).';
+$string['convocatoria_companyid'] = 'Company/Institution';
+$string['convocatoria_companyid_help'] = 'Select the company or institution this convocatoria belongs to. This determines which users can view and apply.';
+$string['convocatoria_departmentid'] = 'Department';
+$string['convocatoria_departmentid_help'] = 'Optional. Select a specific department to restrict this convocatoria to a particular unit.';
+
+// Terms and settings.
+$string['convocatoriaterms_help'] = 'The legal terms and conditions that applicants must accept before submitting their application.';
+$string['maxapplicationsperuser_help'] = 'Maximum number of applications a single user can submit to vacancies in this convocatoria. Set to 0 for unlimited.';
+$string['exempteddoctypes_help'] = 'Document types that can be exempted for applicants with valid exemption status.';
+$string['exemptionreason_help'] = 'The reason or criteria for granting document exemptions to applicants.';
