@@ -81,8 +81,8 @@ if ($isdean && !$isreviewer) {
             $i++;
         }
         $whereclauses[] = '(' . implode(' OR ', $codepatterns) . ')';
-        // Dean sees applications that are submitted or under review.
-        $whereclauses[] = "a.status IN ('submitted', 'under_review')";
+        // Dean ONLY sees applications with 'submitted' status.
+        $whereclauses[] = "a.status = 'submitted'";
     } else {
         // Dean with no faculty assignments - show nothing.
         $whereclauses[] = '1=0';
@@ -107,7 +107,7 @@ if ($isdean && !$isreviewer) {
                FROM {local_jobboard_application} a
                JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
               WHERE (" . implode(' OR ', $countpatterns) . ")
-                AND a.status IN ('submitted', 'under_review')",
+                AND a.status = 'submitted'",
             $countparams
         );
     }
@@ -193,7 +193,7 @@ if ($isdean && !$isreviewer && !empty($deanfaculties)) {
                      FROM {local_jobboard_vacancy} v
                      JOIN {local_jobboard_application} a ON a.vacancyid = v.id
                     WHERE (" . implode(' OR ', $vacfilterpatterns) . ")
-                      AND a.status IN ('submitted', 'under_review')
+                      AND a.status = 'submitted'
                     ORDER BY v.code";
     $vacancies = $DB->get_records_sql($vacancysql, $vacfilterparams);
 } else {
