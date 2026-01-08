@@ -572,11 +572,12 @@ if (!$applicationid) {
     // Faculty-based access check for deans.
     // Deans can only view applications for vacancies in their assigned faculties.
     if ($is_dean && !$is_admin) {
-        $facultyids = faculty_reviewer::get_faculty_ids_for_user($USER->id);
-        $canaccess = false;
+        // Primary check: Use vacancy code pattern matching (e.g., FCAS-*, FII-*).
+        $canaccess = faculty_reviewer::vacancy_belongs_to_user_faculty($vacancyobj->code ?? '', $USER->id);
 
-        if (!empty($facultyids) && $vacancyobj->programid) {
-            // Get the program and check if its faculty is in the dean's assigned faculties.
+        // Fallback: also check via program->faculty relationship if vacancy has programid.
+        if (!$canaccess && !empty($vacancyobj->programid)) {
+            $facultyids = faculty_reviewer::get_faculty_ids_for_user($USER->id);
             $program = $DB->get_record('local_jobboard_program', ['id' => $vacancyobj->programid]);
             if ($program && in_array($program->facultyid, $facultyids)) {
                 $canaccess = true;

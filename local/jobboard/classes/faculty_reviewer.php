@@ -228,6 +228,43 @@ class faculty_reviewer {
     }
 
     /**
+     * Get faculty codes for a user (used for vacancy code pattern matching).
+     *
+     * @param int $userid The user ID.
+     * @return array Array of faculty codes (e.g., ['FCAS', 'FII']).
+     */
+    public static function get_faculty_codes_for_user(int $userid): array {
+        global $DB;
+
+        return $DB->get_fieldset_sql(
+            "SELECT f.code
+               FROM {local_jobboard_faculty_reviewer} fr
+               JOIN {local_jobboard_faculty} f ON f.id = fr.facultyid
+              WHERE fr.userid = :userid AND fr.status = :status",
+            ['userid' => $userid, 'status' => self::STATUS_ACTIVE]
+        );
+    }
+
+    /**
+     * Check if a vacancy code matches any of the user's assigned faculty codes.
+     *
+     * @param string $vacancycode The vacancy code (e.g., 'FCAS-001', 'FII-DOC-002').
+     * @param int $userid The user ID.
+     * @return bool True if the vacancy belongs to one of the user's faculties.
+     */
+    public static function vacancy_belongs_to_user_faculty(string $vacancycode, int $userid): bool {
+        $facultycodes = self::get_faculty_codes_for_user($userid);
+
+        foreach ($facultycodes as $code) {
+            if (strpos($vacancycode, $code) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if user is a reviewer for a specific faculty.
      *
      * @param int $facultyid The faculty ID.
