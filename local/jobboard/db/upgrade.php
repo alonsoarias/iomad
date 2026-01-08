@@ -746,6 +746,30 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026010805, 'local', 'jobboard');
     }
 
+    // Version 4.1.1 - Add programid field to vacancy for faculty-based review.
+    if ($oldversion < 2026010806) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Add programid field.
+        $field = new xmldb_field('programid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'convocatoriaid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add index on programid.
+        $index = new xmldb_index('programid_idx', XMLDB_INDEX_NOTUNIQUE, ['programid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Note: Foreign key constraint is defined in install.xml but not enforced by Moodle's XMLDB.
+        // The programid references local_jobboard_program(id).
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2026010806, 'local', 'jobboard');
+    }
+
     return true;
 }
 

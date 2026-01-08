@@ -19,6 +19,7 @@
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
         <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>
         <FIELD NAME="convocatoriaid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Parent convocatoria ID"/>
+        <FIELD NAME="programid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Academic program ID for faculty-based review"/>
         <FIELD NAME="positions" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Number of available positions"/>
         <FIELD NAME="requirements" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Minimum requirements"/>
         <FIELD NAME="desirable" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Desirable requirements"/>
@@ -36,9 +37,11 @@
         <KEY NAME="createdby" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="modifiedby" TYPE="foreign" FIELDS="modifiedby" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="convocatoriaid_fk" TYPE="foreign" FIELDS="convocatoriaid" REFTABLE="local_jobboard_convocatoria" REFFIELDS="id"/>
+        <KEY NAME="programid_fk" TYPE="foreign" FIELDS="programid" REFTABLE="local_jobboard_program" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="code_location_modality_unique" UNIQUE="true" FIELDS="code, location, modality" COMMENT="Same code allowed in different locations/modalities"/>
+        <INDEX NAME="programid_idx" UNIQUE="false" FIELDS="programid"/>
         <INDEX NAME="code_idx" UNIQUE="false" FIELDS="code"/>
         <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
         <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>

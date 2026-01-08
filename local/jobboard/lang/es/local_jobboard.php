@@ -1757,6 +1757,27 @@ $string['error:alreadyassigned'] = 'Este usuario ya está asignado como revisor 
 $string['faculty_reviewer_assigned'] = 'Revisor asignado exitosamente';
 $string['faculty_reviewer_removed'] = 'Revisor eliminado exitosamente';
 $string['no_faculty_reviewers'] = 'No hay revisores de facultad asignados';
+$string['managefacultyreviewers'] = 'Gestionar revisores por facultad';
+$string['managefacultyreviewers_desc'] = 'Asignar decanos y revisores a facultades para el flujo de revisión. Cada decano revisa postulaciones a vacantes dentro de su facultad asignada.';
+$string['selectfaculty'] = 'Seleccionar facultad';
+$string['currentfacultyreviewers'] = 'Revisores actuales';
+$string['nofacultyreviewers'] = 'No hay revisores asignados a esta facultad';
+$string['addfacultyreviewer'] = 'Agregar revisor de facultad';
+$string['facultyreviewersassigned'] = '{$a} revisor(es) asignado(s) a la facultad';
+$string['facultyreviewerunassigned'] = 'Revisor desactivado exitosamente';
+$string['facultyreviewerdeleted'] = 'Revisor eliminado exitosamente';
+$string['facultyreviewerrolechanged'] = 'Rol del revisor actualizado exitosamente';
+$string['facultyreviewerreactivated'] = 'Revisor reactivado exitosamente';
+$string['deactivate'] = 'Desactivar';
+$string['reactivate'] = 'Reactivar';
+$string['assigntofaculty'] = 'Asignar a facultad';
+$string['selectusers'] = 'Seleccionar usuarios';
+$string['searchuser'] = 'Buscar usuario';
+$string['selectmultiple'] = 'Mantenga presionado Ctrl/Cmd para seleccionar múltiples usuarios';
+$string['nousersavailableforassignment'] = 'No hay usuarios disponibles para asignar. Los usuarios deben tener la capacidad "Aprobar perfiles".';
+$string['assignrole'] = 'Rol';
+$string['dateadded'] = 'Fecha de asignación';
+$string['confirmdelete'] = '¿Está seguro de que desea eliminar permanentemente esta asignación?';
 
 // =============================================================================
 // CADENAS ADICIONALES - COMITÉS

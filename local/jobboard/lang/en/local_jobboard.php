@@ -1762,6 +1762,27 @@ $string['error:alreadyassigned'] = 'This user is already assigned as a reviewer 
 $string['faculty_reviewer_assigned'] = 'Reviewer assigned successfully';
 $string['faculty_reviewer_removed'] = 'Reviewer removed successfully';
 $string['no_faculty_reviewers'] = 'No faculty reviewers assigned';
+$string['managefacultyreviewers'] = 'Manage faculty reviewers';
+$string['managefacultyreviewers_desc'] = 'Assign deans and reviewers to faculties for the dean review workflow. Each dean reviews applications for vacancies within their assigned faculty.';
+$string['selectfaculty'] = 'Select faculty';
+$string['currentfacultyreviewers'] = 'Current reviewers';
+$string['nofacultyreviewers'] = 'No reviewers assigned to this faculty';
+$string['addfacultyreviewer'] = 'Add faculty reviewer';
+$string['facultyreviewersassigned'] = '{$a} reviewer(s) assigned to faculty';
+$string['facultyreviewerunassigned'] = 'Reviewer deactivated successfully';
+$string['facultyreviewerdeleted'] = 'Reviewer removed successfully';
+$string['facultyreviewerrolechanged'] = 'Reviewer role updated successfully';
+$string['facultyreviewerreactivated'] = 'Reviewer reactivated successfully';
+$string['deactivate'] = 'Deactivate';
+$string['reactivate'] = 'Reactivate';
+$string['assigntofaculty'] = 'Assign to faculty';
+$string['selectusers'] = 'Select users';
+$string['searchuser'] = 'Search user';
+$string['selectmultiple'] = 'Hold Ctrl/Cmd to select multiple users';
+$string['nousersavailableforassignment'] = 'No users available for assignment. Users must have the "Approve profiles" capability.';
+$string['assignrole'] = 'Role';
+$string['dateadded'] = 'Date added';
+$string['confirmdelete'] = 'Are you sure you want to permanently remove this assignment?';
 
 // =============================================================================
 // ADDITIONAL STRINGS - COMMITTEES
