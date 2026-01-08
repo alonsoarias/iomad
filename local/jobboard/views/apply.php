@@ -64,6 +64,21 @@ if (application::user_has_submitted_application($vacancyid, $USER->id)) {
 
 // Check for existing draft application.
 $draftapplication = application::get_draft($vacancyid, $USER->id);
+
+// Check for withdrawn application that can be reactivated.
+// This allows users to reapply after withdrawing their previous application.
+$withdrawnapplication = null;
+if (!$draftapplication) {
+    $withdrawnapplication = application::get_withdrawn($vacancyid, $USER->id);
+    if ($withdrawnapplication) {
+        // Reactivate the withdrawn application as a draft.
+        $withdrawnapplication->reactivate();
+        $draftapplication = $withdrawnapplication;
+        // Notify user that their previous application was reactivated.
+        \core\notification::info(get_string('applicationreactivated_notice', 'local_jobboard'));
+    }
+}
+
 $isresuming = ($draftapplication !== null);
 
 // Check vacancy is open.

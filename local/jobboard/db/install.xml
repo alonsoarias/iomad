@@ -603,6 +603,31 @@
       </INDEXES>
     </TABLE>
 
+    <!-- Table: Faculty Reviewer - Reviewers (deans) assigned to faculties for DOCENTE convocatorias -->
+    <TABLE NAME="local_jobboard_faculty_reviewer" COMMENT="Reviewers assigned to faculties - for DOCENTE type convocatorias where review is per faculty">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="facultyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Faculty ID"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Reviewer user ID"/>
+        <FIELD NAME="role" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="reviewer" SEQUENCE="false" COMMENT="Role: dean, lead_reviewer, reviewer"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active" SEQUENCE="false" COMMENT="Status: active, inactive"/>
+        <FIELD NAME="addedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who added this assignment"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="facultyid_fk" TYPE="foreign" FIELDS="facultyid" REFTABLE="local_jobboard_faculty" REFFIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="addedby_fk" TYPE="foreign" FIELDS="addedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="faculty_user_unique" UNIQUE="true" FIELDS="facultyid, userid" COMMENT="User can only be reviewer once per faculty"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="role_idx" UNIQUE="false" FIELDS="role"/>
+      </INDEXES>
+    </TABLE>
+
     <!-- Table: Program - Academic programs within faculties -->
     <TABLE NAME="local_jobboard_program" COMMENT="Academic programs within faculties - linked to course categories">
       <FIELDS>

@@ -808,6 +808,41 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025122300, 'local', 'jobboard');
     }
 
+    // Version 4.1.0 - Faculty reviewers table and reapplication fix.
+    // - Create local_jobboard_faculty_reviewer table for assigning reviewers to faculties
+    // - This supports DOCENTE convocatorias where review is per faculty (dean)
+    if ($oldversion < 2026010800) {
+        $dbman = $DB->get_manager();
+
+        // Create local_jobboard_faculty_reviewer table.
+        $table = new xmldb_table('local_jobboard_faculty_reviewer');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('facultyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('role', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'reviewer');
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'active');
+        $table->add_field('addedby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('facultyid_fk', XMLDB_KEY_FOREIGN, ['facultyid'], 'local_jobboard_faculty', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('addedby_fk', XMLDB_KEY_FOREIGN, ['addedby'], 'user', ['id']);
+
+        $table->add_index('faculty_user_unique', XMLDB_INDEX_UNIQUE, ['facultyid', 'userid']);
+        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+        $table->add_index('role_idx', XMLDB_INDEX_NOTUNIQUE, ['role']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2026010800, 'local', 'jobboard');
+    }
+
     return true;
 }
 

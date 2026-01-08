@@ -448,6 +448,9 @@ $string['draft_pending_desc'] = 'Esta postulación está guardada como borrador.
 $string['draft_action_desc'] = 'Complete los campos y documentos requeridos, luego envíe su postulación para revisión.';
 $string['applicationupdated'] = 'Postulación actualizada exitosamente';
 $string['applicationwithdrawn'] = 'Postulación retirada exitosamente';
+$string['applicationreactivated'] = 'Postulación reactivada para reenvío';
+$string['applicationreactivated_notice'] = 'Su postulación anterior retirada ha sido reactivada. Ahora puede actualizar sus documentos y volver a enviarla.';
+$string['error:cannotreactivate'] = 'Solo las postulaciones retiradas pueden ser reactivadas';
 $string['applicationdeleted'] = 'Postulación eliminada exitosamente';
 $string['noapplications'] = 'No se encontraron postulaciones';
 $string['noapplications_desc'] = 'Aún no ha postulado a ninguna vacante. Explore las posiciones disponibles para comenzar.';
@@ -1742,6 +1745,19 @@ $string['assignreviewers_desc'] = 'Asignar revisores a postulaciones';
 $string['autoassigncomplete'] = 'Asignación automática completada';
 $string['program_reviewers'] = 'Revisores de programa';
 $string['program_reviewers_desc'] = 'Revisores asignados por programa';
+$string['faculty_reviewers'] = 'Revisores de facultad';
+$string['faculty_reviewers_desc'] = 'Revisores (decanos) asignados por facultad para convocatorias tipo DOCENTE';
+$string['faculty_reviewer_role_dean'] = 'Decano';
+$string['faculty_reviewer_role_lead_reviewer'] = 'Revisor líder';
+$string['faculty_reviewer_role_reviewer'] = 'Revisor';
+$string['faculty_reviewer_status_active'] = 'Activo';
+$string['faculty_reviewer_status_inactive'] = 'Inactivo';
+$string['assign_faculty_reviewer'] = 'Asignar revisor de facultad';
+$string['assign_faculty_reviewer_desc'] = 'Asignar un revisor (decano) a una facultad para convocatorias tipo DOCENTE';
+$string['error:alreadyassigned'] = 'Este usuario ya está asignado como revisor para esta facultad';
+$string['faculty_reviewer_assigned'] = 'Revisor asignado exitosamente';
+$string['faculty_reviewer_removed'] = 'Revisor eliminado exitosamente';
+$string['no_faculty_reviewers'] = 'No hay revisores de facultad asignados';
 
 // =============================================================================
 // CADENAS ADICIONALES - COMITÉS

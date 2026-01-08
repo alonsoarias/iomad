@@ -464,6 +464,9 @@ $string['draft_pending_desc'] = 'This application is saved as a draft. Complete 
 $string['draft_action_desc'] = 'Complete the required fields and documents, then submit your application for review.';
 $string['applicationupdated'] = 'Application updated successfully';
 $string['applicationwithdrawn'] = 'Application withdrawn successfully';
+$string['applicationreactivated'] = 'Application reactivated for resubmission';
+$string['applicationreactivated_notice'] = 'Your previous withdrawn application has been reactivated. You can now update your documents and resubmit.';
+$string['error:cannotreactivate'] = 'Only withdrawn applications can be reactivated';
 $string['applicationdeleted'] = 'Application deleted successfully';
 $string['noapplications'] = 'No applications found';
 $string['noapplications_desc'] = 'You haven\'t applied to any vacancies yet. Browse available positions to get started.';
@@ -1747,6 +1750,19 @@ $string['assignreviewers_desc'] = 'Assign reviewers to applications';
 $string['autoassigncomplete'] = 'Auto-assignment complete';
 $string['program_reviewers'] = 'Program reviewers';
 $string['program_reviewers_desc'] = 'Reviewers assigned by program';
+$string['faculty_reviewers'] = 'Faculty reviewers';
+$string['faculty_reviewers_desc'] = 'Reviewers (deans) assigned by faculty for DOCENTE convocatorias';
+$string['faculty_reviewer_role_dean'] = 'Dean';
+$string['faculty_reviewer_role_lead_reviewer'] = 'Lead reviewer';
+$string['faculty_reviewer_role_reviewer'] = 'Reviewer';
+$string['faculty_reviewer_status_active'] = 'Active';
+$string['faculty_reviewer_status_inactive'] = 'Inactive';
+$string['assign_faculty_reviewer'] = 'Assign faculty reviewer';
+$string['assign_faculty_reviewer_desc'] = 'Assign a reviewer (dean) to a faculty for DOCENTE type convocatorias';
+$string['error:alreadyassigned'] = 'This user is already assigned as a reviewer for this faculty';
+$string['faculty_reviewer_assigned'] = 'Reviewer assigned successfully';
+$string['faculty_reviewer_removed'] = 'Reviewer removed successfully';
+$string['no_faculty_reviewers'] = 'No faculty reviewers assigned';
 
 // =============================================================================
 // ADDITIONAL STRINGS - COMMITTEES

@@ -236,10 +236,12 @@ class application {
         global $DB;
 
         if ($excludedrafts) {
+            // Exclude both draft and withdrawn applications.
+            // Users with withdrawn applications can reapply.
             return $DB->record_exists_select(
                 'local_jobboard_application',
-                'vacancyid = :vacancyid AND userid = :userid AND status != :status',
-                ['vacancyid' => $vacancyid, 'userid' => $userid, 'status' => 'draft']
+                'vacancyid = :vacancyid AND userid = :userid AND status NOT IN (:draft, :withdrawn)',
+                ['vacancyid' => $vacancyid, 'userid' => $userid, 'draft' => 'draft', 'withdrawn' => 'withdrawn']
             );
         }
 
@@ -250,14 +252,91 @@ class application {
     }
 
     /**
-     * Check if user has a submitted (non-draft) application to vacancy.
+     * Check if user has a submitted (non-draft, non-withdrawn) application to vacancy.
      *
      * @param int $vacancyid The vacancy ID.
      * @param int $userid The user ID.
-     * @return bool True if has submitted application.
+     * @return bool True if has active submitted application.
      */
     public static function user_has_submitted_application(int $vacancyid, int $userid): bool {
         return self::user_has_applied($vacancyid, $userid, true);
+    }
+
+    /**
+     * Get user's withdrawn application for a vacancy.
+     *
+     * This is used to allow reapplication after withdrawal by reactivating
+     * the previous application record.
+     *
+     * @param int $vacancyid The vacancy ID.
+     * @param int $userid The user ID.
+     * @return self|null The withdrawn application or null.
+     */
+    public static function get_withdrawn(int $vacancyid, int $userid): ?self {
+        global $DB;
+
+        $record = $DB->get_record('local_jobboard_application', [
+            'vacancyid' => $vacancyid,
+            'userid' => $userid,
+            'status' => 'withdrawn',
+        ]);
+
+        if (!$record) {
+            return null;
+        }
+
+        return new self($record);
+    }
+
+    /**
+     * Reactivate a withdrawn application for reapplication.
+     *
+     * This allows a user to reapply to the same vacancy after withdrawing
+     * by resetting their previous application to draft status.
+     *
+     * @return self This application (reactivated as draft).
+     * @throws \moodle_exception If application is not withdrawn.
+     */
+    public function reactivate(): self {
+        global $DB;
+
+        if ($this->status !== 'withdrawn') {
+            throw new \moodle_exception('error:cannotreactivate', 'local_jobboard');
+        }
+
+        $oldstatus = $this->status;
+        $this->status = 'draft';
+        $this->timemodified = time();
+
+        // Clear previous review data for fresh start.
+        $this->reviewerid = null;
+        $this->statusnotes = '';
+
+        $DB->update_record('local_jobboard_application', (object) [
+            'id' => $this->id,
+            'status' => $this->status,
+            'reviewerid' => null,
+            'statusnotes' => '',
+            'timemodified' => $this->timemodified,
+        ]);
+
+        // Log workflow change.
+        $this->log_workflow_change($oldstatus, 'draft', get_string('applicationreactivated', 'local_jobboard'));
+
+        // Log audit.
+        audit::log(
+            audit::ACTION_UPDATE,
+            audit::ENTITY_APPLICATION,
+            $this->id,
+            [
+                'vacancyid' => $this->vacancyid,
+                'userid' => $this->userid,
+                'action' => 'reactivated',
+                'previous_status' => $oldstatus,
+            ]
+        );
+
+        return $this;
     }
 
     /**
