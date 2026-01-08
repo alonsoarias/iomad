@@ -4071,20 +4071,6 @@ $string['error:dean_access_dates'] = 'El período de revisión del Decano no est
 $string['error:hr_access_dates'] = 'El período de validación de Talento Humano no está activo para esta convocatoria';
 $string['error:invalidtransition'] = 'Transición de estado no permitida';
 $string['error:dean_cannot_validate_docs'] = 'Los Decanos no pueden aprobar/rechazar documentos individuales. Solo pueden aprobar/rechazar la postulación completa.';
-$string['error:dean_already_assigned'] = 'Este usuario ya está asignado como decano de esta facultad';
-
-// Gestión de decanos por facultad
-$string['faculty_deans'] = 'Decanos por Facultad';
-$string['faculty_deans_desc'] = 'Asigne decanos a las facultades para la revisión de postulaciones';
-$string['assign_dean'] = 'Asignar Decano';
-$string['remove_dean'] = 'Remover Decano';
-$string['dean_assigned'] = 'Decano asignado correctamente';
-$string['dean_removed'] = 'Decano removido correctamente';
-$string['no_deans_assigned'] = 'Sin decanos asignados';
-$string['select_dean'] = 'Seleccionar decano';
-$string['select_faculty'] = 'Seleccionar facultad';
-$string['dean_assignment_success'] = 'Asignación de decano guardada correctamente';
-$string['confirm_remove_dean'] = '¿Está seguro de que desea remover a este decano de la facultad?';
 
 // Capabilities
 $string['jobboard:reviewprofiles'] = 'Revisar perfiles de postulantes';
@@ -4096,41 +4082,6 @@ $string['approve_profile'] = 'Aprobar perfil';
 $string['reject_profile'] = 'Rechazar perfil';
 $string['validate_hr'] = 'Validar (Talento Humano)';
 $string['reject_hr'] = 'Rechazar (Talento Humano)';
-
-// Acciones del Decano
-$string['dean_actions'] = 'Acciones del Decano';
-$string['dean_actions_desc'] = 'Revise la documentación del postulante y tome una decisión sobre la postulación.';
-$string['dean_approve_comments_placeholder'] = 'Comentarios opcionales sobre la aprobación...';
-$string['dean_reject_reason_placeholder'] = 'Indique el motivo del rechazo de la postulación...';
-$string['dean_reject_reason_help'] = 'El motivo del rechazo será notificado al postulante.';
-$string['dean_reject_reason_required'] = 'Debe indicar el motivo del rechazo de la postulación.';
-$string['rejection_reason'] = 'Motivo del rechazo';
-
-// Acciones de Talento Humano
-$string['hr_actions'] = 'Acciones de Talento Humano';
-$string['hr_actions_desc'] = 'Validación final de la documentación del postulante.';
-$string['hr_validate_comments_placeholder'] = 'Comentarios opcionales sobre la validación...';
-$string['hr_reject_reason_placeholder'] = 'Indique el motivo del rechazo...';
-$string['hr_reject_reason_help'] = 'El motivo del rechazo será notificado al postulante.';
-$string['hr_reject_reason_required'] = 'Debe indicar el motivo del rechazo.';
-
-// Dashboard Decano
-$string['role_dean'] = 'Decano';
-$string['role_hr'] = 'Talento Humano';
-$string['dashboard_dean_welcome'] = 'Bienvenido al panel de revisión de postulaciones. Aquí puede revisar y aprobar/rechazar las postulaciones de su facultad.';
-$string['dashboard_hr_welcome'] = 'Bienvenido al panel de validación de documentos. Aquí puede validar la documentación de los postulantes aprobados por los decanos.';
-$string['dean_dashboard_title'] = 'Revisión de Postulaciones';
-$string['dean_dashboard_desc'] = 'Revise las postulaciones pendientes y tome decisiones sobre los perfiles de los candidatos.';
-$string['hr_dashboard_title'] = 'Validación de Documentos';
-$string['hr_dashboard_desc'] = 'Valide la documentación de los postulantes que han sido aprobados por los decanos.';
-$string['pending_dean_review'] = 'Pendientes de revisión';
-$string['dean_approved'] = 'Aprobados por Decano';
-$string['dean_rejected'] = 'Rechazados por Decano';
-$string['total_reviewed'] = 'Total revisados';
-$string['pending_hr_validation'] = 'Pendientes de validación';
-$string['hr_validated'] = 'Validados por T.H.';
-$string['hr_rejected'] = 'Rechazados por T.H.';
-$string['total_validated'] = 'Total validados';
 
 // Estados del período de revisión
 $string['review_period_not_configured'] = 'Período de revisión no configurado';

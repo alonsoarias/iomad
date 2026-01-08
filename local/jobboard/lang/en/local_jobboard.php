@@ -2836,64 +2836,6 @@ $string['locked'] = 'Locked';
 $string['admin_review_mode'] = 'Admin mode: You can review any document without order or date restrictions';
 $string['dean_review_mode'] = 'Dean mode: You can view all documents but can only approve or reject the complete application, not individual documents';
 
-// Dean actions
-$string['dean_actions'] = 'Dean Actions';
-$string['dean_actions_desc'] = 'Review the applicant\'s documentation and make a decision on the application.';
-$string['dean_approve_comments_placeholder'] = 'Optional comments on the approval...';
-$string['dean_reject_reason_placeholder'] = 'Indicate the reason for rejecting the application...';
-$string['dean_reject_reason_help'] = 'The rejection reason will be notified to the applicant.';
-$string['dean_reject_reason_required'] = 'You must indicate the reason for rejecting the application.';
-$string['rejection_reason'] = 'Rejection reason';
-$string['approve_profile'] = 'Approve profile';
-$string['reject_profile'] = 'Reject profile';
-$string['profile_approved'] = 'Profile approved';
-$string['profile_rejected'] = 'Profile rejected';
-$string['profile_approved_advancing'] = 'Profile approved by Dean, advancing to HR validation';
-
-// HR actions
-$string['hr_actions'] = 'HR Actions';
-$string['hr_actions_desc'] = 'Final validation of the applicant\'s documentation.';
-$string['hr_validate_comments_placeholder'] = 'Optional comments on the validation...';
-$string['hr_reject_reason_placeholder'] = 'Indicate the reason for rejection...';
-$string['hr_reject_reason_help'] = 'The rejection reason will be notified to the applicant.';
-$string['hr_reject_reason_required'] = 'You must indicate the reason for rejection.';
-$string['validate_hr'] = 'Validate (HR)';
-$string['reject_hr'] = 'Reject (HR)';
-
-// Errors
-$string['error:dean_already_assigned'] = 'This user is already assigned as dean for this faculty';
-
-// Faculty dean management
-$string['faculty_deans'] = 'Faculty Deans';
-$string['faculty_deans_desc'] = 'Assign deans to faculties for application review';
-$string['assign_dean'] = 'Assign Dean';
-$string['remove_dean'] = 'Remove Dean';
-$string['dean_assigned'] = 'Dean assigned successfully';
-$string['dean_removed'] = 'Dean removed successfully';
-$string['no_deans_assigned'] = 'No deans assigned';
-$string['select_dean'] = 'Select dean';
-$string['select_faculty'] = 'Select faculty';
-$string['dean_assignment_success'] = 'Dean assignment saved successfully';
-$string['confirm_remove_dean'] = 'Are you sure you want to remove this dean from the faculty?';
-
-// Dean/HR Dashboard
-$string['role_dean'] = 'Dean';
-$string['role_hr'] = 'Human Resources';
-$string['dashboard_dean_welcome'] = 'Welcome to the application review panel. Here you can review and approve/reject applications from your faculty.';
-$string['dashboard_hr_welcome'] = 'Welcome to the document validation panel. Here you can validate the documentation of applicants approved by deans.';
-$string['dean_dashboard_title'] = 'Application Review';
-$string['dean_dashboard_desc'] = 'Review pending applications and make decisions on candidate profiles.';
-$string['hr_dashboard_title'] = 'Document Validation';
-$string['hr_dashboard_desc'] = 'Validate the documentation of applicants who have been approved by deans.';
-$string['pending_dean_review'] = 'Pending review';
-$string['dean_approved'] = 'Approved by Dean';
-$string['dean_rejected'] = 'Rejected by Dean';
-$string['total_reviewed'] = 'Total reviewed';
-$string['pending_hr_validation'] = 'Pending validation';
-$string['hr_validated'] = 'Validated by HR';
-$string['hr_rejected'] = 'Rejected by HR';
-$string['total_validated'] = 'Total validated';
-
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
 $string['selectstatus'] = 'Select status';

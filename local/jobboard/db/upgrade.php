@@ -808,40 +808,6 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025122300, 'local', 'jobboard');
     }
 
-    // Version 4.0.2 - Add faculty_dean table to assign deans to faculties.
-    if ($oldversion < 2025122302) {
-        // Define table local_jobboard_faculty_dean.
-        $table = new xmldb_table('local_jobboard_faculty_dean');
-
-        // Adding fields.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('facultyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'active');
-        $table->add_field('addedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-
-        // Adding keys.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
-        $table->add_key('facultyid_fk', XMLDB_KEY_FOREIGN, ['facultyid'], 'local_jobboard_faculty', ['id']);
-        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
-        $table->add_key('addedby_fk', XMLDB_KEY_FOREIGN, ['addedby'], 'user', ['id']);
-
-        // Adding indexes.
-        $table->add_index('faculty_user_unique', XMLDB_INDEX_UNIQUE, ['facultyid', 'userid']);
-        $table->add_index('userid_idx', XMLDB_INDEX_NOTUNIQUE, ['userid']);
-        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
-
-        // Create table if it doesn't exist.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        // Savepoint reached.
-        upgrade_plugin_savepoint(true, 2025122302, 'local', 'jobboard');
-    }
-
     return true;
 }
 

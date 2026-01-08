@@ -91,11 +91,10 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
 
             // Publish all draft vacancies in this convocatoria.
-            // Also propagate the convocatoria's publicationtype to ensure visibility.
             $DB->execute("UPDATE {local_jobboard_vacancy}
-                          SET status = 'published', publicationtype = ?, timemodified = ?
+                          SET status = 'published', timemodified = ?
                           WHERE convocatoriaid = ? AND status = 'draft'",
-                [$convocatoria->publicationtype ?? 'public', time(), $convocatoriaid]);
+                [time(), $convocatoriaid]);
 
             // Audit log.
             \local_jobboard\audit::log('convocatoria_opened', 'convocatoria', $convocatoriaid, [
@@ -165,12 +164,11 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
 
             // Reopen all closed vacancies in this convocatoria.
-            // Also ensure publicationtype matches the convocatoria.
             $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid, 'status' => 'closed']);
             $DB->execute("UPDATE {local_jobboard_vacancy}
-                          SET status = 'published', publicationtype = ?, timemodified = ?
+                          SET status = 'published', timemodified = ?
                           WHERE convocatoriaid = ? AND status = 'closed'",
-                [$convocatoria->publicationtype ?? 'public', time(), $convocatoriaid]);
+                [time(), $convocatoriaid]);
 
             // Audit log.
             \local_jobboard\audit::log('convocatoria_reopened', 'convocatoria', $convocatoriaid, [
