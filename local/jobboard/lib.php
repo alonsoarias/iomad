@@ -204,6 +204,15 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
                 $menuentry .= "\n-$myreviewslabel|/local/jobboard/index.php?view=myreviews";
             }
 
+            // Dean-specific menu items (deans who can review profiles but not documents).
+            $isdean = has_capability('local/jobboard:reviewprofiles', $context) ||
+                      has_capability('local/jobboard:approveprofile', $context);
+            $isreviewer = has_capability('local/jobboard:reviewdocuments', $context);
+            if ($isdean && !$isreviewer) {
+                $myreviewslabel = get_string('myreviews', 'local_jobboard');
+                $menuentry .= "\n-$myreviewslabel|/local/jobboard/index.php?view=myreviews";
+            }
+
             // Reports.
             if (has_capability('local/jobboard:viewreports', $context)) {
                 $reportslabel = get_string('reports', 'local_jobboard');
@@ -304,6 +313,19 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         );
 
         // My assigned reviews.
+        $jobboardnode->add(
+            get_string('myreviews', 'local_jobboard'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']),
+            navigation_node::TYPE_CUSTOM
+        );
+    }
+
+    // Dean-specific menu items (deans who can review profiles but not documents).
+    $isdean = has_capability('local/jobboard:reviewprofiles', $context) ||
+              has_capability('local/jobboard:approveprofile', $context);
+    $isreviewer = has_capability('local/jobboard:reviewdocuments', $context);
+    if ($isdean && !$isreviewer) {
+        // My reviews for deans.
         $jobboardnode->add(
             get_string('myreviews', 'local_jobboard'),
             new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']),
