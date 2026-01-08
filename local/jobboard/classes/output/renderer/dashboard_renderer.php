@@ -795,14 +795,12 @@ trait dashboard_renderer {
 
         // Get assigned faculties for this dean.
         $faculties = $DB->get_records_sql(
-            "SELECT fr.id, fr.facultyid, f.name as facultyname, f.code as facultycode,
-                    c.id as convocatoriaid, c.name as convocatorianame, c.code as convocatoriacode
+            "SELECT fr.id, fr.facultyid, f.name as facultyname, f.code as facultycode, fr.role
                FROM {local_jobboard_faculty_reviewer} fr
                JOIN {local_jobboard_faculty} f ON f.id = fr.facultyid
-               LEFT JOIN {local_jobboard_convocatoria} c ON c.id = fr.convocatoriaid
               WHERE fr.userid = :userid
                 AND fr.status = 'active'
-              ORDER BY c.name, f.name",
+              ORDER BY f.name",
             ['userid' => $userid]
         );
 
@@ -813,8 +811,7 @@ trait dashboard_renderer {
                 'facultyid' => $fac->facultyid,
                 'facultyname' => $fac->facultyname,
                 'facultycode' => $fac->facultycode,
-                'convocatorianame' => $fac->convocatorianame ?? '',
-                'convocatoriacode' => $fac->convocatoriacode ?? '',
+                'role' => $fac->role,
             ];
         }
 
