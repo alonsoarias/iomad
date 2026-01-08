@@ -240,6 +240,93 @@
                 </div>
             </div>
 
+            {{! Vacancy Details (visible for Deans) }}
+            {{#is_dean}}
+            <div class="jb-card">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-briefcase"></i>
+                    {{#str}}vacancydetails, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}code, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value jb-code">{{selectedapplication.vacancycode}}</span>
+                    </div>
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}title, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value">{{selectedapplication.vacancytitle}}</span>
+                    </div>
+                    {{#vacancy}}
+                    {{#department}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}department, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value">{{department}}</span>
+                    </div>
+                    {{/department}}
+                    {{#location}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}location, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value">{{location}}</span>
+                    </div>
+                    {{/location}}
+                    {{#contracttypelabel}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}contracttype, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value">{{contracttypelabel}}</span>
+                    </div>
+                    {{/contracttypelabel}}
+                    {{#positions}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}positions, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value">{{positions}}</span>
+                    </div>
+                    {{/positions}}
+                    {{/vacancy}}
+                </div>
+            </div>
+            {{/is_dean}}
+
+            {{! Dean Actions - Approve/Reject Application }}
+            {{#show_dean_actions}}
+            <div class="jb-card">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-user-tie"></i>
+                    {{#str}}deanactions, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <p class="jb-text-muted" style="font-size: 0.8125rem; margin-bottom: 1rem;">
+                        {{#str}}dean_actions_help, local_jobboard{{/str}}
+                    </p>
+
+                    {{! Approve Application Form }}
+                    <form method="post" action="{{submitreviewurl}}" class="jb-dean-form" style="margin-bottom: 1rem;">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="approveprofile">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <textarea name="comments" class="jb-textarea" rows="2" placeholder="{{#str}}approvecomments_placeholder, local_jobboard{{/str}}"></textarea>
+                        <button type="submit" class="jb-btn jb-btn--success jb-btn--full" style="margin-top: 0.5rem;">
+                            <i class="fa fa-check"></i> {{#str}}approveprofile, local_jobboard{{/str}}
+                        </button>
+                    </form>
+
+                    <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 1rem 0;">
+
+                    {{! Reject Application Form }}
+                    <form method="post" action="{{submitreviewurl}}" class="jb-dean-form">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="rejectprofile">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <textarea name="reason" class="jb-textarea" rows="2" placeholder="{{#str}}rejectreason_placeholder, local_jobboard{{/str}}" required></textarea>
+                        <button type="submit" class="jb-btn jb-btn--danger jb-btn--full" style="margin-top: 0.5rem;">
+                            <i class="fa fa-times"></i> {{#str}}rejectprofile, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {{/show_dean_actions}}
+
             {{! Review Progress }}
             {{#allreviewed}}
             <div class="jb-card">

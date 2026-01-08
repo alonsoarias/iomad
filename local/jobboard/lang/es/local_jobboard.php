@@ -4131,6 +4131,13 @@ $string['reject_profile'] = 'Rechazar perfil';
 $string['validate_hr'] = 'Validar (Talento Humano)';
 $string['reject_hr'] = 'Rechazar (Talento Humano)';
 
+// Acciones del Decano
+$string['deanactions'] = 'Acciones del Decano';
+$string['dean_actions_help'] = 'Como Decano, puede aprobar o rechazar esta postulación completa. Si aprueba, el candidato pasará a preselección. Si rechaza, debe indicar el motivo.';
+$string['approveprofile'] = 'Aprobar postulación';
+$string['rejectprofile'] = 'Rechazar postulación';
+$string['approvecomments_placeholder'] = 'Comentarios opcionales sobre la aprobación...';
+
 // Estados del período de revisión
 $string['review_period_not_configured'] = 'Período de revisión no configurado';
 $string['review_period_pending'] = 'Período de revisión pendiente';

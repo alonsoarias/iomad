@@ -2886,6 +2886,13 @@ $string['locked'] = 'Locked';
 $string['admin_review_mode'] = 'Admin mode: You can review any document without order or date restrictions';
 $string['dean_review_mode'] = 'Dean mode: You can view all documents but can only approve or reject the complete application, not individual documents';
 
+// Dean action strings
+$string['deanactions'] = 'Dean Actions';
+$string['dean_actions_help'] = 'As a Dean, you can approve or reject this complete application. If approved, the candidate will advance to preselection. If rejected, you must provide a reason.';
+$string['approveprofile'] = 'Approve application';
+$string['rejectprofile'] = 'Reject application';
+$string['approvecomments_placeholder'] = 'Optional comments about the approval...';
+
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
 $string['selectstatus'] = 'Select status';

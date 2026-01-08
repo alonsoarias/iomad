@@ -1328,6 +1328,22 @@ trait review_renderer {
             'statuscolor' => $appstatusclass,
         ];
 
+        // Vacancy details for dean view.
+        $contracttypes = \local_jobboard_get_contract_types();
+        $data['vacancy'] = [
+            'id' => $vacancy->id ?? 0,
+            'code' => format_string($vacancy->code ?? ''),
+            'title' => format_string($vacancy->title ?? ''),
+            'department' => format_string($vacancy->department ?? ''),
+            'location' => format_string($vacancy->location ?? ''),
+            'contracttype' => $vacancy->contracttype ?? '',
+            'contracttypelabel' => isset($vacancy->contracttype) && isset($contracttypes[$vacancy->contracttype])
+                ? $contracttypes[$vacancy->contracttype]
+                : ($vacancy->contracttype ?? ''),
+            'positions' => $vacancy->positions ?? 1,
+            'description' => format_text($vacancy->description ?? '', FORMAT_HTML),
+        ];
+
         $data['hasdocuments'] = !empty($docsdata);
         $data['documents'] = $docsdata;
         $data['initialpreview'] = $initialpreview;
