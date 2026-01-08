@@ -65,8 +65,17 @@ if (application::user_has_submitted_application($vacancyid, $USER->id)) {
 // Check for existing draft application.
 $draftapplication = application::get_draft($vacancyid, $USER->id);
 
-// Check for withdrawn application that can be reactivated.
-// This allows users to reapply after withdrawing their previous application.
+// TEMPORARY FEATURE: Reapplication after withdrawal.
+// This block allows users to reapply to the same vacancy after withdrawing their application.
+// The withdrawn application is reactivated as a draft, preserving previously uploaded documents.
+//
+// @todo Remove this entire block when the reapplication feature is deprecated.
+// When removed, also update:
+// - application::user_has_applied() - Remove withdrawn exclusion
+// - application::user_has_submitted_application() - Remove withdrawn exclusion
+// - application::get_withdrawn() - Delete method
+// - application::reactivate() - Delete method
+// - All renderer files using user_has_submitted_application()
 $withdrawnapplication = null;
 if (!$draftapplication) {
     $withdrawnapplication = application::get_withdrawn($vacancyid, $USER->id);
@@ -78,6 +87,7 @@ if (!$draftapplication) {
         \core\notification::info(get_string('applicationreactivated_notice', 'local_jobboard'));
     }
 }
+// END TEMPORARY FEATURE: Reapplication after withdrawal.
 
 $isresuming = ($draftapplication !== null);
 
