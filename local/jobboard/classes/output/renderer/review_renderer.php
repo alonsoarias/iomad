@@ -1600,7 +1600,7 @@ trait review_renderer {
             "SELECT DISTINCT c.id, c.name, c.startdate, c.enddate, c.status,
                     (SELECT COUNT(*) FROM {local_jobboard_vacancy} v WHERE v.convocatoriaid = c.id) as vacancycount
                FROM {local_jobboard_convocatoria} c
-              WHERE c.status IN ('published', 'closed')
+              WHERE c.status IN ('open', 'closed')
                 AND EXISTS (SELECT 1 FROM {local_jobboard_vacancy} v WHERE v.convocatoriaid = c.id)
               ORDER BY c.enddate DESC, c.name ASC"
         );
