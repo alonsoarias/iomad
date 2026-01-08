@@ -1473,4 +1473,111 @@ trait review_renderer {
 
         return array_merge($common, $specific);
     }
+
+    /**
+     * Prepare data for assign reviewer page.
+     *
+     * @param int $vacancyid Optional vacancy ID to filter by.
+     * @return array Template data.
+     */
+    public function prepare_assign_reviewer_page_data(int $vacancyid = 0): array {
+        global $DB;
+
+        // Get statistics.
+        $unassignedcount = \local_jobboard\reviewer::count_unassigned($vacancyid ?: null);
+        $reviewers = \local_jobboard\reviewer::get_available_reviewers();
+        $reviewercount = count($reviewers);
+        $assignedcount = \local_jobboard\reviewer::count_assigned($vacancyid ?: null);
+        $avgworkload = $reviewercount > 0 ? round($assignedcount / $reviewercount, 1) : 0;
+
+        // Get vacancies for filter dropdown.
+        $vacancies = [];
+        $allvacancies = $DB->get_records_sql(
+            "SELECT DISTINCT v.id, v.code, v.title
+               FROM {local_jobboard_vacancy} v
+               JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+              WHERE a.status = 'submitted'
+              ORDER BY v.code"
+        );
+        foreach ($allvacancies as $v) {
+            $vacancies[] = [
+                'id' => $v->id,
+                'label' => format_string($v->code . ' - ' . $v->title),
+                'selected' => ($v->id == $vacancyid),
+            ];
+        }
+
+        // Prepare reviewers data with workload.
+        $reviewersdata = [];
+        foreach ($reviewers as $r) {
+            $workload = \local_jobboard\reviewer::get_workload($r->id);
+            $workloadcolor = 'success';
+            if ($workload >= 20) {
+                $workloadcolor = 'danger';
+            } else if ($workload >= 10) {
+                $workloadcolor = 'warning';
+            }
+
+            $reviewersdata[] = [
+                'id' => $r->id,
+                'fullname' => fullname($r),
+                'workload' => $workload,
+                'workloadcolor' => $workloadcolor,
+                'workloadindicator' => $workload >= 15 ? ' ⚠️' : '',
+                'hasstats' => false, // Could add more detailed stats later.
+            ];
+        }
+
+        // Get unassigned applications.
+        $unassigned = \local_jobboard\reviewer::get_unassigned_applications($vacancyid ?: null);
+        $unassigneddata = [];
+        foreach ($unassigned as $app) {
+            $statuscolor = 'warning';
+            if ($app->status === 'submitted') {
+                $statuscolor = 'primary';
+            }
+
+            $unassigneddata[] = [
+                'id' => $app->id,
+                'applicantname' => format_string($app->firstname . ' ' . $app->lastname),
+                'vacancycode' => format_string($app->vacancy_code),
+                'statustext' => get_string('status_' . $app->status, 'local_jobboard'),
+                'statuscolor' => $statuscolor,
+                'dateapplied' => userdate($app->timecreated, '%Y-%m-%d'),
+            ];
+        }
+
+        $pageurl = new \moodle_url('/local/jobboard/admin/assign_reviewer.php');
+
+        return [
+            'pagetitle' => get_string('assignreviewer', 'local_jobboard'),
+            'stats' => [
+                'unassigned' => $unassignedcount,
+                'reviewers' => $reviewercount,
+                'assigned' => $assignedcount,
+                'avgworkload' => $avgworkload,
+            ],
+            'vacancies' => $vacancies,
+            'selectedvacancyid' => $vacancyid,
+            'reviewers' => $reviewersdata,
+            'hasreviewers' => !empty($reviewersdata),
+            'unassigned' => $unassigneddata,
+            'hasunassigned' => !empty($unassigneddata),
+            'filterformurl' => $pageurl->out(false),
+            'actionformurl' => $pageurl->out(false),
+            'dashboardurl' => (new \moodle_url('/local/jobboard/'))->out(false),
+            'reviewurl' => (new \moodle_url('/local/jobboard/views/myreviews.php'))->out(false),
+            'sesskey' => sesskey(),
+        ];
+    }
+
+    /**
+     * Render the assign reviewer page.
+     *
+     * @param array $data Template data from prepare_assign_reviewer_page_data.
+     * @return string Rendered HTML.
+     */
+    public function render_assign_reviewer_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/review/assign_reviewer', $data);
+    }
 }
