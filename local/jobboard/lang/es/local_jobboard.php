@@ -4202,3 +4202,7 @@ $string['convocatoriaterms_help'] = 'Los términos y condiciones legales que los
 $string['maxapplicationsperuser_help'] = 'Número máximo de postulaciones que un usuario puede enviar a vacantes en esta convocatoria. Configure en 0 para ilimitado.';
 $string['exempteddoctypes_help'] = 'Tipos de documentos que pueden ser eximidos para postulantes con estado de exención válido.';
 $string['exemptionreason_help'] = 'La razón o criterio para otorgar exenciones de documentos a los postulantes.';
+
+// FUNCIONALIDAD TEMPORAL: Aviso de repostulación después de retiro.
+// @todo Eliminar cuando la funcionalidad de repostulación sea deprecada.
+$string['withdrawnapplication_reapply_notice'] = 'Usted tiene una postulación previamente retirada para esta vacante. Si hace clic en "Aplicar", su postulación retirada será reactivada como borrador, permitiéndole editarla y reenviarla.';

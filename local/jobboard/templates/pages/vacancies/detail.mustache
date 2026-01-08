@@ -78,6 +78,19 @@
     </div>
     {{/isclosed}}
 
+    {{! TEMPORARY FEATURE: Withdrawn Application Notice }}
+    {{! Shows when user has a withdrawn application that can be reactivated }}
+    {{#haswithdrawn}}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-info-circle"></i>
+        <div class="jb-alert__content">
+            <strong>{{#str}}notice{{/str}}</strong>
+            <span>{{withdrawnnotice}}</span>
+        </div>
+    </div>
+    {{/haswithdrawn}}
+    {{! END TEMPORARY FEATURE }}
+
     {{! Content Layout }}
     <div class="jb-detail-content">
         {{! Main Column }}

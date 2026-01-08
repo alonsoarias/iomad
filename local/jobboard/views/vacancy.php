@@ -78,7 +78,16 @@ $canedit = $canmanage && $vacancy->can_edit();
 
 // Check if user already applied (excluding draft and withdrawn applications).
 // Users with withdrawn applications can reapply.
-$hasapplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
+$hasapplied = \local_jobboard\application::user_has_submitted_application((int) $vacancy->id, (int) $USER->id);
+
+// TEMPORARY FEATURE: Check if user has a withdrawn application that can be reactivated.
+// @todo Remove this check when reapplication feature is deprecated.
+$haswithdrawn = false;
+if ($canapply && !$hasapplied) {
+    $withdrawnapp = \local_jobboard\application::get_withdrawn((int) $vacancy->id, (int) $USER->id);
+    $haswithdrawn = ($withdrawnapp !== null);
+}
+// END TEMPORARY FEATURE.
 
 // Build application stats for managers.
 $applicationstats = [];
@@ -110,7 +119,8 @@ $data = $renderer->prepare_vacancy_detail_page_data(
     $hasapplied,
     $canedit,
     $canmanage,
-    $applicationstats
+    $applicationstats,
+    $haswithdrawn // TEMPORARY: Pass withdrawn status for reapplication notice.
 );
 
 // Output the page.

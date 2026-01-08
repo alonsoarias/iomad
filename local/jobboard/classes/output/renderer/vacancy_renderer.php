@@ -705,6 +705,7 @@ trait vacancy_renderer {
      * @param bool $canedit Whether user can edit the vacancy.
      * @param bool $canmanage Whether user can manage vacancies.
      * @param array $applicationstats Application stats for managers (optional).
+     * @param bool $haswithdrawn Whether user has a withdrawn application (TEMPORARY).
      * @return array Template data.
      */
     public function prepare_vacancy_detail_page_data(
@@ -714,7 +715,8 @@ trait vacancy_renderer {
         bool $hasapplied,
         bool $canedit,
         bool $canmanage,
-        array $applicationstats = []
+        array $applicationstats = [],
+        bool $haswithdrawn = false
     ): array {
         global $CFG, $USER;
 
@@ -847,6 +849,11 @@ trait vacancy_renderer {
             'statusmessage' => $statusmessage,
             'canapply' => $canapply && !$isclosed,
             'hasapplied' => $hasapplied,
+            // TEMPORARY FEATURE: Show notice for withdrawn applications.
+            // @todo Remove when reapplication feature is deprecated.
+            'haswithdrawn' => $haswithdrawn,
+            'withdrawnnotice' => $haswithdrawn ? get_string('withdrawnapplication_reapply_notice', 'local_jobboard') : '',
+            // END TEMPORARY FEATURE.
             'canedit' => $canedit,
             'canmanage' => $canmanage,
             'isurgent' => $isurgent,

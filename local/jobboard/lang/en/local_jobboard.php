@@ -4166,3 +4166,7 @@ $string['convocatoriaterms_help'] = 'The legal terms and conditions that applica
 $string['maxapplicationsperuser_help'] = 'Maximum number of applications a single user can submit to vacancies in this convocatoria. Set to 0 for unlimited.';
 $string['exempteddoctypes_help'] = 'Document types that can be exempted for applicants with valid exemption status.';
 $string['exemptionreason_help'] = 'The reason or criteria for granting document exemptions to applicants.';
+
+// TEMPORARY FEATURE: Withdrawn application reapplication notice.
+// @todo Remove when reapplication feature is deprecated.
+$string['withdrawnapplication_reapply_notice'] = 'You have a previously withdrawn application for this vacancy. If you click "Apply", your withdrawn application will be reactivated as a draft, allowing you to edit and resubmit it.';
