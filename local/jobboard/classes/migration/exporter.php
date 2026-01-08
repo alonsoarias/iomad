@@ -86,9 +86,6 @@ class exporter {
         if ($dbman->table_exists('local_jobboard_program')) {
             $counts['programs'] = $DB->count_records('local_jobboard_program');
         }
-        if ($dbman->table_exists('local_jobboard_program_reviewer')) {
-            $counts['program_reviewers'] = $DB->count_records('local_jobboard_program_reviewer');
-        }
         if ($dbman->table_exists('local_jobboard_interview')) {
             $counts['interviews'] = $DB->count_records('local_jobboard_interview');
         }
@@ -145,7 +142,6 @@ class exporter {
         // Export organizational structure (faculties, programs, reviewers).
         $data['faculties'] = $this->export_faculties();
         $data['programs'] = $this->export_programs();
-        $data['program_reviewers'] = $this->export_program_reviewers();
 
         // Export interviews.
         $data['interviews'] = $this->export_interviews();
@@ -660,36 +656,6 @@ class exporter {
             unset($prog->id, $prog->facultyid);
         }
         return array_values($programs);
-    }
-
-    /**
-     * Export program reviewers.
-     *
-     * @return array Exported program reviewers.
-     */
-    protected function export_program_reviewers(): array {
-        global $DB;
-
-        $dbman = $DB->get_manager();
-        if (!$dbman->table_exists('local_jobboard_program_reviewer')) {
-            return [];
-        }
-
-        $reviewers = $DB->get_records_sql(
-            "SELECT pr.*, u.username, u.email, u.idnumber,
-                    p.code as program_code,
-                    a.username as addedby_username
-               FROM {local_jobboard_program_reviewer} pr
-               JOIN {user} u ON u.id = pr.userid
-               LEFT JOIN {local_jobboard_program} p ON p.id = pr.programid
-               LEFT JOIN {user} a ON a.id = pr.addedby
-              ORDER BY pr.id"
-        );
-        foreach ($reviewers as &$rev) {
-            $rev->original_id = $rev->id;
-            unset($rev->id, $rev->userid, $rev->programid, $rev->addedby);
-        }
-        return array_values($reviewers);
     }
 
     /**

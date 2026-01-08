@@ -619,9 +619,7 @@ $string['assignedreviewers'] = 'Revisores asignados';
 $string['reviewerworkload'] = 'Carga de trabajo del revisor';
 $string['reviewerprogress'] = 'Progreso del revisor';
 $string['reviewerstatistics'] = 'Estadísticas del revisor';
-$string['programreviewers'] = 'Revisores por programa';
 $string['facultyreviewers'] = 'Revisores por facultad';
-$string['manageprogramreviewers'] = 'Gestionar revisores de programa';
 $string['assignedapplications'] = 'Postulaciones asignadas';
 $string['completedreviews'] = 'Revisiones completadas';
 $string['pendingreviews'] = 'Revisiones pendientes';
@@ -1744,8 +1742,6 @@ $string['reviewerremoved'] = 'Revisor eliminado exitosamente';
 $string['reviewerremoveerror'] = 'Error al eliminar revisor';
 $string['assignreviewers_desc'] = 'Asignar revisores a postulaciones';
 $string['autoassigncomplete'] = 'Asignación automática completada';
-$string['program_reviewers'] = 'Revisores de programa';
-$string['program_reviewers_desc'] = 'Revisores asignados por programa';
 $string['faculty_reviewers'] = 'Revisores de facultad';
 $string['faculty_reviewers_desc'] = 'Revisores (decanos) asignados por facultad para convocatorias tipo DOCENTE';
 $string['faculty_reviewer_role_dean'] = 'Decano';
@@ -2890,10 +2886,6 @@ $string['manualassign'] = 'Asignación manual';
 $string['maxperreviewer'] = 'Máximo por revisor';
 $string['noreviewers'] = 'Sin revisores';
 $string['noreviewersavailable'] = 'No hay revisores disponibles';
-$string['noreviewersforprogram'] = 'No hay revisores para este programa';
-$string['programreviewerhelp'] = 'Asignar revisores a programas específicos';
-$string['programswithreviewers'] = 'Programas con revisores';
-$string['noprogramswithreviewers'] = 'No hay programas con revisores';
 $string['leadreviewers'] = 'Revisores líderes';
 $string['committeename'] = 'Nombre del comité';
 $string['committeeautoroleassign'] = 'Auto-asignar roles del comité';
@@ -3517,25 +3509,18 @@ $string['bulkvalidation'] = 'Validación Masiva';
 $string['reviewapplications'] = 'Revisar Postulaciones';
 
 // =============================================================================
-// CADENAS DE REVISORES POR PROGRAMA
+// CADENAS DE REVISORES
 // =============================================================================
 
 $string['totalreviewers'] = 'Total de Revisores';
 $string['activereviewers'] = 'Revisores Activos';
-$string['leadreviewers'] = 'Revisores Líderes';
-$string['programswithreviewers'] = 'Programas con Revisores';
-$string['noprogramswithreviewers'] = 'Ningún programa tiene revisores asignados aún';
-$string['addreviewerstoprogram'] = 'Agregar Revisores a Programa';
 $string['addreviewer'] = 'Agregar Revisor';
-$string['assignedreviewers'] = 'Revisores Asignados';
-$string['noreviewersforprogram'] = 'No hay revisores asignados a este programa';
 $string['selectuser'] = 'Seleccionar usuario';
 $string['role_reviewer'] = 'Revisor';
 $string['role_lead_reviewer'] = 'Revisor Líder';
 $string['nousersavailable'] = 'No hay usuarios disponibles para asignar';
 $string['changerole'] = 'Cambiar rol';
 $string['confirmremovereviewer'] = '¿Está seguro de que desea eliminar a este revisor?';
-$string['programreviewerhelp'] = 'Los revisores asignados a un programa pueden revisar postulaciones para todas las vacantes dentro de esa categoría de programa.';
 
 // =============================================================================
 // CADENAS DE SELECCIÓN DE VACANTE

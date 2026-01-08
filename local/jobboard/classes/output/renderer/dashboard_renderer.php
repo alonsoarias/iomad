@@ -509,21 +509,6 @@ trait dashboard_renderer {
             ];
         }
 
-        // Program Reviewers.
-        if ($caps['manageworkflow'] ?? false) {
-            // Program Reviewers.
-            $sections[] = [
-                'id' => 'programreviewers',
-                'title' => get_string('program_reviewers', 'local_jobboard'),
-                'description' => get_string('program_reviewers_desc', 'local_jobboard'),
-                'icon' => 'user-check',
-                'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/admin/manage_program_reviewers.php'))->out(false),
-                'buttonlabel' => get_string('program_reviewers', 'local_jobboard'),
-                'buttonicon' => 'user-check',
-            ];
-        }
-
         return $sections;
     }
 

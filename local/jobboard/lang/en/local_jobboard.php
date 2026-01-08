@@ -635,9 +635,7 @@ $string['assignedreviewers'] = 'Assigned reviewers';
 $string['reviewerworkload'] = 'Reviewer workload';
 $string['reviewerprogress'] = 'Reviewer progress';
 $string['reviewerstatistics'] = 'Reviewer statistics';
-$string['programreviewers'] = 'Program reviewers';
 $string['facultyreviewers'] = 'Faculty reviewers';
-$string['manageprogramreviewers'] = 'Manage program reviewers';
 $string['assignedapplications'] = 'Assigned applications';
 $string['completedreviews'] = 'Completed reviews';
 $string['pendingreviews'] = 'Pending reviews';
@@ -1749,8 +1747,6 @@ $string['reviewerremoved'] = 'Reviewer removed successfully';
 $string['reviewerremoveerror'] = 'Error removing reviewer';
 $string['assignreviewers_desc'] = 'Assign reviewers to applications';
 $string['autoassigncomplete'] = 'Auto-assignment complete';
-$string['program_reviewers'] = 'Program reviewers';
-$string['program_reviewers_desc'] = 'Reviewers assigned by program';
 $string['faculty_reviewers'] = 'Faculty reviewers';
 $string['faculty_reviewers_desc'] = 'Reviewers (deans) assigned by faculty for DOCENTE convocatorias';
 $string['faculty_reviewer_role_dean'] = 'Dean';
@@ -2887,10 +2883,6 @@ $string['manualassign'] = 'Manual assign';
 $string['maxperreviewer'] = 'Max per reviewer';
 $string['noreviewers'] = 'No reviewers';
 $string['noreviewersavailable'] = 'No reviewers available';
-$string['noreviewersforprogram'] = 'No reviewers for this program';
-$string['programreviewerhelp'] = 'Assign reviewers to specific programs';
-$string['programswithreviewers'] = 'Programs with reviewers';
-$string['noprogramswithreviewers'] = 'No programs with reviewers';
 $string['leadreviewers'] = 'Lead reviewers';
 $string['committeename'] = 'Committee name';
 $string['committeeautoroleassign'] = 'Auto-assign committee roles';
@@ -3525,25 +3517,18 @@ $string['bulkvalidation'] = 'Bulk Validation';
 $string['reviewapplications'] = 'Review Applications';
 
 // =============================================================================
-// PROGRAM REVIEWERS STRINGS
+// REVIEWER STRINGS
 // =============================================================================
 
 $string['totalreviewers'] = 'Total Reviewers';
 $string['activereviewers'] = 'Active Reviewers';
-$string['leadreviewers'] = 'Lead Reviewers';
-$string['programswithreviewers'] = 'Programs with Reviewers';
-$string['noprogramswithreviewers'] = 'No programs have reviewers assigned yet';
-$string['addreviewerstoprogram'] = 'Add Reviewers to Program';
 $string['addreviewer'] = 'Add Reviewer';
-$string['assignedreviewers'] = 'Assigned Reviewers';
-$string['noreviewersforprogram'] = 'No reviewers assigned to this program';
 $string['selectuser'] = 'Select user';
 $string['role_reviewer'] = 'Reviewer';
 $string['role_lead_reviewer'] = 'Lead Reviewer';
 $string['nousersavailable'] = 'No users available for assignment';
 $string['changerole'] = 'Change role';
 $string['confirmremovereviewer'] = 'Are you sure you want to remove this reviewer?';
-$string['programreviewerhelp'] = 'Reviewers assigned to a program can review applications for all vacancies within that program category.';
 
 // =============================================================================
 // VACANCY SELECTION STRINGS

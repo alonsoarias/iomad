@@ -133,7 +133,6 @@ class importer {
             // Import organizational structure.
             $this->import_faculties($data['faculties'] ?? []);
             $this->import_programs($data['programs'] ?? []);
-            $this->import_program_reviewers($data['program_reviewers'] ?? []);
 
             // Import applications (after vacancies are imported).
             $this->import_applications($data['applications'] ?? []);
@@ -975,56 +974,6 @@ class importer {
                     }
                 }
                 $this->results['counts']['programs']['inserted']++;
-            }
-        }
-    }
-
-    /**
-     * Import program reviewers.
-     *
-     * @param array $reviewers Program reviewers to import.
-     */
-    protected function import_program_reviewers(array $reviewers): void {
-        global $DB;
-
-        if (empty($reviewers)) {
-            return;
-        }
-
-        $dbman = $DB->get_manager();
-        if (!$dbman->table_exists('local_jobboard_program_reviewer')) {
-            return;
-        }
-
-        $this->results['counts']['program_reviewers'] = ['inserted' => 0, 'skipped' => 0];
-
-        foreach ($reviewers as $rev) {
-            $rev = (object) $rev;
-            $programcode = $rev->program_code ?? null;
-            unset($rev->original_id, $rev->program_code, $rev->addedby_username);
-
-            $user = $this->find_user($rev);
-            unset($rev->username, $rev->email, $rev->idnumber);
-
-            if ($user && $programcode && isset($this->programmap[$programcode])) {
-                $rev->userid = $user->id;
-                $rev->programid = $this->programmap[$programcode];
-
-                $existing = $DB->get_record('local_jobboard_program_reviewer', [
-                    'userid' => $user->id,
-                    'programid' => $rev->programid,
-                ]);
-
-                if (!$existing) {
-                    if (!$this->dryrun) {
-                        $DB->insert_record('local_jobboard_program_reviewer', $rev);
-                    }
-                    $this->results['counts']['program_reviewers']['inserted']++;
-                } else {
-                    $this->results['counts']['program_reviewers']['skipped']++;
-                }
-            } else {
-                $this->results['counts']['program_reviewers']['skipped']++;
             }
         }
     }
