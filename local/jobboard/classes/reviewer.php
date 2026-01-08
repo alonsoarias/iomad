@@ -385,4 +385,88 @@ class reviewer {
 
         return $reassigned;
     }
+
+    /**
+     * Count unassigned applications.
+     *
+     * @param int|null $vacancyid Optional vacancy ID to filter by.
+     * @return int Count of unassigned applications.
+     */
+    public static function count_unassigned(?int $vacancyid = null): int {
+        global $DB;
+
+        $sql = "SELECT COUNT(*)
+                  FROM {local_jobboard_application}
+                 WHERE status = 'submitted'
+                   AND (reviewerid IS NULL OR reviewerid = 0)";
+        $params = [];
+
+        if ($vacancyid) {
+            $sql .= " AND vacancyid = :vacancyid";
+            $params['vacancyid'] = $vacancyid;
+        }
+
+        return $DB->count_records_sql($sql, $params);
+    }
+
+    /**
+     * Count assigned applications.
+     *
+     * @param int|null $vacancyid Optional vacancy ID to filter by.
+     * @return int Count of assigned applications.
+     */
+    public static function count_assigned(?int $vacancyid = null): int {
+        global $DB;
+
+        $sql = "SELECT COUNT(*)
+                  FROM {local_jobboard_application}
+                 WHERE status IN ('submitted', 'under_review')
+                   AND reviewerid IS NOT NULL AND reviewerid > 0";
+        $params = [];
+
+        if ($vacancyid) {
+            $sql .= " AND vacancyid = :vacancyid";
+            $params['vacancyid'] = $vacancyid;
+        }
+
+        return $DB->count_records_sql($sql, $params);
+    }
+
+    /**
+     * Get reviewer workload (alias for get_reviewer_workload).
+     *
+     * @param int $reviewerid Reviewer user ID.
+     * @return int Number of active assignments.
+     */
+    public static function get_workload(int $reviewerid): int {
+        return self::get_reviewer_workload($reviewerid);
+    }
+
+    /**
+     * Get unassigned applications.
+     *
+     * @param int|null $vacancyid Optional vacancy ID to filter by.
+     * @return array List of unassigned applications with applicant and vacancy info.
+     */
+    public static function get_unassigned_applications(?int $vacancyid = null): array {
+        global $DB;
+
+        $sql = "SELECT a.*, u.firstname, u.lastname, u.email,
+                       v.code as vacancy_code, v.title as vacancy_title
+                  FROM {local_jobboard_application} a
+                  JOIN {user} u ON u.id = a.userid
+                  JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                 WHERE a.status = 'submitted'
+                   AND (a.reviewerid IS NULL OR a.reviewerid = 0)";
+        $params = [];
+
+        if ($vacancyid) {
+            $sql .= " AND a.vacancyid = :vacancyid";
+            $params['vacancyid'] = $vacancyid;
+        }
+
+        $sql .= " ORDER BY a.timecreated ASC";
+
+        return $DB->get_records_sql($sql, $params);
+    }
 }
