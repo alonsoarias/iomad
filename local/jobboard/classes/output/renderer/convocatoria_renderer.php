@@ -558,11 +558,9 @@ trait convocatoria_renderer {
             $isclosed = ($vacclosedate < $now || $vacancy->status === 'closed');
             $vacisopen = $vacancy->is_open();
 
-            // Check if user already applied.
-            $hasapplied = $DB->record_exists('local_jobboard_application', [
-                'vacancyid' => $vacancy->id,
-                'userid' => $USER->id,
-            ]);
+            // Check if user already applied (excluding draft and withdrawn applications).
+            // Users with withdrawn applications can reapply.
+            $hasapplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
 
             $vacanciesdata[] = [
                 'id' => $vacancy->id,

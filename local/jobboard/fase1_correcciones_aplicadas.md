@@ -2,7 +2,7 @@
 
 ## Fecha: 2026-01-08
 ## Versión Anterior: 2025122301 (release 4.0.1)
-## Versión Nueva: 2026010801 (release 4.1.0)
+## Versión Nueva: 2026010802 (release 4.1.0)
 
 ---
 
@@ -88,13 +88,42 @@ $string['error:cannotreactivate'] = 'Only withdrawn applications can be reactiva
 #### `lang/es/local_jobboard.php`
 - **Líneas 451-453**: Nuevas cadenas de texto en español
 
-### Comportamiento Después de la Corrección
+### Archivos Adicionales Corregidos (v2026010802)
+
+Se detectó que el botón "Aplicar" no aparecía en la UI porque múltiples vistas
+verificaban si el usuario tenía postulación sin excluir `withdrawn`:
+
+#### `views/vacancy.php`
+- **Líneas 79-81**: Corregida verificación de postulación existente
+
+```php
+// Antes:
+$hasapplied = $DB->record_exists('local_jobboard_application', [...]);
+
+// Después:
+$hasapplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
+```
+
+#### `classes/output/renderer/vacancy_renderer.php`
+- **Líneas 159-161**: Corregida verificación en listado de vacantes
+
+#### `classes/output/renderer/public_renderer.php`
+- **Líneas 730-735**: Corregida verificación en página pública
+
+#### `classes/output/renderer/convocatoria_renderer.php`
+- **Líneas 561-563**: Corregida verificación en vista de convocatoria
+
+#### `ajax/filter_public_vacancies.php`
+- **Líneas 148-153**: Corregida verificación en filtrado AJAX
+
+### Comportamiento Después de la Corrección Completa
 1. Usuario retira su postulación → estado cambia a `withdrawn`
-2. Usuario intenta postular de nuevo a la misma vacante
-3. Sistema detecta la postulación retirada
-4. Sistema reactiva la postulación anterior como `draft`
-5. Usuario puede editar documentos y volver a enviar
-6. Usuario recibe notificación de que su postulación fue reactivada
+2. Usuario ve el botón "Aplicar" disponible (UI corregida)
+3. Usuario hace clic en "Aplicar"
+4. Sistema detecta la postulación retirada
+5. Sistema reactiva la postulación anterior como `draft`
+6. Usuario puede editar documentos y volver a enviar
+7. Usuario recibe notificación de que su postulación fue reactivada
 
 ---
 

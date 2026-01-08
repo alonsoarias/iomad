@@ -156,11 +156,9 @@ trait vacancy_renderer {
             $isUrgent = ($daysRemaining <= 7 && $daysRemaining >= 0);
             $isClosed = ($v->closedate < time() || $v->status === 'closed');
 
-            // Check if user has applied.
-            $hasApplied = $DB->record_exists('local_jobboard_application', [
-                'vacancyid' => $v->id,
-                'userid' => $USER->id,
-            ]);
+            // Check if user has applied (excluding draft and withdrawn applications).
+            // Users with withdrawn applications can reapply.
+            $hasApplied = \local_jobboard\application::user_has_submitted_application($v->id, $USER->id);
 
             // Get convocatoria code if exists.
             $convocatoriacode = null;

@@ -145,13 +145,11 @@ $daysRemaining = max(0, (int) floor(($convocatoria->enddate - time()) / 86400));
 $isUrgent = $daysRemaining <= 7;
 
 foreach ($vacancies as $vacancy) {
-    // Check if user has applied.
+    // Check if user has applied (excluding draft and withdrawn applications).
+    // Users with withdrawn applications can reapply.
     $hasApplied = false;
     if ($isloggedin) {
-        $hasApplied = $DB->record_exists('local_jobboard_application', [
-            'vacancyid' => $vacancy->id,
-            'userid' => $USER->id,
-        ]);
+        $hasApplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
     }
 
     // Location from company.

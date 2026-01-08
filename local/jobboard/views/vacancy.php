@@ -76,11 +76,9 @@ $canmanage = has_capability('local/jobboard:createvacancy', $context);
 $canapply = has_capability('local/jobboard:apply', $context);
 $canedit = $canmanage && $vacancy->can_edit();
 
-// Check if user already applied.
-$hasapplied = $DB->record_exists('local_jobboard_application', [
-    'vacancyid' => $vacancy->id,
-    'userid' => $USER->id,
-]);
+// Check if user already applied (excluding draft and withdrawn applications).
+// Users with withdrawn applications can reapply.
+$hasapplied = \local_jobboard\application::user_has_submitted_application($vacancy->id, $USER->id);
 
 // Build application stats for managers.
 $applicationstats = [];
