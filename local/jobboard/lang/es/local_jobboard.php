@@ -1743,6 +1743,7 @@ $string['revieweradderror'] = 'Error al agregar revisor';
 $string['reviewerremoved'] = 'Revisor eliminado exitosamente';
 $string['reviewerremoveerror'] = 'Error al eliminar revisor';
 $string['assignreviewers_desc'] = 'Asignar revisores a postulaciones';
+$string['assignreviewerhelp'] = 'Asigne revisores a las postulaciones para validación de documentos. Use auto-asignación para distribución balanceada o seleccione postulaciones manualmente.';
 $string['autoassigncomplete'] = 'Asignación automática completada';
 $string['faculty_reviewers'] = 'Revisores de facultad';
 $string['faculty_reviewers_desc'] = 'Revisores (decanos) asignados por facultad para convocatorias tipo DOCENTE';

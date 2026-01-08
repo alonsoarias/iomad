@@ -1748,6 +1748,7 @@ $string['revieweradderror'] = 'Error adding reviewer';
 $string['reviewerremoved'] = 'Reviewer removed successfully';
 $string['reviewerremoveerror'] = 'Error removing reviewer';
 $string['assignreviewers_desc'] = 'Assign reviewers to applications';
+$string['assignreviewerhelp'] = 'Assign reviewers to applications for document validation. Use auto-assign for balanced distribution or manually select applications.';
 $string['autoassigncomplete'] = 'Auto-assignment complete';
 $string['faculty_reviewers'] = 'Faculty reviewers';
 $string['faculty_reviewers_desc'] = 'Reviewers (deans) assigned by faculty for DOCENTE convocatorias';
