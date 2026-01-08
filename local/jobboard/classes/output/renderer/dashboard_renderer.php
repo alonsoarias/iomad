@@ -801,7 +801,7 @@ trait dashboard_renderer {
                JOIN {local_jobboard_faculty} f ON f.id = fr.facultyid
                LEFT JOIN {local_jobboard_convocatoria} c ON c.id = fr.convocatoriaid
               WHERE fr.userid = :userid
-                AND fr.active = 1
+                AND fr.status = 'active'
               ORDER BY c.name, f.name",
             ['userid' => $userid]
         );
