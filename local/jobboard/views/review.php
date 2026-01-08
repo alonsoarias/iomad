@@ -675,9 +675,20 @@ $data['is_admin'] = $is_admin;
 // Add status-based action visibility for Dean/HR workflow.
 if (isset($application) && $application->id) {
     // Admins can always see all actions regardless of status.
-    // Dean sees actions only for pending_dean_review status.
+    // Dean can approve/reject applications in review-eligible statuses.
     // HR sees actions only for pending_hr_validation status.
-    $data['show_dean_actions'] = $is_admin || ($application->status === 'pending_dean_review' && $can_approve_profile);
+    $dean_actionable_statuses = [
+        'submitted',
+        'under_review',
+        'docs_validated',
+        'pending_dean_review',
+    ];
+    // Show dean actions if:
+    // 1. User is admin (can do everything), OR
+    // 2. User has approveprofile capability AND application is in actionable status
+    // Note: We check $can_approve_profile which covers both dean role and explicit capability.
+    $data['show_dean_actions'] = $is_admin ||
+        ($can_approve_profile && in_array($application->status, $dean_actionable_statuses));
     $data['show_hr_actions'] = $is_admin || ($application->status === 'pending_hr_validation' && $can_validate_hr);
     // Admins can always review documents. Dean role only reviews profiles, not individual docs.
     $data['show_document_actions'] = $is_admin || ($can_review_documents && !$is_dean);
