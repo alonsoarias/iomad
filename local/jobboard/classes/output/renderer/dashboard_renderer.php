@@ -820,26 +820,30 @@ trait dashboard_renderer {
         $completedcount = 0;
 
         if (!empty($faculties)) {
-            $facultyids = array_column((array)$faculties, 'facultyid');
-            list($insql, $params) = $DB->get_in_or_equal($facultyids, SQL_PARAMS_NAMED);
+            // Build patterns for vacancy codes based on faculty codes.
+            $facultycodes = array_column($assignedfaculties, 'facultycode');
 
-            // Get pending applications in dean's faculties.
-            $pendingcount = $DB->count_records_sql(
-                "SELECT COUNT(DISTINCT a.id)
-                   FROM {local_jobboard_application} a
-                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
-                  WHERE a.status IN ('submitted', 'under_review')
-                    AND v.facultyid $insql",
-                $params
-            );
+            // Count pending applications matching faculty vacancy codes.
+            foreach ($facultycodes as $code) {
+                $pendingcount += $DB->count_records_sql(
+                    "SELECT COUNT(DISTINCT a.id)
+                       FROM {local_jobboard_application} a
+                       JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                      WHERE a.status IN ('submitted', 'under_review')
+                        AND v.code LIKE :codepattern",
+                    ['codepattern' => $code . '%']
+                );
+            }
 
-            // Get completed reviews by this dean.
-            $completedcount = $DB->count_records_sql(
-                "SELECT COUNT(DISTINCT dr.id)
-                   FROM {local_jobboard_dean_review} dr
-                  WHERE dr.reviewerid = :userid",
-                ['userid' => $userid]
-            );
+            // Get completed reviews by this dean (if dean_review table exists).
+            if ($DB->get_manager()->table_exists('local_jobboard_dean_review')) {
+                $completedcount = $DB->count_records_sql(
+                    "SELECT COUNT(DISTINCT dr.id)
+                       FROM {local_jobboard_dean_review} dr
+                      WHERE dr.reviewerid = :userid",
+                    ['userid' => $userid]
+                );
+            }
         }
 
         return [
