@@ -114,7 +114,7 @@
                     <span class="jb-type-card__count">{{count}}</span>
                     <span class="jb-type-card__name">{{typename}}</span>
                     {{#isselected}}
-                    <span class="jb-badge jb-badge--primary"><i class="fa fa-check"></i> {{#str}}selected{{/str}}</span>
+                    <span class="jb-badge jb-badge--primary"><i class="fa fa-check"></i> {{#str}}selected, local_jobboard{{/str}}</span>
                     {{/isselected}}
                 </a>
                 {{/pendingbytype}}
@@ -147,7 +147,7 @@
                         <input type="checkbox" id="selectall">
                         <span>{{#str}}selectall{{/str}}</span>
                     </label>
-                    <span class="jb-select-all__count" id="selection-count">0 {{#str}}selected{{/str}}</span>
+                    <span class="jb-select-all__count" id="selection-count">0 {{#str}}selected, local_jobboard{{/str}}</span>
                 </div>
 
                 <div class="jb-table-container">
@@ -241,7 +241,7 @@
                 var countDisplay = document.getElementById('selection-count');
                 function updateCount() {
                     var count = document.querySelectorAll('.doc-checkbox:checked').length;
-                    countDisplay.textContent = count + ' {{#str}}selected{{/str}}';
+                    countDisplay.textContent = count + ' {{#str}}selected, local_jobboard{{/str}}';
                 }
                 selectAll.addEventListener('change', function() {
                     var self = this;
