@@ -7,6 +7,11 @@
     Context variables:
     * pagetitle - Page title string
     * pagedesc - Page description string
+    * convocatorias - Array of convocatorias for selection
+    * hasconvocatorias - Boolean if has convocatorias
+    * selectedconvocatoriaid - Selected convocatoria ID
+    * selectedconvocatorianame - Selected convocatoria name
+    * hasselectedconvocatoria - Boolean if has selected convocatoria
     * faculties - Array of faculties with reviewers
     * hasfaculties - Boolean if has faculties
     * facultycount - Number of faculties
@@ -42,6 +47,49 @@
             <i class="fa fa-building"></i> {{pagetitle}}
         </h1>
         <p class="jb-public-header__subtitle">{{pagedesc}}</p>
+    </div>
+
+    {{! ================================================================ }}
+    {{! CONVOCATORIA SELECTOR SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-card jb-convocatoria-selector">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--primary">
+                <i class="fa fa-calendar-alt"></i>
+            </div>
+            <h3 class="jb-card__header-title">{{#str}}selectconvocatoria, local_jobboard{{/str}}</h3>
+        </div>
+        <div class="jb-card__body">
+            {{#hasconvocatorias}}
+            <div class="jb-convocatoria-list">
+                {{#convocatorias}}
+                <a href="{{selecturl}}" class="jb-convocatoria-item {{#selected}}jb-convocatoria-item--selected{{/selected}}">
+                    <div class="jb-convocatoria-item__info">
+                        <strong>{{name}}</strong>
+                        <span class="jb-badge jb-badge--info">
+                            <i class="fa fa-briefcase"></i> {{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
+                        </span>
+                    </div>
+                    {{#selected}}
+                    <i class="fa fa-check-circle jb-convocatoria-item__check"></i>
+                    {{/selected}}
+                </a>
+                {{/convocatorias}}
+            </div>
+            {{/hasconvocatorias}}
+            {{^hasconvocatorias}}
+            <div class="jb-empty-inline">
+                <i class="fa fa-info-circle"></i>
+                <span>{{#str}}noconvocatoriaswithvacancies, local_jobboard{{/str}}</span>
+            </div>
+            {{/hasconvocatorias}}
+        </div>
+    </div>
+
+    {{! Only show statistics and faculties if convocatoria is selected }}
+    {{#hasselectedconvocatoria}}
+    <div class="jb-selected-convocatoria-header">
+        <h2><i class="fa fa-calendar-check"></i> {{selectedconvocatorianame}}</h2>
     </div>
 
     {{! ================================================================ }}
@@ -148,9 +196,10 @@
     <div class="jb-empty">
         <i class="fa fa-building"></i>
         <h3>{{#str}}nofacultiesavailable, local_jobboard{{/str}}</h3>
-        <p>{{#str}}nofacultiesavailable_desc, local_jobboard{{/str}}</p>
+        <p>{{#str}}nofacultiesinconvocatoria_desc, local_jobboard{{/str}}</p>
     </div>
     {{/hasfaculties}}
+    {{/hasselectedconvocatoria}}
 
     {{! ================================================================ }}
     {{! FOOTER NAVIGATION }}
@@ -168,6 +217,23 @@
 <style>
 /* Faculty Assignment Page - Following jb-* pattern */
 .jb-faculty-assign { max-width: 1200px; padding: 1rem; }
+
+/* Convocatoria Selector */
+.jb-convocatoria-selector { margin-bottom: 1.5rem; }
+.jb-convocatoria-selector .jb-card__header { background: linear-gradient(135deg, var(--iser-verde, #1b9e88) 0%, #157a6a 100%); color: #fff; }
+.jb-convocatoria-selector .jb-card__header-icon { background: rgba(255,255,255,0.2); color: #fff; }
+.jb-convocatoria-selector .jb-card__header-title { color: #fff; }
+.jb-convocatoria-list { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.jb-convocatoria-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e5e5; border-radius: 8px; text-decoration: none; color: var(--iser-negro, #1a1a1a); transition: all 0.2s; min-width: 280px; flex: 1; }
+.jb-convocatoria-item:hover { border-color: var(--iser-verde, #1b9e88); background: rgba(27, 158, 136, 0.05); }
+.jb-convocatoria-item--selected { border-color: var(--iser-verde, #1b9e88); background: rgba(27, 158, 136, 0.1); }
+.jb-convocatoria-item__info { display: flex; flex-direction: column; gap: 0.25rem; }
+.jb-convocatoria-item__info strong { font-size: 0.9rem; }
+.jb-convocatoria-item__check { color: var(--iser-verde, #1b9e88); font-size: 1.25rem; }
+.jb-selected-convocatoria-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--iser-verde, #1b9e88); }
+.jb-selected-convocatoria-header h2 { margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--iser-verde-dark, #157a6a); display: flex; align-items: center; gap: 0.5rem; }
+.jb-card__header-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.jb-card__header-title { margin: 0; font-size: 1rem; font-weight: 600; }
 
 /* Header */
 .jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }

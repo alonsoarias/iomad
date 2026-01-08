@@ -1790,6 +1790,9 @@ $string['confirmunassignfaculty'] = 'Are you sure you want to remove this review
 $string['selectdean'] = 'Select dean...';
 $string['nofacultiesavailable'] = 'No faculties available';
 $string['nofacultiesavailable_desc'] = 'Faculties are auto-created when importing vacancies with faculty codes (e.g., FCAS, FII). Import vacancies first to create faculties.';
+$string['nofacultiesinconvocatoria_desc'] = 'No vacancies with faculty codes (FCAS, FII) found in this convocatoria.';
+$string['selectconvocatoria'] = 'Select convocatoria';
+$string['noconvocatoriaswithvacancies'] = 'No convocatorias with vacancies available. Please create and publish a convocatoria with vacancies first.';
 
 // =============================================================================
 // ADDITIONAL STRINGS - COMMITTEES

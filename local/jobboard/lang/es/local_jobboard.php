@@ -1785,6 +1785,9 @@ $string['confirmunassignfaculty'] = '¿Está seguro de que desea eliminar este r
 $string['selectdean'] = 'Seleccionar decano...';
 $string['nofacultiesavailable'] = 'No hay facultades disponibles';
 $string['nofacultiesavailable_desc'] = 'Las facultades se crean automáticamente al importar vacantes con códigos de facultad (ej: FCAS, FII). Importe vacantes primero para crear facultades.';
+$string['nofacultiesinconvocatoria_desc'] = 'No se encontraron vacantes con códigos de facultad (FCAS, FII) en esta convocatoria.';
+$string['selectconvocatoria'] = 'Seleccionar convocatoria';
+$string['noconvocatoriaswithvacancies'] = 'No hay convocatorias con vacantes disponibles. Por favor cree y publique una convocatoria con vacantes primero.';
 
 // =============================================================================
 // CADENAS ADICIONALES - COMITÉS

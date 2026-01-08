@@ -34,6 +34,7 @@ use local_jobboard\reviewer;
 use local_jobboard\faculty_reviewer;
 
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
+$convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $mode = optional_param('mode', 'applications', PARAM_ALPHA);
 
@@ -46,6 +47,9 @@ require_capability('local/jobboard:manageworkflow', $context);
 $urlparams = ['mode' => $mode];
 if ($vacancyid) {
     $urlparams['vacancyid'] = $vacancyid;
+}
+if ($convocatoriaid) {
+    $urlparams['convocatoriaid'] = $convocatoriaid;
 }
 $PAGE->set_url(new moodle_url('/local/jobboard/admin/assign_reviewer.php', $urlparams));
 $PAGE->set_context($context);
@@ -148,7 +152,7 @@ echo $OUTPUT->header();
 
 $renderer = $PAGE->get_renderer('local_jobboard');
 if ($mode === 'faculties') {
-    $data = $renderer->prepare_faculty_assignment_page_data();
+    $data = $renderer->prepare_faculty_assignment_page_data($convocatoriaid);
     echo $renderer->render_faculty_assignment_page($data);
 } else {
     $data = $renderer->prepare_assign_reviewer_page_data($vacancyid);

@@ -1584,73 +1584,153 @@ trait review_renderer {
     /**
      * Prepare data for faculty assignment page (mode=faculties).
      *
+     * @param int $convocatoriaid Optional convocatoria ID to filter by.
      * @return array Template data.
      */
-    public function prepare_faculty_assignment_page_data(): array {
+    public function prepare_faculty_assignment_page_data(int $convocatoriaid = 0): array {
         global $DB;
 
-        $pageurl = new \moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties']);
+        $basepageurl = new \moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties']);
+        $pageurl = $convocatoriaid
+            ? new \moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties', 'convocatoriaid' => $convocatoriaid])
+            : $basepageurl;
 
-        // Get all faculties.
-        $faculties = $DB->get_records('local_jobboard_faculty', ['enabled' => 1], 'name ASC');
+        // Get all convocatorias with vacancies for selection.
+        $convocatorias = $DB->get_records_sql(
+            "SELECT DISTINCT c.id, c.name, c.startdate, c.enddate, c.status,
+                    (SELECT COUNT(*) FROM {local_jobboard_vacancy} v WHERE v.convocatoriaid = c.id) as vacancycount
+               FROM {local_jobboard_convocatoria} c
+              WHERE c.status IN ('published', 'closed')
+                AND EXISTS (SELECT 1 FROM {local_jobboard_vacancy} v WHERE v.convocatoriaid = c.id)
+              ORDER BY c.enddate DESC, c.name ASC"
+        );
+
+        $convocatoriasdata = [];
+        $selectedconvocatoria = null;
+        foreach ($convocatorias as $conv) {
+            $isselected = ($conv->id == $convocatoriaid);
+            $convocatoriasdata[] = [
+                'id' => $conv->id,
+                'name' => format_string($conv->name),
+                'vacancycount' => (int)$conv->vacancycount,
+                'status' => $conv->status,
+                'selected' => $isselected,
+                'selecturl' => (new \moodle_url('/local/jobboard/admin/assign_reviewer.php', [
+                    'mode' => 'faculties',
+                    'convocatoriaid' => $conv->id,
+                ]))->out(false),
+            ];
+            if ($isselected) {
+                $selectedconvocatoria = $conv;
+            }
+        }
+
         $facultiesdata = [];
         $totalreviewers = 0;
 
-        foreach ($faculties as $faculty) {
-            // Get reviewers assigned to this faculty.
-            $assignedsql = "SELECT fr.*, u.firstname, u.lastname, u.email
-                            FROM {local_jobboard_faculty_reviewer} fr
-                            JOIN {user} u ON u.id = fr.userid
-                            WHERE fr.facultyid = :facultyid AND fr.status = 'active'
-                            ORDER BY fr.role ASC, u.lastname ASC";
-            $assignedreviewers = $DB->get_records_sql($assignedsql, ['facultyid' => $faculty->id]);
+        // Only show faculties if a convocatoria is selected.
+        if ($convocatoriaid && $selectedconvocatoria) {
+            // Get faculties based on vacancy codes in this convocatoria.
+            // Vacancies with codes starting with FCAS- belong to FCAS faculty,
+            // codes starting with FII- belong to FII faculty.
+            $facultycodes = $DB->get_records_sql(
+                "SELECT DISTINCT
+                    CASE
+                        WHEN v.code LIKE 'FCAS%' THEN 'FCAS'
+                        WHEN v.code LIKE 'FII%' THEN 'FII'
+                        ELSE 'OTHER'
+                    END as facultycode,
+                    COUNT(*) as vacancycount
+                 FROM {local_jobboard_vacancy} v
+                 WHERE v.convocatoriaid = :convocatoriaid
+                   AND (v.code LIKE 'FCAS%' OR v.code LIKE 'FII%')
+                 GROUP BY CASE
+                    WHEN v.code LIKE 'FCAS%' THEN 'FCAS'
+                    WHEN v.code LIKE 'FII%' THEN 'FII'
+                    ELSE 'OTHER'
+                 END",
+                ['convocatoriaid' => $convocatoriaid]
+            );
 
-            $reviewersdata = [];
-            foreach ($assignedreviewers as $reviewer) {
-                $reviewersdata[] = [
-                    'id' => $reviewer->id,
-                    'userid' => $reviewer->userid,
-                    'fullname' => fullname($reviewer),
-                    'email' => $reviewer->email,
-                    'role' => $reviewer->role,
-                    'roledisplay' => get_string('faculty_reviewer_role_' . $reviewer->role, 'local_jobboard'),
-                    'isdean' => $reviewer->role === 'dean',
-                    'unassignurl' => (new \moodle_url('/local/jobboard/admin/assign_reviewer.php', [
-                        'mode' => 'faculties',
-                        'action' => 'unassignfaculty',
-                        'id' => $reviewer->id,
-                        'sesskey' => sesskey(),
-                    ]))->out(false),
-                ];
-                $totalreviewers++;
-            }
-
-            // Count programs in this faculty.
-            $programcount = $DB->count_records('local_jobboard_program', ['facultyid' => $faculty->id, 'enabled' => 1]);
-
-            // Count vacancies linked to programs in this faculty.
-            $vacancycount = 0;
-            if ($programcount > 0) {
-                $vacancycount = $DB->count_records_sql(
-                    "SELECT COUNT(DISTINCT v.id)
-                       FROM {local_jobboard_vacancy} v
-                       JOIN {local_jobboard_program} p ON v.programid = p.id
-                      WHERE p.facultyid = :facultyid AND v.status = 'published'",
-                    ['facultyid' => $faculty->id]
-                );
-            }
-
-            $facultiesdata[] = [
-                'id' => $faculty->id,
-                'code' => $faculty->code,
-                'name' => format_string($faculty->name),
-                'shortname' => $faculty->shortname ?? $faculty->code,
-                'reviewers' => $reviewersdata,
-                'hasreviewers' => !empty($reviewersdata),
-                'reviewercount' => count($reviewersdata),
-                'programcount' => $programcount,
-                'vacancycount' => $vacancycount,
+            // Faculty name mapping.
+            $facultynames = [
+                'FCAS' => 'Ciencias Administrativas y Sociales',
+                'FII' => 'Ingenierías e Informática',
             ];
+
+            foreach ($facultycodes as $fc) {
+                if ($fc->facultycode === 'OTHER' || empty($fc->facultycode)) {
+                    continue;
+                }
+
+                // Ensure faculty exists in database.
+                $faculty = $DB->get_record('local_jobboard_faculty', ['code' => $fc->facultycode]);
+                if (!$faculty) {
+                    // Auto-create faculty.
+                    $faculty = new \stdClass();
+                    $faculty->companyid = 0;
+                    $faculty->code = $fc->facultycode;
+                    $faculty->name = $facultynames[$fc->facultycode] ?? $fc->facultycode;
+                    $faculty->shortname = $fc->facultycode;
+                    $faculty->enabled = 1;
+                    $faculty->sortorder = ($fc->facultycode === 'FCAS') ? 1 : 2;
+                    $faculty->timecreated = time();
+                    $faculty->id = $DB->insert_record('local_jobboard_faculty', $faculty);
+                }
+
+                // Get reviewers assigned to this faculty.
+                $assignedsql = "SELECT fr.*, u.firstname, u.lastname, u.email,
+                                       u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename
+                                FROM {local_jobboard_faculty_reviewer} fr
+                                JOIN {user} u ON u.id = fr.userid
+                                WHERE fr.facultyid = :facultyid AND fr.status = 'active'
+                                ORDER BY fr.role ASC, u.lastname ASC";
+                $assignedreviewers = $DB->get_records_sql($assignedsql, ['facultyid' => $faculty->id]);
+
+                $reviewersdata = [];
+                foreach ($assignedreviewers as $reviewer) {
+                    $reviewersdata[] = [
+                        'id' => $reviewer->id,
+                        'userid' => $reviewer->userid,
+                        'fullname' => fullname($reviewer),
+                        'email' => $reviewer->email,
+                        'role' => $reviewer->role,
+                        'roledisplay' => get_string('faculty_reviewer_role_' . $reviewer->role, 'local_jobboard'),
+                        'isdean' => $reviewer->role === 'dean',
+                        'unassignurl' => (new \moodle_url('/local/jobboard/admin/assign_reviewer.php', [
+                            'mode' => 'faculties',
+                            'convocatoriaid' => $convocatoriaid,
+                            'action' => 'unassignfaculty',
+                            'id' => $reviewer->id,
+                            'sesskey' => sesskey(),
+                        ]))->out(false),
+                    ];
+                    $totalreviewers++;
+                }
+
+                // Count programs (departments) in this faculty for this convocatoria.
+                $programcount = $DB->count_records_sql(
+                    "SELECT COUNT(DISTINCT v.department)
+                       FROM {local_jobboard_vacancy} v
+                      WHERE v.convocatoriaid = :convocatoriaid
+                        AND v.code LIKE :codepattern
+                        AND v.department IS NOT NULL
+                        AND v.department != ''",
+                    ['convocatoriaid' => $convocatoriaid, 'codepattern' => $fc->facultycode . '%']
+                );
+
+                $facultiesdata[] = [
+                    'id' => $faculty->id,
+                    'code' => $faculty->code,
+                    'name' => format_string($faculty->name),
+                    'shortname' => $faculty->shortname ?? $faculty->code,
+                    'reviewers' => $reviewersdata,
+                    'hasreviewers' => !empty($reviewersdata),
+                    'reviewercount' => count($reviewersdata),
+                    'programcount' => $programcount,
+                    'vacancycount' => (int)$fc->vacancycount,
+                ];
+            }
         }
 
         // Get users with dean role for assignment dropdown.
@@ -1658,7 +1738,8 @@ trait review_renderer {
         $availabledeans = [];
         if ($deanrole) {
             $systemcontext = \context_system::instance();
-            $deanusers = get_role_users($deanrole->id, $systemcontext, false, 'u.id, u.firstname, u.lastname, u.email');
+            $deanusers = get_role_users($deanrole->id, $systemcontext, false,
+                'u.id, u.firstname, u.lastname, u.email, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename');
             foreach ($deanusers as $user) {
                 $availabledeans[] = [
                     'id' => $user->id,
@@ -1671,7 +1752,8 @@ trait review_renderer {
         // If no deans available, get users who could be deans (with approve capability).
         if (empty($availabledeans)) {
             $systemcontext = \context_system::instance();
-            $potentialusers = get_users_by_capability($systemcontext, 'local/jobboard:approveprofile', 'u.id, u.firstname, u.lastname, u.email');
+            $potentialusers = get_users_by_capability($systemcontext, 'local/jobboard:approveprofile',
+                'u.id, u.firstname, u.lastname, u.email, u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename');
             foreach ($potentialusers as $user) {
                 $availabledeans[] = [
                     'id' => $user->id,
@@ -1691,6 +1773,11 @@ trait review_renderer {
         return [
             'pagetitle' => get_string('managefacultyreviewers', 'local_jobboard'),
             'pagedesc' => get_string('managefacultyreviewers_desc', 'local_jobboard'),
+            'convocatorias' => $convocatoriasdata,
+            'hasconvocatorias' => !empty($convocatoriasdata),
+            'selectedconvocatoriaid' => $convocatoriaid,
+            'selectedconvocatorianame' => $selectedconvocatoria ? format_string($selectedconvocatoria->name) : '',
+            'hasselectedconvocatoria' => !empty($selectedconvocatoria),
             'faculties' => $facultiesdata,
             'hasfaculties' => !empty($facultiesdata),
             'facultycount' => count($facultiesdata),
