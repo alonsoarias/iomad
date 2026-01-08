@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Add link in the reports section.
+// Add link in the reports section (external page for the report itself).
 $ADMIN->add('reports', new admin_externalpage(
     'report_platform_usage',
     get_string('pluginname', 'report_platform_usage'),
@@ -32,13 +32,13 @@ $ADMIN->add('reports', new admin_externalpage(
     'report/platform_usage:view'
 ));
 
-// Add settings page - only if not already added by Moodle's standard loading.
-// Using defined() check to prevent duplicate registration.
-if ($hassiteconfig && !defined('REPORT_PLATFORM_USAGE_SETTINGS_LOADED')) {
-    define('REPORT_PLATFORM_USAGE_SETTINGS_LOADED', true);
-
-    $settings = new admin_settingpage('report_platform_usage_settings',
-        get_string('settings', 'report_platform_usage'));
+// Define settings - Moodle will automatically add this to the admin tree.
+// Do NOT manually add to 'reports' as Moodle handles this for report plugins.
+if ($hassiteconfig) {
+    $settings = new admin_settingpage(
+        'report_platform_usage_settings',
+        get_string('settings', 'report_platform_usage')
+    );
 
     // Session limit for dedication calculation.
     $settings->add(new admin_setting_configduration(
@@ -88,6 +88,4 @@ if ($hassiteconfig && !defined('REPORT_PLATFORM_USAGE_SETTINGS_LOADED')) {
         get_string('setting_enable_cache_desc', 'report_platform_usage'),
         1
     ));
-
-    $ADMIN->add('reports', $settings);
 }
