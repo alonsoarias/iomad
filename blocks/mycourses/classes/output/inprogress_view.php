@@ -107,8 +107,8 @@ class inprogress_view implements renderable, templatable {
                 $exportedcourse->summary = $coursesummary;
             }
 
-            // Get the course percentage.
-            if ($totalrec = $DB->get_records('course_completion_criteria', array('course' => $inprogress->courseid))) {
+            // Get the course percentage if course has completion criteria.
+            if ($course && $totalrec = $DB->get_records('course_completion_criteria', array('course' => $inprogress->courseid))) {
                 $usercount = $DB->count_records('course_completion_crit_compl', array('course' => $inprogress->courseid, 'userid' => $USER->id));
                 $exportedcourse->progress = round($usercount * 100 / count($totalrec), 0);
                 $exportedcourse->hasprogress = true;
@@ -130,7 +130,7 @@ class inprogress_view implements renderable, templatable {
                     } else {
                         $completestring = " - " . get_string('no');
                     }
-        
+
                     if (!empty($criteria->moduleinstance)) {
                         $modinfo = get_coursemodule_from_id('', $criteria->moduleinstance);
                         $gradestring = "";
@@ -154,10 +154,17 @@ class inprogress_view implements renderable, templatable {
                         $tooltip = $criteria->get_title() . "$completestring \r\n" . $tooltip;
                     }
                 }
-        
+
                 // Add in the modified time.
-                $tooltip .= format_string(get_string('lastmodified') . " - " .userdate($inprogress->modifiedtime, $CFG->iomad_date_format));
+                if (!empty($inprogress->modifiedtime)) {
+                    $tooltip .= format_string(get_string('lastmodified') . " - " . userdate($inprogress->modifiedtime, $CFG->iomad_date_format));
+                }
                 $exportedcourse->progresstooltip = $tooltip;
+            } else {
+                // Course has no completion tracking - still show it but without progress.
+                $exportedcourse->hasprogress = false;
+                $exportedcourse->progress = 0;
+                $exportedcourse->progresstooltip = '';
             }
             $inprogressview['courses'][] = $exportedcourse;
         }

@@ -92,11 +92,10 @@ class summarise_text extends external_api {
         // Send the action to the AI manager.
         $manager = \core\di::get(\core_ai\manager::class);
         $response = $manager->process_action($action);
-        $generatedcontent = $response->get_response_data()['generatedcontent'] ?? '';
         // Return the response.
         return [
             'success' => $response->get_success(),
-            'generatedcontent' => \core_external\util::format_text($generatedcontent, FORMAT_PLAIN, $contextid)[0],
+            'generatedcontent' => $response->get_response_data()['generatedcontent'] ?? '',
             'finishreason' => $response->get_response_data()['finishreason'] ?? '',
             'errorcode' => $response->get_errorcode(),
             'error' => $response->get_errormessage(),

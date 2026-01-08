@@ -99,7 +99,22 @@ if (core_userfeedback::should_display_reminder()) {
     core_userfeedback::print_reminder_block();
 }
 
-echo $OUTPUT->custom_block_region('content');
+// Render the mycourses block directly.
+if (file_exists($CFG->dirroot . '/blocks/mycourses/block_mycourses.php')) {
+    require_once($CFG->dirroot . '/blocks/mycourses/block_mycourses.php');
+    $mycoursesblock = new block_mycourses();
+    $mycoursesblock->page = $PAGE;
+    $mycoursesblock->instance = new stdClass();
+    $mycoursesblock->instance->id = 0;
+    $mycoursesblock->context = $context;
+    $blockcontent = $mycoursesblock->get_content();
+    if (!empty($blockcontent) && !empty($blockcontent->text)) {
+        echo html_writer::div($blockcontent->text, 'block_mycourses');
+    }
+} else {
+    // Fallback to default block region if mycourses block is not installed.
+    echo $OUTPUT->custom_block_region('content');
+}
 
 echo $OUTPUT->footer();
 

@@ -164,8 +164,6 @@ class MoodleODSWorksheet {
         if (is_array($format)) {
             $format = new MoodleODSFormat($format);
         }
-        $str = \core\dataformat::escape_spreadsheet_formula($str);
-
         $this->data[$row][$col]->value = $str;
         $this->data[$row][$col]->type = 'string';
         $this->data[$row][$col]->format = $format;

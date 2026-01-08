@@ -1001,39 +1001,22 @@ function scorm_print_launch($user, $scorm, $action, $cm) {
 
     // Do not give the player launch FORM if the SCORM object is locked after the final attempt.
     if ($scorm->lastattemptlock == 0 || $result->attemptleft > 0) {
-        echo html_writer::start_div('scorm-center');
-        echo html_writer::start_tag('form', [
-            'id' => 'scormviewform',
-            'method' => 'post',
-            'action' => $CFG->wwwroot . '/mod/scorm/player.php',
-        ]);
-        $haspopup = !empty($scorm->popup);
-        $popuphtml = '';
-        if ($haspopup) {
-            $popuphtml = html_writer::span(get_string('opensinnewwindowbracketed'), 'sr-only')
-                . $OUTPUT->pix_icon('i/externallink', '', 'moodle', ['class' => 'ms-1 me-0']);
-        }
+            echo html_writer::start_div('scorm-center');
+            echo html_writer::start_tag('form', array('id' => 'scormviewform',
+                                                        'method' => 'post',
+                                                        'action' => $CFG->wwwroot.'/mod/scorm/player.php'));
         if ($scorm->hidebrowse == 0) {
-            $previewbuttonparams = [
-                'class' => 'btn btn-secondary me-1',
-                'name' => 'mode',
-                'type' => 'submit',
-                'id' => 'b',
-                'value' => 'browse',
-            ];
-            echo html_writer::tag('button', get_string('browse', 'scorm') . $popuphtml, $previewbuttonparams);
+            echo html_writer::tag('button', get_string('browse', 'scorm'),
+                    ['class' => 'btn btn-secondary me-1', 'name' => 'mode',
+                        'type' => 'submit', 'id' => 'b', 'value' => 'browse'])
+                . html_writer::end_tag('button');
         } else {
             echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'mode', 'value' => 'normal'));
         }
-
-        $enterbuttonparams = [
-            'class' => 'btn btn-primary mx-1',
-            'name' => 'mode',
-            'type' => 'submit',
-            'id' => 'n',
-            'value' => 'normal',
-        ];
-        echo html_writer::tag('button', get_string('enter', 'scorm') . $popuphtml, $enterbuttonparams);
+        echo html_writer::tag('button', get_string('enter', 'scorm'),
+                ['class' => 'btn btn-primary mx-1', 'name' => 'mode',
+                    'type' => 'submit', 'id' => 'n', 'value' => 'normal'])
+             . html_writer::end_tag('button');
         if (!empty($scorm->forcenewattempt)) {
             if ($scorm->forcenewattempt == SCORM_FORCEATTEMPT_ALWAYS ||
                     ($scorm->forcenewattempt == SCORM_FORCEATTEMPT_ONCOMPLETE && $incomplete === false)) {
@@ -1045,7 +1028,7 @@ function scorm_print_launch($user, $scorm, $action, $cm) {
             echo html_writer::label(get_string('newattempt', 'scorm'), 'a', true, ['class' => 'ps-1']);
             echo html_writer::end_div();
         }
-        if ($haspopup) {
+        if (!empty($scorm->popup)) {
             echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'display', 'value' => 'popup'));
         }
 
@@ -1504,11 +1487,6 @@ function scorm_delete_attempt($userid, $scorm, $attemptornumber) {
         $attempt = $attemptornumber;
     } else {
         $attempt = scorm_get_attempt($userid, $scorm->id, $attemptornumber, false);
-
-        // The attempt doesn't exist.
-        if ($attempt === null) {
-            return true;
-        }
     }
 
     scorm_delete_tracks($scorm->id, null, $userid, $attempt->id);
@@ -2035,16 +2013,7 @@ function scorm_get_toc($user, $scorm, $cmid, $toclink=TOCJSLINK, $currentorg='',
     if ($tocheader) {
         $result->toc .= html_writer::end_div().html_writer::end_div();
         $result->toc .= html_writer::start_div('loading', array('id' => 'scorm_toc_toggle'));
-        $toggletoclabel = get_string('toggletableofcontents', 'scorm');
-        $toggletocbutton = html_writer::tag('button', '', [
-            'id' => 'scorm_toc_toggle_btn',
-            'type' => 'button',
-            'class' => 'btn btn-secondary btn-sm mb-1',
-            'title' => $toggletoclabel,
-            'aria-label' => $toggletoclabel,
-            'aria-controls' => 'scorm_toc',
-        ]);
-        $result->toc .= $toggletocbutton . html_writer::end_div();
+        $result->toc .= html_writer::tag('button', '', array('id' => 'scorm_toc_toggle_btn')).html_writer::end_div();
         $result->toc .= html_writer::start_div('', array('id' => 'scorm_content'));
         $result->toc .= html_writer::div('', '', array('id' => 'scorm_navpanel'));
         $result->toc .= html_writer::end_div().html_writer::end_div();

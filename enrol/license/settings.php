@@ -15,8 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Settings for the License enrolment plugin
- *
  * @package   enrol_license
  * @copyright 2021 Derick Turner
  * @author    Derick Turner
@@ -37,8 +35,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('enrol_license/defaultenrol',
         get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 1));
 
-    $options = [ENROL_INSTANCE_ENABLED  => get_string('yes'),
-                ENROL_INSTANCE_DISABLED => get_string('no')];
+    $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
+                     ENROL_INSTANCE_DISABLED => get_string('no'));
     $settings->add(new admin_setting_configselect('enrol_license/status',
         get_string('status', 'enrol_license'), get_string('status_desc', 'enrol_license'), ENROL_INSTANCE_DISABLED, $options));
 
@@ -50,21 +48,19 @@ if ($ADMIN->fulltree) {
             get_string('defaultrole', 'enrol_license'), get_string('defaultrole_desc', 'enrol_license'), $student->id, $options));
     }
 
-    $options = [
-                0 => get_string('never'),
-                1800 * 3600 * 24 => get_string('numdays', '', 1800),
-                1000 * 3600 * 24 => get_string('numdays', '', 1000),
-                365 * 3600 * 24 => get_string('numdays', '', 365),
-                180 * 3600 * 24 => get_string('numdays', '', 180),
-                150 * 3600 * 24 => get_string('numdays', '', 150),
-                120 * 3600 * 24 => get_string('numdays', '', 120),
-                90 * 3600 * 24 => get_string('numdays', '', 90),
-                60 * 3600 * 24 => get_string('numdays', '', 60),
-                30 * 3600 * 24 => get_string('numdays', '', 30),
-                21 * 3600 * 24 => get_string('numdays', '', 21),
-                14 * 3600 * 24 => get_string('numdays', '', 14),
-                7 * 3600 * 24 => get_string('numdays', '', 7),
-               ];
+    $options = array(0 => get_string('never'),
+                     1800 * 3600 * 24 => get_string('numdays', '', 1800),
+                     1000 * 3600 * 24 => get_string('numdays', '', 1000),
+                     365 * 3600 * 24 => get_string('numdays', '', 365),
+                     180 * 3600 * 24 => get_string('numdays', '', 180),
+                     150 * 3600 * 24 => get_string('numdays', '', 150),
+                     120 * 3600 * 24 => get_string('numdays', '', 120),
+                     90 * 3600 * 24 => get_string('numdays', '', 90),
+                     60 * 3600 * 24 => get_string('numdays', '', 60),
+                     30 * 3600 * 24 => get_string('numdays', '', 30),
+                     21 * 3600 * 24 => get_string('numdays', '', 21),
+                     14 * 3600 * 24 => get_string('numdays', '', 14),
+                     7 * 3600 * 24 => get_string('numdays', '', 7));
     $settings->add(new admin_setting_configselect('enrol_license/longtimenosee',
         get_string('longtimenosee', 'enrol_license'), get_string('longtimenosee_help', 'enrol_license'), 0, $options));
 

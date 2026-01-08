@@ -31,4 +31,3 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['clianswerno'] = '';
 $string['cliansweryes'] = '';
-$string['cliincorrectvalueretry'] = 'Skeivt virði, vinarliga royn aftur';

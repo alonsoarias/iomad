@@ -61,14 +61,12 @@ class mobile {
                 $data['pagecontent'] = $availableview->export_for_template($renderer);
                 $data['nocourses'] = get_string('noavailable', 'block_mycourses');
                 $data['availablepage'] = true;
-                $data['selectlabel'] = get_string('availableheader', 'block_mycourses');
                 break;
 
             case 'completed':
                 $completedview = new completed_view($mycompletion);
                 $data['pagecontent'] = $completedview->export_for_template($renderer);
                 $data['nocourses'] = get_string('nocompleted', 'block_mycourses');
-                $data['selectlabel'] = get_string('completedheader', 'block_mycourses');
                 break;
 
             case 'inprogress':
@@ -76,7 +74,6 @@ class mobile {
                 $inprogressview = new inprogress_view($mycompletion);
                 $data['pagecontent'] = $inprogressview->export_for_template($renderer);
                 $data['nocourses'] = get_string('noinprogress', 'block_mycourses');
-                $data['selectlabel'] = get_string('inprogressheader', 'block_mycourses');
                 break;
         }
 

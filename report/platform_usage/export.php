@@ -57,12 +57,16 @@ if (!\report_platform_usage\report::is_iomad_installed()) {
 $report = new \report_platform_usage\report($companyid, $datefrom, $dateto, false, $courseid);
 
 // Export based on format.
-if ($format === 'excel' && $type === 'summary') {
+if ($format === 'pdf') {
+    // Use PDF exporter for PDF format.
+    $exporter = new \report_platform_usage\pdf_exporter($report);
+    $exporter->export();
+} else if ($format === 'excel' && $type === 'summary') {
     // Use enhanced Excel exporter with charts for summary.
     $exporter = new \report_platform_usage\excel_exporter($report);
     $exporter->export();
 } else {
-    // Use standard exporter for CSV or specific data types.
+    // Use standard exporter for Excel or specific data types.
     $exporter = new \report_platform_usage\exporter($report, $type);
     $exporter->export($format);
 }

@@ -69,15 +69,13 @@
     }
 }}
 <div class="preferences-page-container">
-    <h2 id="defaultnotificationprefsheading">{{#str}} managemessageoutputs, message {{/str}}</h2>
+    <h2>{{#str}} managemessageoutputs, message {{/str}}</h2>
 
     <div class="preferences-container">
-        <table class="table table-hover preference-table" aria-labelledby="defaultnotificationprefsheading">
+        <table class="table table-hover preference-table">
             <thead>
                 <tr>
-                    <th>
-                        <span class="sr-only">{{#str}}preference, message{{/str}}</span>
-                    </th>
+                    <th></th>
                     <th>{{#str}} enabled, core_message {{/str}}</th>
                     {{#processors}}
                         <th data-processor-name="{{name}}">{{{displayname}}}</th>
@@ -99,7 +97,8 @@
                                             class="custom-control-input provider_enabled"
                                             {{#enabled}}checked{{/enabled}}
                                         >
-                                        <label for="{{{enabledsetting}}}" class="custom-control-label">
+                                        <label for="{{{enabledsetting}}}" class="custom-control-label"
+                                            title="{{enabledlabel}}">
                                             <span class="accesshide">{{enabledlabel}}</span>
                                         </label>
                                     </div>
@@ -115,7 +114,8 @@
                                                 class="custom-control-input enabled_message_setting"
                                                 {{#enabled}}checked{{/enabled}}
                                             >
-                                            <label for="{{{enabledsetting}}}" class="custom-control-label">
+                                            <label for="{{{enabledsetting}}}" class="custom-control-label"
+                                                title="{{enabledlabel}}">
                                                 {{#str}} enabled, core_message {{/str}}
                                             </label>
                                         </div>
@@ -128,7 +128,8 @@
                                                 class="custom-control-input locked_message_setting"
                                                 {{#locked}}checked{{/locked}}
                                             >
-                                            <label for="{{{lockedsetting}}}" class="custom-control-label">
+                                            <label for="{{{lockedsetting}}}" class="custom-control-label"
+                                                title="{{lockedlabel}}">
                                                 {{#str}} forced, core_message {{/str}}
                                             </label>
                                         </div>

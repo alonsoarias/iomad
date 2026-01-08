@@ -756,16 +756,10 @@ class helper {
                     debugging('Cache stores used for session definitions should ideally be searchable.', DEBUG_DEVELOPER);
                     continue;
                 }
-
-                // Load all of the keys into memory so we can compare against multiple prefixes.
-                $keys = $store->find_all();
-                sort($keys);
-
                 // Get all of the last access keys.
-                $lastaccess = array_filter($keys, fn($key) => str_starts_with($key, session_cache::LASTACCESS));
+                $keys = $store->find_by_prefix(session_cache::LASTACCESS);
                 $todelete = [];
-                $prefixtodelete = [];
-                foreach ($store->get_many($lastaccess) as $key => $value) {
+                foreach ($store->get_many($keys) as $key => $value) {
                     $expiresvalue = 0;
                     if ($value instanceof ttl_wrapper) {
                         $expiresvalue = $value->data;
@@ -777,15 +771,10 @@ class helper {
                     $expires = (int) $expiresvalue;
 
                     if ($expires > 0 && $expires < $purgetime) {
-                        $todelete[] = $key;
-                        $prefixtodelete[] = substr($key, strlen(session_cache::LASTACCESS));
+                        $prefix = substr($key, strlen(session_cache::LASTACCESS));
+                        $foundbyprefix = $store->find_by_prefix($prefix);
+                        $todelete = array_merge($todelete, [$key], $foundbyprefix);
                     }
-                }
-
-                // Match all of the prefixes to delete to keys to delete.
-                if ($prefixtodelete) {
-                    sort($prefixtodelete);
-                    $todelete = array_merge($todelete, self::filter_sorted_keys_by_prefixes($keys, $prefixtodelete));
                 }
                 if ($todelete) {
                     $outcome = (int) $store->delete_many($todelete);
@@ -797,37 +786,6 @@ class helper {
                 }
             }
         }
-    }
-
-    /**
-     * Filters a sorted list of keys by a sorted list of prefixes.
-     * This relies on the sorting to reduce the number of comparisons.
-     *
-     * @param array $keys a sorted array of keys
-     * @param array $prefixes a sorted array of prefixes
-     * @return array of keys containing any of the prefixes
-     */
-    public static function filter_sorted_keys_by_prefixes(array $keys, array $prefixes): array {
-        // Reverse the prefixes to allow for simple processing.
-        $prefixes = array_reverse($prefixes);
-
-        $matches = [];
-        $prefix = array_pop($prefixes);
-        foreach ($keys as $key) {
-            // The keys and prefixes are sorted so we only need to compare against one prefix at a time.
-            // This is done inside a loop to check the next prefix at break points.
-            while ($prefix) {
-                if (str_starts_with($key, $prefix)) {
-                    $matches[] = $key;
-                } else if ($prefix < $key) {
-                    // The key has moved past the current prefix alphabetically, so check the next.
-                    $prefix = array_pop($prefixes);
-                    continue;
-                }
-                break;
-            }
-        }
-        return $matches;
     }
 
     /**

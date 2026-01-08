@@ -37,6 +37,8 @@ function mycourses_get_my_completion($sort = 'coursefullname', $dir = 'ASC') {
     }
 
     $mycompletions = new stdclass();
+
+    // Get courses from local_iomad_track that are in progress.
     $myinprogress = $DB->get_records_sql("SELECT DISTINCT cc.id, cc.userid, cc.courseid as courseid, cc.coursename as coursefullname, c.summary as coursesummary, c.visible, ic.hasgrade, cc.timestarted, cc.modifiedtime
                                           FROM {local_iomad_track} cc
                                           LEFT JOIN {course} c ON (c.id = cc.courseid)
@@ -61,7 +63,53 @@ function mycourses_get_my_completion($sort = 'coursefullname', $dir = 'ASC') {
         $myinprogress[$rec->id] = $rec;
     }
 
-    // We dont care about these.  If you have enrolled then you are started.
+    // Get courses where the user is enrolled but not tracked in local_iomad_track.
+    // This includes courses without completion tracking.
+    $trackedcourseids = array_map(function($course) {
+        return $course->courseid;
+    }, $myinprogress);
+
+    // Build exclusion SQL for tracked courses.
+    $excludesql = '';
+    $excludeparams = [];
+    if (!empty($trackedcourseids)) {
+        list($insql, $excludeparams) = $DB->get_in_or_equal($trackedcourseids, SQL_PARAMS_NAMED, 'excl', false);
+        $excludesql = "AND c.id $insql";
+    }
+
+    // Get enrolled courses not in tracking table.
+    $enrolledcourses = $DB->get_records_sql("SELECT DISTINCT c.id, c.id as courseid, c.fullname as coursefullname, c.summary as coursesummary, c.visible, ue.timestart as timestarted
+                                              FROM {course} c
+                                              JOIN {enrol} e ON (e.courseid = c.id)
+                                              JOIN {user_enrolments} ue ON (ue.enrolid = e.id AND ue.userid = :userid)
+                                              LEFT JOIN {iomad_courses} ic ON (c.id = ic.courseid)
+                                              LEFT JOIN {course_completions} ccomp ON (ccomp.course = c.id AND ccomp.userid = :userid2)
+                                              WHERE ue.status = 0
+                                              AND e.status = 0
+                                              AND (ue.timeend = 0 OR ue.timeend > :now)
+                                              AND c.id != :siteid
+                                              AND (ccomp.timecompleted IS NULL OR ccomp.timecompleted = 0)
+                                              $excludesql",
+                                              array_merge(['userid' => $USER->id,
+                                               'userid2' => $USER->id,
+                                               'now' => time(),
+                                               'siteid' => SITEID], $excludeparams));
+
+    // Add enrolled courses to inprogress list.
+    foreach ($enrolledcourses as $enrolledcourse) {
+        // Check if this course is not already completed in local_iomad_track.
+        $iscompleted = $DB->record_exists_sql("SELECT id FROM {local_iomad_track}
+                                               WHERE userid = :userid
+                                               AND courseid = :courseid
+                                               AND timecompleted > 0",
+                                               ['userid' => $USER->id, 'courseid' => $enrolledcourse->courseid]);
+        if (!$iscompleted) {
+            $enrolledcourse->hasgrade = 0;
+            $enrolledcourse->modifiedtime = $enrolledcourse->timestarted;
+            $myinprogress['enrolled_' . $enrolledcourse->courseid] = $enrolledcourse;
+        }
+    }
+
     $mynotstartedenrolled = array();
     $unsortedcourses = array();
 

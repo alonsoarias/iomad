@@ -15,18 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Install script for enrol_license
- *
  * @package   enrol_license
  * @copyright 2021 Derick Turner
  * @author    Derick Turner
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-/**
- * Enrol license install function.
- *
- * @return void
- */
+
+defined('MOODLE_INTERNAL') || die();
+
 function xmldb_enrol_license_install() {
     global $CFG, $DB;
 
@@ -35,7 +31,7 @@ function xmldb_enrol_license_install() {
         // New course default.
         set_config('sendcoursewelcomemessage', $CFG->sendcoursewelcomemessage, 'enrol_license');
         // Each instance has different setting now.
-        $DB->set_field('enrol', 'customint4', $CFG->sendcoursewelcomemessage, ['enrol' => 'license']);
+        $DB->set_field('enrol', 'customint4', $CFG->sendcoursewelcomemessage, array('enrol' => 'license'));
         unset_config('sendcoursewelcomemessage');
     }
 
@@ -43,7 +39,7 @@ function xmldb_enrol_license_install() {
     if (isset($CFG->longtimenosee)) {
         $nosee = $CFG->longtimenosee * 3600 * 24;
         set_config('longtimenosee', $nosee, 'enrol_license');
-        $DB->set_field('enrol', 'customint2', $nosee, ['enrol' => 'license']);
+        $DB->set_field('enrol', 'customint2', $nosee, array('enrol' => 'license'));
         unset_config('longtimenosee');
     }
 

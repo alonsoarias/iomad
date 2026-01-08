@@ -1729,8 +1729,10 @@ class report {
             return [];
         }
 
-        // Get enrolled users.
-        $enrolledusers = get_enrolled_users($context, '', 0, 'u.id, u.username, u.firstname, u.lastname, u.email, u.lastaccess');
+        // Get enrolled users with all name fields required by fullname().
+        $userfields = 'u.id, u.username, u.firstname, u.lastname, u.email, u.lastaccess, ' .
+                      'u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename';
+        $enrolledusers = get_enrolled_users($context, '', 0, $userfields);
 
         if (empty($enrolledusers)) {
             return [];

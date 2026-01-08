@@ -123,11 +123,7 @@ abstract class spout_base extends \core\dataformat\base {
      * @param int $rownum
      */
     public function write_record($record, $rownum) {
-        $rowvalues = $this->format_record($record);
-        foreach ($rowvalues as $key => $value) {
-            $rowvalues[$key] = \core\dataformat::escape_spreadsheet_formula($value);
-        }
-        $row = Row::fromValues($rowvalues);
+        $row = Row::fromValues($this->format_record($record));
         $this->writer->addRow($row);
     }
 

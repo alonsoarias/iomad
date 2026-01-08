@@ -843,26 +843,6 @@
     color: white;
 }
 
-/* Export Buttons - Clean subtle style */
-.report-platform-usage .btn-export {
-    background: white;
-    border: 1px solid var(--rpu-gray-200);
-    color: var(--rpu-gray-600);
-    box-shadow: var(--rpu-shadow-xs);
-    font-weight: var(--rpu-font-medium);
-}
-
-.report-platform-usage .btn-export:hover {
-    background: var(--rpu-gray-50);
-    border-color: var(--rpu-gray-300);
-    color: var(--rpu-gray-700);
-    box-shadow: var(--rpu-shadow-sm);
-}
-
-.report-platform-usage .btn-export i {
-    color: var(--rpu-success-500);
-}
-
 /* ===========================================
    Form Controls - Refined Inputs
    =========================================== */
@@ -1413,10 +1393,6 @@ body > .tooltip.bs-tooltip-bottom .arrow::before {
         justify-content: center;
     }
 
-    .report-platform-usage .btn-export {
-        margin-bottom: var(--rpu-space-2);
-    }
-
     .report-platform-usage .card:hover {
         transform: none;
     }
@@ -1448,7 +1424,6 @@ body > .tooltip.bs-tooltip-bottom .arrow::before {
     }
 
     .report-platform-usage .btn,
-    .report-platform-usage .btn-export,
     .report-platform-usage .filter-section,
     .report-platform-usage #loading-indicator,
     .report-platform-usage #course-loading-indicator {

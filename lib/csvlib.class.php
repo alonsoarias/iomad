@@ -449,9 +449,6 @@ class csv_export_writer {
             }
         }
         $delimiter = csv_import_reader::get_delimiter($this->delimiter);
-        foreach ($row as $key => $value) {
-            $row[$key] = \core\dataformat::escape_spreadsheet_formula($value);
-        }
         fputcsv($this->fp, $row, $delimiter, $this->csvenclosure);
     }
 

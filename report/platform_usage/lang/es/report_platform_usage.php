@@ -52,7 +52,7 @@ $string['daterange'] = 'Rango de fechas';
 
 // Exportación.
 $string['exportexcel'] = 'Descargar Excel';
-$string['exportcsv'] = 'Descargar CSV';
+$string['exportpdf'] = 'Descargar PDF';
 
 // Métricas de ingreso.
 $string['loginstoday'] = 'Ingresos hoy';
@@ -176,8 +176,13 @@ $string['viewdetails'] = 'Ver detalles';
 $string['generateddate'] = 'Generado';
 $string['generated_by'] = 'Generado por';
 
-// Privacidad.
-$string['privacy:metadata'] = 'Este plugin no almacena datos personales.';
+// Privacidad y GDPR.
+$string['privacy:metadata'] = 'El plugin de Reporte de Uso de Plataforma almacena datos de dedicación de los usuarios.';
+$string['privacy:metadata:report_platform_usage_ded'] = 'Información sobre el tiempo dedicado por los usuarios en cada curso.';
+$string['privacy:metadata:report_platform_usage_ded:userid'] = 'El ID del usuario cuyo tiempo de dedicación se registra.';
+$string['privacy:metadata:report_platform_usage_ded:courseid'] = 'El ID del curso al que se dedicó el tiempo.';
+$string['privacy:metadata:report_platform_usage_ded:timespent'] = 'El tiempo total dedicado en segundos.';
+$string['privacy:metadata:report_platform_usage_ded:timestart'] = 'La marca de tiempo del inicio del período de cálculo.';
 
 // Descripciones de secciones para la interfaz.
 $string['logintrends_desc'] = 'Actividad de ingresos en los últimos 30 días';

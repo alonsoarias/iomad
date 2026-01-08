@@ -117,6 +117,7 @@ $jsstrings = [
     'completions' => get_string('completions', 'report_platform_usage'),
     'dailyusers' => get_string('dailyusers', 'report_platform_usage'),
     'dedicationpercent' => get_string('dedicationpercent', 'report_platform_usage'),
+    'date' => get_string('date', 'report_platform_usage'),
 ];
 
 // Tooltip strings.
@@ -170,15 +171,15 @@ if ($incoursecontext) {
 
 // Filter form (only show in system context).
 if (!$incoursecontext) {
-    echo '<div class="card mb-4 filter-section">';
-    echo '<div class="card-body">';
-    echo '<div class="d-flex flex-wrap align-items-center">';
+    echo '<div class="card mb-4">';
+    echo '<div class="card-body py-3">';
+    echo '<div class="d-flex flex-wrap align-items-center" style="gap: 1rem;">';
 
     // Company filter (only show if IOMAD is installed).
     if ($isiomad && !empty($companies)) {
-        echo '<div class="form-group mr-3 mb-2">';
-        echo '<label for="companyid" class="mr-2">' . get_string('company', 'report_platform_usage') . ':</label>';
-        echo '<select name="companyid" id="companyid" class="form-control">';
+        echo '<div class="d-flex align-items-center">';
+        echo '<label for="companyid" class="mb-0 mr-2 font-weight-normal">' . get_string('company', 'report_platform_usage') . ':</label>';
+        echo '<select name="companyid" id="companyid" class="form-control form-control-sm" style="width: auto;">';
         echo '<option value="0">' . get_string('allcompanies', 'report_platform_usage') . '</option>';
         foreach ($companies as $id => $name) {
             $selected = ($id == $companyid) ? 'selected' : '';
@@ -189,22 +190,22 @@ if (!$incoursecontext) {
     }
 
     // Date filters for global context.
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<label for="global-datefrom" class="mr-2">' . get_string('datefrom', 'report_platform_usage') . ':</label>';
-    echo '<input type="date" id="global-datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
+    echo '<div class="d-flex align-items-center">';
+    echo '<label for="global-datefrom" class="mb-0 mr-2 font-weight-normal">' . get_string('datefrom', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="global-datefrom" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $datefrom) . '">';
     echo '</div>';
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<label for="global-dateto" class="mr-2">' . get_string('dateto', 'report_platform_usage') . ':</label>';
-    echo '<input type="date" id="global-dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
-    echo '</div>';
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<button type="button" id="apply-global-filter" class="btn btn-primary">';
-    echo '<i class="fa fa-filter"></i> ' . get_string('filter', 'report_platform_usage');
-    echo '</button>';
+    echo '<div class="d-flex align-items-center">';
+    echo '<label for="global-dateto" class="mb-0 mr-2 font-weight-normal">' . get_string('dateto', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="global-dateto" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $dateto) . '">';
     echo '</div>';
 
+    // Filter button.
+    echo '<button type="button" id="apply-global-filter" class="btn btn-primary btn-sm">';
+    echo '<i class="fa fa-filter mr-1"></i>' . get_string('filter', 'report_platform_usage');
+    echo '</button>';
+
     // Loading indicator.
-    echo '<div id="loading-indicator" class="mb-2 mr-3" style="display: none;">';
+    echo '<div id="loading-indicator" style="display: none;">';
     echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
     echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
     echo '</div>';
@@ -216,12 +217,12 @@ if (!$incoursecontext) {
             'dateto' => $dateto,
             'sesskey' => sesskey(),
         ]);
-        echo '<div class="ml-auto">';
-        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn btn-success btn-export mb-2 mr-2">';
-        echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
+        echo '<div class="d-flex align-items-center ml-auto" style="gap: 0.5rem;">';
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn btn-success btn-sm">';
+        echo '<i class="fa fa-file-excel-o mr-1"></i>' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=csv" id="export-csv" class="btn btn-secondary btn-export mb-2">';
-        echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=pdf" id="export-pdf" class="btn btn-danger btn-sm">';
+        echo '<i class="fa fa-file-pdf-o mr-1"></i>' . get_string('exportpdf', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
     }
@@ -231,10 +232,12 @@ if (!$incoursecontext) {
 } else {
     // Course context - show course info, date filters, and export buttons.
     echo '<div class="card mb-4 bg-light">';
-    echo '<div class="card-body">';
-    echo '<div class="d-flex flex-wrap align-items-center justify-content-between mb-3">';
-    echo '<div>';
-    echo '<h5 class="mb-1"><i class="fa fa-book mr-2"></i>' . format_string($course->fullname) . '</h5>';
+    echo '<div class="card-body py-3">';
+
+    // Course info and export buttons row.
+    echo '<div class="d-flex flex-wrap align-items-center justify-content-between">';
+    echo '<div class="mb-2 mb-md-0">';
+    echo '<h5 class="mb-0"><i class="fa fa-book mr-2"></i>' . format_string($course->fullname) . '</h5>';
     echo '<small class="text-muted">' . format_string($course->shortname) . '</small>';
     echo '</div>';
 
@@ -246,33 +249,31 @@ if (!$incoursecontext) {
             'dateto' => $dateto,
             'sesskey' => sesskey(),
         ]);
-        echo '<div>';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" id="export-excel-course" class="btn btn-success btn-export mr-2">';
-        echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
+        echo '<div class="d-flex align-items-center" style="gap: 0.5rem;">';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" id="export-excel-course" class="btn btn-success btn-sm">';
+        echo '<i class="fa fa-file-excel-o mr-1"></i>' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=csv" id="export-csv-course" class="btn btn-secondary btn-export">';
-        echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=pdf" id="export-pdf-course" class="btn btn-danger btn-sm">';
+        echo '<i class="fa fa-file-pdf-o mr-1"></i>' . get_string('exportpdf', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
     }
     echo '</div>';
 
     // Date filter row for course context.
-    echo '<div class="d-flex flex-wrap align-items-center">';
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<label for="course-datefrom" class="mr-2">' . get_string('datefrom', 'report_platform_usage') . ':</label>';
-    echo '<input type="date" id="course-datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
+    echo '<div class="d-flex flex-wrap align-items-center mt-3 pt-3 border-top" style="gap: 1rem;">';
+    echo '<div class="d-flex align-items-center">';
+    echo '<label for="course-datefrom" class="mb-0 mr-2 font-weight-normal">' . get_string('datefrom', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="course-datefrom" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $datefrom) . '">';
     echo '</div>';
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<label for="course-dateto" class="mr-2">' . get_string('dateto', 'report_platform_usage') . ':</label>';
-    echo '<input type="date" id="course-dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
+    echo '<div class="d-flex align-items-center">';
+    echo '<label for="course-dateto" class="mb-0 mr-2 font-weight-normal">' . get_string('dateto', 'report_platform_usage') . '</label>';
+    echo '<input type="date" id="course-dateto" class="form-control form-control-sm" style="width: auto;" value="' . date('Y-m-d', $dateto) . '">';
     echo '</div>';
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<button type="button" id="apply-course-filter" class="btn btn-primary">';
-    echo '<i class="fa fa-filter"></i> ' . get_string('filter', 'report_platform_usage');
+    echo '<button type="button" id="apply-course-filter" class="btn btn-primary btn-sm">';
+    echo '<i class="fa fa-filter mr-1"></i>' . get_string('filter', 'report_platform_usage');
     echo '</button>';
-    echo '</div>';
-    echo '<div id="course-loading-indicator" class="mb-2 mr-3" style="display: none;">';
+    echo '<div id="course-loading-indicator" style="display: none;">';
     echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
     echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
     echo '</div>';
@@ -794,630 +795,40 @@ echo '</div>';
 
 echo '</div>';
 
-// Chart.js and AJAX initialization.
+// Chart.js and AMD module initialization.
 $ajaxurl = $CFG->wwwroot . '/report/platform_usage/ajax.php';
-?>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Language strings.
-    var STRINGS = <?php echo json_encode($jsstrings); ?>;
 
-    // AJAX URL.
-    var AJAX_URL = '<?php echo $ajaxurl; ?>';
+// Prepare initial data for JavaScript.
+$initialdata = [
+    'login_summary' => $loginSummary,
+    'user_summary' => $userSummary,
+    'course_stats' => $courseStats,
+    'daily_logins' => $dailyLogins,
+    'course_access_trends' => $courseAccessTrends,
+    'top_courses' => array_values($topCourses),
+    'top_activities' => $topActivities,
+    'completions_summary' => $completionsSummary,
+    'completion_trends' => $completionTrends,
+    'daily_users' => $dailyUsers,
+    'top_dedication' => $topDedication,
+];
 
-    // Context flag.
-    var inCourseContext = <?php echo $incoursecontext ? 'true' : 'false'; ?>;
-    var courseId = <?php echo (int)$courseid; ?>;
+// Configuration for the AMD module.
+$config = [
+    'ajaxUrl' => $ajaxurl,
+    'courseId' => (int)$courseid,
+    'inCourseContext' => $incoursecontext,
+];
 
-    // Chart.js global configuration for premium styling (must be before initCharts)
-    Chart.defaults.font.family = "'Inter', system-ui, -apple-system, sans-serif";
-    Chart.defaults.font.size = 12;
-    Chart.defaults.color = '#64748b';
-    Chart.defaults.plugins.legend.labels.usePointStyle = true;
-    Chart.defaults.plugins.legend.labels.padding = 16;
-    Chart.defaults.plugins.tooltip.backgroundColor = '#0f172a';
-    Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
-    Chart.defaults.plugins.tooltip.bodyColor = '#e2e8f0';
-    Chart.defaults.plugins.tooltip.borderColor = '#334155';
-    Chart.defaults.plugins.tooltip.borderWidth = 1;
-    Chart.defaults.plugins.tooltip.padding = 12;
-    Chart.defaults.plugins.tooltip.cornerRadius = 8;
-    Chart.defaults.plugins.tooltip.displayColors = true;
-    Chart.defaults.plugins.tooltip.boxPadding = 4;
+// Load Chart.js from CDN.
+echo '<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
 
-    // Premium color palette (indigo/purple theme)
-    var COLORS = {
-        brand: {
-            primary: '#6366f1',
-            primaryLight: '#818cf8',
-            primaryDark: '#4f46e5',
-            gradient: ['rgba(99, 102, 241, 0.8)', 'rgba(129, 140, 248, 0.8)']
-        },
-        success: {
-            primary: '#10b981',
-            light: '#34d399',
-            gradient: ['rgba(16, 185, 129, 0.8)', 'rgba(52, 211, 153, 0.8)']
-        },
-        warning: {
-            primary: '#f59e0b',
-            light: '#fbbf24',
-            gradient: ['rgba(245, 158, 11, 0.8)', 'rgba(251, 191, 36, 0.8)']
-        },
-        info: {
-            primary: '#06b6d4',
-            light: '#22d3ee',
-            gradient: ['rgba(6, 182, 212, 0.8)', 'rgba(34, 211, 238, 0.8)']
-        },
-        error: {
-            primary: '#f43f5e',
-            light: '#fb7185'
-        },
-        gray: {
-            50: '#f8fafc',
-            100: '#f1f5f9',
-            200: '#e2e8f0',
-            300: '#cbd5e1',
-            400: '#94a3b8',
-            500: '#64748b',
-            600: '#475569',
-            700: '#334155',
-            800: '#1e293b',
-            900: '#0f172a'
-        }
-    };
-
-    /**
-     * Create gradient for chart backgrounds
-     */
-    function createGradient(ctx, colorStart, colorEnd) {
-        var gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, colorStart);
-        gradient.addColorStop(1, colorEnd);
-        return gradient;
-    }
-
-    /**
-     * Initialize all charts.
-     */
-function initCharts(data) {
-    // PASO 1: Destruir gráficos existentes para evitar duplicados
-    if (typeof charts !== 'undefined') {
-        Object.keys(charts).forEach(function(key) {
-            if (charts[key] && typeof charts[key].destroy === 'function') {
-                charts[key].destroy();
-            }
-        });
-        charts = {};
-    }
-
-    // PASO 2: Daily Logins Line Chart (with unique users)
-    var dailyLoginsCanvas = document.getElementById('dailyLoginsChart');
-    if (dailyLoginsCanvas && data.daily_logins && data.daily_logins.labels) {
-        var dailyLoginsCtx = dailyLoginsCanvas.getContext('2d');
-        charts.dailyLogins = new Chart(dailyLoginsCtx, {
-            type: 'line',
-            data: {
-                labels: data.daily_logins.labels,
-                datasets: [
-                    {
-                        label: STRINGS.logins,
-                        data: data.daily_logins.logins,
-                        borderColor: COLORS.brand.primary,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: STRINGS.uniqueusers,
-                        data: data.daily_logins.unique_users,
-                        borderColor: COLORS.success.primary,
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { intersect: false, mode: 'index' },
-                plugins: { legend: { position: 'top' } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-    }
-
-    // PASO 3: User Activity Doughnut Chart
-    var userActivityCanvas = document.getElementById('userActivityChart');
-    if (userActivityCanvas) {
-        var userActivityCtx = userActivityCanvas.getContext('2d');
-        var activeUsers, inactiveUsers;
-        if (inCourseContext && data.course_stats) {
-            activeUsers = data.course_stats.active_users || 0;
-            inactiveUsers = data.course_stats.inactive_users || 0;
-        } else {
-            activeUsers = data.user_summary.active || 0;
-            inactiveUsers = data.user_summary.inactive || 0;
-        }
-        charts.userActivity = new Chart(userActivityCtx, {
-            type: 'doughnut',
-            data: {
-                labels: [STRINGS.activeusers, STRINGS.inactiveusers],
-                datasets: [{
-                    data: [activeUsers, inactiveUsers],
-                    backgroundColor: [COLORS.success.primary, COLORS.error.primary],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-    }
-
-    // PASO 4: Course Access Trends Line Chart
-    var courseAccessCanvas = document.getElementById('courseAccessChart');
-    if (courseAccessCanvas && data.course_access_trends && data.course_access_trends.labels) {
-        var courseAccessCtx = courseAccessCanvas.getContext('2d');
-        charts.courseAccess = new Chart(courseAccessCtx, {
-            type: 'line',
-            data: {
-                labels: data.course_access_trends.labels,
-                datasets: [{
-                    label: STRINGS.courseaccesses,
-                    data: data.course_access_trends.data,
-                    borderColor: COLORS.warning.primary,
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { intersect: false, mode: 'index' },
-                plugins: { legend: { position: 'top' } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-    }
-
-    // PASO 5: Completion Trends Line Chart (only if canvas exists - has data)
-    var completionTrendsCanvas = document.getElementById('completionTrendsChart');
-    if (completionTrendsCanvas && data.completion_trends && data.completion_trends.labels) {
-        var completionTrendsCtx = completionTrendsCanvas.getContext('2d');
-        charts.completionTrends = new Chart(completionTrendsCtx, {
-            type: 'line',
-            data: {
-                labels: data.completion_trends.labels,
-                datasets: [{
-                    label: STRINGS.completions,
-                    data: data.completion_trends.data,
-                    borderColor: COLORS.info.primary,
-                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { intersect: false, mode: 'index' },
-                plugins: { legend: { position: 'top' } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-    }
-
-    // PASO 6: Dedication Chart (horizontal bar)
-    var dedicationCanvas = document.getElementById('dedicationChart');
-    if (dedicationCanvas && data.top_dedication && data.top_dedication.length > 0) {
-        var dedicationCtx = dedicationCanvas.getContext('2d');
-        charts.dedication = new Chart(dedicationCtx, {
-            type: 'bar',
-            data: {
-                labels: data.top_dedication.map(function(c) {
-                    return c.shortname && c.shortname.length > 18 ? 
-                        c.shortname.substring(0, 15) + '...' : 
-                        (c.shortname || c.fullname.substring(0, 15));
-                }),
-                datasets: [{
-                    label: STRINGS.dedicationpercent,
-                    data: data.top_dedication.map(function(c) { 
-                        return c.dedication_percent; 
-                    }),
-                    backgroundColor: COLORS.brand.primary,
-                    borderColor: COLORS.brand.primaryDark,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: { 
-                            callback: function(value) { 
-                                return value + '%'; 
-                            } 
-                        }
-                    }
-                }
-            }
-        });
-    }
-}
-
-    /**
-     * Update all charts with new data.
-     */
-function updateCharts(data) {
-    // CRÍTICO: En lugar de actualizar, destruir y recrear
-    // Esto evita problemas de sincronización y referencias perdidas
-    initCharts(data);
-}
-
-    /**
-     * Update summary cards.
-     */
-    function updateSummaryCards(data) {
-        // Platform Access card - new structure.
-        if (data.login_summary) {
-            updateElement('total-logins', numberFormat(data.login_summary.total_logins || 0));
-            updateElement('unique-users-login', numberFormat(data.login_summary.unique_users || 0));
-            updateElement('avg-logins-day', (data.login_summary.avg_logins_per_day || 0).toFixed(1));
-            updateElement('avg-logins-user', (data.login_summary.avg_logins_per_user || 0).toFixed(1));
-        }
-
-        // User Summary card.
-        if (data.user_summary) {
-            updateElement('total-users', numberFormat(data.user_summary.total));
-            updateElement('active-users', numberFormat(data.user_summary.active));
-            updateElement('inactive-users', numberFormat(data.user_summary.inactive));
-        }
-
-        // Completions card - new structure.
-        if (data.completions_summary) {
-            updateElement('total-completions', numberFormat(data.completions_summary.total_completions || 0));
-            updateElement('unique-courses', numberFormat(data.completions_summary.unique_courses || 0));
-            updateElement('completions-avg', (data.completions_summary.avg_per_day || 0).toFixed(1));
-            // Update completion rate.
-            var total = data.user_summary ? data.user_summary.total : 0;
-            var completionRate = total > 0 ? ((data.completions_summary.total_completions / total) * 100).toFixed(1) : '0';
-            updateElement('completion-rate', completionRate + '%');
-        }
-
-        // Daily Users card.
-        if (data.daily_users && data.daily_users.data) {
-            var maxDaily = Math.max.apply(null, data.daily_users.data) || 0;
-            var avgDaily = data.daily_users.data.length > 0 ? Math.round(data.daily_users.data.reduce(function(a,b) { return a+b; }, 0) / data.daily_users.data.length) : 0;
-            var todayDaily = data.daily_users.data[data.daily_users.data.length - 1] || 0;
-            updateElement('daily-today', numberFormat(todayDaily));
-            updateElement('daily-avg', numberFormat(avgDaily));
-            updateElement('daily-max', numberFormat(maxDaily));
-        }
-    }
-
-    /**
-     * Safely update element text content.
-     */
-    function updateElement(id, value) {
-        var el = document.getElementById(id);
-        if (el) {
-            el.textContent = value;
-        }
-    }
-
-    /**
-     * Update tables.
-     */
-    function updateTables(data) {
-        // Update courses table.
-        var coursesHtml = '';
-        if (data.top_courses.length === 0) {
-            coursesHtml = '<p class="text-muted">' + STRINGS.nodata + '</p>';
-        } else {
-            coursesHtml = '<div class="table-responsive"><table class="table table-striped table-sm">';
-            coursesHtml += '<thead><tr><th>' + STRINGS.coursename + '</th>';
-            coursesHtml += '<th class="text-right">' + STRINGS.courseaccesses + '</th>';
-            coursesHtml += '<th class="text-right">' + STRINGS.uniqueusers + '</th></tr></thead><tbody>';
-            data.top_courses.forEach(function(course) {
-                coursesHtml += '<tr><td>' + escapeHtml(course.fullname) + '</td>';
-                coursesHtml += '<td class="text-right">' + numberFormat(course.access_count) + '</td>';
-                coursesHtml += '<td class="text-right">' + numberFormat(course.unique_users) + '</td></tr>';
-            });
-            coursesHtml += '</tbody></table></div>';
-        }
-        document.getElementById('top-courses-table').innerHTML = coursesHtml;
-
-        // Update activities table.
-        var activitiesHtml = '';
-        if (data.top_activities.length === 0) {
-            activitiesHtml = '<p class="text-muted">' + STRINGS.nodata + '</p>';
-        } else {
-            activitiesHtml = '<div class="table-responsive"><table class="table table-striped table-sm">';
-            activitiesHtml += '<thead><tr><th>' + STRINGS.activityname + '</th>';
-            activitiesHtml += '<th>' + STRINGS.coursename + '</th>';
-            activitiesHtml += '<th>' + STRINGS.activitytype + '</th>';
-            activitiesHtml += '<th class="text-right">' + STRINGS.activityaccesses + '</th>';
-            activitiesHtml += '<th class="text-right">' + STRINGS.uniqueusers + '</th></tr></thead><tbody>';
-            data.top_activities.forEach(function(activity) {
-                activitiesHtml += '<tr><td>' + escapeHtml(activity.name) + '</td>';
-                activitiesHtml += '<td><small class="text-muted">' + escapeHtml(activity.course_name || '') + '</small></td>';
-                activitiesHtml += '<td><span class="badge badge-secondary">' + escapeHtml(activity.type_name || activity.type) + '</span></td>';
-                activitiesHtml += '<td class="text-right">' + numberFormat(activity.access_count) + '</td>';
-                activitiesHtml += '<td class="text-right">' + numberFormat(activity.unique_users) + '</td></tr>';
-            });
-            activitiesHtml += '</tbody></table></div>';
-        }
-        document.getElementById('top-activities-table').innerHTML = activitiesHtml;
-    }
-
-    /**
-     * Load global report data via AJAX (with company and date filters).
-     */
-    function loadGlobalReportData(companyId, datefrom, dateto) {
-        var loading = document.getElementById('loading-indicator');
-        loading.style.display = 'inline-block';
-
-        var datefromTs = new Date(datefrom).getTime() / 1000;
-        var datetoTs = new Date(dateto).getTime() / 1000 + 86399; // End of day
-
-        var url = AJAX_URL + '?companyid=' + companyId + '&datefrom=' + Math.floor(datefromTs) + '&dateto=' + Math.floor(datetoTs);
-
-        fetch(url)
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                currentData = data;
-                updateSummaryCards(data);
-                updateCharts(data);
-                updateTables(data);
-                loading.style.display = 'none';
-                // Refresh tooltips after dynamic content update.
-                document.dispatchEvent(new Event('tooltipsNeedRefresh'));
-            })
-            .catch(function(error) {
-                console.error('Error loading report data:', error);
-                loading.style.display = 'none';
-            });
-    }
-
-    /**
-     * Update global export links with current filters.
-     */
-    function updateGlobalExportLinks(companyId, datefrom, dateto) {
-        var excelLink = document.getElementById('export-excel');
-        var csvLink = document.getElementById('export-csv');
-
-        var datefromTs = new Date(datefrom).getTime() / 1000;
-        var datetoTs = new Date(dateto).getTime() / 1000 + 86399;
-
-        if (excelLink) {
-            var url = excelLink.href
-                .replace(/companyid=\d+/, 'companyid=' + companyId)
-                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
-                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
-            excelLink.href = url;
-        }
-        if (csvLink) {
-            var url = csvLink.href
-                .replace(/companyid=\d+/, 'companyid=' + companyId)
-                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
-                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
-            csvLink.href = url;
-        }
-    }
-
-    /**
-     * Load course report data via AJAX.
-     */
-    function loadCourseReportData(datefrom, dateto) {
-        var loading = document.getElementById('course-loading-indicator');
-        if (loading) {
-            loading.style.display = 'inline-block';
-        }
-
-        var datefromTs = new Date(datefrom).getTime() / 1000;
-        var datetoTs = new Date(dateto).getTime() / 1000 + 86399; // End of day
-
-        var url = AJAX_URL + '?courseid=' + courseId + '&datefrom=' + Math.floor(datefromTs) + '&dateto=' + Math.floor(datetoTs);
-
-        fetch(url)
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
-                currentData = data;
-                updateSummaryCards(data);
-                updateCharts(data);
-                updateTables(data);
-                updateCourseCards(data);
-                if (loading) {
-                    loading.style.display = 'none';
-                }
-                // Refresh tooltips after dynamic content update.
-                document.dispatchEvent(new Event('tooltipsNeedRefresh'));
-            })
-            .catch(function(error) {
-                console.error('Error loading course report data:', error);
-                if (loading) {
-                    loading.style.display = 'none';
-                }
-            });
-    }
-
-    /**
-     * Update course-specific summary cards.
-     */
-    function updateCourseCards(data) {
-        if (!inCourseContext || !data.course_stats) {
-            return;
-        }
-
-        // Update course accesses.
-        updateElement('course-accesses', numberFormat(data.course_stats.accesses || 0));
-    }
-
-    /**
-     * Update course export links with new date range.
-     */
-    function updateCourseExportLinks(datefrom, dateto) {
-        var excelLink = document.getElementById('export-excel-course');
-        var csvLink = document.getElementById('export-csv-course');
-
-        var datefromTs = new Date(datefrom).getTime() / 1000;
-        var datetoTs = new Date(dateto).getTime() / 1000 + 86399;
-
-        if (excelLink) {
-            var url = excelLink.href
-                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
-                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
-            excelLink.href = url;
-        }
-        if (csvLink) {
-            var url = csvLink.href
-                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
-                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
-            csvLink.href = url;
-        }
-    }
-
-    /**
-     * Format number with thousands separator.
-     */
-    function numberFormat(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    /**
-     * Escape HTML special characters.
-     */
-    function escapeHtml(text) {
-        if (!text) return '';
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // Initial data.
-    var currentData = {
-        login_summary: <?php echo json_encode($loginSummary); ?>,
-        user_summary: <?php echo json_encode($userSummary); ?>,
-        course_stats: <?php echo json_encode($courseStats); ?>,
-        daily_logins: <?php echo json_encode($dailyLogins); ?>,
-        course_access_trends: <?php echo json_encode($courseAccessTrends); ?>,
-        top_courses: <?php echo json_encode(array_values($topCourses)); ?>,
-        top_activities: <?php echo json_encode($topActivities); ?>,
-        completions_summary: <?php echo json_encode($completionsSummary); ?>,
-        completion_trends: <?php echo json_encode($completionTrends); ?>,
-        daily_users: <?php echo json_encode($dailyUsers); ?>,
-        top_dedication: <?php echo json_encode($topDedication); ?>
-    };
-
-    // Chart instances.
-    var charts = {};
-
-    // Initialize charts.
-    initCharts(currentData);
-
-    // Global context filter event (company + dates).
-    var globalFilterBtn = document.getElementById('apply-global-filter');
-    if (globalFilterBtn) {
-        globalFilterBtn.addEventListener('click', function() {
-            var companyFilter = document.getElementById('companyid');
-            var companyId = companyFilter ? companyFilter.value : 0;
-            var datefrom = document.getElementById('global-datefrom').value;
-            var dateto = document.getElementById('global-dateto').value;
-            loadGlobalReportData(companyId, datefrom, dateto);
-            updateGlobalExportLinks(companyId, datefrom, dateto);
-        });
-    }
-
-    // Company filter change event - triggers filter automatically.
-    var companyFilter = document.getElementById('companyid');
-    if (companyFilter) {
-        companyFilter.addEventListener('change', function() {
-            var companyId = this.value;
-            var datefrom = document.getElementById('global-datefrom').value;
-            var dateto = document.getElementById('global-dateto').value;
-            loadGlobalReportData(companyId, datefrom, dateto);
-            updateGlobalExportLinks(companyId, datefrom, dateto);
-        });
-    }
-
-    // Course context date filter event.
-    var courseFilterBtn = document.getElementById('apply-course-filter');
-    if (courseFilterBtn) {
-        courseFilterBtn.addEventListener('click', function() {
-            var datefrom = document.getElementById('course-datefrom').value;
-            var dateto = document.getElementById('course-dateto').value;
-            loadCourseReportData(datefrom, dateto);
-            updateCourseExportLinks(datefrom, dateto);
-        });
-    }
-
-    // Initialize Bootstrap tooltips with robust loading.
-    function initTooltips() {
-        if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tooltip !== 'undefined') {
-            // Dispose existing tooltips first to prevent duplicates.
-            jQuery('[data-toggle="tooltip"]').each(function() {
-                var $el = jQuery(this);
-                if ($el.data('bs.tooltip')) {
-                    $el.tooltip('dispose');
-                }
-            });
-            // Initialize new tooltips.
-            jQuery('[data-toggle="tooltip"]').tooltip({
-                container: 'body',
-                html: true,
-                trigger: 'hover focus',
-                delay: { show: 100, hide: 100 },
-                boundary: 'window',
-                fallbackPlacement: ['top', 'bottom', 'right', 'left']
-            });
-            return true;
-        }
-        return false;
-    }
-
-    // Initialize tooltips on page load with retry mechanism.
-    function initTooltipsWithRetry(retries) {
-        if (initTooltips()) {
-            return; // Success
-        }
-        if (retries > 0) {
-            setTimeout(function() {
-                initTooltipsWithRetry(retries - 1);
-            }, 200);
-        }
-    }
-
-    // Start tooltip initialization with retries.
-    initTooltipsWithRetry(10);
-
-    // Re-initialize tooltips after AJAX updates.
-    document.addEventListener('tooltipsNeedRefresh', function() {
-        initTooltips();
-    });
-
-    // Also initialize on jQuery ready if not already done.
-    if (typeof jQuery !== 'undefined') {
-        jQuery(document).ready(function() {
-            initTooltips();
-        });
-    }
-});
-</script>
-<?php
+// Initialize the AMD module.
+$PAGE->requires->js_call_amd(
+    'report_platform_usage/dashboard',
+    'init',
+    [$config, $initialdata, $jsstrings]
+);
 
 // Close report wrapper div.
 echo '</div>';
