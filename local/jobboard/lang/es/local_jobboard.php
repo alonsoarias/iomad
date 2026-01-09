@@ -4137,6 +4137,9 @@ $string['dean_actions_help'] = 'Como Decano, puede aprobar o rechazar esta postu
 $string['approveprofile'] = 'Aprobar postulación';
 $string['rejectprofile'] = 'Rechazar postulación';
 $string['approvecomments_placeholder'] = 'Comentarios opcionales sobre la aprobación...';
+$string['deanreviewpanel'] = 'Panel de Revisión del Decano';
+$string['deanreviewpanel_desc'] = 'Revise y apruebe/rechace las postulaciones de sus facultades asignadas';
+$string['nopendingapplications_dean_desc'] = 'No hay postulaciones con estado "enviada" pendientes de su revisión en sus facultades asignadas.';
 
 // Estados del período de revisión
 $string['review_period_not_configured'] = 'Período de revisión no configurado';

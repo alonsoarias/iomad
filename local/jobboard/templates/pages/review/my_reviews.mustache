@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/pages/review/my_reviews
 
-    My reviews page template for reviewers.
+    My reviews page template for reviewers and deans.
     Uses jb-* CSS pattern following public/index.mustache design.
 
     Context variables:
@@ -13,6 +13,10 @@
     * hasassignments (bool) - Has assignments
     * assignments (array) - Array of assigned applications
     * pagination (string) - Pagination HTML
+    * isdean (bool) - Is dean user
+    * isreviewer (bool) - Is reviewer user
+    * deanfaculties (array) - Dean's assigned faculties
+    * hasdeanfaculties (bool) - Has assigned faculties
 }}
 <div class="jb-myreviews" id="jobboard-myreviews">
     {{! Header }}
@@ -21,17 +25,46 @@
             <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
+            {{^isdean}}
             <a href="{{reviewqueueurl}}" class="jb-btn jb-btn--primary">
                 <i class="fa fa-clipboard-check"></i> {{#str}}reviewdocuments, local_jobboard{{/str}}
             </a>
+            {{/isdean}}
         </div>
+        {{#isdean}}
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-user-tie"></i> {{#str}}deanreviewpanel, local_jobboard{{/str}}
+        </h1>
+        <p class="jb-public-header__subtitle">{{#str}}deanreviewpanel_desc, local_jobboard{{/str}}</p>
+        {{/isdean}}
+        {{^isdean}}
         <h1 class="jb-public-header__title">
             <i class="fa fa-clipboard-list"></i> {{#str}}myreviews, local_jobboard{{/str}}
         </h1>
         <p class="jb-public-header__subtitle">{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
+        {{/isdean}}
     </div>
 
-    {{! Statistics Row }}
+    {{! Dean's Assigned Faculties }}
+    {{#isdean}}
+    {{#hasdeanfaculties}}
+    <div class="jb-dean-faculties">
+        <span class="jb-dean-faculties__label"><i class="fa fa-building-columns"></i> {{#str}}assignedfaculties, local_jobboard{{/str}}:</span>
+        {{#deanfaculties}}
+        <span class="jb-badge jb-badge--primary">{{code}}</span>
+        {{/deanfaculties}}
+    </div>
+    {{/hasdeanfaculties}}
+    {{^hasdeanfaculties}}
+    <div class="jb-empty">
+        <i class="fa fa-building-columns"></i>
+        <h3>{{#str}}nofacultiesassigned, local_jobboard{{/str}}</h3>
+        <p>{{#str}}nofacultiesassigned_desc, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasdeanfaculties}}
+    {{/isdean}}
+
+    {{! Statistics Row - Different for deans }}
     {{#stats.0}}
     <div class="jb-stats">
         {{#stats}}
@@ -98,7 +131,12 @@
     {{#hasassignments}}
     <div class="jb-section-header">
         <h3 class="jb-section-header__title">
+            {{#isdean}}
+            <i class="fa fa-file-lines"></i> {{#str}}pendingapplications, local_jobboard{{/str}}
+            {{/isdean}}
+            {{^isdean}}
             <i class="fa fa-clipboard-list"></i> {{#str}}assignedapplications, local_jobboard{{/str}}
+            {{/isdean}}
         </h3>
     </div>
     {{/hasassignments}}
@@ -177,12 +215,19 @@
                 </div>
             </div>
 
-            {{! Card Footer }}
+            {{! Card Footer - Different for deans }}
             <div class="jb-assignment-card__footer">
+                {{#isdean}}
+                <a href="{{reviewurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
+                    <i class="fa fa-user-check"></i> {{#str}}reviewapplication, local_jobboard{{/str}}
+                </a>
+                {{/isdean}}
+                {{^isdean}}
                 <a href="{{reviewurl}}" class="jb-btn {{#pendingcount}}jb-btn--primary{{/pendingcount}}{{^pendingcount}}jb-btn--outline{{/pendingcount}} jb-btn--sm">
                     <i class="fa fa-magnifying-glass"></i> {{#str}}reviewdocuments, local_jobboard{{/str}}
                     {{#pendingcount}}<span class="jb-btn__badge">{{pendingcount}}</span>{{/pendingcount}}
                 </a>
+                {{/isdean}}
                 <a href="{{viewurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
                     <i class="fa fa-eye"></i>
                 </a>
@@ -192,8 +237,29 @@
     </div>
     {{/hasassignments}}
 
-    {{! Empty State }}
+    {{! Empty State - Different for deans }}
     {{^hasassignments}}
+    {{#hasdeanfaculties}}
+    <div class="jb-empty">
+        {{#isdean}}
+        <i class="fa fa-inbox"></i>
+        <h3>{{#str}}nopendingapplications, local_jobboard{{/str}}</h3>
+        <p>{{#str}}nopendingapplications_dean_desc, local_jobboard{{/str}}</p>
+        {{/isdean}}
+        {{^isdean}}
+        <i class="fa fa-clipboard-list"></i>
+        <h3>{{#str}}noassignments, local_jobboard{{/str}}</h3>
+        <p>{{#str}}noassignments_desc, local_jobboard{{/str}}</p>
+        <div class="jb-empty__actions">
+            <a href="{{reviewqueueurl}}" class="jb-btn jb-btn--primary">
+                <i class="fa fa-clipboard-check"></i> {{#str}}reviewdocuments, local_jobboard{{/str}}
+            </a>
+        </div>
+        {{/isdean}}
+    </div>
+    {{/hasdeanfaculties}}
+    {{^hasdeanfaculties}}
+    {{^isdean}}
     <div class="jb-empty">
         <i class="fa fa-clipboard-list"></i>
         <h3>{{#str}}noassignments, local_jobboard{{/str}}</h3>
@@ -204,6 +270,8 @@
             </a>
         </div>
     </div>
+    {{/isdean}}
+    {{/hasdeanfaculties}}
     {{/hasassignments}}
 
     {{! Pagination }}
@@ -213,20 +281,27 @@
     </div>
     {{/pagination}}
 
-    {{! Footer Navigation }}
+    {{! Footer Navigation - Different for deans }}
     <div class="jb-footer-nav">
         <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
             <i class="fa fa-arrow-left"></i> {{#str}}backtodashboard, local_jobboard{{/str}}
         </a>
+        {{^isdean}}
         <a href="{{reviewqueueurl}}" class="jb-btn jb-btn--outline-primary">
             <i class="fa fa-clipboard-check"></i> {{#str}}reviewdocuments, local_jobboard{{/str}}
         </a>
+        {{/isdean}}
     </div>
 </div>
 
 <style>
 /* My Reviews Page - Following public/index.mustache pattern */
 .jb-myreviews { max-width: 1200px; padding: 1rem; }
+
+/* Dean Faculties Badge Row */
+.jb-dean-faculties { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--iser-verde, #1b9e88); }
+.jb-dean-faculties__label { font-size: 0.875rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); display: flex; align-items: center; gap: 0.5rem; }
+.jb-dean-faculties__label i { color: var(--iser-verde, #1b9e88); }
 
 /* Header - Same as public/index */
 .jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }

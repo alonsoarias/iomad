@@ -2892,6 +2892,9 @@ $string['dean_actions_help'] = 'As a Dean, you can approve or reject this comple
 $string['approveprofile'] = 'Approve application';
 $string['rejectprofile'] = 'Reject application';
 $string['approvecomments_placeholder'] = 'Optional comments about the approval...';
+$string['deanreviewpanel'] = 'Dean Review Panel';
+$string['deanreviewpanel_desc'] = 'Review and approve/reject applications from your assigned faculties';
+$string['nopendingapplications_dean_desc'] = 'There are no applications with "submitted" status pending your review in your assigned faculties.';
 
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';

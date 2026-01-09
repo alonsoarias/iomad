@@ -237,6 +237,11 @@ if ($isdean && !$isreviewer) {
         return ['code' => $f->facultycode];
     }, $deanfaculties));
     $data['hasdeanfaculties'] = !empty($deanfaculties);
+    // Add isdean to each assignment for template loop access.
+    foreach ($data['assignments'] as &$assignment) {
+        $assignment['isdean'] = true;
+    }
+    unset($assignment);
 }
 
 // Output the page.

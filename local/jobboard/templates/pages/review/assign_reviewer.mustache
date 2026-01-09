@@ -28,9 +28,14 @@
             <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{reviewurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
-                <i class="fa fa-clipboard-check"></i> {{#str}}reviewapplications, local_jobboard{{/str}}
-            </a>
+            <div class="jb-public-header__actions">
+                <a href="{{facultyassignmenturl}}" class="jb-btn jb-btn--primary jb-btn--sm">
+                    <i class="fa fa-building-columns"></i> {{#str}}managefacultyreviewers, local_jobboard{{/str}}
+                </a>
+                <a href="{{reviewurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                    <i class="fa fa-clipboard-check"></i> {{#str}}reviewapplications, local_jobboard{{/str}}
+                </a>
+            </div>
         </div>
         <h1 class="jb-public-header__title">
             <i class="fa fa-user-plus"></i> {{pagetitle}}

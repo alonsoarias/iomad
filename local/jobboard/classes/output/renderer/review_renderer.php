@@ -1583,6 +1583,7 @@ trait review_renderer {
             'actionformurl' => $pageurl->out(false),
             'dashboardurl' => (new \moodle_url('/local/jobboard/'))->out(false),
             'reviewurl' => (new \moodle_url('/local/jobboard/views/myreviews.php'))->out(false),
+            'facultyassignmenturl' => (new \moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties']))->out(false),
             'sesskey' => sesskey(),
         ];
     }
