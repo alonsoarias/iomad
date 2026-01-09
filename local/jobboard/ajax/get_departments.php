@@ -47,7 +47,7 @@ try {
     $result = [];
     foreach ($departments as $id => $name) {
         $result[] = [
-            'id' => $id,
+            'id' => (int) $id,
             'name' => $name,
         ];
     }

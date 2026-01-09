@@ -68,8 +68,9 @@ if ($isiomad) {
     // Get user's current company assignment.
     $companyuser = $DB->get_record('company_users', ['userid' => $USER->id], 'companyid, departmentid');
     if ($companyuser) {
-        $usercompanyid = $companyuser->companyid;
-        $userdepartmentid = $companyuser->departmentid;
+        // Cast to int to ensure proper JSON serialization for JavaScript comparison.
+        $usercompanyid = (int) $companyuser->companyid;
+        $userdepartmentid = (int) $companyuser->departmentid;
     }
 }
 

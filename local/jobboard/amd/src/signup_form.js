@@ -71,7 +71,7 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
      * Update the company select options.
      *
      * @param {Array} companies Array of company objects.
-     * @param {number} preselectedId ID to preselect.
+     * @param {number|string} preselectedId ID to preselect.
      */
     var updateCompanyOptions = function(companies, preselectedId) {
         if (!state.companySelect) {
@@ -83,12 +83,16 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
             state.companySelect.remove(1);
         }
 
+        // Convert preselectedId to number for comparison (handles string/number mismatch).
+        var preselectedIdNum = preselectedId ? parseInt(preselectedId, 10) : null;
+
         // Add new options.
         companies.forEach(function(company) {
             var option = document.createElement('option');
             option.value = company.id;
             option.textContent = company.name;
-            if (preselectedId && company.id === preselectedId) {
+            // Use parsed integer for comparison to handle type mismatch.
+            if (preselectedIdNum && parseInt(company.id, 10) === preselectedIdNum) {
                 option.selected = true;
             }
             state.companySelect.appendChild(option);
@@ -213,9 +217,9 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                         loadDepartments(config.companyPreselect).then(function(departments) {
                             updateDepartmentOptions(departments);
 
-                            // Select preselected department if provided.
+                            // Select preselected department if provided (convert to string for select value).
                             if (config.preselect && state.departmentSelect) {
-                                state.departmentSelect.value = config.preselect;
+                                state.departmentSelect.value = String(config.preselect);
                             }
                         });
                     }
@@ -225,9 +229,9 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                 loadDepartments(config.companyPreselect).then(function(departments) {
                     updateDepartmentOptions(departments);
 
-                    // Select preselected department if provided.
+                    // Select preselected department if provided (convert to string for select value).
                     if (config.preselect && state.departmentSelect) {
-                        state.departmentSelect.value = config.preselect;
+                        state.departmentSelect.value = String(config.preselect);
                     }
                 });
             }
