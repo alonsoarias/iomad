@@ -1927,6 +1927,9 @@ $string['currentpassword_required'] = 'Se requiere la contraseña actual';
 $string['passwordsdiffer'] = 'Las contraseñas no coinciden';
 $string['password_change_optional'] = 'Deje en blanco para mantener la contraseña actual';
 $string['password_updated'] = 'Contraseña actualizada exitosamente';
+$string['company_updated'] = 'Sede actualizada exitosamente a: {$a}';
+$string['department_updated'] = 'Departamento actualizado exitosamente';
+$string['company_change_notice'] = 'Ha cambiado su sede. Esta acción puede afectar las vacantes disponibles para usted.';
 
 // =============================================================================
 // CADENAS ADICIONALES - CONSENTIMIENTO Y GDPR

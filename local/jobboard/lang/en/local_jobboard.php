@@ -1934,6 +1934,9 @@ $string['currentpassword_required'] = 'Current password is required';
 $string['passwordsdiffer'] = 'Passwords do not match';
 $string['password_change_optional'] = 'Leave blank to keep current password';
 $string['password_updated'] = 'Password updated successfully';
+$string['company_updated'] = 'Company updated successfully to: {$a}';
+$string['department_updated'] = 'Department updated successfully';
+$string['company_change_notice'] = 'You have changed your company. This action may affect available vacancies for you.';
 
 // =============================================================================
 // ADDITIONAL STRINGS - CONSENT & GDPR

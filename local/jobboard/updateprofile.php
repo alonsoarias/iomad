@@ -220,7 +220,21 @@ if ($data = $mform->get_data()) {
 
     // Update company assignment in IOMAD (handles both new assignments and company changes).
     if ($isiomad && !empty($data->companyid)) {
-        iomad_helper::assign_user_to_company($USER->id, (int)$data->companyid, (int)($data->departmentid ?? 0));
+        $newcompanyid = (int)$data->companyid;
+        $newdepartmentid = (int)($data->departmentid ?? 0);
+
+        // Check if company is changing.
+        $companychanged = ($newcompanyid !== $usercompanyid);
+
+        // Perform the assignment.
+        $assignresult = iomad_helper::assign_user_to_company($USER->id, $newcompanyid, $newdepartmentid);
+
+        // Show notification if company changed.
+        if ($companychanged && $assignresult) {
+            $newcompany = $DB->get_record('company', ['id' => $newcompanyid], 'name');
+            $companyname = $newcompany ? format_string($newcompany->name) : '';
+            \core\notification::info(get_string('company_updated', 'local_jobboard', $companyname));
+        }
     }
 
     // Show success and redirect.
