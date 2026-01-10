@@ -430,6 +430,22 @@ $daysuntilclose = $closedate ? ceil(($closedate - time()) / DAYSECS) : 30;
 // Get document types for checklist.
 $requireddocs = $mform->get_filtered_documents();
 
+// Track uploaded document codes for existing draft applications.
+$uploadedcodes = [];
+if ($isresuming && $draftapplication) {
+    $existingdocs = document::get_by_application($draftapplication->id);
+    foreach ($existingdocs as $doc) {
+        $uploadedcodes[] = $doc->documenttype;
+    }
+    // Mark documents as uploaded in the checklist data.
+    foreach ($requireddocs as &$doctype) {
+        if (in_array($doctype->code, $uploadedcodes)) {
+            $doctype->isuploaded = true;
+        }
+    }
+    unset($doctype); // Break reference.
+}
+
 // Capture form HTML.
 ob_start();
 $mform->display();
@@ -448,6 +464,7 @@ $templatedata = $renderer->prepare_apply_page_data(
 // Initialize document checklist JavaScript for auto-marking.
 $PAGE->requires->js_call_amd('local_jobboard/document_checklist', 'init', [[
     'totalDocs' => count($requireddocs),
+    'uploadedCodes' => array_values($uploadedcodes),
 ]]);
 
 // Output page.

@@ -508,6 +508,8 @@ define([], function() {
      * Initialize the document checklist module.
      *
      * @param {Object} config Configuration options.
+     * @param {number} [config.totalDocs] Total number of documents.
+     * @param {Array} [config.uploadedCodes] Array of document codes that are already uploaded.
      */
     var init = function(config) {
         if (state.initialized) {
@@ -524,6 +526,20 @@ define([], function() {
         config = config || {};
         state.totalCount = config.totalDocs || parseInt(state.checklistContainer.dataset.total, 10) || 0;
 
+        // Get initial uploaded count from data attribute if available.
+        var initialUploaded = parseInt(state.checklistContainer.dataset.uploaded, 10) || 0;
+        state.uploadedCount = initialUploaded;
+
+        // Apply initial state from pre-uploaded documents (passed from PHP).
+        if (config.uploadedCodes && Array.isArray(config.uploadedCodes)) {
+            config.uploadedCodes.forEach(function(code) {
+                updateChecklistItem(code, true);
+            });
+        }
+
+        // Update progress with initial state.
+        updateProgress();
+
         // Map file managers to document codes.
         state.fileManagers = mapFileManagers();
 
@@ -535,11 +551,20 @@ define([], function() {
         var hasTextFields = Object.keys(state.textFields).length > 0;
 
         if (!hasFileManagers && !hasTextFields) {
+            state.initialized = true;
             return;
         }
 
-        // Initial scan.
-        scanFileManagers();
+        // Delayed initial scan to allow file managers to fully render.
+        // This is important because Moodle file managers load content via AJAX.
+        setTimeout(function() {
+            scanFileManagers();
+        }, 1000);
+
+        // Additional delayed scan for slower connections.
+        setTimeout(function() {
+            scanFileManagers();
+        }, 3000);
 
         // Set up observers for real-time updates.
         setupObservers();

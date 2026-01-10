@@ -808,15 +808,22 @@ trait application_renderer {
 
         // Required docs data.
         $docsdata = [];
+        $uploadedcodes = [];
         foreach ($requireddocs as $doc) {
+            $isuploaded = !empty($doc->isuploaded);
             $docsdata[] = [
                 'code' => $doc->code ?? '',
                 'name' => format_string($doc->name),
                 'isrequired' => !empty($doc->isrequired),
-                'isuploaded' => false, // Will be updated by JS when files are uploaded.
+                'isuploaded' => $isuploaded,
                 'category' => $doc->category ?? 'employment',
             ];
+            // Track which documents are already uploaded for JavaScript.
+            if ($isuploaded) {
+                $uploadedcodes[] = $doc->code ?? '';
+            }
         }
+        $uploadedcount = count($uploadedcodes);
 
         // Exemption info.
         $exemptiondata = null;
@@ -858,6 +865,8 @@ trait application_renderer {
             'requireddocs' => $docsdata,
             'requireddocscount' => count($docsdata),
             'hasrequireddocs' => !empty($docsdata),
+            'uploadedcodes' => $uploadedcodes,
+            'uploadedcount' => $uploadedcount,
             'quicktips' => $quicktips,
             'supportemail' => get_config('local_jobboard', 'supportemail'),
             'viewvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'id' => $vacancyid]))->out(false),

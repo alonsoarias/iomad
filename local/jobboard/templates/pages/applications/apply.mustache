@@ -92,25 +92,25 @@
 
             {{! Document Checklist }}
             {{#hasrequireddocs}}
-            <div class="jb-card" data-region="document-checklist" data-total="{{requireddocscount}}">
+            <div class="jb-card" data-region="document-checklist" data-total="{{requireddocscount}}" data-uploaded="{{uploadedcount}}">
                 <div class="jb-card__header jb-card__header--accent">
                     <span><i class="fa fa-list-check"></i> {{#str}}documentchecklist, local_jobboard{{/str}}</span>
                     <span data-region="checklist-counter" class="jb-badge">
-                        <span data-count="uploaded">0</span>/{{requireddocscount}}
+                        <span data-count="uploaded">{{uploadedcount}}</span>/{{requireddocscount}}
                     </span>
                 </div>
-                <div class="jb-progress" data-region="checklist-progress"></div>
+                <div class="jb-progress" data-region="checklist-progress" style="--progress-width: {{#uploadedcount}}{{.}}{{/uploadedcount}}{{^uploadedcount}}0{{/uploadedcount}}%;"></div>
                 <ul class="jb-checklist" data-region="checklist-items">
                     {{#requireddocs}}
-                    <li class="jb-checklist__item" data-doc-code="{{code}}" data-action="scroll-to-doc" data-target="doc_{{code}}">
-                        <span class="jb-checklist__icon" data-icon="unchecked"><i class="fa fa-circle"></i></span>
-                        <span class="jb-checklist__icon jb-checklist__icon--done d-none" data-icon="checked"><i class="fa fa-check-circle"></i></span>
+                    <li class="jb-checklist__item {{#isuploaded}}checked{{/isuploaded}}{{^isuploaded}}unchecked{{/isuploaded}}" data-doc-code="{{code}}" data-action="scroll-to-doc" data-target="doc_{{code}}">
+                        <span class="jb-checklist__icon {{#isuploaded}}d-none{{/isuploaded}}" data-icon="unchecked"><i class="fa fa-circle"></i></span>
+                        <span class="jb-checklist__icon jb-checklist__icon--done {{^isuploaded}}d-none{{/isuploaded}}" data-icon="checked"><i class="fa fa-check-circle"></i></span>
                         <span class="jb-checklist__text">{{name}}</span>
                         {{#isrequired}}<span class="jb-text-danger">*</span>{{/isrequired}}
                     </li>
                     {{/requireddocs}}
                 </ul>
-                <div data-region="all-complete" class="jb-checklist__done d-none">
+                <div data-region="all-complete" class="jb-checklist__done {{^allDocsUploaded}}d-none{{/allDocsUploaded}}">
                     <i class="fa fa-check-circle"></i> {{#str}}alldocumentsuploaded, local_jobboard{{/str}}
                 </div>
             </div>
@@ -460,7 +460,7 @@
     display: block;
     height: 100%;
     background: var(--iser-verde);
-    width: 0%;
+    width: var(--progress-width, 0%);
     transition: width 0.3s;
 }
 
