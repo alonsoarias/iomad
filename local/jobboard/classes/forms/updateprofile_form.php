@@ -302,44 +302,49 @@ class updateprofile_form extends moodleform {
             $mform->addElement('html', '<div class="alert alert-info">' .
                 get_string('signup_company_help', 'local_jobboard') . '</div>');
 
-            // Company selector - initial options with placeholder, populated via AJAX.
+            // Company selector - load ALL companies to allow company changes.
+            // This is critical: Moodle Forms validates that submitted values are in the options list.
+            // If we only load the current company, users cannot change to a different company.
             $companyoptions = [0 => get_string('selectcompany', 'local_jobboard')];
 
-            // Pre-load current company if user has one.
-            if (!empty($usercompanyid)) {
-                global $DB;
-                $currentcompany = $DB->get_record('company', ['id' => $usercompanyid]);
-                if ($currentcompany) {
-                    $companyoptions[$currentcompany->id] = format_string($currentcompany->name);
+            // Load all available companies from the customdata (passed from updateprofile.php).
+            if (!empty($companies) && is_array($companies)) {
+                foreach ($companies as $cid => $cname) {
+                    $companyoptions[(int) $cid] = format_string($cname);
                 }
             }
 
             $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions, [
                 'id' => 'id_companyid_signup',
             ]);
+            $mform->setType('companyid', PARAM_INT);
             $mform->addRule('companyid', get_string('required'), 'required', null, 'client');
 
             // Get current department ID for preselection.
             $userdeptid = $this->_customdata['userdepartmentid'] ?? 0;
 
             // Department selector - populated via AJAX when company is selected.
+            // Load departments for current company if user has one.
             $departmentoptions = [0 => get_string('selectdepartment', 'local_jobboard')];
-            // If user already has a company, load its departments.
             if (!empty($usercompanyid)) {
                 $departments = iomad_helper::get_departments((int) $usercompanyid);
                 if (!empty($departments)) {
-                    $departmentoptions = $departmentoptions + $departments;
+                    foreach ($departments as $did => $dname) {
+                        $departmentoptions[(int) $did] = format_string($dname);
+                    }
                 }
             }
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
                 $departmentoptions, [
                 'id' => 'id_departmentid_signup',
             ]);
+            $mform->setType('departmentid', PARAM_INT);
 
-            // Add JavaScript for AJAX loading of companies and departments.
+            // Add JavaScript for AJAX loading of departments when company changes.
+            // Companies are already loaded server-side, but departments load dynamically.
             global $PAGE;
             $PAGE->requires->js_call_amd('local_jobboard/signup_form', 'init', [[
-                'loadCompaniesAjax' => true,
+                'loadCompaniesAjax' => false, // Companies already loaded server-side.
                 'companyPreselect' => $usercompanyid,
                 'preselect' => $userdeptid,
             ]]);
