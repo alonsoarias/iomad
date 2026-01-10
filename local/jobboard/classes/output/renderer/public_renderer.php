@@ -846,9 +846,40 @@ trait public_renderer {
      * @return array Template data.
      */
     public function prepare_updateprofile_data(?object $vacancy, string $formhtml): array {
+        // Build comprehensive string data for template.
+        // Using explicit get_string() calls instead of relying on {{#str}} helper
+        // to ensure consistent string resolution across all Moodle configurations.
         $strdata = [
+            // Header and navigation.
+            'backtodashboard' => get_string('backtodashboard', 'local_jobboard'),
+            'dashboard' => get_string('dashboard', 'local_jobboard'),
+
+            // Profile requirement alert.
+            'profilerequired_title' => get_string('profilerequired_title', 'local_jobboard'),
+            'profilerequired_desc' => get_string('profilerequired_desc', 'local_jobboard'),
+
+            // Form card.
+            'personalinformation' => get_string('personalinformation', 'local_jobboard'),
+
+            // Vacancy card.
             'signup_applying_for' => get_string('signup_applying_for', 'local_jobboard'),
             'code' => get_string('code', 'local_jobboard'),
+            'location' => get_string('location', 'local_jobboard'),
+
+            // Profile checklist.
+            'profilechecklist' => get_string('profilechecklist', 'local_jobboard'),
+            'profile_field_names' => get_string('profile_field_names', 'local_jobboard'),
+            'profile_field_email' => get_string('profile_field_email', 'local_jobboard'),
+            'profile_field_phone' => get_string('profile_field_phone', 'local_jobboard'),
+            'profile_field_idnumber' => get_string('profile_field_idnumber', 'local_jobboard'),
+            'profile_required_note' => get_string('profile_required_note', 'local_jobboard'),
+
+            // Help card.
+            'help' => get_string('help', 'local_jobboard'),
+            'profile_help_text' => get_string('profile_help_text', 'local_jobboard'),
+
+            // Footer.
+            'completeprofiletoapply' => get_string('completeprofiletoapply', 'local_jobboard'),
         ];
 
         $vacancydata = null;

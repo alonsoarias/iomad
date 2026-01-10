@@ -20,7 +20,7 @@
         <div class="jb-profile-header__nav">
             <a href="{{dashboardurl}}" class="jb-profile-header__back">
                 <i class="fa fa-arrow-left"></i>
-                {{#str}}backtodashboard, local_jobboard{{/str}}
+                {{str.backtodashboard}}
             </a>
         </div>
         <div class="jb-profile-header__title-row">
@@ -42,8 +42,8 @@
             <div class="jb-alert jb-alert--info">
                 <i class="fa fa-circle-info jb-alert__icon"></i>
                 <div class="jb-alert__content">
-                    <strong>{{#str}}profilerequired_title, local_jobboard{{/str}}</strong>
-                    <p>{{#str}}profilerequired_desc, local_jobboard{{/str}}</p>
+                    <strong>{{str.profilerequired_title}}</strong>
+                    <p>{{str.profilerequired_desc}}</p>
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
             <div class="jb-card">
                 <div class="jb-card__header">
                     <i class="fa fa-id-card"></i>
-                    {{#str}}personalinformation, local_jobboard{{/str}}
+                    {{str.personalinformation}}
                 </div>
                 <div class="jb-card__body jb-card__body--form">
                     {{{formhtml}}}
@@ -76,7 +76,7 @@
                     </div>
                     {{#vacancy.location}}
                     <div class="jb-info-row jb-info-row--last">
-                        <span class="jb-info-label"><i class="fa fa-location-dot"></i> {{#str}}location, local_jobboard{{/str}}</span>
+                        <span class="jb-info-label"><i class="fa fa-location-dot"></i> {{str.location}}</span>
                         <span>{{vacancy.location}}</span>
                     </div>
                     {{/vacancy.location}}
@@ -88,30 +88,30 @@
             <div class="jb-card">
                 <div class="jb-card__header">
                     <i class="fa fa-list-check"></i>
-                    {{#str}}profilechecklist, local_jobboard{{/str}}
+                    {{str.profilechecklist}}
                 </div>
                 <div class="jb-card__body jb-card__body--compact">
                     <ul class="jb-checklist">
                         <li class="jb-checklist__item jb-checklist__item--done">
                             <i class="fa fa-circle-check"></i>
-                            {{#str}}profile_field_names, local_jobboard{{/str}}
+                            {{str.profile_field_names}}
                         </li>
                         <li class="jb-checklist__item jb-checklist__item--done">
                             <i class="fa fa-circle-check"></i>
-                            {{#str}}profile_field_email, local_jobboard{{/str}}
+                            {{str.profile_field_email}}
                         </li>
                         <li class="jb-checklist__item jb-checklist__item--pending">
                             <i class="fa fa-circle"></i>
-                            {{#str}}profile_field_phone, local_jobboard{{/str}}
+                            {{str.profile_field_phone}}
                         </li>
                         <li class="jb-checklist__item jb-checklist__item--pending">
                             <i class="fa fa-circle"></i>
-                            {{#str}}profile_field_idnumber, local_jobboard{{/str}}
+                            {{str.profile_field_idnumber}}
                         </li>
                     </ul>
                 </div>
                 <div class="jb-card__footer">
-                    <small><i class="fa fa-info-circle"></i> {{#str}}profile_required_note, local_jobboard{{/str}}</small>
+                    <small><i class="fa fa-info-circle"></i> {{str.profile_required_note}}</small>
                 </div>
             </div>
 
@@ -119,13 +119,13 @@
             <div class="jb-card">
                 <div class="jb-card__header">
                     <i class="fa fa-circle-question"></i>
-                    {{#str}}help, local_jobboard{{/str}}
+                    {{str.help}}
                 </div>
                 <div class="jb-card__body">
-                    <p class="jb-help-text">{{#str}}profile_help_text, local_jobboard{{/str}}</p>
+                    <p class="jb-help-text">{{str.profile_help_text}}</p>
                     <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline jb-btn--block">
                         <i class="fa fa-home"></i>
-                        {{#str}}dashboard, local_jobboard{{/str}}
+                        {{str.dashboard}}
                     </a>
                 </div>
             </div>
@@ -135,12 +135,12 @@
     {{! Footer Navigation }}
     <div class="jb-profile-footer">
         <a href="{{dashboardurl}}" class="jb-link">
-            <i class="fa fa-arrow-left"></i> {{#str}}backtodashboard, local_jobboard{{/str}}
+            <i class="fa fa-arrow-left"></i> {{str.backtodashboard}}
         </a>
         {{#hasvacancy}}
         <span class="jb-footer-note">
             <i class="fa fa-info-circle"></i>
-            {{#str}}completeprofiletoapply, local_jobboard{{/str}}
+            {{str.completeprofiletoapply}}
         </span>
         {{/hasvacancy}}
     </div>
