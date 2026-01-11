@@ -107,6 +107,16 @@ list($options, $unrecognized) = cli_get_params([
     'application-id' => null,
     'vacancy-id' => null,
     'list-applications' => false,
+    // Sync and correction options.
+    'sync-from-markdown' => null,
+    'analyze-convocatoria' => false,
+    'fix-vacancies' => false,
+    'migrate-applications' => false,
+    'source-vacancy' => null,
+    'target-vacancy' => null,
+    'show-protected' => false,
+    'show-missing' => false,
+    'convocatoria-id' => null,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -131,6 +141,12 @@ list($options, $unrecognized) = cli_get_params([
     'A' => 'application-id',
     'V' => 'vacancy-id',
     'L' => 'list-applications',
+    'M' => 'sync-from-markdown',
+    'Z' => 'analyze-convocatoria',
+    'F' => 'fix-vacancies',
+    'G' => 'migrate-applications',
+    'Y' => 'show-protected',
+    'W' => 'show-missing',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -257,6 +273,38 @@ APPLICATION DELETION EXAMPLES:
 
   # Dry run (preview what would be deleted)
   php cli.php --delete-application --idnumber=1234567890 --dryrun --verbose
+
+CONVOCATORIA SYNC FROM MARKDOWN:
+  -M, --sync-from-markdown=FILE   Sync vacancies from Markdown file
+  -Z, --analyze-convocatoria      Show statistics of current convocatoria
+  -G, --migrate-applications      Migrate applications between vacancies
+  -Y, --show-protected            List vacancies that have applications
+  -W, --show-missing              List vacancies missing from current convocatoria
+  --source-vacancy=ID             Source vacancy ID for migration
+  --target-vacancy=ID             Target vacancy ID for migration
+  --convocatoria-id=ID            Convocatoria ID (auto-detects if not specified)
+
+CONVOCATORIA SYNC EXAMPLES:
+  # Analyze the current convocatoria
+  php cli.php --analyze-convocatoria
+
+  # Show vacancies with applications (protected)
+  php cli.php --show-protected
+
+  # Show vacancies missing from convocatoria vs Markdown
+  php cli.php --show-missing
+
+  # Sync vacancies from Markdown (dry run)
+  php cli.php --sync-from-markdown=../Convocatoria/TERMINOS_REPOSITORIO_HOJAS_DE_VIDA_2026.md --dryrun
+
+  # Actually sync vacancies from Markdown
+  php cli.php --sync-from-markdown=../Convocatoria/TERMINOS_REPOSITORIO_HOJAS_DE_VIDA_2026.md
+
+  # Migrate applications from one vacancy to another
+  php cli.php --migrate-applications --source-vacancy=123 --target-vacancy=456
+
+  # Migrate applications (dry run to preview)
+  php cli.php --migrate-applications --source-vacancy=123 --target-vacancy=456 --dryrun
 
 STRUCTURE CREATED (IOMAD Hierarchy):
   LEVEL 1 - Companies (16 Centros Tutoriales):
@@ -601,6 +649,85 @@ if ($options['delete-application'] || $options['list-applications']) {
     }
 
     exit(0);
+}
+
+// ============================================================
+// CONVOCATORIA SYNC FROM MARKDOWN
+// ============================================================
+if ($options['analyze-convocatoria'] || $options['show-protected'] || $options['show-missing'] ||
+    $options['sync-from-markdown'] || $options['migrate-applications']) {
+
+    if (!$moodleavailable) {
+        cli_error("Convocatoria sync requires Moodle. Run from Moodle installation.");
+    }
+
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+    $convocatoriaid = $options['convocatoria-id'] ? (int) $options['convocatoria-id'] : null;
+
+    // Default markdown path.
+    $markdownpath = $options['sync-from-markdown'];
+    if (empty($markdownpath) && ($options['show-missing'] || $options['sync-from-markdown'] !== null)) {
+        $markdownpath = __DIR__ . '/../Convocatoria/TERMINOS_REPOSITORIO_HOJAS_DE_VIDA_2026.md';
+    }
+
+    // If no convocatoria specified, try to find the active one.
+    if (!$convocatoriaid) {
+        $convocatoria = $DB->get_record_sql(
+            "SELECT * FROM {local_jobboard_convocatoria}
+             WHERE status = 'published' OR status = 'open'
+             ORDER BY startdate DESC LIMIT 1"
+        );
+        if ($convocatoria) {
+            $convocatoriaid = $convocatoria->id;
+            echo "Auto-detected convocatoria: {$convocatoria->code} - {$convocatoria->name} (ID: $convocatoriaid)\n\n";
+        } else {
+            cli_error("No active convocatoria found. Specify --convocatoria-id=N");
+        }
+    }
+
+    // Analyze convocatoria option.
+    if ($options['analyze-convocatoria']) {
+        analyze_convocatoria($convocatoriaid, $verbose);
+        exit(0);
+    }
+
+    // Show protected vacancies.
+    if ($options['show-protected']) {
+        show_protected_vacancies($convocatoriaid);
+        exit(0);
+    }
+
+    // Show missing vacancies (requires markdown).
+    if ($options['show-missing']) {
+        if (!file_exists($markdownpath)) {
+            cli_error("Markdown file not found: $markdownpath");
+        }
+        show_missing_vacancies($markdownpath, $convocatoriaid);
+        exit(0);
+    }
+
+    // Migrate applications between vacancies.
+    if ($options['migrate-applications']) {
+        $sourceid = $options['source-vacancy'] ? (int) $options['source-vacancy'] : null;
+        $targetid = $options['target-vacancy'] ? (int) $options['target-vacancy'] : null;
+
+        if (!$sourceid || !$targetid) {
+            cli_error("Migration requires --source-vacancy=N and --target-vacancy=N");
+        }
+
+        migrate_applications($sourceid, $targetid, $dryrun);
+        exit(0);
+    }
+
+    // Sync vacancies from markdown.
+    if ($options['sync-from-markdown']) {
+        if (!file_exists($markdownpath)) {
+            cli_error("Markdown file not found: $markdownpath");
+        }
+        sync_vacancies_from_markdown($markdownpath, $convocatoriaid, $dryrun, $verbose);
+        exit(0);
+    }
 }
 
 // ============================================================
@@ -2890,4 +3017,604 @@ function normalize_location_key($location) {
 
     // Default to PAMPLONA if unrecognized.
     return 'PAMPLONA';
+}
+
+/**
+ * ============================================================================
+ * CONVOCATORIA SYNC AND CORRECTION FUNCTIONS
+ * ============================================================================
+ * Functions to synchronize vacancies from Markdown document and migrate
+ * applications when needed.
+ */
+
+/**
+ * Parse profiles from Markdown file.
+ *
+ * @param string $filepath Path to the Markdown file
+ * @param bool $verbose Show detailed output
+ * @return array Array of profiles with their data
+ */
+function parse_markdown_profiles($filepath, $verbose = false) {
+    global $DB;
+
+    if (!file_exists($filepath)) {
+        cli_error("Markdown file not found: $filepath");
+    }
+
+    $content = file_get_contents($filepath);
+    $profiles = [];
+
+    $currentlocation = 'Pamplona';
+    $currentmodality = 'presencial';
+    $currentfaculty = 'FII';
+
+    $lines = explode("\n", $content);
+
+    foreach ($lines as $i => $line) {
+        // Detect location/sede from headers
+        if (preg_match('/^#{2,4}\s+(.+)$/i', $line, $matches)) {
+            $headertext = strtoupper(trim($matches[1]));
+
+            // Location detection
+            if (strpos($headertext, 'PAMPLONA') !== false && strpos($headertext, 'NORTE DE SANTANDER') !== false) {
+                $currentlocation = 'Pamplona';
+            } elseif (strpos($headertext, 'TOLEDO') !== false) {
+                $currentlocation = 'Toledo';
+            } elseif (strpos($headertext, 'TARRA') !== false) {
+                $currentlocation = 'El Tarra';
+            } elseif (strpos($headertext, 'TIBU') !== false || strpos($headertext, 'TIBÚ') !== false) {
+                $currentlocation = 'Tibú';
+            } elseif (strpos($headertext, 'SARDINATA') !== false) {
+                $currentlocation = 'Sardinata';
+            } elseif (strpos($headertext, 'SAN VICENTE') !== false) {
+                $currentlocation = 'San Vicente del Chucurí';
+            } elseif (strpos($headertext, 'SANTA ROSA') !== false) {
+                $currentlocation = 'Santa Rosa Sur de Bolívar';
+            } elseif (strpos($headertext, 'SARAVENA') !== false) {
+                $currentlocation = 'Saravena';
+            } elseif (strpos($headertext, 'CUCUTA') !== false || strpos($headertext, 'CÚCUTA') !== false) {
+                $currentlocation = 'Cúcuta';
+            } elseif (strpos($headertext, 'SALAZAR') !== false) {
+                $currentlocation = 'Salazar de las Palmas';
+            } elseif (strpos($headertext, 'OCAÑA') !== false) {
+                $currentlocation = 'Ocaña';
+            } elseif (strpos($headertext, 'SAN PABLO') !== false) {
+                $currentlocation = 'San Pablo';
+            } elseif (strpos($headertext, 'CIMITARRA') !== false) {
+                $currentlocation = 'Cimitarra';
+            } elseif (strpos($headertext, 'FUNDACION') !== false || strpos($headertext, 'FUNDACIÓN') !== false) {
+                $currentlocation = 'Fundación';
+            } elseif (strpos($headertext, 'PUEBLO BELLO') !== false) {
+                $currentlocation = 'Pueblo Bello';
+            } elseif (strpos($headertext, 'TAME') !== false) {
+                $currentlocation = 'Tame';
+            }
+
+            // Modality detection
+            if (strpos($headertext, 'PRESENCIAL') !== false) {
+                $currentmodality = 'presencial';
+            } elseif (strpos($headertext, 'DISTANCIA') !== false) {
+                $currentmodality = 'distancia';
+            }
+        }
+
+        // Faculty detection
+        if (strpos(strtoupper($line), 'FACULTAD DE INGENIER') !== false) {
+            $currentfaculty = 'FII';
+        } elseif (strpos(strtoupper($line), 'FACULTAD DE CIENCIAS ADMINISTRATIVAS') !== false) {
+            $currentfaculty = 'FCAS';
+        } elseif (strpos(strtoupper($line), 'BIENESTAR INSTITUCIONAL') !== false) {
+            $currentfaculty = 'BIENESTAR';
+        }
+
+        // Parse table rows with FII or FCAS codes
+        if (strpos($line, '|') !== false && (strpos($line, 'FII') !== false || strpos($line, 'FCAS') !== false)) {
+            $cells = array_values(array_filter(array_map('trim', explode('|', $line))));
+
+            if (count($cells) >= 4 && preg_match('/^(FII|FCAS)[\s\-]*\d+/i', $cells[0])) {
+                $code = strtoupper(preg_replace('/\s+/', '-', trim($cells[0])));
+                $code = preg_replace('/--+/', '-', $code); // Fix double dashes
+
+                $profile = [
+                    'code' => $code,
+                    'contract_type' => $cells[1] ?? '',
+                    'program' => $cells[2] ?? '',
+                    'profile' => $cells[3] ?? '',
+                    'courses' => $cells[4] ?? '',
+                    'location' => $currentlocation,
+                    'modality' => $currentmodality,
+                    'faculty' => $currentfaculty,
+                ];
+
+                // Create unique key
+                $key = "{$code}|{$currentlocation}|{$currentmodality}";
+                $profiles[$key] = $profile;
+            }
+        }
+    }
+
+    if ($verbose) {
+        echo "Parsed " . count($profiles) . " profiles from Markdown\n";
+    }
+
+    return $profiles;
+}
+
+/**
+ * Analyze current convocatoria and show statistics.
+ *
+ * @param int|null $convocatoriaid Convocatoria ID to analyze (null for all)
+ * @param bool $verbose Show detailed output
+ */
+function analyze_convocatoria($convocatoriaid = null, $verbose = false) {
+    global $DB;
+
+    cli_heading('ANALYZING CONVOCATORIA');
+
+    // Get convocatoria info
+    if ($convocatoriaid) {
+        $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+        if (!$convocatoria) {
+            cli_error("Convocatoria with ID $convocatoriaid not found");
+        }
+        echo "Convocatoria: {$convocatoria->name} (ID: {$convocatoria->id})\n";
+        echo "Code: {$convocatoria->code}\n";
+        echo "Status: {$convocatoria->status}\n\n";
+    }
+
+    // Get vacancy statistics
+    $where = $convocatoriaid ? "WHERE v.convocatoriaid = ?" : "";
+    $params = $convocatoriaid ? [$convocatoriaid] : [];
+
+    $sql = "SELECT COUNT(*) as total FROM {local_jobboard_vacancy} v $where";
+    $totalvacancies = $DB->count_records_sql($sql, $params);
+
+    $sql = "SELECT COUNT(DISTINCT a.vacancyid) as count
+            FROM {local_jobboard_application} a
+            JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            $where";
+    $vacancieswithapps = $DB->count_records_sql($sql, $params);
+
+    $sql = "SELECT COUNT(*) as count
+            FROM {local_jobboard_application} a
+            JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            $where";
+    $totalapplications = $DB->count_records_sql($sql, $params);
+
+    echo "=== STATISTICS ===\n";
+    echo "Total vacancies: $totalvacancies\n";
+    echo "Vacancies with applications: $vacancieswithapps\n";
+    echo "Total applications: $totalapplications\n";
+    echo "Vacancies without applications: " . ($totalvacancies - $vacancieswithapps) . "\n\n";
+
+    // Group by location
+    $sql = "SELECT v.location, COUNT(*) as count
+            FROM {local_jobboard_vacancy} v
+            $where
+            GROUP BY v.location
+            ORDER BY count DESC";
+    $bylocation = $DB->get_records_sql($sql, $params);
+
+    echo "=== BY LOCATION ===\n";
+    foreach ($bylocation as $row) {
+        echo "  {$row->location}: {$row->count}\n";
+    }
+
+    // Show protected vacancies (with applications)
+    echo "\n=== TOP VACANCIES WITH APPLICATIONS ===\n";
+    $sql = "SELECT v.id, v.code, v.title, v.location, COUNT(a.id) as app_count
+            FROM {local_jobboard_vacancy} v
+            JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+            " . ($convocatoriaid ? "WHERE v.convocatoriaid = ?" : "") . "
+            GROUP BY v.id, v.code, v.title, v.location
+            ORDER BY app_count DESC
+            LIMIT 20";
+    $topvacancies = $DB->get_records_sql($sql, $params);
+
+    foreach ($topvacancies as $v) {
+        $title = substr($v->title, 0, 50);
+        echo "  {$v->code} ({$v->location}): {$v->app_count} apps - {$title}...\n";
+    }
+}
+
+/**
+ * Get list of protected vacancies (those with applications).
+ *
+ * @param int|null $convocatoriaid Convocatoria ID
+ * @return array Array of vacancy IDs that have applications
+ */
+function get_protected_vacancies($convocatoriaid = null) {
+    global $DB;
+
+    $where = $convocatoriaid ? "AND v.convocatoriaid = ?" : "";
+    $params = $convocatoriaid ? [$convocatoriaid] : [];
+
+    $sql = "SELECT DISTINCT v.id
+            FROM {local_jobboard_vacancy} v
+            JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+            WHERE 1=1 $where";
+
+    return array_keys($DB->get_records_sql($sql, $params));
+}
+
+/**
+ * Migrate applications from one vacancy to another.
+ *
+ * @param int $sourceid Source vacancy ID
+ * @param int $targetid Target vacancy ID
+ * @param bool $dryrun Simulate only
+ * @return int Number of applications migrated
+ */
+function migrate_applications($sourceid, $targetid, $dryrun = false) {
+    global $DB;
+
+    // Verify both vacancies exist
+    $source = $DB->get_record('local_jobboard_vacancy', ['id' => $sourceid]);
+    $target = $DB->get_record('local_jobboard_vacancy', ['id' => $targetid]);
+
+    if (!$source) {
+        cli_error("Source vacancy ID $sourceid not found");
+    }
+    if (!$target) {
+        cli_error("Target vacancy ID $targetid not found");
+    }
+
+    // Get applications from source
+    $applications = $DB->get_records('local_jobboard_application', ['vacancyid' => $sourceid]);
+    $count = count($applications);
+
+    echo "Migrating $count applications from vacancy $sourceid to $targetid\n";
+    echo "  Source: {$source->code} - {$source->title}\n";
+    echo "  Target: {$target->code} - {$target->title}\n";
+
+    if ($dryrun) {
+        echo "[DRYRUN] Would migrate $count applications\n";
+        return $count;
+    }
+
+    // Update applications
+    $DB->set_field('local_jobboard_application', 'vacancyid', $targetid, ['vacancyid' => $sourceid]);
+
+    // Log the migration
+    $log = new stdClass();
+    $log->entitytype = 'application_migration';
+    $log->entityid = $sourceid;
+    $log->action = 'migrate';
+    $log->details = json_encode([
+        'source_vacancy' => $sourceid,
+        'target_vacancy' => $targetid,
+        'applications_count' => $count,
+    ]);
+    $log->userid = 2; // Admin
+    $log->timecreated = time();
+    $DB->insert_record('local_jobboard_audit', $log);
+
+    echo "Successfully migrated $count applications\n";
+    return $count;
+}
+
+/**
+ * Sync vacancies from Markdown file.
+ *
+ * @param string $markdownpath Path to Markdown file
+ * @param int $convocatoriaid Convocatoria ID
+ * @param bool $dryrun Simulate only
+ * @param bool $verbose Show detailed output
+ * @return array Statistics about the sync operation
+ */
+function sync_vacancies_from_markdown($markdownpath, $convocatoriaid, $dryrun = false, $verbose = false) {
+    global $DB;
+
+    cli_heading('SYNCING VACANCIES FROM MARKDOWN');
+
+    // Parse Markdown
+    $mdprofiles = parse_markdown_profiles($markdownpath, $verbose);
+    echo "Parsed " . count($mdprofiles) . " profiles from Markdown\n\n";
+
+    // Get current vacancies
+    $currentvacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
+    echo "Current vacancies in convocatoria: " . count($currentvacancies) . "\n\n";
+
+    // Build lookup by code+location
+    $currentbykey = [];
+    foreach ($currentvacancies as $v) {
+        // Normalize location for comparison
+        $loc = normalize_location_for_comparison($v->location);
+        $key = strtoupper($v->code) . "|" . $loc . "|" . $v->modality;
+        $currentbykey[$key] = $v;
+    }
+
+    // Get protected vacancies
+    $protected = get_protected_vacancies($convocatoriaid);
+    echo "Protected vacancies (with applications): " . count($protected) . "\n\n";
+
+    $stats = [
+        'created' => 0,
+        'updated' => 0,
+        'skipped' => 0,
+        'protected' => 0,
+        'errors' => [],
+    ];
+
+    // Process each profile from Markdown
+    foreach ($mdprofiles as $key => $profile) {
+        $code = $profile['code'];
+        $loc = normalize_location_for_comparison($profile['location']);
+        $lookupkey = strtoupper($code) . "|" . $loc . "|" . $profile['modality'];
+
+        if (isset($currentbykey[$lookupkey])) {
+            // Vacancy exists - check if needs update
+            $existing = $currentbykey[$lookupkey];
+
+            if (in_array($existing->id, $protected)) {
+                // Protected - don't modify
+                $stats['protected']++;
+                if ($verbose) {
+                    echo "  [PROTECTED] {$code} at {$profile['location']} - has applications\n";
+                }
+            } else {
+                // Update if needed
+                $needsupdate = false;
+                $updates = [];
+
+                // Check fields that might need update
+                if (trim($existing->requirements) !== trim($profile['profile'])) {
+                    $updates['requirements'] = $profile['profile'];
+                    $needsupdate = true;
+                }
+
+                if ($needsupdate && !$dryrun) {
+                    $updates['id'] = $existing->id;
+                    $updates['timemodified'] = time();
+                    $DB->update_record('local_jobboard_vacancy', (object)$updates);
+                }
+
+                if ($needsupdate) {
+                    $stats['updated']++;
+                    if ($verbose) {
+                        echo "  [UPDATED] {$code} at {$profile['location']}\n";
+                    }
+                } else {
+                    $stats['skipped']++;
+                }
+            }
+        } else {
+            // New vacancy - create it
+            if (!$dryrun) {
+                $vacancy = create_vacancy_from_profile($profile, $convocatoriaid);
+                if ($vacancy) {
+                    $stats['created']++;
+                    if ($verbose) {
+                        echo "  [CREATED] {$code} at {$profile['location']}\n";
+                    }
+                } else {
+                    $stats['errors'][] = "Failed to create {$code} at {$profile['location']}";
+                }
+            } else {
+                $stats['created']++;
+                if ($verbose) {
+                    echo "  [DRYRUN] Would create {$code} at {$profile['location']}\n";
+                }
+            }
+        }
+    }
+
+    // Summary
+    echo "\n=== SYNC SUMMARY ===\n";
+    echo "Created: {$stats['created']}\n";
+    echo "Updated: {$stats['updated']}\n";
+    echo "Skipped (no changes): {$stats['skipped']}\n";
+    echo "Protected (has applications): {$stats['protected']}\n";
+
+    if (!empty($stats['errors'])) {
+        echo "\nErrors:\n";
+        foreach ($stats['errors'] as $err) {
+            echo "  - $err\n";
+        }
+    }
+
+    if ($dryrun) {
+        echo "\n[DRYRUN MODE] No changes were made to the database.\n";
+    }
+
+    return $stats;
+}
+
+/**
+ * Normalize location for comparison.
+ */
+function normalize_location_for_comparison($location) {
+    $location = strtoupper(trim($location));
+    $location = str_replace(['Á','É','Í','Ó','Ú','Ñ'], ['A','E','I','O','U','N'], $location);
+
+    // Remove common suffixes
+    $location = preg_replace('/\s*\(SEDE PRINCIPAL\)/i', '', $location);
+    $location = preg_replace('/\s*SUR DE BOLIVAR/i', '', $location);
+    $location = preg_replace('/\s*DEL SUR/i', '', $location);
+    $location = preg_replace('/\s*DEL CHUCURI/i', '', $location);
+
+    return trim($location);
+}
+
+/**
+ * Create a vacancy from a profile array.
+ */
+function create_vacancy_from_profile($profile, $convocatoriaid) {
+    global $DB;
+
+    $contracttype = 'catedra';
+    if (stripos($profile['contract_type'], 'TIEMPO COMPLETO') !== false) {
+        $contracttype = 'tiempo_completo';
+    } elseif (stripos($profile['contract_type'], 'MEDIO TIEMPO') !== false) {
+        $contracttype = 'medio_tiempo';
+    }
+
+    $vacancy = new stdClass();
+    $vacancy->code = $profile['code'];
+    $vacancy->title = substr($profile['program'] . ' - ' . $profile['profile'], 0, 255);
+    $vacancy->description = build_vacancy_description($profile);
+    $vacancy->contracttype = $contracttype;
+    $vacancy->duration = 'Semestre académico (16 semanas)';
+    $vacancy->location = $profile['location'];
+    $vacancy->modality = $profile['modality'];
+    $vacancy->department = $profile['program'];
+    $vacancy->convocatoriaid = $convocatoriaid;
+    $vacancy->positions = 1;
+    $vacancy->requirements = build_vacancy_requirements($profile);
+    $vacancy->desirable = build_vacancy_desirable();
+    $vacancy->status = 'published';
+    $vacancy->publicationtype = 'public';
+    $vacancy->createdby = 2;
+    $vacancy->timecreated = time();
+
+    try {
+        $id = $DB->insert_record('local_jobboard_vacancy', $vacancy);
+        $vacancy->id = $id;
+        return $vacancy;
+    } catch (Exception $e) {
+        cli_problem("Error creating vacancy {$profile['code']}: " . $e->getMessage());
+        return null;
+    }
+}
+
+/**
+ * Build HTML description for a vacancy.
+ */
+function build_vacancy_description($profile) {
+    $faculty = $profile['faculty'] == 'FII'
+        ? 'Ingenierías e Informática'
+        : ($profile['faculty'] == 'FCAS' ? 'Ciencias Administrativas y Sociales' : 'Bienestar Institucional');
+
+    return '<div class="vacancy-description">
+<div class="alert alert-secondary">
+<strong>Código:</strong> ' . htmlspecialchars($profile['code']) . ' |
+<strong>Facultad:</strong> ' . htmlspecialchars($faculty) . ' |
+<strong>Modalidad:</strong> ' . ucfirst($profile['modality']) . '
+</div>
+<h4>Programa Académico</h4>
+<p><strong>' . htmlspecialchars($profile['program']) . '</strong></p>
+<h4>Actividades/Cursos a Orientar</h4>
+<p>' . htmlspecialchars($profile['courses']) . '</p>
+<h4>Información de la Vinculación</h4>
+<table class="table table-sm">
+<tr><th>Tipo de Vinculación</th><td><span class="badge badge-primary">' . htmlspecialchars($profile['contract_type']) . '</span></td></tr>
+<tr><th>Sede</th><td>' . htmlspecialchars($profile['location']) . '</td></tr>
+<tr><th>Modalidad</th><td>' . ucfirst($profile['modality']) . '</td></tr>
+<tr><th>Facultad</th><td>' . htmlspecialchars($faculty) . '</td></tr>
+</table>
+</div>';
+}
+
+/**
+ * Build HTML requirements for a vacancy.
+ */
+function build_vacancy_requirements($profile) {
+    return '<div class="vacancy-requirements">
+<h5>Perfil Profesional Requerido</h5>
+<p class="lead">' . htmlspecialchars($profile['profile']) . '</p>
+<h5>Requisitos Mínimos</h5>
+<ul>
+<li>Título profesional universitario acorde al perfil solicitado</li>
+<li>No tener inhabilidades ni incompatibilidades para contratar con el Estado</li>
+<li>Disponibilidad para la sede ' . htmlspecialchars($profile['location']) . ' en modalidad ' . ucfirst($profile['modality']) . '</li>
+</ul>
+</div>';
+}
+
+/**
+ * Build HTML desirable requirements.
+ */
+function build_vacancy_desirable() {
+    return '<div class="vacancy-desirable">
+<h5>Requisitos Deseables</h5>
+<ul>
+<li>Experiencia docente en educación superior mínimo 1 año</li>
+<li>Publicaciones académicas o investigaciones en el área</li>
+<li>Manejo de herramientas tecnológicas para educación virtual</li>
+</ul>
+</div>';
+}
+
+/**
+ * Show protected vacancies (those with applications).
+ */
+function show_protected_vacancies($convocatoriaid = null) {
+    global $DB;
+
+    cli_heading('PROTECTED VACANCIES (WITH APPLICATIONS)');
+
+    $where = $convocatoriaid ? "WHERE v.convocatoriaid = ?" : "";
+    $params = $convocatoriaid ? [$convocatoriaid] : [];
+
+    $sql = "SELECT v.id, v.code, v.title, v.location, v.modality, COUNT(a.id) as app_count
+            FROM {local_jobboard_vacancy} v
+            JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+            $where
+            GROUP BY v.id, v.code, v.title, v.location, v.modality
+            ORDER BY app_count DESC";
+
+    $vacancies = $DB->get_records_sql($sql, $params);
+
+    echo "Total protected vacancies: " . count($vacancies) . "\n\n";
+
+    foreach ($vacancies as $v) {
+        $title = substr($v->title, 0, 60);
+        echo "{$v->id}\t{$v->code}\t{$v->app_count} apps\t{$v->location}\t{$title}...\n";
+    }
+}
+
+/**
+ * Show missing vacancies (in Markdown but not in DB).
+ */
+function show_missing_vacancies($markdownpath, $convocatoriaid) {
+    global $DB;
+
+    cli_heading('MISSING VACANCIES');
+
+    // Parse Markdown
+    $mdprofiles = parse_markdown_profiles($markdownpath, false);
+
+    // Get current vacancies
+    $currentvacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
+
+    // Build lookup
+    $currentbykey = [];
+    foreach ($currentvacancies as $v) {
+        $loc = normalize_location_for_comparison($v->location);
+        $key = strtoupper($v->code) . "|" . $loc . "|" . $v->modality;
+        $currentbykey[$key] = $v;
+    }
+
+    // Find missing
+    $missing = [];
+    foreach ($mdprofiles as $key => $profile) {
+        $code = strtoupper($profile['code']);
+        $loc = normalize_location_for_comparison($profile['location']);
+        $lookupkey = $code . "|" . $loc . "|" . $profile['modality'];
+
+        if (!isset($currentbykey[$lookupkey])) {
+            $missing[] = $profile;
+        }
+    }
+
+    // Group by location
+    $bylocation = [];
+    foreach ($missing as $m) {
+        $loc = $m['location'];
+        if (!isset($bylocation[$loc])) {
+            $bylocation[$loc] = [];
+        }
+        $bylocation[$loc][] = $m;
+    }
+
+    echo "Total missing vacancies: " . count($missing) . "\n\n";
+
+    foreach ($bylocation as $loc => $profiles) {
+        echo "=== $loc (" . count($profiles) . " missing) ===\n";
+        foreach ($profiles as $p) {
+            $profile = substr($p['profile'], 0, 50);
+            echo "  {$p['code']}: {$profile}...\n";
+        }
+        echo "\n";
+    }
 }
