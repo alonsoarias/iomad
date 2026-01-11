@@ -6,7 +6,7 @@
 -- RESUMEN:
 -- - Vacantes FII a crear: 27
 -- - Vacantes duplicadas (a/b) a eliminar: 36
--- - Vacantes extras a eliminar: 0
+-- - Vacantes extras a eliminar: 2 (Saravena FII-08, Toledo FII-08)
 -- 
 -- ================================================================
 
@@ -65,9 +65,10 @@ INSERT INTO kjrt_local_jobboard_vacancy (id, code, title, description, contractt
 DELETE FROM kjrt_local_jobboard_vacancy WHERE id IN (749, 750, 757, 758, 759, 760, 793, 794, 815, 816, 818, 819, 919, 920, 921, 922, 925, 926, 961, 962, 963, 964, 967, 968, 1011, 1012, 1013, 1014, 1017, 1018, 1049, 1050, 1051, 1052, 1055, 1056);
 
 -- ================================================================
--- 3. ELIMINAR VACANTES EXTRAS: 0
--- (Saravena: FII-07, FII-08; Toledo: FII-08)
+-- 3. ELIMINAR VACANTES EXTRAS: 2
+-- (Saravena: FII-08; Toledo: FII-08 - no deberían existir según MD)
 -- ================================================================
+DELETE FROM kjrt_local_jobboard_vacancy WHERE id IN (923, 1053);
 
 COMMIT;
 
