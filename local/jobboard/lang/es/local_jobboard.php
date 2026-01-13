@@ -1756,6 +1756,8 @@ $string['reviewedby'] = 'Revisado por';
 $string['reviewdate'] = 'Fecha de revisión';
 $string['currentstatus'] = 'Estado actual';
 $string['pendingdeanreview'] = 'Pendiente revisión';
+$string['filterreviews'] = 'Filtrar revisiones';
+$string['closed'] = 'Cerrada';
 
 // =============================================================================
 // CADENAS ADICIONALES - REVISORES

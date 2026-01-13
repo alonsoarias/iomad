@@ -1761,6 +1761,8 @@ $string['reviewedby'] = 'Reviewed by';
 $string['reviewdate'] = 'Review date';
 $string['currentstatus'] = 'Current status';
 $string['pendingdeanreview'] = 'Pending review';
+$string['filterreviews'] = 'Filter reviews';
+$string['closed'] = 'Closed';
 
 // =============================================================================
 // ADDITIONAL STRINGS - REVIEWERS
