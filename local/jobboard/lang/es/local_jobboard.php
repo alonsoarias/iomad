@@ -1750,6 +1750,12 @@ $string['observations'] = 'Observaciones';
 $string['statuslabel'] = 'Estado (etiqueta)';
 $string['noapplicationsfound'] = 'No se encontraron postulaciones para exportar';
 $string['nofacultyassignment'] = 'No tiene facultades asignadas para la exportación';
+$string['deandecision'] = 'Decisión decano';
+$string['deanobservations'] = 'Observaciones del decano';
+$string['reviewedby'] = 'Revisado por';
+$string['reviewdate'] = 'Fecha de revisión';
+$string['currentstatus'] = 'Estado actual';
+$string['pendingdeanreview'] = 'Pendiente revisión';
 
 // =============================================================================
 // CADENAS ADICIONALES - REVISORES

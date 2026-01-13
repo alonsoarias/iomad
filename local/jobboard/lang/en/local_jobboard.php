@@ -1755,6 +1755,12 @@ $string['observations'] = 'Observations';
 $string['statuslabel'] = 'Status (label)';
 $string['noapplicationsfound'] = 'No applications found for export';
 $string['nofacultyassignment'] = 'No faculty assigned for export';
+$string['deandecision'] = 'Dean decision';
+$string['deanobservations'] = 'Dean observations';
+$string['reviewedby'] = 'Reviewed by';
+$string['reviewdate'] = 'Review date';
+$string['currentstatus'] = 'Current status';
+$string['pendingdeanreview'] = 'Pending review';
 
 // =============================================================================
 // ADDITIONAL STRINGS - REVIEWERS

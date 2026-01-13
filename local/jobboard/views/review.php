@@ -214,7 +214,7 @@ if ($action && confirm_sesskey()) {
                 $comments = optional_param('comments', '', PARAM_TEXT);
 
                 $app = new application($applicationid);
-                if ($app->id && $app->status === 'pending_dean_review') {
+                if ($app->id && in_array($app->status, ['submitted', 'pending_dean_review'])) {
                     // Admins bypass date-based restrictions.
                     if ($is_admin) {
                         $app->approve_profile($comments);
@@ -240,7 +240,7 @@ if ($action && confirm_sesskey()) {
                 $reason = required_param('reason', PARAM_TEXT);
 
                 $app = new application($applicationid);
-                if ($app->id && $app->status === 'pending_dean_review') {
+                if ($app->id && in_array($app->status, ['submitted', 'pending_dean_review'])) {
                     // Admins bypass date-based restrictions.
                     if ($is_admin) {
                         $app->reject_profile($reason);
@@ -675,13 +675,13 @@ $data['is_admin'] = $is_admin;
 // Add status-based action visibility for Dean/HR workflow.
 if (isset($application) && $application->id) {
     // Admins can always see all actions regardless of status.
-    // Dean can ONLY approve/reject applications with 'submitted' status.
+    // Dean can approve/reject applications with 'submitted' or 'pending_dean_review' status.
     // HR sees actions only for pending_hr_validation status.
     // Show dean actions if:
     // 1. User is admin (can do everything), OR
-    // 2. User has approveprofile capability AND application status is 'submitted'
+    // 2. User has approveprofile capability AND application status is 'submitted' or 'pending_dean_review'
     $data['show_dean_actions'] = $is_admin ||
-        ($can_approve_profile && $application->status === 'submitted');
+        ($can_approve_profile && in_array($application->status, ['submitted', 'pending_dean_review']));
     $data['show_hr_actions'] = $is_admin || ($application->status === 'pending_hr_validation' && $can_validate_hr);
     // Admins can always review documents. Dean role only reviews profiles, not individual docs.
     $data['show_document_actions'] = $is_admin || ($can_review_documents && !$is_dean);

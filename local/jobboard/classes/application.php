@@ -111,7 +111,7 @@ class application {
     /** @var array Allowed status transitions. */
     public const TRANSITIONS = [
         'draft' => ['submitted'],
-        'submitted' => ['pending_dean_review', 'withdrawn'],
+        'submitted' => ['pending_dean_review', 'dean_approved', 'dean_rejected', 'withdrawn'],
         'pending_dean_review' => ['dean_approved', 'dean_rejected'],
         'dean_approved' => ['pending_hr_validation'],
         'dean_rejected' => [], // Final state.
@@ -810,11 +810,13 @@ class application {
     /**
      * Approve profile (Dean only).
      *
+     * Dean can approve applications with status 'submitted' or 'pending_dean_review'.
+     *
      * @param string $comments Optional comments.
      * @throws \moodle_exception If transition not allowed.
      */
     public function approve_profile(string $comments = ''): void {
-        if ($this->status !== 'pending_dean_review') {
+        if (!in_array($this->status, ['submitted', 'pending_dean_review'])) {
             throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
         }
 
@@ -828,11 +830,13 @@ class application {
     /**
      * Reject profile (Dean only).
      *
+     * Dean can reject applications with status 'submitted' or 'pending_dean_review'.
+     *
      * @param string $reason Rejection reason.
      * @throws \moodle_exception If transition not allowed.
      */
     public function reject_profile(string $reason): void {
-        if ($this->status !== 'pending_dean_review') {
+        if (!in_array($this->status, ['submitted', 'pending_dean_review'])) {
             throw new \moodle_exception('error:invalidtransition', 'local_jobboard');
         }
 
