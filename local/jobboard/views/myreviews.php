@@ -81,17 +81,59 @@ if ($isdean && !$isreviewer) {
             $i++;
         }
         $whereclauses[] = '(' . implode(' OR ', $codepatterns) . ')';
-        // Dean ONLY sees applications with 'submitted' status.
-        $whereclauses[] = "a.status = 'submitted'";
+
+        // Dean can see: pending_dean_review (to review), dean_approved, dean_rejected (reviewed by them).
+        // Also submitted for legacy/transition support.
+        $deanstatuses = ['submitted', 'pending_dean_review', 'dean_approved', 'dean_rejected', 'pending_hr_validation'];
+        list($instatussql, $statusparams) = $DB->get_in_or_equal($deanstatuses, SQL_PARAMS_NAMED, 'dstatus');
+        $whereclauses[] = "a.status $instatussql";
+        $params = array_merge($params, $statusparams);
     } else {
         // Dean with no faculty assignments - show nothing.
         $whereclauses[] = '1=0';
     }
 
-    // Dean stats (simplified).
+    // Dean stats: count applications they've approved/rejected.
     $mystats = ['validated' => 0, 'rejected' => 0, 'avg_time_hours' => 0];
     $myworkload = 0;
     if (!empty($deanfaculties)) {
+        // Build patterns for stats queries.
+        $statparams = ['deanid' => $USER->id];
+        $statpatterns = [];
+        $i = 0;
+        foreach ($deanfaculties as $fac) {
+            $paramname = 'sc' . $i;
+            $statpatterns[] = "v.code LIKE :{$paramname}";
+            $statparams[$paramname] = $fac->facultycode . '%';
+            $i++;
+        }
+        $patternclause = '(' . implode(' OR ', $statpatterns) . ')';
+
+        // Count applications approved by this dean (logged in workflow).
+        $mystats['validated'] = (int) $DB->count_records_sql(
+            "SELECT COUNT(DISTINCT wl.applicationid)
+               FROM {local_jobboard_workflow_log} wl
+               JOIN {local_jobboard_application} a ON a.id = wl.applicationid
+               JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+              WHERE wl.changedby = :deanid
+                AND wl.newstatus IN ('dean_approved', 'pending_hr_validation')
+                AND $patternclause",
+            $statparams
+        );
+
+        // Count applications rejected by this dean.
+        $statparams2 = $statparams;
+        $mystats['rejected'] = (int) $DB->count_records_sql(
+            "SELECT COUNT(DISTINCT wl.applicationid)
+               FROM {local_jobboard_workflow_log} wl
+               JOIN {local_jobboard_application} a ON a.id = wl.applicationid
+               JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+              WHERE wl.changedby = :deanid
+                AND wl.newstatus = 'dean_rejected'
+                AND $patternclause",
+            $statparams2
+        );
+
         // Count pending applications in dean's faculties.
         $countparams = [];
         $countpatterns = [];
@@ -107,7 +149,7 @@ if ($isdean && !$isreviewer) {
                FROM {local_jobboard_application} a
                JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
               WHERE (" . implode(' OR ', $countpatterns) . ")
-                AND a.status = 'submitted'",
+                AND a.status IN ('submitted', 'pending_dean_review')",
             $countparams
         );
     }
@@ -177,6 +219,42 @@ $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title,
 
 $applications = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
+// For deans, fetch the latest review comment for each application.
+if ($isdean && !$isreviewer && !empty($applications)) {
+    $appids = array_keys($applications);
+    list($inappidsql, $appidparams) = $DB->get_in_or_equal($appids, SQL_PARAMS_NAMED, 'appid');
+
+    // Get the latest workflow log entry with comments for each application.
+    $commentsql = "SELECT wl.applicationid, wl.comments, wl.newstatus, wl.timechanged, wl.changedby,
+                          u.firstname as reviewer_firstname, u.lastname as reviewer_lastname
+                     FROM {local_jobboard_workflow_log} wl
+                     JOIN {user} u ON u.id = wl.changedby
+                    WHERE wl.applicationid $inappidsql
+                      AND wl.comments IS NOT NULL
+                      AND wl.comments != ''
+                    ORDER BY wl.timechanged DESC";
+    $allcomments = $DB->get_records_sql($commentsql, $appidparams);
+
+    // Group by applicationid and keep only the latest.
+    $latestcomments = [];
+    foreach ($allcomments as $comment) {
+        if (!isset($latestcomments[$comment->applicationid])) {
+            $latestcomments[$comment->applicationid] = $comment;
+        }
+    }
+
+    // Attach comments to applications.
+    foreach ($applications as $appid => $app) {
+        if (isset($latestcomments[$appid])) {
+            $applications[$appid]->last_comment = $latestcomments[$appid]->comments;
+            $applications[$appid]->last_comment_by = $latestcomments[$appid]->reviewer_firstname . ' ' .
+                                                      $latestcomments[$appid]->reviewer_lastname;
+            $applications[$appid]->last_comment_time = $latestcomments[$appid]->timechanged;
+            $applications[$appid]->last_comment_status = $latestcomments[$appid]->newstatus;
+        }
+    }
+}
+
 // Get vacancies for filter.
 if ($isdean && !$isreviewer && !empty($deanfaculties)) {
     // Dean: show vacancies from their assigned faculties.
@@ -242,6 +320,27 @@ if ($isdean && !$isreviewer) {
         $assignment['isdean'] = true;
     }
     unset($assignment);
+
+    // Customize stats labels for deans (profiles instead of documents).
+    if (!empty($data['stats'])) {
+        // Update labels for dean-specific context.
+        foreach ($data['stats'] as &$stat) {
+            if ($stat['icon'] === 'check-circle') {
+                $stat['label'] = get_string('profilesapproved', 'local_jobboard');
+            } else if ($stat['icon'] === 'times-circle') {
+                $stat['label'] = get_string('profilesrejected', 'local_jobboard');
+            } else if ($stat['icon'] === 'tasks') {
+                $stat['label'] = get_string('pendingreview', 'local_jobboard');
+            }
+        }
+        unset($stat);
+
+        // Remove avg time stat for deans (not relevant).
+        $data['stats'] = array_filter($data['stats'], function($s) {
+            return $s['icon'] !== 'clock';
+        });
+        $data['stats'] = array_values($data['stats']); // Re-index.
+    }
 }
 
 // Output the page.

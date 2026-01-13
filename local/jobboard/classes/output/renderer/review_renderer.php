@@ -134,13 +134,13 @@ trait review_renderer {
             $isUrgent = $daysUntilClose <= 3 && $daysUntilClose > 0;
             $isClosed = $daysUntilClose <= 0;
 
-            // Status color.
+            // Status color - includes dean-related statuses.
             $statusColor = 'secondary';
-            if (in_array($app->status, ['docs_validated', 'selected'])) {
+            if (in_array($app->status, ['docs_validated', 'selected', 'dean_approved', 'hr_validated'])) {
                 $statusColor = 'success';
-            } else if (in_array($app->status, ['docs_rejected', 'rejected'])) {
+            } else if (in_array($app->status, ['docs_rejected', 'rejected', 'dean_rejected', 'hr_rejected'])) {
                 $statusColor = 'danger';
-            } else if ($app->status === 'under_review') {
+            } else if (in_array($app->status, ['under_review', 'pending_dean_review', 'pending_hr_validation'])) {
                 $statusColor = 'warning';
             } else if ($app->status === 'submitted') {
                 $statusColor = 'info';
@@ -150,7 +150,8 @@ trait review_renderer {
             $approvedpercent = $totaldocs > 0 ? round(($validatedocs / $totaldocs) * 100) : 0;
             $rejectedpercent = $totaldocs > 0 ? round(($rejecteddocs / $totaldocs) * 100) : 0;
 
-            $assignments[] = [
+            // Build assignment data.
+            $assignmentdata = [
                 'id' => $app->id,
                 'applicantname' => format_string($app->firstname . ' ' . $app->lastname),
                 'email' => $app->email,
@@ -173,6 +174,19 @@ trait review_renderer {
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
                 'downloadzipurl' => (new moodle_url('/local/jobboard/download_documents.php', ['applicationid' => $app->id, 'sesskey' => sesskey()]))->out(false),
             ];
+
+            // Add review comment if available (for dean view).
+            if (!empty($app->last_comment)) {
+                $assignmentdata['hascomment'] = true;
+                $assignmentdata['lastcomment'] = format_string($app->last_comment);
+                $assignmentdata['lastcommentby'] = format_string($app->last_comment_by ?? '');
+                $assignmentdata['lastcommenttime'] = userdate($app->last_comment_time ?? 0, get_string('strftimedatetime', 'langconfig'));
+                $assignmentdata['lastcommentstatus'] = $app->last_comment_status ?? '';
+            } else {
+                $assignmentdata['hascomment'] = false;
+            }
+
+            $assignments[] = $assignmentdata;
         }
 
         // Stats cards.

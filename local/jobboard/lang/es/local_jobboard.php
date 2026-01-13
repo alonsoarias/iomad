@@ -1734,6 +1734,10 @@ $string['bulkactionerrors'] = 'Algunas acciones masivas fallaron';
 $string['avgvalidationtime'] = 'Tiempo promedio de validación';
 $string['checklistitems'] = 'Elementos de lista de verificación';
 
+// Dean-specific stats labels.
+$string['profilesapproved'] = 'Perfiles aprobados';
+$string['profilesrejected'] = 'Perfiles rechazados';
+
 // =============================================================================
 // CADENAS ADICIONALES - REVISORES
 // =============================================================================

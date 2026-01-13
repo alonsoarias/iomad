@@ -1739,6 +1739,10 @@ $string['bulkactionerrors'] = 'Some bulk actions failed';
 $string['avgvalidationtime'] = 'Average validation time';
 $string['checklistitems'] = 'Checklist items';
 
+// Dean-specific stats labels.
+$string['profilesapproved'] = 'Profiles approved';
+$string['profilesrejected'] = 'Profiles rejected';
+
 // =============================================================================
 // ADDITIONAL STRINGS - REVIEWERS
 // =============================================================================

@@ -213,6 +213,18 @@
                     {{^isurgent}}<i class="fa fa-calendar-days"></i>{{/isurgent}}
                     {{#str}}closedate, local_jobboard{{/str}}: {{closedate}}
                 </div>
+
+                {{! Last Review Comment (for dean view) }}
+                {{#hascomment}}
+                <div class="jb-assignment-card__comment">
+                    <div class="jb-comment-header">
+                        <i class="fa fa-comment"></i>
+                        <span class="jb-comment-by">{{lastcommentby}}</span>
+                        <span class="jb-comment-time">{{lastcommenttime}}</span>
+                    </div>
+                    <p class="jb-comment-text">{{lastcomment}}</p>
+                </div>
+                {{/hascomment}}
             </div>
 
             {{! Card Footer - Different for deans }}
@@ -384,6 +396,14 @@
 .jb-assignment-card__date--urgent { color: #dc3545; font-weight: 600; }
 .jb-assignment-card__date i { color: var(--iser-verde, #1b9e88); }
 .jb-assignment-card__date--urgent i { color: #dc3545; }
+
+/* Comment Section */
+.jb-assignment-card__comment { margin-top: 0.75rem; padding: 0.75rem; background: #f8f9fa; border-radius: 6px; border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-comment-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.375rem; font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
+.jb-comment-header i { color: var(--iser-verde, #1b9e88); }
+.jb-comment-by { font-weight: 600; color: var(--iser-gris-oscuro, #333); }
+.jb-comment-time { font-style: italic; }
+.jb-comment-text { margin: 0; font-size: 0.8125rem; color: var(--iser-gris-oscuro, #333); line-height: 1.4; }
 
 .jb-assignment-card__footer { padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
 
