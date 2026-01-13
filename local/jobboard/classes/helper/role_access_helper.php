@@ -31,93 +31,55 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Role access helper class.
  *
- * Manages date-based access control for Dean and HR roles in the workflow.
+ * Manages role-based access control for Dean and HR roles in the workflow.
+ * Note: Date-based restrictions have been removed - access is always granted
+ * if the user has the appropriate role and capability.
  */
 class role_access_helper {
 
     /**
      * Check if Dean can access review for a convocatoria.
      *
-     * @param \stdClass $convocatoria The convocatoria record.
-     * @return bool True if Dean can access.
+     * @param \stdClass $convocatoria The convocatoria record (unused, kept for compatibility).
+     * @return bool Always returns true - date restrictions removed.
      */
     public static function can_dean_access(\stdClass $convocatoria): bool {
-        $now = time();
-
-        if (empty($convocatoria->dean_review_startdate) ||
-            empty($convocatoria->dean_review_enddate)) {
-            return false;
-        }
-
-        return ($now >= $convocatoria->dean_review_startdate &&
-                $now <= $convocatoria->dean_review_enddate);
+        // Date-based restrictions have been removed.
+        // Access is controlled by capabilities and role assignments.
+        return true;
     }
 
     /**
      * Check if HR can access validation for a convocatoria.
      *
-     * @param \stdClass $convocatoria The convocatoria record.
-     * @return bool True if HR can access.
+     * @param \stdClass $convocatoria The convocatoria record (unused, kept for compatibility).
+     * @return bool Always returns true - date restrictions removed.
      */
     public static function can_hr_access(\stdClass $convocatoria): bool {
-        $now = time();
-
-        if (empty($convocatoria->hr_review_startdate) ||
-            empty($convocatoria->hr_review_enddate)) {
-            return false;
-        }
-
-        return ($now >= $convocatoria->hr_review_startdate &&
-                $now <= $convocatoria->hr_review_enddate);
+        // Date-based restrictions have been removed.
+        // Access is controlled by capabilities and role assignments.
+        return true;
     }
 
     /**
      * Get review period status for Dean.
      *
-     * @param \stdClass $convocatoria The convocatoria record.
-     * @return string Status: 'not_configured', 'pending', 'active', 'ended'.
+     * @param \stdClass $convocatoria The convocatoria record (unused, kept for compatibility).
+     * @return string Always returns 'active' - date restrictions removed.
      */
     public static function get_dean_period_status(\stdClass $convocatoria): string {
-        if (empty($convocatoria->dean_review_startdate) ||
-            empty($convocatoria->dean_review_enddate)) {
-            return 'not_configured';
-        }
-
-        $now = time();
-
-        if ($now < $convocatoria->dean_review_startdate) {
-            return 'pending';
-        }
-
-        if ($now > $convocatoria->dean_review_enddate) {
-            return 'ended';
-        }
-
+        // Date-based restrictions have been removed.
         return 'active';
     }
 
     /**
      * Get review period status for HR.
      *
-     * @param \stdClass $convocatoria The convocatoria record.
-     * @return string Status: 'not_configured', 'pending', 'active', 'ended'.
+     * @param \stdClass $convocatoria The convocatoria record (unused, kept for compatibility).
+     * @return string Always returns 'active' - date restrictions removed.
      */
     public static function get_hr_period_status(\stdClass $convocatoria): string {
-        if (empty($convocatoria->hr_review_startdate) ||
-            empty($convocatoria->hr_review_enddate)) {
-            return 'not_configured';
-        }
-
-        $now = time();
-
-        if ($now < $convocatoria->hr_review_startdate) {
-            return 'pending';
-        }
-
-        if ($now > $convocatoria->hr_review_enddate) {
-            return 'ended';
-        }
-
+        // Date-based restrictions have been removed.
         return 'active';
     }
 

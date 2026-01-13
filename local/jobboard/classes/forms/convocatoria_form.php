@@ -118,38 +118,6 @@ class convocatoria_form extends \moodleform {
         $mform->addRule('enddate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
         $mform->addHelpButton('enddate', 'convocatoriaenddate', 'local_jobboard');
 
-        // Header: Review Dates (Dean and HR).
-        $mform->addElement('header', 'reviewdatesheader', get_string('reviewdates', 'local_jobboard'));
-        $mform->setExpanded('reviewdatesheader', false);
-
-        // Dean review start date.
-        $mform->addElement('date_time_selector', 'dean_review_startdate',
-            get_string('dean_review_startdate', 'local_jobboard'), [
-            'optional' => true,
-        ]);
-        $mform->addHelpButton('dean_review_startdate', 'dean_review_startdate', 'local_jobboard');
-
-        // Dean review end date.
-        $mform->addElement('date_time_selector', 'dean_review_enddate',
-            get_string('dean_review_enddate', 'local_jobboard'), [
-            'optional' => true,
-        ]);
-        $mform->addHelpButton('dean_review_enddate', 'dean_review_enddate', 'local_jobboard');
-
-        // HR review start date.
-        $mform->addElement('date_time_selector', 'hr_review_startdate',
-            get_string('hr_review_startdate', 'local_jobboard'), [
-            'optional' => true,
-        ]);
-        $mform->addHelpButton('hr_review_startdate', 'hr_review_startdate', 'local_jobboard');
-
-        // HR review end date.
-        $mform->addElement('date_time_selector', 'hr_review_enddate',
-            get_string('hr_review_enddate', 'local_jobboard'), [
-            'optional' => true,
-        ]);
-        $mform->addHelpButton('hr_review_enddate', 'hr_review_enddate', 'local_jobboard');
-
         // Header: Publication.
         $mform->addElement('header', 'publicationheader', get_string('publicationtype', 'local_jobboard'));
 
@@ -317,28 +285,6 @@ class convocatoria_form extends \moodleform {
             }
         }
 
-        // Dean review dates validation.
-        if (!empty($data['dean_review_startdate']) && !empty($data['dean_review_enddate'])) {
-            if ($data['dean_review_enddate'] <= $data['dean_review_startdate']) {
-                $errors['dean_review_enddate'] = get_string('error:convocatoriadatesinvalid', 'local_jobboard');
-            }
-            // Dean review should start after convocatoria ends.
-            if (!empty($data['enddate']) && $data['dean_review_startdate'] < $data['enddate']) {
-                $errors['dean_review_startdate'] = get_string('error:reviewdatebeforeend', 'local_jobboard');
-            }
-        }
-
-        // HR review dates validation.
-        if (!empty($data['hr_review_startdate']) && !empty($data['hr_review_enddate'])) {
-            if ($data['hr_review_enddate'] <= $data['hr_review_startdate']) {
-                $errors['hr_review_enddate'] = get_string('error:convocatoriadatesinvalid', 'local_jobboard');
-            }
-            // HR review should start after dean review ends (if configured).
-            if (!empty($data['dean_review_enddate']) && $data['hr_review_startdate'] < $data['dean_review_enddate']) {
-                $errors['hr_review_startdate'] = get_string('error:hrreviewbeforedean', 'local_jobboard');
-            }
-        }
-
         return $errors;
     }
 
@@ -362,12 +308,6 @@ class convocatoria_form extends \moodleform {
         $data->companyid = $convocatoria->companyid ?? 0;
         $data->departmentid = $convocatoria->departmentid ?? 0;
         $data->terms = ['text' => $convocatoria->terms ?? '', 'format' => FORMAT_HTML];
-
-        // Review dates for Dean and HR workflow.
-        $data->dean_review_startdate = $convocatoria->dean_review_startdate ?? 0;
-        $data->dean_review_enddate = $convocatoria->dean_review_enddate ?? 0;
-        $data->hr_review_startdate = $convocatoria->hr_review_startdate ?? 0;
-        $data->hr_review_enddate = $convocatoria->hr_review_enddate ?? 0;
 
         // Application restriction fields.
         $data->allow_multiple_applications = $convocatoria->allow_multiple_applications ?? 0;
