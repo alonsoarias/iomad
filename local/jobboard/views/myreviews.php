@@ -128,7 +128,7 @@ if ($isdean && !$isreviewer) {
                JOIN {local_jobboard_application} a ON a.id = wl.applicationid
                JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
               WHERE wl.changedby = :deanid
-                AND wl.newstatus IN ('dean_approved', 'pending_hr_validation')
+                AND wl.newstatus = 'dean_approved'
                 AND $patternclause",
             $statparams
         );

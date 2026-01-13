@@ -723,7 +723,7 @@ class application {
     public function change_status(string $newstatus, string $comments = '', ?int $changedby = null): void {
         global $DB, $USER;
 
-        $changedby = $changedby ?? $USER->id;
+        $changedby = (int) ($changedby ?? $USER->id);
 
         // Validate transition.
         if (!$this->can_transition_to($newstatus)) {
