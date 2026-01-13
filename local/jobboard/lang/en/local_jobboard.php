@@ -2944,6 +2944,7 @@ $string['deantasks'] = 'Dean tasks';
 $string['deansection_title'] = 'Dean Review Panel';
 $string['deansection_desc'] = 'Review and approve applications for your assigned faculties';
 $string['assignedfaculties'] = 'Assigned faculties';
+$string['myfaculties'] = 'My faculties';
 $string['nofacultiesassigned'] = 'No faculties assigned';
 $string['nofacultiesassigned_desc'] = 'You have not been assigned to any faculties yet. Please contact the administrator to request faculty assignment.';
 $string['viewfacultyassignments'] = 'View faculty assignments';

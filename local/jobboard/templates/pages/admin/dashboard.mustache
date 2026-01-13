@@ -194,14 +194,41 @@
         <div class="jb-section-header">
             <h2 class="jb-section-header__title"><i class="fa fa-graduation-cap"></i> {{#str}}deantasks, local_jobboard{{/str}}</h2>
         </div>
-        <div class="jb-dean-grid">
-            {{! Main Dean Card }}
+
+        {{! Stats Row }}
+        <div class="jb-stat-grid mb-4">
+            <a href="{{deansection.myreviewsurl}}" class="jb-card jb-stat-card jb-stat-card--warning jb-card-interactive">
+                <div class="jb-stat-card__icon"><i class="fa fa-clock"></i></div>
+                <span class="jb-stat-card__value">{{deansection.pendingcount}}</span>
+                <span class="jb-stat-card__label">{{#str}}pendingreview, local_jobboard{{/str}}</span>
+            </a>
+            <div class="jb-card jb-stat-card jb-stat-card--success">
+                <div class="jb-stat-card__icon"><i class="fa fa-check-circle"></i></div>
+                <span class="jb-stat-card__value">{{deansection.approvedcount}}</span>
+                <span class="jb-stat-card__label">{{#str}}profilesapproved, local_jobboard{{/str}}</span>
+            </div>
+            <div class="jb-card jb-stat-card jb-stat-card--danger">
+                <div class="jb-stat-card__icon"><i class="fa fa-times-circle"></i></div>
+                <span class="jb-stat-card__value">{{deansection.rejectedcount}}</span>
+                <span class="jb-stat-card__label">{{#str}}profilesrejected, local_jobboard{{/str}}</span>
+            </div>
+            <div class="jb-card jb-stat-card jb-stat-card--info">
+                <div class="jb-stat-card__icon"><i class="fa fa-building-columns"></i></div>
+                <span class="jb-stat-card__value">{{deansection.facultycount}}</span>
+                <span class="jb-stat-card__label">{{#str}}assignedfaculties, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+
+        {{! Main Content }}
+        <div class="jb-card-grid">
+            {{! Dean Main Card }}
             <div class="jb-card jb-dean-card">
                 <div class="jb-dean-card__header">
-                    <div class="jb-dean-card__icon"><i class="fa fa-graduation-cap"></i></div>
+                    <div class="jb-dean-card__icon"><i class="fa fa-user-graduate"></i></div>
                     <div class="jb-dean-card__title">
                         <h3>{{#str}}deansection_title, local_jobboard{{/str}}</h3>
                         {{#deansection.haspending}}<span class="jb-badge jb-badge--warning">{{deansection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>{{/deansection.haspending}}
+                        {{^deansection.haspending}}<span class="jb-badge jb-badge--success">{{#str}}nopendingreview, local_jobboard{{/str}}</span>{{/deansection.haspending}}
                     </div>
                 </div>
                 <div class="jb-dean-card__body">
@@ -209,7 +236,7 @@
 
                     {{#deansection.hasfaculties}}
                     <div class="jb-dean-faculties">
-                        <h4><i class="fa fa-building-columns"></i> {{#str}}assignedfaculties, local_jobboard{{/str}} ({{deansection.facultycount}})</h4>
+                        <h4><i class="fa fa-building-columns"></i> {{#str}}myfaculties, local_jobboard{{/str}}</h4>
                         <ul class="jb-faculty-list">
                             {{#deansection.assignedfaculties}}
                             <li>
@@ -229,7 +256,7 @@
                     {{/deansection.hasfaculties}}
 
                     {{#deansection.haspending}}
-                    <div class="jb-alert jb-alert--warning jb-alert--compact">
+                    <div class="jb-alert jb-alert--warning jb-alert--compact mt-3">
                         <i class="fa fa-triangle-exclamation"></i>
                         <span>{{#str}}pending_reviews_alert, local_jobboard, {{deansection.pendingcount}}{{/str}}</span>
                     </div>
@@ -237,19 +264,24 @@
                 </div>
                 <div class="jb-dean-card__footer">
                     <a href="{{deansection.myreviewsurl}}" class="jb-btn jb-btn--primary"><i class="fa fa-clipboard-list"></i> {{#str}}viewmyreviews, local_jobboard{{/str}}</a>
-                    <a href="{{deansection.facultyassignmenturl}}" class="jb-btn jb-btn--outline"><i class="fa fa-building-columns"></i> {{#str}}viewfacultyassignments, local_jobboard{{/str}}</a>
                 </div>
             </div>
-            {{! Stats Cards }}
-            <div class="jb-card jb-stat-card jb-stat-card--success">
-                <div class="jb-stat-card__icon"><i class="fa fa-check-circle"></i></div>
-                <span class="jb-stat-card__value">{{deansection.approvedcount}}</span>
-                <span class="jb-stat-card__label">{{#str}}profilesapproved, local_jobboard{{/str}}</span>
-            </div>
-            <div class="jb-card jb-stat-card jb-stat-card--danger">
-                <div class="jb-stat-card__icon"><i class="fa fa-times-circle"></i></div>
-                <span class="jb-stat-card__value">{{deansection.rejectedcount}}</span>
-                <span class="jb-stat-card__label">{{#str}}profilesrejected, local_jobboard{{/str}}</span>
+
+            {{! Quick Actions Card }}
+            <div class="jb-card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fa fa-bolt me-2"></i>{{#str}}quickactions, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{deansection.myreviewsurl}}" class="jb-btn jb-btn--outline jb-btn--block">
+                            <i class="fa fa-list-check me-2"></i>{{#str}}reviewapplications, local_jobboard{{/str}}
+                        </a>
+                        <a href="{{deansection.facultyassignmenturl}}" class="jb-btn jb-btn--outline jb-btn--block">
+                            <i class="fa fa-building-columns me-2"></i>{{#str}}viewfacultyassignments, local_jobboard{{/str}}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

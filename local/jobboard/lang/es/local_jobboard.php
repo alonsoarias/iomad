@@ -2937,6 +2937,7 @@ $string['deantasks'] = 'Tareas del decano';
 $string['deansection_title'] = 'Panel de Revisión del Decano';
 $string['deansection_desc'] = 'Revisar y aprobar postulaciones de sus facultades asignadas';
 $string['assignedfaculties'] = 'Facultades asignadas';
+$string['myfaculties'] = 'Mis facultades';
 $string['nofacultiesassigned'] = 'Sin facultades asignadas';
 $string['nofacultiesassigned_desc'] = 'Aún no se le han asignado facultades. Por favor, contacte al administrador para solicitar la asignación de facultades.';
 $string['viewfacultyassignments'] = 'Ver asignaciones de facultades';

@@ -6660,5 +6660,231 @@ audio:focus-visible {
 }
 
 /* ==========================================================================
+   DEAN & REVIEWER DASHBOARD SECTIONS
+   ========================================================================== */
+
+/* Dean/Reviewer Grid Layout */
+.jb-dean-grid,
+.jb-reviewer-grid {
+    display: grid;
+    gap: var(--jb-space-6);
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .jb-dean-grid {
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .jb-dean-grid .jb-dean-card {
+        grid-row: span 2;
+    }
+
+    .jb-reviewer-grid {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/* Dean/Reviewer Cards */
+.jb-dean-card,
+.jb-reviewer-card {
+    background: var(--jb-surface-raised);
+    border: 1px solid var(--jb-border-light);
+    border-radius: var(--jb-radius-xl);
+    overflow: hidden;
+    transition: var(--jb-transition-all-normal);
+}
+
+.jb-dean-card:hover,
+.jb-reviewer-card:hover {
+    box-shadow: var(--jb-shadow-lg);
+}
+
+.jb-dean-card__header,
+.jb-reviewer-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--jb-space-4);
+    padding: var(--jb-space-5);
+    background: linear-gradient(135deg, var(--jb-primary) 0%, var(--jb-primary-hover) 100%);
+    color: var(--jb-text-inverse);
+}
+
+.jb-dean-card__icon,
+.jb-reviewer-card__icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--jb-radius-xl);
+    font-size: var(--jb-text-2xl);
+}
+
+.jb-dean-card__title,
+.jb-reviewer-card__title {
+    flex: 1;
+}
+
+.jb-dean-card__title h3,
+.jb-reviewer-card__title h3 {
+    margin: 0 0 var(--jb-space-1) 0;
+    font-size: var(--jb-text-xl);
+    font-weight: var(--jb-font-semibold);
+    color: var(--jb-text-inverse);
+}
+
+.jb-dean-card__body,
+.jb-reviewer-card__body {
+    padding: var(--jb-space-5);
+}
+
+.jb-dean-card__body > p,
+.jb-reviewer-card__body > p {
+    color: var(--jb-text-secondary);
+    margin-bottom: var(--jb-space-4);
+}
+
+.jb-dean-card__footer,
+.jb-reviewer-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--jb-space-3);
+    padding: var(--jb-space-4) var(--jb-space-5);
+    background: var(--jb-surface-subtle);
+    border-top: 1px solid var(--jb-border-light);
+}
+
+/* Dean Faculties List */
+.jb-dean-faculties {
+    margin-bottom: var(--jb-space-4);
+}
+
+.jb-dean-faculties h4 {
+    font-size: var(--jb-text-sm);
+    font-weight: var(--jb-font-semibold);
+    color: var(--jb-text-primary);
+    margin-bottom: var(--jb-space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--jb-space-2);
+}
+
+.jb-dean-faculties h4 i {
+    color: var(--jb-primary);
+}
+
+.jb-faculty-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--jb-space-2);
+}
+
+.jb-faculty-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--jb-space-2-5) var(--jb-space-3);
+    background: var(--jb-surface-subtle);
+    border-radius: var(--jb-radius-lg);
+    border: 1px solid var(--jb-border-light);
+}
+
+.jb-faculty-name {
+    display: flex;
+    align-items: center;
+    gap: var(--jb-space-2);
+    font-size: var(--jb-text-sm);
+    color: var(--jb-text-primary);
+}
+
+.jb-faculty-name i {
+    color: var(--jb-primary);
+    opacity: 0.7;
+}
+
+/* Stat Cards for Dean/Reviewer */
+.jb-dean-grid .jb-stat-card,
+.jb-reviewer-grid .jb-stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--jb-space-6);
+    min-height: 140px;
+}
+
+.jb-stat-card__icon {
+    font-size: var(--jb-text-3xl);
+    margin-bottom: var(--jb-space-3);
+    opacity: 0.9;
+}
+
+.jb-stat-card__value {
+    font-size: var(--jb-text-4xl);
+    font-weight: var(--jb-font-bold);
+    line-height: 1;
+    margin-bottom: var(--jb-space-2);
+}
+
+.jb-stat-card__label {
+    font-size: var(--jb-text-sm);
+    color: var(--jb-text-secondary);
+    font-weight: var(--jb-font-medium);
+}
+
+/* Stat Card Color Variants */
+.jb-stat-card--success {
+    border-left: 4px solid var(--jb-success);
+}
+
+.jb-stat-card--success .jb-stat-card__icon,
+.jb-stat-card--success .jb-stat-card__value {
+    color: var(--jb-success);
+}
+
+.jb-stat-card--danger {
+    border-left: 4px solid var(--jb-danger);
+}
+
+.jb-stat-card--danger .jb-stat-card__icon,
+.jb-stat-card--danger .jb-stat-card__value {
+    color: var(--jb-danger);
+}
+
+.jb-stat-card--warning {
+    border-left: 4px solid var(--jb-warning);
+}
+
+.jb-stat-card--warning .jb-stat-card__icon,
+.jb-stat-card--warning .jb-stat-card__value {
+    color: var(--jb-warning);
+}
+
+.jb-stat-card--primary {
+    border-left: 4px solid var(--jb-primary);
+}
+
+.jb-stat-card--primary .jb-stat-card__icon,
+.jb-stat-card--primary .jb-stat-card__value {
+    color: var(--jb-primary);
+}
+
+.jb-stat-card--info {
+    border-left: 4px solid var(--jb-info);
+}
+
+.jb-stat-card--info .jb-stat-card__icon,
+.jb-stat-card--info .jb-stat-card__value {
+    color: var(--jb-info);
+}
+
+/* ==========================================================================
    END OF STYLES
    ========================================================================== */
