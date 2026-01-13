@@ -1743,6 +1743,19 @@ $string['checklistitems'] = 'Checklist items';
 $string['profilesapproved'] = 'Profiles approved';
 $string['profilesrejected'] = 'Profiles rejected';
 
+// Export functionality.
+$string['exportapplications'] = 'Export applications';
+$string['exportapplications_desc'] = 'Download Excel file with applicant information';
+$string['applicationid'] = 'Application ID';
+$string['vacancycode'] = 'Vacancy code';
+$string['applicationdate'] = 'Application date';
+$string['lastupdate'] = 'Last update';
+$string['lastreviewer'] = 'Last reviewer';
+$string['observations'] = 'Observations';
+$string['statuslabel'] = 'Status (label)';
+$string['noapplicationsfound'] = 'No applications found for export';
+$string['nofacultyassignment'] = 'No faculty assigned for export';
+
 // =============================================================================
 // ADDITIONAL STRINGS - REVIEWERS
 // =============================================================================

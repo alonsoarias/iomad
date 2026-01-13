@@ -310,6 +310,7 @@ $data = $renderer->prepare_myreviews_page_data(
 // Add dean-specific data.
 $data['isdean'] = $isdean && !$isreviewer;
 $data['isreviewer'] = $isreviewer;
+$data['exporturl'] = new moodle_url('/local/jobboard/export_dean_applications.php');
 if ($isdean && !$isreviewer) {
     $data['deanfaculties'] = array_values(array_map(function($f) {
         return ['code' => $f->facultycode];

@@ -36,6 +36,13 @@
             <i class="fa fa-user-tie"></i> {{#str}}deanreviewpanel, local_jobboard{{/str}}
         </h1>
         <p class="jb-public-header__subtitle">{{#str}}deanreviewpanel_desc, local_jobboard{{/str}}</p>
+        {{#hasdeanfaculties}}
+        <div class="jb-header-actions">
+            <a href="{{exporturl}}" class="jb-btn jb-btn--outline-primary">
+                <i class="fa fa-file-excel"></i> {{#str}}exportapplications, local_jobboard{{/str}}
+            </a>
+        </div>
+        {{/hasdeanfaculties}}
         {{/isdean}}
         {{^isdean}}
         <h1 class="jb-public-header__title">
@@ -323,6 +330,7 @@
 .jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
 .jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
 .jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+.jb-header-actions { margin-top: 1rem; display: flex; gap: 0.75rem; }
 
 /* Section Header */
 .jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }

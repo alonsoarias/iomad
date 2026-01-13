@@ -1738,6 +1738,19 @@ $string['checklistitems'] = 'Elementos de lista de verificación';
 $string['profilesapproved'] = 'Perfiles aprobados';
 $string['profilesrejected'] = 'Perfiles rechazados';
 
+// Export functionality.
+$string['exportapplications'] = 'Exportar postulaciones';
+$string['exportapplications_desc'] = 'Descargar archivo Excel con la información de postulantes';
+$string['applicationid'] = 'ID postulación';
+$string['vacancycode'] = 'Código vacante';
+$string['applicationdate'] = 'Fecha de postulación';
+$string['lastupdate'] = 'Última actualización';
+$string['lastreviewer'] = 'Último revisor';
+$string['observations'] = 'Observaciones';
+$string['statuslabel'] = 'Estado (etiqueta)';
+$string['noapplicationsfound'] = 'No se encontraron postulaciones para exportar';
+$string['nofacultyassignment'] = 'No tiene facultades asignadas para la exportación';
+
 // =============================================================================
 // CADENAS ADICIONALES - REVISORES
 // =============================================================================
