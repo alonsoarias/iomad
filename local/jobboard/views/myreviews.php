@@ -82,9 +82,21 @@ if ($isdean && !$isreviewer) {
         }
         $whereclauses[] = '(' . implode(' OR ', $codepatterns) . ')';
 
-        // Dean can see: pending_dean_review (to review), dean_approved, dean_rejected (reviewed by them).
-        // Also submitted for legacy/transition support.
-        $deanstatuses = ['submitted', 'pending_dean_review', 'dean_approved', 'dean_rejected', 'pending_hr_validation'];
+        // Dean can see all applications in their faculties except drafts.
+        // This includes applications even after convocatoria is closed.
+        $deanstatuses = [
+            'submitted',
+            'pending_dean_review',
+            'dean_approved',
+            'dean_rejected',
+            'pending_hr_validation',
+            'hr_validated',
+            'hr_rejected',
+            'docs_validated',
+            'docs_rejected',
+            'selected',
+            'rejected',
+        ];
         list($instatussql, $statusparams) = $DB->get_in_or_equal($deanstatuses, SQL_PARAMS_NAMED, 'dstatus');
         $whereclauses[] = "a.status $instatussql";
         $params = array_merge($params, $statusparams);
