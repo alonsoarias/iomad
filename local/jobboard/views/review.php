@@ -208,53 +208,29 @@ if ($action && confirm_sesskey()) {
             break;
 
         case 'approveprofile':
-            // Dean approves a profile. Admins bypass date restrictions.
+            // Dean approves a profile.
             if ($applicationid) {
                 require_capability('local/jobboard:approveprofile', $context);
                 $comments = optional_param('comments', '', PARAM_TEXT);
 
                 $app = new application($applicationid);
                 if ($app->id && in_array($app->status, ['submitted', 'pending_dean_review'])) {
-                    // Admins bypass date-based restrictions.
-                    if ($is_admin) {
-                        $app->approve_profile($comments);
-                        \core\notification::success(get_string('profile_approved', 'local_jobboard'));
-                    } else {
-                        // Check if dean has access (date-based).
-                        $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
-                        if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
-                            $app->approve_profile($comments);
-                            \core\notification::success(get_string('profile_approved', 'local_jobboard'));
-                        } else {
-                            \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
-                        }
-                    }
+                    $app->approve_profile($comments);
+                    \core\notification::success(get_string('profile_approved', 'local_jobboard'));
                 }
             }
             break;
 
         case 'rejectprofile':
-            // Dean rejects a profile. Admins bypass date restrictions.
+            // Dean rejects a profile.
             if ($applicationid) {
                 require_capability('local/jobboard:approveprofile', $context);
                 $reason = required_param('reason', PARAM_TEXT);
 
                 $app = new application($applicationid);
                 if ($app->id && in_array($app->status, ['submitted', 'pending_dean_review'])) {
-                    // Admins bypass date-based restrictions.
-                    if ($is_admin) {
-                        $app->reject_profile($reason);
-                        \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
-                    } else {
-                        // Check if dean has access (date-based).
-                        $convocatoria = role_access_helper::get_convocatoria_from_vacancy($app->vacancyid);
-                        if ($convocatoria && role_access_helper::can_dean_access($convocatoria)) {
-                            $app->reject_profile($reason);
-                            \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
-                        } else {
-                            \core\notification::error(get_string('error:dean_access_dates', 'local_jobboard'));
-                        }
-                    }
+                    $app->reject_profile($reason);
+                    \core\notification::success(get_string('profile_rejected', 'local_jobboard'));
                 }
             }
             break;
