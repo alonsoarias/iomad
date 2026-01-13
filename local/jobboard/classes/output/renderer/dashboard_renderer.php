@@ -817,34 +817,62 @@ trait dashboard_renderer {
 
         // Count pending reviews for this dean's faculties.
         $pendingcount = 0;
-        $completedcount = 0;
+        $approvedcount = 0;
+        $rejectedcount = 0;
 
         if (!empty($faculties)) {
             // Build patterns for vacancy codes based on faculty codes.
             $facultycodes = array_column($assignedfaculties, 'facultycode');
 
             // Count pending applications matching faculty vacancy codes.
-            // Dean only sees 'submitted' status applications.
+            // Dean can see applications with 'submitted' or 'pending_dean_review' status.
             foreach ($facultycodes as $code) {
                 $pendingcount += $DB->count_records_sql(
                     "SELECT COUNT(DISTINCT a.id)
                        FROM {local_jobboard_application} a
                        JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
-                      WHERE a.status = 'submitted'
+                      WHERE a.status IN ('submitted', 'pending_dean_review')
                         AND v.code LIKE :codepattern",
                     ['codepattern' => $code . '%']
                 );
             }
 
-            // Get completed reviews by this dean (if dean_review table exists).
-            if ($DB->get_manager()->table_exists('local_jobboard_dean_review')) {
-                $completedcount = $DB->count_records_sql(
-                    "SELECT COUNT(DISTINCT dr.id)
-                       FROM {local_jobboard_dean_review} dr
-                      WHERE dr.reviewerid = :userid",
-                    ['userid' => $userid]
-                );
+            // Count approved/rejected by this dean from workflow_log.
+            $params = ['deanid' => $userid];
+            $codepatterns = [];
+            $i = 0;
+            foreach ($facultycodes as $code) {
+                $paramname = 'fc' . $i;
+                $codepatterns[] = "v.code LIKE :{$paramname}";
+                $params[$paramname] = $code . '%';
+                $i++;
             }
+            $patternclause = '(' . implode(' OR ', $codepatterns) . ')';
+
+            // Count approved by this dean.
+            $approvedcount = (int) $DB->count_records_sql(
+                "SELECT COUNT(DISTINCT wl.applicationid)
+                   FROM {local_jobboard_workflow_log} wl
+                   JOIN {local_jobboard_application} a ON a.id = wl.applicationid
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                  WHERE wl.changedby = :deanid
+                    AND wl.newstatus = 'dean_approved'
+                    AND $patternclause",
+                $params
+            );
+
+            // Count rejected by this dean.
+            $params2 = $params;
+            $rejectedcount = (int) $DB->count_records_sql(
+                "SELECT COUNT(DISTINCT wl.applicationid)
+                   FROM {local_jobboard_workflow_log} wl
+                   JOIN {local_jobboard_application} a ON a.id = wl.applicationid
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                  WHERE wl.changedby = :deanid
+                    AND wl.newstatus = 'dean_rejected'
+                    AND $patternclause",
+                $params2
+            );
         }
 
         return [
@@ -852,7 +880,9 @@ trait dashboard_renderer {
             'hasfaculties' => !empty($assignedfaculties),
             'facultycount' => count($assignedfaculties),
             'pendingcount' => $pendingcount,
-            'completedcount' => $completedcount,
+            'approvedcount' => $approvedcount,
+            'rejectedcount' => $rejectedcount,
+            'completedcount' => $approvedcount + $rejectedcount,
             'haspending' => $pendingcount > 0,
             'myreviewsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']))->out(false),
             'facultyassignmenturl' => (new moodle_url('/local/jobboard/admin/assign_reviewer.php', ['mode' => 'faculties']))->out(false),

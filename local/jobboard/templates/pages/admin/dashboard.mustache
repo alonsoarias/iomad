@@ -240,11 +240,16 @@
                     <a href="{{deansection.facultyassignmenturl}}" class="jb-btn jb-btn--outline"><i class="fa fa-building-columns"></i> {{#str}}viewfacultyassignments, local_jobboard{{/str}}</a>
                 </div>
             </div>
-            {{! Stats Card }}
-            <div class="jb-card jb-stat-card jb-stat-card--dean">
-                <div class="jb-stat-card__icon"><i class="fa fa-check-double"></i></div>
-                <span class="jb-stat-card__value">{{deansection.completedcount}}</span>
-                <span class="jb-stat-card__label">{{#str}}completeddeanreviews, local_jobboard{{/str}}</span>
+            {{! Stats Cards }}
+            <div class="jb-card jb-stat-card jb-stat-card--success">
+                <div class="jb-stat-card__icon"><i class="fa fa-check-circle"></i></div>
+                <span class="jb-stat-card__value">{{deansection.approvedcount}}</span>
+                <span class="jb-stat-card__label">{{#str}}profilesapproved, local_jobboard{{/str}}</span>
+            </div>
+            <div class="jb-card jb-stat-card jb-stat-card--danger">
+                <div class="jb-stat-card__icon"><i class="fa fa-times-circle"></i></div>
+                <span class="jb-stat-card__value">{{deansection.rejectedcount}}</span>
+                <span class="jb-stat-card__label">{{#str}}profilesrejected, local_jobboard{{/str}}</span>
             </div>
         </div>
     </section>
