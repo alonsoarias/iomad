@@ -88,12 +88,12 @@ if (empty($applications)) {
 $appids = array_keys($applications);
 list($inappidsql, $appidparams) = $DB->get_in_or_equal($appids, SQL_PARAMS_NAMED, 'appid');
 
-$commentsql = "SELECT wl.id, wl.applicationid, wl.oldstatus, wl.newstatus, wl.comments, wl.timechanged,
+$commentsql = "SELECT wl.id, wl.applicationid, wl.previousstatus, wl.newstatus, wl.comments, wl.timecreated,
                       u.firstname as changedby_firstname, u.lastname as changedby_lastname
                  FROM {local_jobboard_workflow_log} wl
                  JOIN {user} u ON u.id = wl.changedby
                 WHERE wl.applicationid $inappidsql
-                ORDER BY wl.timechanged DESC";
+                ORDER BY wl.timecreated DESC";
 $allcomments = $DB->get_records_sql($commentsql, $appidparams);
 
 // Group comments by application, keep latest.
@@ -226,7 +226,7 @@ foreach ($applications as $app) {
             $observation = $comment->comments;
         }
         $lastreviewer = $comment->changedby_firstname . ' ' . $comment->changedby_lastname .
-                       ' (' . userdate($comment->timechanged, get_string('strftimedatetime', 'langconfig')) . ')';
+                       ' (' . userdate($comment->timecreated, get_string('strftimedatetime', 'langconfig')) . ')';
     }
 
     // Write row data.

@@ -225,14 +225,14 @@ if ($isdean && !$isreviewer && !empty($applications)) {
     list($inappidsql, $appidparams) = $DB->get_in_or_equal($appids, SQL_PARAMS_NAMED, 'appid');
 
     // Get the latest workflow log entry with comments for each application.
-    $commentsql = "SELECT wl.applicationid, wl.comments, wl.newstatus, wl.timechanged, wl.changedby,
+    $commentsql = "SELECT wl.applicationid, wl.comments, wl.newstatus, wl.timecreated, wl.changedby,
                           u.firstname as reviewer_firstname, u.lastname as reviewer_lastname
                      FROM {local_jobboard_workflow_log} wl
                      JOIN {user} u ON u.id = wl.changedby
                     WHERE wl.applicationid $inappidsql
                       AND wl.comments IS NOT NULL
                       AND wl.comments != ''
-                    ORDER BY wl.timechanged DESC";
+                    ORDER BY wl.timecreated DESC";
     $allcomments = $DB->get_records_sql($commentsql, $appidparams);
 
     // Group by applicationid and keep only the latest.
@@ -249,7 +249,7 @@ if ($isdean && !$isreviewer && !empty($applications)) {
             $applications[$appid]->last_comment = $latestcomments[$appid]->comments;
             $applications[$appid]->last_comment_by = $latestcomments[$appid]->reviewer_firstname . ' ' .
                                                       $latestcomments[$appid]->reviewer_lastname;
-            $applications[$appid]->last_comment_time = $latestcomments[$appid]->timechanged;
+            $applications[$appid]->last_comment_time = $latestcomments[$appid]->timecreated;
             $applications[$appid]->last_comment_status = $latestcomments[$appid]->newstatus;
         }
     }
