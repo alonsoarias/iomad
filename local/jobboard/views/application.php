@@ -42,12 +42,13 @@ if (!$application) {
     throw new moodle_exception('applicationnotfound', 'local_jobboard');
 }
 
-// Check access - either own application or has review capability.
+// Check access - either own application or has review/dean capability.
 $isowner = ($application->userid == $USER->id);
 $canreview = has_capability('local/jobboard:reviewdocuments', $context);
 $canmanageworkflow = has_capability('local/jobboard:manageworkflow', $context);
+$canapproveprofile = has_capability('local/jobboard:approveprofile', $context);
 
-if (!$isowner && !$canreview && !$canmanageworkflow) {
+if (!$isowner && !$canreview && !$canmanageworkflow && !$canapproveprofile) {
     throw new moodle_exception('noaccess', 'local_jobboard');
 }
 

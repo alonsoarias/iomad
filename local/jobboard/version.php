@@ -30,8 +30,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2026011306;
+$plugin->version = 2026011307;
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '4.1.15';
+$plugin->release = '4.1.16';
