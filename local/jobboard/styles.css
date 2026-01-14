@@ -6666,6 +6666,7 @@ audio:focus-visible {
 /* Dean Section Container */
 .jb-dean-section {
     max-width: 1200px;
+    padding: 0 1rem;
 }
 
 /* Section Header with Action */
@@ -6673,9 +6674,26 @@ audio:focus-visible {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e5e5;
     flex-wrap: wrap;
     gap: 0.75rem;
+}
+
+.jb-dean-section .jb-section-header__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--iser-rojo, #c41e3a);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-dean-section .jb-section-header__title i {
+    color: var(--iser-verde, #1b9e88);
+    font-size: 1.125rem;
 }
 
 /* Dean Faculties Badge Row - Same as myreviews */
@@ -6913,6 +6931,93 @@ audio:focus-visible {
     margin-left: auto;
     margin-right: auto;
     font-size: 0.875rem;
+}
+
+/* Buttons - Same as myreviews */
+.jb-dean-section .jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-dean-section .jb-btn--sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.jb-dean-section .jb-btn--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+    border-color: var(--iser-verde, #1b9e88);
+}
+
+.jb-dean-section .jb-btn--primary:hover {
+    background: var(--iser-verde-dark, #157a6a);
+    border-color: var(--iser-verde-dark, #157a6a);
+    color: #fff;
+    text-decoration: none;
+}
+
+.jb-dean-section .jb-btn--outline {
+    background: transparent;
+    border-color: #d1d5db;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-dean-section .jb-btn--outline:hover {
+    border-color: var(--iser-verde, #1b9e88);
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+}
+
+/* Badges - Same as myreviews */
+.jb-dean-section .jb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.jb-dean-section .jb-badge--primary {
+    background: rgba(27, 158, 136, 0.15);
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-dean-section .jb-badge--success {
+    background: rgba(40, 167, 69, 0.15);
+    color: #1e7e34;
+}
+
+.jb-dean-section .jb-badge--warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #856404;
+}
+
+.jb-dean-section .jb-badge--danger {
+    background: rgba(220, 53, 69, 0.15);
+    color: #dc3545;
+}
+
+.jb-dean-section .jb-badge--info {
+    background: rgba(23, 162, 184, 0.15);
+    color: #0c5460;
+}
+
+.jb-dean-section .jb-badge--secondary {
+    background: #e9ecef;
+    color: #6c757d;
 }
 
 /* Responsive */
