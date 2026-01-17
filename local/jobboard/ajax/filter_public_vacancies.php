@@ -77,6 +77,13 @@ if ($convocatoria->status !== 'open' || $convocatoria->enddate < time()) {
     exit;
 }
 
+// Check if convocatoria is public or user has permission to view internal.
+if ($convocatoria->publicationtype !== 'public' && !$canviewinternal) {
+    header('HTTP/1.1 403 Forbidden');
+    echo json_encode(['error' => get_string('error:convocatorianotpublic', 'local_jobboard')]);
+    exit;
+}
+
 // Build vacancies query with filters.
 $vacancyParams = ['convid' => $convocatoriaid];
 $vacancyWhere = "v.convocatoriaid = :convid AND v.status = 'published'";

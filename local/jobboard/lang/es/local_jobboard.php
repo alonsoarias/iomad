@@ -2255,6 +2255,7 @@ $string['error:publicpagedisabled_title'] = 'Página no disponible';
 $string['error:publicpagedisabled_desc'] = 'El acceso público a las convocatorias y vacantes ha sido temporalmente deshabilitado por el administrador del sistema.';
 $string['error:publicpagedisabled_action'] = 'Si usted es un usuario registrado, por favor inicie sesión para acceder a las convocatorias disponibles.';
 $string['error:convocatorianotfound'] = 'Convocatoria no encontrada';
+$string['error:convocatorianotpublic'] = 'Esta convocatoria es interna y solo está disponible para miembros de la organización';
 $string['invalidemail'] = 'Dirección de correo inválida';
 $string['emailexists'] = 'El correo ya existe';
 $string['emailagain'] = 'Correo (de nuevo)';

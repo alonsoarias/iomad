@@ -52,6 +52,9 @@ $PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'));
 // Check IOMAD installation.
 $isiomad = iomad_helper::is_iomad_installed();
 
+// Check capability to view internal convocatorias.
+$canviewinternal = has_capability('local/jobboard:viewinternalvacancies', $context);
+
 // Build query.
 $where = ['1=1'];
 $params = [];
@@ -68,6 +71,11 @@ if ($status === 'open') {
     $params['now'] = time();
 }
 
+// Filter by publicationtype: show only public convocatorias unless user can view internal.
+if (!$canviewinternal) {
+    $where[] = "c.publicationtype = 'public'";
+}
+
 // Note: All convocatorias are visible to all users regardless of company.
 // Convocatorias are public job calls - users can apply to any company's vacancies.
 
@@ -76,10 +84,11 @@ $wheresql = implode(' AND ', $where);
 $countsql = "SELECT COUNT(*) FROM {local_jobboard_convocatoria} c WHERE $wheresql";
 $total = $DB->count_records_sql($countsql, $params);
 
-// Get convocatorias with vacancy counts.
+// Get convocatorias with vacancy counts (also filtered by publicationtype for vacancies).
+$vacancyFilter = $canviewinternal ? "" : " AND v.publicationtype = 'public'";
 $sql = "SELECT c.*,
                (SELECT COUNT(*) FROM {local_jobboard_vacancy} v
-                WHERE v.convocatoriaid = c.id AND v.status = 'published') as vacancy_count
+                WHERE v.convocatoriaid = c.id AND v.status = 'published'{$vacancyFilter}) as vacancy_count
           FROM {local_jobboard_convocatoria} c
          WHERE $wheresql
          ORDER BY c.startdate DESC, c.name ASC";

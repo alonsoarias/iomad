@@ -59,6 +59,15 @@ if ($convocatoria->status !== 'open' || $convocatoria->enddate < $now) {
     throw new moodle_exception('error:convocatoriaclosed', 'local_jobboard');
 }
 
+// Check if user is logged in and has permission to view internal convocatorias.
+$isloggedin = isloggedin() && !isguestuser();
+$canviewinternal = $isloggedin && has_capability('local/jobboard:viewinternalvacancies', $context);
+
+// Check if convocatoria is public or user has permission to view internal.
+if ($convocatoria->publicationtype !== 'public' && !$canviewinternal) {
+    throw new moodle_exception('error:convocatorianotpublic', 'local_jobboard');
+}
+
 // Page setup.
 $PAGE->set_pagelayout('standard');
 $PAGE->activityheader->disable();
@@ -73,22 +82,23 @@ $PAGE->navbar->add($convocatoria->name);
 // Log view (anonymous).
 \local_jobboard\audit::log('public_convocatoria_viewed', 'convocatoria', $convocatoria->id);
 
-// Check if user is logged in.
-$isloggedin = isloggedin() && !isguestuser();
-
 // Get statistics using aggregation.
-$stats = $DB->get_record_sql(
-    "SELECT COUNT(*) as total_vacancies, COALESCE(SUM(v.positions), 0) as total_positions
-       FROM {local_jobboard_vacancy} v
-      WHERE v.convocatoriaid = :convid
-        AND v.status = :status
-        AND v.publicationtype = :pubtype",
-    [
-        'convid' => $convocatoriaid,
-        'status' => 'published',
-        'pubtype' => 'public',
-    ]
-);
+// Show all vacancies if user can view internal, otherwise only public.
+$statssql = "SELECT COUNT(*) as total_vacancies, COALESCE(SUM(v.positions), 0) as total_positions
+               FROM {local_jobboard_vacancy} v
+              WHERE v.convocatoriaid = :convid
+                AND v.status = :status";
+$statsparams = [
+    'convid' => $convocatoriaid,
+    'status' => 'published',
+];
+
+if (!$canviewinternal) {
+    $statssql .= " AND v.publicationtype = :pubtype";
+    $statsparams['pubtype'] = 'public';
+}
+
+$stats = $DB->get_record_sql($statssql, $statsparams);
 
 $totalvacancies = (int) ($stats->total_vacancies ?? 0);
 $totalpositions = (int) ($stats->total_positions ?? 0);

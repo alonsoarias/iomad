@@ -2262,6 +2262,7 @@ $string['error:publicpagedisabled_title'] = 'Page not available';
 $string['error:publicpagedisabled_desc'] = 'Public access to convocatorias and vacancies has been temporarily disabled by the system administrator.';
 $string['error:publicpagedisabled_action'] = 'If you are a registered user, please log in to access available convocatorias.';
 $string['error:convocatorianotfound'] = 'Convocatoria not found';
+$string['error:convocatorianotpublic'] = 'This convocatoria is internal and only available to organization members';
 $string['error:dean_access_dates'] = 'The Dean review period is not active for this convocatoria';
 $string['error:hr_access_dates'] = 'The HR validation period is not active for this convocatoria';
 $string['error:dean_cannot_validate_docs'] = 'Deans cannot approve/reject individual documents. They can only approve/reject the complete application.';

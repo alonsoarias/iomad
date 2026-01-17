@@ -125,6 +125,11 @@ if ($convocatoriaid > 0) {
         throw new moodle_exception('error:convocatoriaclosed', 'local_jobboard');
     }
 
+    // Check if convocatoria is public or user has permission to view internal.
+    if ($convocatoria->publicationtype !== 'public' && !$canviewinternal) {
+        throw new moodle_exception('error:convocatorianotpublic', 'local_jobboard');
+    }
+
     // Update page title and breadcrumbs.
     $PAGE->set_title($convocatoria->name . ' - ' . get_string('vacancies', 'local_jobboard'));
     $PAGE->set_heading($convocatoria->name);
@@ -292,6 +297,7 @@ if ($convocatoriaid > 0) {
 // ============================================================================
 
 // Get all open convocatorias with their vacancy counts.
+// Filter by publicationtype: show only public convocatorias unless user can view internal.
 $sql = "SELECT c.*,
                (SELECT COUNT(*)
                   FROM {local_jobboard_vacancy} v
@@ -307,7 +313,8 @@ $sql = "SELECT c.*,
                ) as total_positions
           FROM {local_jobboard_convocatoria} c
          WHERE c.status = 'open'
-           AND (c.enddate IS NULL OR c.enddate >= :now)
+           AND (c.enddate IS NULL OR c.enddate >= :now)" .
+           ($canviewinternal ? "" : " AND c.publicationtype = 'public'") . "
          ORDER BY c.enddate ASC, c.name ASC";
 
 $convocatorias = $DB->get_records_sql($sql, ['now' => time()]);

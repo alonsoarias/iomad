@@ -46,6 +46,14 @@ $isajax = optional_param('ajax', 0, PARAM_INT);
 // Load convocatoria.
 $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid], '*', MUST_EXIST);
 
+// Check capabilities early to validate convocatoria access.
+$canviewinternal = has_capability('local/jobboard:viewinternalvacancies', $context);
+
+// Check if convocatoria is public or user has permission to view internal.
+if ($convocatoria->publicationtype !== 'public' && !$canviewinternal) {
+    throw new moodle_exception('error:convocatorianotpublic', 'local_jobboard');
+}
+
 // Page setup.
 $PAGE->set_pagelayout('standard');
 $PAGE->activityheader->disable();
@@ -64,7 +72,7 @@ $PAGE->navbar->add($convocatoria->name);
 
 // Check capabilities.
 $canapply = has_capability('local/jobboard:apply', $context);
-$canviewinternal = has_capability('local/jobboard:viewinternalvacancies', $context);
+// Note: $canviewinternal is already defined above during convocatoria access validation.
 
 // Get contract types for display.
 $contracttypes = local_jobboard_get_contract_types();
