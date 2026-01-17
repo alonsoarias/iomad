@@ -1,20 +1,57 @@
 {
   "generated": "2026-01-17",
   "source": "CONVOCATORIA 01-2026 PARA CONFORMAR EL REPOSITORIO DE HOJAS DE VIDA DE PROYECTOS INTERINSTITUCIONALES",
+  "document_metadata": {
+    "original_filename": "CONVOCATORIA REPOSITORIO PROYECTOS 15.01.26.docx",
+    "author": "Relaciones Públicas ISER",
+    "last_modified_by": "Proyectos interinstitucionales ISER",
+    "created_date": "2026-01-15T21:56:00Z",
+    "modified_date": "2026-01-15T21:56:00Z"
+  },
   "convocatoria": {
     "code": "CONV-PROY-ISER-2026-01",
     "name": "Convocatoria 01-2026 para Conformar el Repositorio de Hojas de Vida de Proyectos Interinstitucionales",
+    "title": "CONVOCATORIA 01-2026 PARA CONFORMAR EL REPOSITORIO DE HOJAS DE VIDA DE PROYECTOS INTERINSTITUCIONALES",
+    "objective": "Conformar diferentes equipos de trabajo con profesionales titulados en diferentes áreas de conocimiento que deseen vincularse a los proyectos interinstitucionales ejecutados por el Instituto Superior de Educación Rural – ISER en Pamplona y otros municipios.",
     "brief_description": "Convocatoria para conformar equipos de trabajo con profesionales titulados para proyectos interinstitucionales ejecutados por el Instituto Superior de Educación Rural – ISER.",
+    "announcement_text": "EL INSTITUTO SUPERIOR DE EDUCACIÓN RURAL - ISER SE PERMITE CONVOCAR A LOS INTERESADOS PARA CONFORMAR EL REPOSITORIO DE HOJAS DE VIDA EN LOS SIGUIENTES PERFILES PROFESIONALES:",
     "startdate": "2026-01-16",
     "enddate": "2026-01-22",
     "publication_date": "2026-01-16",
     "results_date": "2026-01-29",
     "status": "open",
     "publicationtype": "public",
+    "contact_process": "PROCESO DE DIRECCIONAMIENTO ESTRATÉGICO Y PLANEACIÓN",
     "contact_emails": [
       "planeacion@iser.edu.co",
       "proyectosinterinstitucionales@iser.edu.co"
-    ]
+    ],
+    "institution": {
+      "name": "Instituto Superior de Educación Rural - ISER",
+      "shortname": "ISER",
+      "city": "Pamplona",
+      "department": "Norte de Santander",
+      "country": "Colombia"
+    }
+  },
+  "participant_requirements": [
+    {
+      "code": "REQ-1",
+      "description": "Cumplir con los mínimos de formación educativa y experiencia específica requeridos."
+    },
+    {
+      "code": "REQ-2",
+      "description": "Cada una de las experiencias relacionadas debe estar claramente delimitadas, es decir, se debe especificar la fecha de inicio (día, mes y año) y la fecha de terminación (día, mes y año), así como, actividades/funciones desarrolladas, municipio de ejecución de los trabajos relacionándolos en orden cronológico, comenzando con la experiencia más reciente. A su vez, con la información de la entidad que certifica y debidamente firmadas."
+    },
+    {
+      "code": "REQ-3",
+      "description": "Residir en los municipios donde prestará los servicios o tener disponibilidad de desplazamiento."
+    }
+  ],
+  "application_info": {
+    "method": "online",
+    "instructions": "Las personas que deseen participar en la convocatoria cargarán la documentación respectiva únicamente a través del enlace de postulación, seleccionando el código del perfil y municipio al cual desea postularse.",
+    "additional_note": "El profesional debe cargar adicionalmente a lo contemplado en la descripción del perfil los siguientes documentos:"
   },
   "stats": {
     "total_profiles": 15,

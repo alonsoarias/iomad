@@ -602,7 +602,7 @@ foreach ($profiles as $profile) {
         $vacancy->departmentid = $vacancyDepartmentId;
         $vacancy->convocatoriaid = $convocatoriaid;
         $vacancy->positions = $locationPositions;
-        $vacancy->requirements = build_vacancy_requirements_proyectos($profile);
+        $vacancy->requirements = build_vacancy_requirements_proyectos($profile, $data['required_documents'] ?? null);
         $vacancy->desirable = build_vacancy_desirable_proyectos($profile);
         $vacancy->status = $publish ? 'published' : 'draft';
         $vacancy->publicationtype = 'public';
@@ -686,15 +686,31 @@ function build_convocatoria_description($data) {
 
     $html = '<div class="convocatoria-description">';
 
-    // Header.
+    // Header with title from document.
+    $title = $conv['title'] ?? 'CONVOCATORIA 01-2026';
     $html .= '<div class="alert alert-primary">';
-    $html .= '<h3 class="alert-heading">CONVOCATORIA 01-2026</h3>';
-    $html .= '<p class="lead">Para Conformar el Repositorio de Hojas de Vida de Proyectos Interinstitucionales</p>';
+    $html .= '<h3 class="alert-heading">' . htmlspecialchars($title) . '</h3>';
     $html .= '</div>';
 
-    // Objective.
+    // Announcement text.
+    if (!empty($conv['announcement_text'])) {
+        $html .= '<div class="alert alert-secondary text-center">';
+        $html .= '<strong>' . htmlspecialchars($conv['announcement_text']) . '</strong>';
+        $html .= '</div>';
+    }
+
+    // Objective (complete from document).
     $html .= '<h4>Objetivo</h4>';
-    $html .= '<p>' . htmlspecialchars($conv['brief_description']) . '</p>';
+    $objective = $conv['objective'] ?? $conv['brief_description'];
+    $html .= '<p>' . htmlspecialchars($objective) . '</p>';
+
+    // Institution info.
+    if (!empty($conv['institution'])) {
+        $inst = $conv['institution'];
+        $html .= '<h4>Institución</h4>';
+        $html .= '<p><strong>' . htmlspecialchars($inst['name']) . '</strong><br>';
+        $html .= htmlspecialchars($inst['city']) . ', ' . htmlspecialchars($inst['department']) . ', ' . htmlspecialchars($inst['country']) . '</p>';
+    }
 
     // Statistics.
     $html .= '<h4>Resumen de Vacantes</h4>';
@@ -710,23 +726,39 @@ function build_convocatoria_description($data) {
     // Timeline.
     $html .= '<h4>Cronograma</h4>';
     $html .= '<ul>';
-    $html .= '<li><strong>Publicación de la convocatoria:</strong> ' . $conv['publication_date'] . '</li>';
-    $html .= '<li><strong>Plazo para remitir hojas de vida:</strong> ' . $conv['startdate'] . ' al ' . $conv['enddate'] . '</li>';
-    $html .= '<li><strong>Publicación del listado del repositorio:</strong> ' . $conv['results_date'] . '</li>';
+    $html .= '<li><strong>Publicación de la convocatoria:</strong> ' . format_date_spanish($conv['publication_date']) . '</li>';
+    $html .= '<li><strong>Plazo para remitir hojas de vida:</strong> Desde ' . format_date_spanish($conv['startdate']) . ' al ' . format_date_spanish($conv['enddate']) . '</li>';
+    $html .= '<li><strong>Publicación del listado del repositorio:</strong> ' . format_date_spanish($conv['results_date']) . '</li>';
     $html .= '</ul>';
+
+    // Application info.
+    if (!empty($data['application_info'])) {
+        $appinfo = $data['application_info'];
+        $html .= '<h4>Postulación en el Repositorio</h4>';
+        $html .= '<p>' . htmlspecialchars($appinfo['instructions']) . '</p>';
+        if (!empty($appinfo['additional_note'])) {
+            $html .= '<p>' . htmlspecialchars($appinfo['additional_note']) . '</p>';
+        }
+    }
 
     // Required documents.
     $html .= '<h4>Documentos Requeridos</h4>';
     $html .= '<ol>';
     foreach ($data['required_documents'] as $doc) {
-        $required = $doc['required'] ? '' : ' <em>(si aplica)</em>';
-        $html .= '<li>' . htmlspecialchars($doc['name']) . $required . '</li>';
+        $doctext = $doc['name'];
+        if (!$doc['required'] && !empty($doc['condition'])) {
+            $doctext .= ' <em>(' . htmlspecialchars($doc['condition']) . ')</em>';
+        } else if (!$doc['required']) {
+            $doctext .= ' <em>(si aplica)</em>';
+        }
+        $html .= '<li>' . $doctext . '</li>';
     }
     $html .= '</ol>';
 
     // Contact.
     $html .= '<h4>Información de Contacto</h4>';
-    $html .= '<p><strong>PROCESO DE DIRECCIONAMIENTO ESTRATÉGICO Y PLANEACIÓN</strong></p>';
+    $contactProcess = $conv['contact_process'] ?? 'PROCESO DE DIRECCIONAMIENTO ESTRATÉGICO Y PLANEACIÓN';
+    $html .= '<p><strong>' . htmlspecialchars($contactProcess) . '</strong></p>';
     $html .= '<ul>';
     foreach ($conv['contact_emails'] as $email) {
         $html .= '<li><a href="mailto:' . htmlspecialchars($email) . '">' . htmlspecialchars($email) . '</a></li>';
@@ -736,6 +768,27 @@ function build_convocatoria_description($data) {
     $html .= '</div>';
 
     return $html;
+
+}
+
+/**
+ * Format date to Spanish format.
+ */
+function format_date_spanish($datestr) {
+    $months = [
+        '01' => 'enero', '02' => 'febrero', '03' => 'marzo', '04' => 'abril',
+        '05' => 'mayo', '06' => 'junio', '07' => 'julio', '08' => 'agosto',
+        '09' => 'septiembre', '10' => 'octubre', '11' => 'noviembre', '12' => 'diciembre'
+    ];
+
+    $parts = explode('-', $datestr);
+    if (count($parts) === 3) {
+        $day = intval($parts[2]);
+        $month = $months[$parts[1]] ?? $parts[1];
+        $year = $parts[0];
+        return "$day de $month de $year";
+    }
+    return $datestr;
 }
 
 /**
@@ -743,22 +796,32 @@ function build_convocatoria_description($data) {
  */
 function build_convocatoria_terms($data) {
     $clarifications = $data['clarifications'];
+    $requirements = $data['participant_requirements'] ?? [];
 
     $html = '<div class="convocatoria-terms">';
     $html .= '<h4>Términos y Condiciones</h4>';
 
-    $html .= '<h5>1. Aclaraciones Finales al Proceso de Convocatoria</h5>';
+    // Participant requirements from JSON.
+    $html .= '<h5>1. Requisitos y Compromisos por parte de las personas interesadas en participar en la convocatoria</h5>';
+    $html .= '<ul>';
+    if (!empty($requirements)) {
+        foreach ($requirements as $req) {
+            $html .= '<li>' . htmlspecialchars($req['description']) . '</li>';
+        }
+    } else {
+        // Fallback if not in JSON.
+        $html .= '<li>Cumplir con los mínimos de formación educativa y experiencia específica requeridos.</li>';
+        $html .= '<li>Cada una de las experiencias relacionadas debe estar claramente delimitadas, especificando fecha de inicio y terminación, actividades/funciones desarrolladas, y municipio de ejecución.</li>';
+        $html .= '<li>Residir en los municipios donde prestará los servicios o tener disponibilidad de desplazamiento.</li>';
+    }
+    $html .= '</ul>';
+
+    // Clarifications from JSON.
+    $html .= '<h5>2. Aclaraciones Finales al Proceso de Convocatoria</h5>';
     $html .= '<ul>';
     foreach ($clarifications as $clarification) {
         $html .= '<li>' . htmlspecialchars($clarification) . '</li>';
     }
-    $html .= '</ul>';
-
-    $html .= '<h5>2. Requisitos y Compromisos</h5>';
-    $html .= '<ul>';
-    $html .= '<li>Cumplir con los mínimos de formación educativa y experiencia específica requeridos.</li>';
-    $html .= '<li>Cada una de las experiencias relacionadas debe estar claramente delimitadas, especificando fecha de inicio y terminación, actividades/funciones desarrolladas, y municipio de ejecución.</li>';
-    $html .= '<li>Residir en los municipios donde prestará los servicios o tener disponibilidad de desplazamiento.</li>';
     $html .= '</ul>';
 
     $html .= '<h5>3. Aceptación de Términos</h5>';
@@ -832,8 +895,10 @@ function build_vacancy_description_proyectos($profile, $location) {
 
 /**
  * Build vacancy requirements HTML.
+ * @param array $profile The profile data.
+ * @param array $requireddocs Optional array of required documents from JSON.
  */
-function build_vacancy_requirements_proyectos($profile) {
+function build_vacancy_requirements_proyectos($profile, $requireddocs = null) {
     $html = '<div class="vacancy-requirements">';
 
     $html .= '<h5>Requisitos Mínimos</h5>';
@@ -849,13 +914,26 @@ function build_vacancy_requirements_proyectos($profile) {
 
     $html .= '<h5>Documentos Requeridos</h5>';
     $html .= '<ol>';
-    $html .= '<li>Formato de Hoja de vida de función pública diligenciada</li>';
-    $html .= '<li>Fotocopia de la cédula de ciudadanía</li>';
-    $html .= '<li>Fotocopia de Libreta Militar (si aplica)</li>';
-    $html .= '<li>Certificación de Experiencia reportada en la hoja de vida</li>';
-    $html .= '<li>Tarjeta profesional (si aplica)</li>';
-    $html .= '<li>Certificados de formación académica</li>';
-    $html .= '<li>RUT actualizado</li>';
+    if (!empty($requireddocs)) {
+        foreach ($requireddocs as $doc) {
+            $doctext = $doc['name'];
+            if (!$doc['required'] && !empty($doc['condition'])) {
+                $doctext .= ' (' . htmlspecialchars($doc['condition']) . ')';
+            } else if (!$doc['required']) {
+                $doctext .= ' (si aplica)';
+            }
+            $html .= '<li>' . htmlspecialchars($doctext) . '</li>';
+        }
+    } else {
+        // Fallback.
+        $html .= '<li>Formato de Hoja de vida de función pública diligenciada</li>';
+        $html .= '<li>Fotocopia de la cédula de ciudadanía</li>';
+        $html .= '<li>Fotocopia de Libreta Militar (si aplica)</li>';
+        $html .= '<li>Certificación de Experiencia reportada en la hoja de vida</li>';
+        $html .= '<li>Tarjeta profesional (si aplica)</li>';
+        $html .= '<li>Certificados de formación académica</li>';
+        $html .= '<li>RUT actualizado</li>';
+    }
     $html .= '</ol>';
 
     $html .= '</div>';
