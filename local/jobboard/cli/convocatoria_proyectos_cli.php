@@ -18,20 +18,13 @@
  * CLI script for creating Convocatoria de Proyectos Interinstitucionales 2026.
  *
  * This script creates:
- * 1. The convocatoria (call for applications)
- * 2. All vacancies (15 profiles with 56 total positions)
+ * 1. IOMAD companies for locations (Pamplona, Arauquita, Cumaribo)
+ * 2. Departments for each company
+ * 3. The convocatoria (call for applications)
+ * 4. All vacancies (15 profiles with 56 total positions)
  *
  * Usage:
  *   php convocatoria_proyectos_cli.php [options]
- *
- * Options:
- *   --help, -h          Show help message
- *   --dryrun, -d        Simulate without making changes
- *   --verbose, -v       Show detailed output
- *   --update, -u        Update existing records
- *   --publish, -p       Publish vacancies after creation
- *   --json=FILE, -j     Path to JSON data file (default: convocatoria_proyectos_2026.json)
- *   --reset             Delete existing convocatoria and vacancies before creating
  *
  * @package   local_jobboard
  * @copyright 2026 ISER
@@ -52,6 +45,7 @@ list($options, $unrecognized) = cli_get_params([
     'publish' => false,
     'json' => __DIR__ . '/convocatoria_proyectos_2026.json',
     'reset' => false,
+    'skip-structure' => false,
 ], [
     'h' => 'help',
     'd' => 'dryrun',
@@ -60,6 +54,7 @@ list($options, $unrecognized) = cli_get_params([
     'p' => 'publish',
     'j' => 'json',
     'r' => 'reset',
+    's' => 'skip-structure',
 ]);
 
 if (!empty($unrecognized)) {
@@ -75,25 +70,29 @@ ISER Job Board - Convocatoria Proyectos Interinstitucionales CLI
 Creates the Convocatoria 01-2026 for Proyectos Interinstitucionales
 with all 15 professional profiles (56 total positions).
 
+This script automatically creates IOMAD companies and departments
+for the required locations if they don't exist.
+
 USAGE:
   php convocatoria_proyectos_cli.php [options]
 
 OPTIONS:
-  -h, --help        Show this help message
-  -d, --dryrun      Simulate execution without making changes
-  -v, --verbose     Show detailed output during execution
-  -u, --update      Update existing records if they exist
-  -p, --publish     Publish vacancies after creation (default: draft)
-  -j, --json=FILE   Path to JSON data file
-                    (default: convocatoria_proyectos_2026.json)
-  -r, --reset       Delete existing convocatoria and vacancies before creating
+  -h, --help           Show this help message
+  -d, --dryrun         Simulate execution without making changes
+  -v, --verbose        Show detailed output during execution
+  -u, --update         Update existing records if they exist
+  -p, --publish        Publish vacancies after creation (default: draft)
+  -j, --json=FILE      Path to JSON data file
+                       (default: convocatoria_proyectos_2026.json)
+  -r, --reset          Delete existing convocatoria and vacancies before creating
+  -s, --skip-structure Skip IOMAD structure creation (companies/departments)
 
 EXAMPLES:
 
-  1. Create convocatoria and vacancies (dry run):
+  1. Create everything (dry run):
      php convocatoria_proyectos_cli.php --dryrun --verbose
 
-  2. Create and publish all vacancies:
+  2. Create companies, convocatoria and publish all vacancies:
      php convocatoria_proyectos_cli.php --publish --verbose
 
   3. Update existing records:
@@ -101,6 +100,18 @@ EXAMPLES:
 
   4. Reset and recreate everything:
      php convocatoria_proyectos_cli.php --reset --publish --verbose
+
+  5. Skip IOMAD structure creation:
+     php convocatoria_proyectos_cli.php --skip-structure --publish --verbose
+
+IOMAD STRUCTURE CREATED:
+  Companies (Sedes):
+    - ISER Pamplona (Sede Principal)
+    - ISER Arauquita (Arauca)
+    - ISER Cumaribo (Vichada)
+
+  Departments per Company:
+    - Proyectos Interinstitucionales
 
 PROFILES INCLUDED:
   DP-1   Director(a) del Programa (1 position)
@@ -133,6 +144,42 @@ if ($options['help']) {
     exit(0);
 }
 
+// ============================================================
+// LOCATIONS/SEDES CONFIGURATION FOR PROYECTOS INTERINSTITUCIONALES
+// ============================================================
+$PROYECTOS_SEDES = [
+    'PAMPLONA' => [
+        'name' => 'ISER Pamplona (Sede Principal)',
+        'shortname' => 'ISER-PAMPLONA',
+        'city' => 'Pamplona',
+        'department' => 'Norte de Santander',
+        'code' => 'ISER-PAM',
+        'location_key' => 'Pamplona',
+    ],
+    'ARAUQUITA' => [
+        'name' => 'ISER Arauquita',
+        'shortname' => 'ISER-ARAUQUITA',
+        'city' => 'Arauquita',
+        'department' => 'Arauca',
+        'code' => 'ISER-ARA',
+        'location_key' => 'Arauquita',
+    ],
+    'CUMARIBO' => [
+        'name' => 'ISER Cumaribo',
+        'shortname' => 'ISER-CUMARIBO',
+        'city' => 'Cumaribo',
+        'department' => 'Vichada',
+        'code' => 'ISER-CUM',
+        'location_key' => 'Cumaribo',
+    ],
+];
+
+// Department to create under each company.
+$PROYECTOS_DEPARTMENT = [
+    'name' => 'Proyectos Interinstitucionales',
+    'shortname' => 'PROY-INTER',
+];
+
 // Global variables.
 $dryrun = $options['dryrun'];
 $verbose = $options['verbose'];
@@ -140,6 +187,7 @@ $update = $options['update'];
 $publish = $options['publish'];
 $jsonpath = $options['json'];
 $reset = $options['reset'];
+$skipstructure = $options['skip-structure'];
 
 // Load JSON data.
 cli_heading('Loading JSON Data');
@@ -206,7 +254,8 @@ if ($reset) {
             $DB->delete_records('local_jobboard_convocatoria', ['id' => $existingconv->id]);
             echo "Deleted convocatoria: {$existingconv->code}\n";
         } else {
-            echo "DRY RUN: Would delete convocatoria and " . count($vacancies ?? []) . " vacancies\n";
+            $vacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $existingconv->id]);
+            echo "DRY RUN: Would delete convocatoria and " . count($vacancies) . " vacancies\n";
         }
     } else {
         echo "No existing convocatoria found with code: $convcode\n";
@@ -216,9 +265,146 @@ if ($reset) {
 }
 
 // ============================================================
-// CREATE CONVOCATORIA
+// PHASE 1: CREATE IOMAD STRUCTURE (COMPANIES AND DEPARTMENTS)
 // ============================================================
-cli_heading('Creating Convocatoria');
+$companymap = [];    // location_key -> company_id
+$departmentmap = []; // location_key -> department_id
+
+if (!$skipstructure) {
+    cli_heading('Phase 1: Creating IOMAD Structure (Companies and Departments)');
+
+    // Extract needed locations from JSON data.
+    $neededlocations = [];
+    foreach ($data['profiles'] as $profile) {
+        foreach ($profile['locations'] as $location) {
+            $locname = $location['name'];
+            $neededlocations[$locname] = true;
+        }
+    }
+    $neededlocations = array_keys($neededlocations);
+
+    echo "Locations needed: " . implode(', ', $neededlocations) . "\n\n";
+
+    $structurestats = [
+        'companies_created' => 0,
+        'companies_existing' => 0,
+        'departments_created' => 0,
+        'departments_existing' => 0,
+    ];
+
+    foreach ($PROYECTOS_SEDES as $sedekey => $sedeinfo) {
+        $locationkey = $sedeinfo['location_key'];
+
+        // Check if this location is needed.
+        if (!in_array($locationkey, $neededlocations)) {
+            if ($verbose) {
+                echo "SKIP: $locationkey (not needed for this convocatoria)\n";
+            }
+            continue;
+        }
+
+        echo "Processing: {$sedeinfo['name']}\n";
+
+        // Check if company exists.
+        $company = $DB->get_record('company', ['shortname' => $sedeinfo['shortname']]);
+
+        if ($company) {
+            echo "  Company EXISTS: {$company->name} (ID: {$company->id})\n";
+            $companymap[$locationkey] = $company->id;
+            $structurestats['companies_existing']++;
+        } else {
+            // Create company.
+            if (!$dryrun) {
+                $companyrecord = new stdClass();
+                $companyrecord->name = $sedeinfo['name'];
+                $companyrecord->shortname = $sedeinfo['shortname'];
+                $companyrecord->code = $sedeinfo['code'];
+                $companyrecord->city = $sedeinfo['city'];
+                $companyrecord->country = 'CO';
+                $companyrecord->lang = 'es';
+                $companyrecord->timezone = 'America/Bogota';
+                $companyrecord->theme = '';
+                $companyrecord->category = 0;
+                $companyrecord->profileid = 0;
+                $companyrecord->supervisorprofileid = 0;
+                $companyrecord->departmentprofileid = 0;
+
+                $companyid = $DB->insert_record('company', $companyrecord);
+                $companymap[$locationkey] = $companyid;
+                echo "  Company CREATED: {$sedeinfo['name']} (ID: $companyid)\n";
+
+                // Create root department for company (required by IOMAD).
+                $rootdept = new stdClass();
+                $rootdept->name = $sedeinfo['name'];
+                $rootdept->shortname = $sedeinfo['shortname'];
+                $rootdept->company = $companyid;
+                $rootdept->parent = 0;
+                $rootdeptid = $DB->insert_record('department', $rootdept);
+                echo "    Root department created (ID: $rootdeptid)\n";
+
+                $structurestats['companies_created']++;
+            } else {
+                echo "  DRY RUN: Would create company {$sedeinfo['name']}\n";
+                $companymap[$locationkey] = 0;
+                $structurestats['companies_created']++;
+            }
+        }
+
+        // Create/check Proyectos Interinstitucionales department.
+        if (isset($companymap[$locationkey]) && $companymap[$locationkey] > 0) {
+            $companyid = $companymap[$locationkey];
+
+            // Get root department.
+            $rootdept = $DB->get_record('department', ['company' => $companyid, 'parent' => 0]);
+            $parentid = $rootdept ? $rootdept->id : 0;
+
+            // Check if department exists.
+            $dept = $DB->get_record('department', [
+                'company' => $companyid,
+                'shortname' => $PROYECTOS_DEPARTMENT['shortname'],
+            ]);
+
+            if ($dept) {
+                $departmentmap[$locationkey] = $dept->id;
+                echo "    Department EXISTS: {$PROYECTOS_DEPARTMENT['name']} (ID: {$dept->id})\n";
+                $structurestats['departments_existing']++;
+            } else if (!$dryrun) {
+                $deptrecord = new stdClass();
+                $deptrecord->name = $PROYECTOS_DEPARTMENT['name'];
+                $deptrecord->shortname = $PROYECTOS_DEPARTMENT['shortname'];
+                $deptrecord->company = $companyid;
+                $deptrecord->parent = $parentid;
+
+                $deptid = $DB->insert_record('department', $deptrecord);
+                $departmentmap[$locationkey] = $deptid;
+                echo "    Department CREATED: {$PROYECTOS_DEPARTMENT['name']} (ID: $deptid)\n";
+                $structurestats['departments_created']++;
+            } else {
+                echo "    DRY RUN: Would create department {$PROYECTOS_DEPARTMENT['name']}\n";
+                $departmentmap[$locationkey] = 0;
+                $structurestats['departments_created']++;
+            }
+        }
+
+        echo "\n";
+    }
+
+    // Structure summary.
+    echo str_repeat('-', 50) . "\n";
+    echo "IOMAD Structure Summary:\n";
+    echo "  Companies created:    {$structurestats['companies_created']}\n";
+    echo "  Companies existing:   {$structurestats['companies_existing']}\n";
+    echo "  Departments created:  {$structurestats['departments_created']}\n";
+    echo "  Departments existing: {$structurestats['departments_existing']}\n";
+    echo str_repeat('-', 50) . "\n\n";
+} else {
+    echo "Skipping IOMAD structure creation (--skip-structure)\n\n";
+}
+
+// ============================================================
+// PHASE 2: CREATE CONVOCATORIA
+// ============================================================
+cli_heading('Phase 2: Creating Convocatoria');
 
 $convdata = $data['convocatoria'];
 $convcode = $convdata['code'];
@@ -285,9 +471,9 @@ if ($existingconv && !$update) {
 echo "\n";
 
 // ============================================================
-// CREATE VACANCIES
+// PHASE 3: CREATE VACANCIES
 // ============================================================
-cli_heading('Creating Vacancies');
+cli_heading('Phase 3: Creating Vacancies');
 
 $profiles = $data['profiles'];
 $stats = [
@@ -324,6 +510,10 @@ foreach ($profiles as $profile) {
             $fullLocation .= " ($locationDept)";
         }
 
+        // Get company and department IDs for this location.
+        $vacancyCompanyId = $companymap[$locationName] ?? null;
+        $vacancyDepartmentId = $departmentmap[$locationName] ?? null;
+
         // Check if exists.
         $existing = $DB->get_record_sql(
             "SELECT * FROM {local_jobboard_vacancy}
@@ -349,6 +539,8 @@ foreach ($profiles as $profile) {
         $vacancy->location = $fullLocation;
         $vacancy->modality = 'presencial';
         $vacancy->department = 'Proyectos Interinstitucionales';
+        $vacancy->companyid = $vacancyCompanyId;
+        $vacancy->departmentid = $vacancyDepartmentId;
         $vacancy->convocatoriaid = $convocatoriaid;
         $vacancy->positions = $locationPositions;
         $vacancy->requirements = build_vacancy_requirements_proyectos($profile);
@@ -373,7 +565,8 @@ foreach ($profiles as $profile) {
                     $vacancyid = $DB->insert_record('local_jobboard_vacancy', $vacancy);
                     $stats['created']++;
                     if ($verbose) {
-                        echo "$prefix CREATED: $code @ $fullLocation ($locationPositions pos) [ID: $vacancyid]\n";
+                        $compInfo = $vacancyCompanyId ? " [Company: $vacancyCompanyId]" : "";
+                        echo "$prefix CREATED: $code @ $fullLocation ($locationPositions pos) [ID: $vacancyid]$compInfo\n";
                     }
                 }
             } catch (Exception $e) {
@@ -392,16 +585,21 @@ foreach ($profiles as $profile) {
 // ============================================================
 // SUMMARY
 // ============================================================
-cli_heading('Summary');
+cli_heading('Final Summary');
 
 echo "Convocatoria: {$data['convocatoria']['name']}\n";
 echo "Convocatoria ID: $convocatoriaid\n\n";
 
+echo "IOMAD Structure:\n";
+echo "  Companies mapped: " . count($companymap) . "\n";
+echo "  Departments mapped: " . count($departmentmap) . "\n\n";
+
+echo "Vacancies:\n";
 echo str_repeat('-', 50) . "\n";
-echo "Vacancies created:  {$stats['created']}\n";
-echo "Vacancies updated:  {$stats['updated']}\n";
-echo "Vacancies skipped:  {$stats['skipped']}\n";
-echo "Errors:             {$stats['errors']}\n";
+echo "  Created:  {$stats['created']}\n";
+echo "  Updated:  {$stats['updated']}\n";
+echo "  Skipped:  {$stats['skipped']}\n";
+echo "  Errors:   {$stats['errors']}\n";
 echo str_repeat('-', 50) . "\n";
 
 $totalprocessed = $stats['created'] + $stats['updated'] + $stats['skipped'];
