@@ -473,6 +473,9 @@ class application_form extends \moodleform {
     /**
      * Load document types from database.
      *
+     * First checks if the vacancy has specific document requirements in local_jobboard_doc_requirement.
+     * If yes, only those documents are loaded. If no, falls back to all enabled global doctypes.
+     *
      * @param int $convocatoriaid Convocatoria ID (reserved for future use).
      * @param bool $isexemption Whether user has exemption.
      * @return array Document types.
@@ -480,7 +483,57 @@ class application_form extends \moodleform {
     protected function load_document_types(int $convocatoriaid, bool $isexemption): array {
         global $DB;
 
-        // Load enabled document types ordered by sortorder and name.
+        // Get vacancy ID from custom data.
+        $vacancy = $this->_customdata['vacancy'] ?? null;
+        $vacancyid = $vacancy ? (int)$vacancy->id : 0;
+
+        // First, check if this vacancy has specific document requirements.
+        if ($vacancyid > 0) {
+            $vacancyreqs = $DB->get_records('local_jobboard_doc_requirement', ['vacancyid' => $vacancyid], 'sortorder');
+
+            if (!empty($vacancyreqs)) {
+                // Vacancy has specific requirements - load only those documents.
+                $doctypes = [];
+
+                foreach ($vacancyreqs as $req) {
+                    // Get the doctype record by code.
+                    $doctype = $DB->get_record('local_jobboard_doctype', [
+                        'code' => $req->documenttype,
+                        'enabled' => 1,
+                    ]);
+
+                    if ($doctype) {
+                        // Override the isrequired field with the vacancy-specific requirement.
+                        $doctype->isrequired = $req->required;
+
+                        // If the requirement has specific instructions, use them.
+                        if (!empty($req->instructions)) {
+                            $doctype->conditional_note = $req->instructions;
+                        }
+
+                        // Use the sortorder from the requirement if provided.
+                        if (!empty($req->sortorder)) {
+                            $doctype->sortorder = $req->sortorder;
+                        }
+
+                        $doctypes[$doctype->id] = $doctype;
+                    }
+                }
+
+                // Apply exemption logic - exempt users don't need ISER-exempted docs.
+                if ($isexemption) {
+                    foreach ($doctypes as $id => $doc) {
+                        if (!empty($doc->iserexempted)) {
+                            $doc->isrequired = 0;
+                        }
+                    }
+                }
+
+                return $doctypes;
+            }
+        }
+
+        // Fallback: No vacancy-specific requirements - load all enabled document types.
         $doctypes = $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder, name');
 
         // Apply exemption logic - exempt users don't need ISER-exempted docs.
