@@ -45,6 +45,7 @@ list($options, $unrecognized) = cli_get_params([
     'publish' => false,
     'json' => __DIR__ . '/convocatoria_proyectos_2026.json',
     'reset' => false,
+    'force' => false,
     'skip-structure' => false,
 ], [
     'h' => 'help',
@@ -54,6 +55,7 @@ list($options, $unrecognized) = cli_get_params([
     'p' => 'publish',
     'j' => 'json',
     'r' => 'reset',
+    'f' => 'force',
     's' => 'skip-structure',
 ]);
 
@@ -85,6 +87,7 @@ OPTIONS:
   -j, --json=FILE      Path to JSON data file
                        (default: convocatoria_proyectos_2026.json)
   -r, --reset          Delete existing convocatoria and vacancies before creating
+  -f, --force          Force delete even if there are applications (use with --reset)
   -s, --skip-structure Skip IOMAD structure creation (companies/departments)
 
 EXAMPLES:
@@ -98,10 +101,13 @@ EXAMPLES:
   3. Update existing records:
      php convocatoria_proyectos_cli.php --update --verbose
 
-  4. Reset and recreate everything:
+  4. Reset and recreate everything from scratch:
      php convocatoria_proyectos_cli.php --reset --publish --verbose
 
-  5. Skip IOMAD structure creation:
+  5. Force reset (deletes applications too) and recreate:
+     php convocatoria_proyectos_cli.php --reset --force --publish --verbose
+
+  6. Skip IOMAD structure creation:
      php convocatoria_proyectos_cli.php --skip-structure --publish --verbose
 
 IOMAD STRUCTURE CREATED:
@@ -187,6 +193,7 @@ $update = $options['update'];
 $publish = $options['publish'];
 $jsonpath = $options['json'];
 $reset = $options['reset'];
+$force = $options['force'];
 $skipstructure = $options['skip-structure'];
 
 // Load JSON data.
@@ -226,25 +233,62 @@ if ($reset) {
     if ($existingconv) {
         echo "Found existing convocatoria: {$existingconv->name} (ID: {$existingconv->id})\n";
 
-        // Check for applications.
-        $sql = "SELECT COUNT(a.id) as cnt
-                FROM {local_jobboard_application} a
-                JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
-                WHERE v.convocatoriaid = ?";
-        $appcount = $DB->count_records_sql($sql, [$existingconv->id]);
+        // Get vacancies for this convocatoria.
+        $vacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $existingconv->id]);
+        $vacancyids = array_keys($vacancies);
 
-        if ($appcount > 0) {
-            cli_error("Cannot reset: Found $appcount application(s). Delete applications first.");
+        // Check for applications.
+        $appcount = 0;
+        if (!empty($vacancyids)) {
+            list($insql, $params) = $DB->get_in_or_equal($vacancyids);
+            $appcount = $DB->count_records_select('local_jobboard_application', "vacancyid $insql", $params);
+        }
+
+        if ($appcount > 0 && !$force) {
+            echo "\n";
+            echo "*** WARNING: Found $appcount application(s) for this convocatoria ***\n";
+            echo "Use --force to delete applications along with the convocatoria.\n";
+            echo "\n";
+            cli_error("Cannot reset: Found $appcount application(s). Use --reset --force to delete everything.");
         }
 
         if (!$dryrun) {
+            $deletedApps = 0;
+            $deletedDocs = 0;
+            $deletedVacancies = 0;
+
+            // Delete applications and their documents if force mode.
+            if ($appcount > 0 && $force) {
+                echo "\n*** FORCE MODE: Deleting $appcount application(s) ***\n\n";
+
+                foreach ($vacancies as $v) {
+                    // Get applications for this vacancy.
+                    $applications = $DB->get_records('local_jobboard_application', ['vacancyid' => $v->id]);
+                    foreach ($applications as $app) {
+                        // Delete application documents.
+                        $doccount = $DB->count_records('local_jobboard_application_doc', ['applicationid' => $app->id]);
+                        $DB->delete_records('local_jobboard_application_doc', ['applicationid' => $app->id]);
+                        $deletedDocs += $doccount;
+
+                        // Delete application.
+                        $DB->delete_records('local_jobboard_application', ['id' => $app->id]);
+                        $deletedApps++;
+
+                        if ($verbose) {
+                            echo "  Deleted application ID: {$app->id} (user: {$app->userid}, docs: $doccount)\n";
+                        }
+                    }
+                }
+                echo "Deleted $deletedApps application(s) and $deletedDocs document(s)\n\n";
+            }
+
             // Delete vacancies.
-            $vacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $existingconv->id]);
             foreach ($vacancies as $v) {
                 // Delete document requirements.
                 $DB->delete_records('local_jobboard_doc_requirement', ['vacancyid' => $v->id]);
                 // Delete vacancy.
                 $DB->delete_records('local_jobboard_vacancy', ['id' => $v->id]);
+                $deletedVacancies++;
                 if ($verbose) {
                     echo "  Deleted vacancy: {$v->code} - {$v->location}\n";
                 }
@@ -252,13 +296,28 @@ if ($reset) {
 
             // Delete convocatoria.
             $DB->delete_records('local_jobboard_convocatoria', ['id' => $existingconv->id]);
-            echo "Deleted convocatoria: {$existingconv->code}\n";
+
+            echo "\n";
+            echo str_repeat('=', 50) . "\n";
+            echo "RESET COMPLETED:\n";
+            echo "  Convocatoria deleted: {$existingconv->code}\n";
+            echo "  Vacancies deleted: $deletedVacancies\n";
+            if ($force && $deletedApps > 0) {
+                echo "  Applications deleted: $deletedApps\n";
+                echo "  Application documents deleted: $deletedDocs\n";
+            }
+            echo str_repeat('=', 50) . "\n";
         } else {
-            $vacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $existingconv->id]);
-            echo "DRY RUN: Would delete convocatoria and " . count($vacancies) . " vacancies\n";
+            echo "DRY RUN: Would delete:\n";
+            echo "  - Convocatoria: {$existingconv->code}\n";
+            echo "  - Vacancies: " . count($vacancies) . "\n";
+            if ($appcount > 0 && $force) {
+                echo "  - Applications: $appcount (--force enabled)\n";
+            }
         }
     } else {
         echo "No existing convocatoria found with code: $convcode\n";
+        echo "Proceeding to create new convocatoria...\n";
     }
 
     echo "\n";
