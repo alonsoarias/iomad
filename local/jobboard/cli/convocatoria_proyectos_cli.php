@@ -153,26 +153,32 @@ if ($options['help']) {
 // ============================================================
 // LOCATIONS/SEDES CONFIGURATION FOR PROYECTOS INTERINSTITUCIONALES
 // ============================================================
+// IMPORTANT: These shortnames must match the existing IOMAD companies.
+// If companies were created with cli.php, use the same shortnames.
+// The script will search for companies by shortname OR by name pattern.
 $PROYECTOS_SEDES = [
     'PAMPLONA' => [
-        'name' => 'ISER Pamplona (Sede Principal)',
-        'shortname' => 'ISER-PAMPLONA',
+        'name' => 'Pamplona (Sede Principal)',
+        'shortname' => 'PAMPLONA',              // Same as cli.php
+        'alt_shortnames' => ['ISER-PAMPLONA', 'ISER-PAM', 'PAMPLONA'],
         'city' => 'Pamplona',
         'department' => 'Norte de Santander',
         'code' => 'ISER-PAM',
         'location_key' => 'Pamplona',
     ],
     'ARAUQUITA' => [
-        'name' => 'ISER Arauquita',
-        'shortname' => 'ISER-ARAUQUITA',
+        'name' => 'Arauquita',
+        'shortname' => 'ARAUQUITA',             // Standard format
+        'alt_shortnames' => ['ISER-ARAUQUITA', 'ISER-ARA', 'ARAUQUITA'],
         'city' => 'Arauquita',
         'department' => 'Arauca',
         'code' => 'ISER-ARA',
         'location_key' => 'Arauquita',
     ],
     'CUMARIBO' => [
-        'name' => 'ISER Cumaribo',
-        'shortname' => 'ISER-CUMARIBO',
+        'name' => 'Cumaribo',
+        'shortname' => 'CUMARIBO',              // Standard format
+        'alt_shortnames' => ['ISER-CUMARIBO', 'ISER-CUM', 'CUMARIBO'],
         'city' => 'Cumaribo',
         'department' => 'Vichada',
         'code' => 'ISER-CUM',
@@ -364,11 +370,43 @@ if (!$skipstructure) {
 
         echo "Processing: {$sedeinfo['name']}\n";
 
-        // Check if company exists.
+        // Check if company exists by trying multiple shortnames.
+        $company = null;
+        $searchedShortnames = [];
+
+        // Try primary shortname first.
+        $searchedShortnames[] = $sedeinfo['shortname'];
         $company = $DB->get_record('company', ['shortname' => $sedeinfo['shortname']]);
 
+        // If not found, try alternative shortnames.
+        if (!$company && !empty($sedeinfo['alt_shortnames'])) {
+            foreach ($sedeinfo['alt_shortnames'] as $altshort) {
+                if ($altshort === $sedeinfo['shortname']) {
+                    continue; // Already tried.
+                }
+                $searchedShortnames[] = $altshort;
+                $company = $DB->get_record('company', ['shortname' => $altshort]);
+                if ($company) {
+                    break;
+                }
+            }
+        }
+
+        // If still not found, try searching by city name (partial match).
+        if (!$company) {
+            $sql = "SELECT * FROM {company} WHERE " . $DB->sql_like('name', ':cityname', false);
+            $company = $DB->get_record_sql($sql, ['cityname' => '%' . $sedeinfo['city'] . '%']);
+            if ($company) {
+                $searchedShortnames[] = "name LIKE '%{$sedeinfo['city']}%'";
+            }
+        }
+
+        if ($verbose) {
+            echo "  Searched for: " . implode(', ', $searchedShortnames) . "\n";
+        }
+
         if ($company) {
-            echo "  Company EXISTS: {$company->name} (ID: {$company->id})\n";
+            echo "  Company EXISTS: {$company->name} (ID: {$company->id}, shortname: {$company->shortname})\n";
             $companymap[$locationkey] = $company->id;
             $structurestats['companies_existing']++;
         } else {
