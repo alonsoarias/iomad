@@ -1246,7 +1246,8 @@ trait review_renderer {
                 // Dean can view all docs but cannot validate/reject individual documents.
                 'canvalidatedocuments' => $canvalidatedocuments,
                 // Show action buttons only if current AND user can validate documents.
-                'showactions' => $iscurrent && $canvalidatedocuments,
+                // CRITICAL: Dean can NEVER see document action buttons, they only approve/reject full applications.
+                'showactions' => $iscurrent && $canvalidatedocuments && !$isdean,
             ];
 
             $docindex++;

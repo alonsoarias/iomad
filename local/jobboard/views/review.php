@@ -371,7 +371,9 @@ $params = [
     // - HR: must review documents sequentially
     'bypass_sequential_review' => $is_admin || $is_dean,
     // Document validation permission (only HR and Admin can validate/reject individual docs).
-    'can_validate_documents' => $is_admin || $is_hr,
+    // CRITICAL: Dean can NEVER validate documents, even if they have other roles.
+    // Dean only approves/rejects the FULL application, not individual documents.
+    'can_validate_documents' => ($is_admin || $is_hr) && !$is_dean,
 ];
 
 // If no application selected, show list of applications pending review.
@@ -634,7 +636,8 @@ if ($applicationid && isset($application) && $application->id) {
         // HR must review documents sequentially.
         'bypassSequentialReview' => $is_admin || $is_dean,
         // Only HR and Admin can validate/reject individual documents.
-        'canValidateDocuments' => $is_admin || $is_hr,
+        // CRITICAL: Dean can NEVER validate documents, even if they have other roles.
+        'canValidateDocuments' => ($is_admin || $is_hr) && !$is_dean,
     ]]);
 }
 
@@ -660,9 +663,11 @@ if (isset($application) && $application->id) {
         ($can_approve_profile && in_array($application->status, ['submitted', 'pending_dean_review']));
     $data['show_hr_actions'] = $is_admin || ($application->status === 'pending_hr_validation' && $can_validate_hr);
     // Admins can always review documents. Dean role only reviews profiles, not individual docs.
+    // CRITICAL: Dean can NEVER show document validation actions.
     $data['show_document_actions'] = $is_admin || ($can_review_documents && !$is_dean);
-    // Admins bypass sequential review - can review any document.
-    $data['bypass_sequential_review'] = $is_admin;
+    // Admins and Deans bypass sequential review - can see all documents.
+    // But Dean still cannot validate/reject individual documents, only view them.
+    $data['bypass_sequential_review'] = $is_admin || $is_dean;
 }
 
 // Handle AJAX request - return only results HTML without header/footer.
