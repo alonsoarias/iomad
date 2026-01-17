@@ -94,9 +94,12 @@
                     </span>
                     {{#hasinitialpreview}}
                     <div class="jb-header-actions">
+                        {{! Download button - NOT visible for deans }}
+                        {{^is_dean}}
                         <a href="{{initialpreview.downloadurl}}" class="jb-btn-icon" target="_blank" data-region="download-btn" title="{{#str}}download{{/str}}">
                             <i class="fa fa-download"></i>
                         </a>
+                        {{/is_dean}}
                         <button type="button" class="jb-btn-icon" onclick="document.querySelector('[data-region=preview-frame]').classList.toggle('jb-preview-fullscreen')" title="{{#str}}fullscreen, local_jobboard{{/str}}">
                             <i class="fa fa-expand"></i>
                         </button>
@@ -124,9 +127,12 @@
                         <div class="jb-preview__empty">
                             <i class="fa fa-file"></i>
                             <p>{{#str}}previewnotavailable, local_jobboard{{/str}}</p>
+                            {{! Download button - NOT visible for deans }}
+                            {{^is_dean}}
                             <a href="{{initialpreview.downloadurl}}" class="jb-btn jb-btn--primary" target="_blank">
                                 <i class="fa fa-download"></i> {{#str}}download{{/str}}
                             </a>
+                            {{/is_dean}}
                         </div>
                         {{/initialpreview.istext}}{{/initialpreview.canpreview}}
                     {{/hasinitialpreview}}
@@ -476,7 +482,8 @@
 
     {{! Results Container - for AJAX filtering }}
     <div data-region="filter-results" id="jb-review-results">
-    {{! Bulk Actions }}
+    {{! Bulk Actions - NOT visible for deans (they cannot download documents) }}
+    {{^is_dean}}
     <div class="jb-bulk-bar d-none" id="jb-bulk-actions-bar">
         <span><strong id="jb-selected-count">0</strong> {{#str}}applicationsselected, local_jobboard{{/str}}</span>
         <div class="jb-bulk-bar__actions">
@@ -488,6 +495,7 @@
             </button>
         </div>
     </div>
+    {{/is_dean}}
 
     {{! Applications List }}
     {{#hasapplications}}
@@ -500,9 +508,12 @@
             <table class="jb-table" id="jb-applications-table">
                 <thead>
                     <tr>
+                        {{! Checkbox column - NOT visible for deans }}
+                        {{^is_dean}}
                         <th class="jb-table__check">
                             <input type="checkbox" id="jb-select-all" class="jb-checkbox">
                         </th>
+                        {{/is_dean}}
                         <th>{{#str}}applicant, local_jobboard{{/str}}</th>
                         <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
                         <th class="jb-table__center">{{#str}}status, local_jobboard{{/str}}</th>
@@ -514,9 +525,12 @@
                 <tbody>
                     {{#applications}}
                     <tr class="{{#isurgent}}jb-table__row--urgent{{/isurgent}}" data-application-id="{{id}}">
+                        {{! Checkbox cell - NOT visible for deans }}
+                        {{^is_dean}}
                         <td class="jb-table__check">
                             <input type="checkbox" class="jb-checkbox jb-application-checkbox" value="{{id}}">
                         </td>
+                        {{/is_dean}}
                         <td>
                             <div class="jb-applicant">
                                 <div class="jb-applicant__avatar"><i class="fa fa-user"></i></div>
@@ -549,9 +563,12 @@
                             <a href="{{reviewurl}}" class="jb-btn jb-btn--primary jb-btn--sm" title="{{#str}}review, local_jobboard{{/str}}">
                                 <i class="fa fa-magnifying-glass"></i>
                             </a>
+                            {{! Download ZIP button - NOT visible for deans }}
+                            {{^is_dean}}
                             <a href="{{downloadzipurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}downloadallzip, local_jobboard{{/str}}">
                                 <i class="fa fa-file-zipper"></i>
                             </a>
+                            {{/is_dean}}
                             <a href="{{viewurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
                                 <i class="fa fa-eye"></i>
                             </a>
