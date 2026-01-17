@@ -1,0 +1,432 @@
+{
+  "generated": "2026-01-17",
+  "source": "CONVOCATORIA 01-2026 PARA CONFORMAR EL REPOSITORIO DE HOJAS DE VIDA DE PROYECTOS INTERINSTITUCIONALES",
+  "convocatoria": {
+    "code": "CONV-PROY-ISER-2026-01",
+    "name": "Convocatoria 01-2026 para Conformar el Repositorio de Hojas de Vida de Proyectos Interinstitucionales",
+    "brief_description": "Convocatoria para conformar equipos de trabajo con profesionales titulados para proyectos interinstitucionales ejecutados por el Instituto Superior de Educación Rural – ISER.",
+    "startdate": "2026-01-16",
+    "enddate": "2026-01-22",
+    "publication_date": "2026-01-16",
+    "results_date": "2026-01-29",
+    "status": "open",
+    "publicationtype": "public",
+    "contact_emails": [
+      "planeacion@iser.edu.co",
+      "proyectosinterinstitucionales@iser.edu.co"
+    ]
+  },
+  "stats": {
+    "total_profiles": 15,
+    "total_positions": 56,
+    "locations": {
+      "pamplona": 14,
+      "arauquita": 17,
+      "cumaribo": 25
+    }
+  },
+  "profiles": [
+    {
+      "code": "DP-1",
+      "positions": 1,
+      "role": "Director(a) del Programa",
+      "education": {
+        "degree": "Título profesional en cualquier área del conocimiento",
+        "postgraduate": "Título de especialización o maestría en áreas relacionadas con la gestión educativa, gestión de proyectos sociales"
+      },
+      "experience": {
+        "years": 3,
+        "description": "Experiencia de mínimo tres (3) años en dirección, gerencia, coordinación o liderazgo de proyectos. De los cuales, al menos, dos (2) años de experiencia específica esté relacionada con la gestión de proyectos sociales o proyectos educativos."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 1,
+          "notes": "con disponibilidad de traslado hacia Arauquita (Arauca) y Cumaribo (Vichada)"
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "PM-2",
+      "positions": 2,
+      "role": "Profesional de Monitoreo y Evaluación",
+      "education": {
+        "degree": "Título profesional en cualquier área del conocimiento",
+        "postgraduate": "Título de maestría o especialización en evaluación, gestión educativa, estadística, analítica de datos, ciencia de datos o afines"
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos años en el monitoreo de metas en programas o proyectos sociales o educativos."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 1
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "PC-3",
+      "positions": 2,
+      "role": "Especialista en Planeación Curricular",
+      "education": {
+        "degree": "Título profesional en cualquier área del conocimiento",
+        "postgraduate": "Título de maestría o especialización en currículo, pedagogía, educación, gestión o planeación educativa"
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en procesos de diseño, ajuste y articulación curricular; formulación de planes de estudio; alineación por competencias; o diseño de rutas de formación."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 1
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "CP-4",
+      "positions": 2,
+      "role": "Coordinador(a) de Programa",
+      "education": {
+        "degree": "Título profesional en cualquier área del conocimiento",
+        "postgraduate": "Título de especialización en áreas relacionadas con gestión de proyectos y/o educación"
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia de dos (2) años en gestión, coordinación, liderazgo o supervisión de proyectos, de los cuales, al menos un (1) año de experiencia específica debe estar relacionado con la gestión de proyectos sociales o proyectos educativos."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 1
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "DEP-5",
+      "positions": 2,
+      "role": "Docente de recreación, actividad física y/o deportes",
+      "education": {
+        "degree": "Título profesional o Tecnólogo en Educación Física, Ciencias de las Actividad Física y/o Deportes",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en formación recreativa, física y/o deportiva."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 1
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "ARC-6",
+      "positions": 2,
+      "role": "Docente de artes y cultura",
+      "education": {
+        "degree": "Título profesional o Tecnólogo en Educación Artística y áreas a fines o certificación en orientación de procesos educativos en artes",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en formación artística y/o cultural."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 1
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "EM-7",
+      "positions": 8,
+      "role": "Especialista en Matemáticas",
+      "education": {
+        "degree": "Título profesional en licenciatura en educación, matemáticas, ingeniería, economía o contaduría pública",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en enseñanza en el área de matemáticas."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 3
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 5
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "EL-8",
+      "positions": 8,
+      "role": "Especialista en Lenguaje",
+      "education": {
+        "degree": "Título profesional en licenciatura en educación, filología, comunicación social o afines, con énfasis en lenguaje, en literatura, lengua castellana o afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en enseñanza en el área del lenguaje."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 3
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 5
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "PS-9",
+      "positions": 8,
+      "role": "Profesional para el apoyo psicosocial",
+      "education": {
+        "degree": "Título profesional en psicología o trabajo social",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en psicología educativa, orientación socio-ocupacional o intervención con adolescentes."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 3
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 5
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "PU-10",
+      "positions": 8,
+      "role": "Docente Universitario",
+      "education": {
+        "degree": "Título profesional en cualquier área del conocimiento con énfasis, preferible en áreas STEM (Ciencia, Tecnología, Ingenierías, Matemáticas)",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en enseñanza y formación en su área de experticia y pedagogía."
+      },
+      "locations": [
+        {
+          "name": "Arauquita",
+          "department": "Arauca",
+          "positions": 3
+        },
+        {
+          "name": "Cumaribo",
+          "department": "Vichada",
+          "positions": 5
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "ECD-11",
+      "positions": 2,
+      "role": "Especialista en competencias digitales",
+      "education": {
+        "degree": "Título profesional en Ingeniería de Sistemas, electrónica, telecomunicaciones o disciplinas afines, con experiencia en formación docente y estudiantil en competencias digitales",
+        "postgraduate": "Formación certificada o Título de especialización en áreas relacionadas con el conocimiento en plataformas LMS, ecosistemas digitales y herramientas de seguimiento académico"
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en el diseño e implementación de proyectos educativos con énfasis en comunicación digital y educación inclusiva."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 2,
+          "notes": "con disponibilidad para eventuales traslados para capacitar"
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "PDI-12",
+      "positions": 2,
+      "role": "Profesional en Diseño Instruccional",
+      "education": {
+        "degree": "Título en cualquier campo del conocimiento con certificación(es) de actualización en plataformas tecnológicas educativas",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia de más de dos (2) años en Diseño Instruccional en plataformas tecnológicas educativas."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 2,
+          "notes": "con disponibilidad para eventuales traslados para capacitar"
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "EEI-13",
+      "positions": 2,
+      "role": "Especialista en educación inclusiva en competencias digitales",
+      "education": {
+        "degree": "Título profesional en cualquiera de los campos del conocimiento, con experiencia en formación docente y/o estudiantil en competencias digitales para grupos poblacionales en vulnerabilidad",
+        "postgraduate": "Formación certificada o título de especialización en educación inclusiva con experiencia demostrada en el uso de plataformas tecnológicas en el sector educación y ecosistemas digitales"
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia mínima de dos (2) años en proyectos educativos en educación inclusiva y ajustes razonables."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 2,
+          "notes": "con disponibilidad para eventuales traslados para capacitar"
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "EXSA-14",
+      "positions": 3,
+      "role": "Experto en plataformas tecnológicas y sistemas de información en entornos educativos",
+      "education": {
+        "degree": "Título como Tecnólogo o Ingeniero de sistemas, electrónica, telecomunicaciones o afines",
+        "postgraduate": "Con certificación(es) de actualización en el área requerida"
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia mínima de un (1) año en temas relacionados con: Diseño e implementación de sistemas de información o plataformas tecnológicas en entornos educativos. Analítica de datos aplicada a educación, interoperabilidad de sistemas y gobierno de datos."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "EPAT-15",
+      "positions": 4,
+      "role": "Experto plataforma de alertas tempranas",
+      "education": {
+        "degree": "Título profesional como Tecnólogo o Ingeniero de sistemas, electrónica o telecomunicaciones",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia mínima de un (1) año en temas relacionados con: Diseño e implementación de sistemas de información o plataformas tecnológicas en entornos educativos. Analítica de datos aplicada a educación, interoperabilidad de sistemas y gobierno de datos. Participación en proyectos de seguimiento académico y/o alertas tempranas para permanencia estudiantil."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 4
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    }
+  ],
+  "required_documents": [
+    {
+      "code": "hoja_vida_funcion_publica",
+      "name": "Formato de Hoja de vida de función pública diligenciada",
+      "required": true
+    },
+    {
+      "code": "cedula_ciudadania",
+      "name": "Fotocopia de la cédula de ciudadanía",
+      "required": true
+    },
+    {
+      "code": "libreta_militar",
+      "name": "Fotocopia de Libreta Militar",
+      "required": false,
+      "condition": "si aplica"
+    },
+    {
+      "code": "certificacion_experiencia",
+      "name": "Certificación de Experiencia reportada en la hoja de vida",
+      "required": true
+    },
+    {
+      "code": "tarjeta_profesional",
+      "name": "Tarjeta profesional",
+      "required": false,
+      "condition": "si aplica, en caso de los programas académicos que haya sido desvinculados de algún Consejo Profesional el respectivo acto administrativo que lo sustente"
+    },
+    {
+      "code": "certificados_formacion",
+      "name": "Certificados de su formación académica",
+      "required": true
+    },
+    {
+      "code": "rut",
+      "name": "RUT actualizado",
+      "required": true
+    }
+  ],
+  "clarifications": [
+    "El suministro de información o la presentación de documentación falsa, incompleta o adulterada, generará la exclusión del candidato del proceso de selección.",
+    "La participación en este proceso de convocatoria conlleva un reconocimiento expreso por parte del candidato con relación al hecho de no encontrarse vinculado o condenado a investigaciones penales relacionadas con lavado de activos, corrupción, tráfico y trata de personas, narcotráfico, financiamiento de terrorismo y conductas relacionadas con la vida e integridad de las personas.",
+    "La presente convocatoria no constituye oferta o promesa por parte del ISER respecto a su adjudicación o celebración de contrato alguno, de acuerdo con las necesidades que se presenten, podrá ser modificada en sus términos y alcance por parte de la institución en cualquier momento."
+  ]
+}
