@@ -678,10 +678,14 @@ foreach ($profiles as $profile) {
                     $vacancy->modifiedby = $adminuser->id;
                     $vacancy->timemodified = $now;
                     $DB->update_record('local_jobboard_vacancy', $vacancy);
+                    $vacancyid = $existing->id;
                     $stats['updated']++;
                     if ($verbose) {
                         echo "$prefix UPDATED: $code @ $fullLocation ($locationPositions pos)\n";
                     }
+
+                    // Delete existing doc requirements for update.
+                    $DB->delete_records('local_jobboard_doc_requirement', ['vacancyid' => $vacancyid]);
                 } else {
                     $vacancyid = $DB->insert_record('local_jobboard_vacancy', $vacancy);
                     $stats['created']++;
@@ -690,6 +694,13 @@ foreach ($profiles as $profile) {
                         echo "$prefix CREATED: $code @ $fullLocation ($locationPositions pos) [ID: $vacancyid]$compInfo\n";
                     }
                 }
+
+                // Create document requirements for this vacancy.
+                $docreqcount = create_vacancy_doc_requirements($vacancyid, $data['required_documents'], $now, $verbose);
+                if ($verbose && $docreqcount > 0) {
+                    echo "    -> Created $docreqcount document requirements\n";
+                }
+
             } catch (Exception $e) {
                 $stats['errors']++;
                 echo "$prefix ERROR: $code @ $fullLocation - " . $e->getMessage() . "\n";
@@ -698,6 +709,7 @@ foreach ($profiles as $profile) {
             $stats['created']++;
             if ($verbose) {
                 echo "$prefix DRY RUN: Would create $code @ $fullLocation ($locationPositions pos)\n";
+                echo "    -> Would create " . count($data['required_documents']) . " document requirements\n";
             }
         }
     }
@@ -1020,4 +1032,74 @@ function build_vacancy_desirable_proyectos($profile) {
     $html .= '</div>';
 
     return $html;
+}
+
+/**
+ * Create document requirements for a vacancy.
+ *
+ * This function creates records in local_jobboard_doc_requirement table
+ * to specify which documents are required for this specific vacancy.
+ *
+ * @param int $vacancyid The vacancy ID.
+ * @param array $requireddocs Array of required documents from JSON.
+ * @param int $now Current timestamp.
+ * @param bool $verbose Whether to show verbose output.
+ * @return int Number of document requirements created.
+ */
+function create_vacancy_doc_requirements($vacancyid, $requireddocs, $now, $verbose = false) {
+    global $DB;
+
+    if (empty($requireddocs)) {
+        return 0;
+    }
+
+    $count = 0;
+    $sortorder = 0;
+
+    foreach ($requireddocs as $doc) {
+        $sortorder += 10;
+
+        // Use doctype_code if available, otherwise use code.
+        $doctypecode = $doc['doctype_code'] ?? $doc['code'];
+
+        // Check if document type exists in the system.
+        $doctype = $DB->get_record('local_jobboard_doctype', ['code' => $doctypecode]);
+        if (!$doctype) {
+            if ($verbose) {
+                echo "    WARNING: Document type '$doctypecode' not found in system, skipping.\n";
+            }
+            continue;
+        }
+
+        // Build the document requirement record.
+        $docreq = new stdClass();
+        $docreq->vacancyid = $vacancyid;
+        $docreq->documenttype = $doctypecode;
+        $docreq->required = $doc['required'] ? 1 : 0;
+        $docreq->acceptedformats = 'pdf';
+        $docreq->maxsize = 5242880; // 5MB default.
+        $docreq->requiresissuedate = 0;
+        $docreq->maxagedays = null;
+        $docreq->sortorder = $sortorder;
+        $docreq->timecreated = $now;
+
+        // Add instructions if provided.
+        if (!empty($doc['instructions'])) {
+            $docreq->instructions = $doc['instructions'];
+        } else if (!empty($doc['condition'])) {
+            $docreq->instructions = $doc['condition'];
+        }
+
+        // Insert the record.
+        try {
+            $DB->insert_record('local_jobboard_doc_requirement', $docreq);
+            $count++;
+        } catch (Exception $e) {
+            if ($verbose) {
+                echo "    ERROR creating doc requirement for '$doctypecode': " . $e->getMessage() . "\n";
+            }
+        }
+    }
+
+    return $count;
 }

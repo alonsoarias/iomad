@@ -425,40 +425,52 @@
   "required_documents": [
     {
       "code": "hoja_vida_funcion_publica",
+      "doctype_code": "sigep",
       "name": "Formato de Hoja de vida de función pública diligenciada",
-      "required": true
+      "required": true,
+      "instructions": "Debe estar completamente diligenciado con la información actualizada"
     },
     {
       "code": "cedula_ciudadania",
+      "doctype_code": "cedula",
       "name": "Fotocopia de la cédula de ciudadanía",
       "required": true
     },
     {
       "code": "libreta_militar",
+      "doctype_code": "libreta_militar",
       "name": "Fotocopia de Libreta Militar",
       "required": false,
-      "condition": "si aplica"
+      "condition": "si aplica",
+      "gender_condition": "M"
     },
     {
       "code": "certificacion_experiencia",
+      "doctype_code": "experiencia_profesional",
       "name": "Certificación de Experiencia reportada en la hoja de vida",
-      "required": true
+      "required": true,
+      "instructions": "Cada experiencia debe especificar fecha de inicio y terminación, actividades desarrolladas, y municipio de ejecución"
     },
     {
       "code": "tarjeta_profesional",
+      "doctype_code": "tarjeta_profesional",
       "name": "Tarjeta profesional",
       "required": false,
       "condition": "si aplica, en caso de los programas académicos que haya sido desvinculados de algún Consejo Profesional el respectivo acto administrativo que lo sustente"
     },
     {
       "code": "certificados_formacion",
+      "doctype_code": "titulo_academico",
       "name": "Certificados de su formación académica",
-      "required": true
+      "required": true,
+      "instructions": "Incluir diplomas y actas de grado de pregrado y posgrado"
     },
     {
       "code": "rut",
+      "doctype_code": "rut",
       "name": "RUT actualizado",
-      "required": true
+      "required": true,
+      "instructions": "RUT actualizado con fecha reciente"
     }
   ],
   "clarifications": [
