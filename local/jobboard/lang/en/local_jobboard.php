@@ -2924,6 +2924,9 @@ $string['approvecomments_placeholder'] = 'Optional comments about the approval..
 $string['deanreviewpanel'] = 'Dean Review Panel';
 $string['deanreviewpanel_desc'] = 'Review and approve/reject applications from your assigned faculties';
 $string['nopendingapplications_dean_desc'] = 'There are no applications with "submitted" status pending your review in your assigned faculties.';
+$string['profile_approved'] = 'Profile approved';
+$string['profile_approved_advancing'] = 'Profile approved by Dean, advancing to HR validation';
+$string['profile_rejected'] = 'Profile rejected';
 
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
