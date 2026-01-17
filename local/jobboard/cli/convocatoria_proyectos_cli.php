@@ -47,6 +47,7 @@ list($options, $unrecognized) = cli_get_params([
     'reset' => false,
     'force' => false,
     'skip-structure' => false,
+    'convocatoria-id' => null,
 ], [
     'h' => 'help',
     'd' => 'dryrun',
@@ -57,6 +58,7 @@ list($options, $unrecognized) = cli_get_params([
     'r' => 'reset',
     'f' => 'force',
     's' => 'skip-structure',
+    'i' => 'convocatoria-id',
 ]);
 
 if (!empty($unrecognized)) {
@@ -89,6 +91,8 @@ OPTIONS:
   -r, --reset          Delete existing convocatoria and vacancies before creating
   -f, --force          Force delete even if there are applications (use with --reset)
   -s, --skip-structure Skip IOMAD structure creation (companies/departments)
+  -i, --convocatoria-id=ID  Specify existing convocatoria ID to reset/recreate
+                            (use with --reset to delete specific convocatoria)
 
 EXAMPLES:
 
@@ -109,6 +113,9 @@ EXAMPLES:
 
   6. Skip IOMAD structure creation:
      php convocatoria_proyectos_cli.php --skip-structure --publish --verbose
+
+  7. Reset specific convocatoria by ID and recreate:
+     php convocatoria_proyectos_cli.php --reset --convocatoria-id=6 --publish --verbose
 
 IOMAD STRUCTURE CREATED:
   Companies (Sedes):
@@ -201,6 +208,7 @@ $jsonpath = $options['json'];
 $reset = $options['reset'];
 $force = $options['force'];
 $skipstructure = $options['skip-structure'];
+$convocatoriaidparam = !empty($options['convocatoria-id']) ? (int) $options['convocatoria-id'] : null;
 
 // Load JSON data.
 cli_heading('Loading JSON Data');
@@ -233,11 +241,27 @@ if ($reset) {
 
     $convcode = $data['convocatoria']['code'];
 
-    // Find existing convocatoria.
-    $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
+    // Find existing convocatoria by ID or code.
+    $existingconv = null;
+    if ($convocatoriaidparam) {
+        // Search by ID if provided.
+        $existingconv = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaidparam]);
+        if ($existingconv) {
+            echo "Found convocatoria by ID: {$existingconv->name} (ID: {$existingconv->id}, Code: {$existingconv->code})\n";
+        } else {
+            echo "WARNING: No convocatoria found with ID: $convocatoriaidparam\n";
+            echo "Searching by code: $convcode\n";
+            $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
+        }
+    } else {
+        // Search by code.
+        $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
+    }
 
     if ($existingconv) {
-        echo "Found existing convocatoria: {$existingconv->name} (ID: {$existingconv->id})\n";
+        if (!$convocatoriaidparam) {
+            echo "Found existing convocatoria: {$existingconv->name} (ID: {$existingconv->id})\n";
+        }
 
         // Get vacancies for this convocatoria.
         $vacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $existingconv->id]);
