@@ -1,0 +1,351 @@
+{
+  "generated": "2026-01-21",
+  "source": "CONVOCATORIA 01-2026 - Perfiles Adicionales (19.01.26)",
+  "document_metadata": {
+    "original_filename": "CONVOCATORIA REPOSITORIO PROYECTOS 19.01.26.docx",
+    "description": "Perfiles adicionales para diseño de objetos virtuales de aprendizaje"
+  },
+  "convocatoria_update": {
+    "code": "CONV-PROY-ISER-2026-01",
+    "new_enddate": "2026-01-25",
+    "note": "Fecha límite actualizada del 22 al 25 de enero"
+  },
+  "stats": {
+    "new_profiles": 14,
+    "new_positions": 38,
+    "location": "Pamplona"
+  },
+  "profiles": [
+    {
+      "code": "INGS-16",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería de Sistemas",
+      "education": {
+        "degree": "Título profesional como Tecnólogo o Ingeniero de sistemas o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de gestión de redes."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGTC-17",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Desarrollo de Software",
+      "education": {
+        "degree": "Título profesional como Tecnólogo o Ingeniero de sistemas o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de desarrollo de software."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGC-18",
+      "positions": 2,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería Civil (Áreas Básicas)",
+      "education": {
+        "degree": "Título profesional como ingeniero civil o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de áreas básicas de ingenierías."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 2
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGC-19",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería Civil (Construcción)",
+      "education": {
+        "degree": "Título profesional como ingeniero civil o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de tecnología en construcción de obras civiles y programas afines."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "ARQ-20",
+      "positions": 1,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Arquitectura",
+      "education": {
+        "degree": "Título profesional como Arquitecto o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de arquitectura y programas afines."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGI-21",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería Industrial",
+      "education": {
+        "degree": "Título profesional como Ingeniero Industrial o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de ingeniería industrial y/o calidad."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGIC-22",
+      "positions": 1,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería Industrial (Automatización)",
+      "education": {
+        "degree": "Título profesional como Ingeniero Industrial o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de Automatización."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 1
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGI-23",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería de Alimentos (Alimentaria)",
+      "education": {
+        "degree": "Título profesional como Ingeniero de Alimentos o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de agroindustria alimentaria."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INGI-24",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería de Alimentos (No Alimentaria)",
+      "education": {
+        "degree": "Título profesional como Ingeniero de Alimentos o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de agroindustria no alimentaria."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "SSTM-25",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en SST (Medicina del Trabajo)",
+      "education": {
+        "degree": "Título como profesional en seguridad y salud en el trabajo o cualquier área de la salud con Especialización en SST",
+        "postgraduate": "Especialización en SST"
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de Medicina del Trabajo."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "SSTS-26",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en SST (Seguridad Industrial)",
+      "education": {
+        "degree": "Título como profesional en seguridad y salud en el trabajo o cualquier área del conocimiento con Especialización en SST",
+        "postgraduate": "Especialización en SST"
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de Seguridad Industrial, talento humano y/o administración."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "FORS-27",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería Forestal",
+      "education": {
+        "degree": "Título como profesional Ingeniero Forestal, Ingeniero Ambiental, Biólogos o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de Forestal."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "FORS-28",
+      "positions": 3,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Ingeniería Forestal (Silvicultura)",
+      "education": {
+        "degree": "Título como profesional Ingeniero Forestal, Ingeniero Ambiental, Biólogos o áreas afines",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 1,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de un (1) año en cursos/asignaturas de Silvicultura."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 3
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    },
+    {
+      "code": "INV-29",
+      "positions": 4,
+      "role": "Profesional en diseño de objetos virtuales de aprendizaje en Investigación y Desarrollo Tecnológico",
+      "education": {
+        "degree": "Título como profesional en cualquiera de las áreas",
+        "postgraduate": null
+      },
+      "experience": {
+        "years": 2,
+        "description": "Experiencia de más de un (1) año en Diseño Instruccional en plataformas tecnológicas educativas. Experiencia docente de dos (2) años en cursos/asignaturas de Metodología de la investigación, Formulación y evaluación de proyectos. Experiencia en diseño o ejecución de proyectos de investigación o inversión."
+      },
+      "locations": [
+        {
+          "name": "Pamplona",
+          "positions": 4
+        }
+      ],
+      "contracttype": "prestacion_servicios"
+    }
+  ],
+  "required_documents": [
+    {
+      "code": "hoja_vida_funcion_publica",
+      "doctype_code": "sigep",
+      "name": "Formato de Hoja de vida de función pública diligenciada",
+      "required": true,
+      "instructions": "Debe estar completamente diligenciado con la información actualizada"
+    },
+    {
+      "code": "cedula_ciudadania",
+      "doctype_code": "cedula",
+      "name": "Fotocopia de la cédula de ciudadanía",
+      "required": true
+    },
+    {
+      "code": "libreta_militar",
+      "doctype_code": "libreta_militar",
+      "name": "Fotocopia de Libreta Militar",
+      "required": false,
+      "condition": "si aplica",
+      "gender_condition": "M"
+    },
+    {
+      "code": "certificacion_experiencia",
+      "doctype_code": "experiencia_profesional",
+      "name": "Certificación de Experiencia reportada en la hoja de vida",
+      "required": true,
+      "instructions": "Cada experiencia debe especificar fecha de inicio y terminación, actividades desarrolladas, y municipio de ejecución"
+    },
+    {
+      "code": "tarjeta_profesional",
+      "doctype_code": "tarjeta_profesional",
+      "name": "Tarjeta profesional",
+      "required": false,
+      "condition": "si aplica, en caso de los programas académicos que haya sido desvinculados de algún Consejo Profesional el respectivo acto administrativo que lo sustente"
+    },
+    {
+      "code": "certificados_formacion",
+      "doctype_code": "titulo_academico",
+      "name": "Certificados de su formación académica",
+      "required": true,
+      "instructions": "Incluir diplomas y actas de grado de pregrado y posgrado"
+    },
+    {
+      "code": "rut",
+      "doctype_code": "rut",
+      "name": "RUT actualizado",
+      "required": true,
+      "instructions": "RUT actualizado con fecha reciente"
+    }
+  ]
+}
