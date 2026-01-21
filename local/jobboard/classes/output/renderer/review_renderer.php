@@ -1664,21 +1664,24 @@ trait review_renderer {
         if ($convocatoriaid && $selectedconvocatoria) {
             // Get faculties based on vacancy codes in this convocatoria.
             // Vacancies with codes starting with FCAS- belong to FCAS faculty,
-            // codes starting with FII- belong to FII faculty.
+            // codes starting with FII- belong to FII faculty,
+            // codes starting with BIEN- belong to BIENESTAR faculty.
             $facultycodes = $DB->get_records_sql(
                 "SELECT DISTINCT
                     CASE
                         WHEN v.code LIKE 'FCAS%' THEN 'FCAS'
                         WHEN v.code LIKE 'FII%' THEN 'FII'
+                        WHEN v.code LIKE 'BIEN%' THEN 'BIENESTAR'
                         ELSE 'OTHER'
                     END as facultycode,
                     COUNT(*) as vacancycount
                  FROM {local_jobboard_vacancy} v
                  WHERE v.convocatoriaid = :convocatoriaid
-                   AND (v.code LIKE 'FCAS%' OR v.code LIKE 'FII%')
+                   AND (v.code LIKE 'FCAS%' OR v.code LIKE 'FII%' OR v.code LIKE 'BIEN%')
                  GROUP BY CASE
                     WHEN v.code LIKE 'FCAS%' THEN 'FCAS'
                     WHEN v.code LIKE 'FII%' THEN 'FII'
+                    WHEN v.code LIKE 'BIEN%' THEN 'BIENESTAR'
                     ELSE 'OTHER'
                  END",
                 ['convocatoriaid' => $convocatoriaid]
@@ -1688,6 +1691,7 @@ trait review_renderer {
             $facultynames = [
                 'FCAS' => 'Ciencias Administrativas y Sociales',
                 'FII' => 'Ingenierías e Informática',
+                'BIENESTAR' => 'Bienestar Institucional',
             ];
 
             foreach ($facultycodes as $fc) {
@@ -1705,7 +1709,8 @@ trait review_renderer {
                     $faculty->name = $facultynames[$fc->facultycode] ?? $fc->facultycode;
                     $faculty->shortname = $fc->facultycode;
                     $faculty->enabled = 1;
-                    $faculty->sortorder = ($fc->facultycode === 'FCAS') ? 1 : 2;
+                    $sortorders = ['FCAS' => 1, 'FII' => 2, 'BIENESTAR' => 3];
+                    $faculty->sortorder = $sortorders[$fc->facultycode] ?? 99;
                     $faculty->timecreated = time();
                     $faculty->id = $DB->insert_record('local_jobboard_faculty', $faculty);
                 }
