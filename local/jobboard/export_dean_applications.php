@@ -205,9 +205,25 @@ foreach ($applications as $app) {
 
     // Determine format based on dean decision.
     $format = $formatnormal;
-    $deandecision = get_string('pendingdeanreview', 'local_jobboard');
+    $deandecision = '';
+
+    // Statuses that indicate the application has passed dean review stage.
+    $postdeanstatuses = [
+        'dean_approved',
+        'pending_hr_validation',
+        'hr_validated',
+        'hr_rejected',
+        'docs_validated',
+        'docs_rejected',
+        'selected',
+        'rejected',
+    ];
+
+    // Statuses that indicate rejection at dean level.
+    $deanrejectedstatuses = ['dean_rejected'];
 
     if ($deanreview) {
+        // We have a workflow log entry for dean review.
         if ($deanreview->newstatus === 'dean_approved') {
             $format = $formatapproved;
             $deandecision = get_string('approved', 'local_jobboard');
@@ -215,8 +231,21 @@ foreach ($applications as $app) {
             $format = $formatrejected;
             $deandecision = get_string('rejected', 'local_jobboard');
         }
+    } else if (in_array($app->status, $postdeanstatuses)) {
+        // No workflow log, but status indicates it passed dean review.
+        $format = $formatapproved;
+        $deandecision = get_string('approved', 'local_jobboard');
+    } else if (in_array($app->status, $deanrejectedstatuses)) {
+        // Status indicates dean rejected.
+        $format = $formatrejected;
+        $deandecision = get_string('rejected', 'local_jobboard');
     } else if (in_array($app->status, ['submitted', 'pending_dean_review'])) {
+        // Still pending dean review.
         $format = $formatpending;
+        $deandecision = get_string('pendingdeanreview', 'local_jobboard');
+    } else {
+        // Other statuses (withdrawn, etc.).
+        $deandecision = '-';
     }
 
     // Get dean info and observations.
