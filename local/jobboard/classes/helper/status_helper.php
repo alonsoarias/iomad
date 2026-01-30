@@ -248,4 +248,77 @@ class status_helper {
 
         return $statuses[$status] ?? $status;
     }
+
+    /**
+     * Get simplified status for applicants.
+     *
+     * Maps internal workflow statuses to simplified statuses that applicants can see.
+     * Hides internal review process details from applicants.
+     *
+     * @param string $internalstatus The internal status code.
+     * @return string The simplified status code for applicants.
+     */
+    public static function get_applicant_status(string $internalstatus): string {
+        // Statuses that show detailed review process should be hidden.
+        $inprogressstatuses = [
+            'under_review',
+            'pending_dean_review',
+            'dean_approved',
+            'pending_hr_validation',
+            'hr_validated',
+            'docs_validated',
+            'docs_rejected',
+        ];
+
+        // Rejection statuses that should be shown as final rejection.
+        $rejectionstatuses = [
+            'rejected',
+            'dean_rejected',
+            'hr_rejected',
+        ];
+
+        if (in_array($internalstatus, $inprogressstatuses)) {
+            return 'in_progress';
+        }
+
+        if (in_array($internalstatus, $rejectionstatuses)) {
+            return 'rejected';
+        }
+
+        // Keep these as-is: draft, submitted, selected, withdrawn, interview.
+        return $internalstatus;
+    }
+
+    /**
+     * Get applicant-friendly status label.
+     *
+     * @param string $internalstatus The internal status code.
+     * @return string Localized status label for applicants.
+     */
+    public static function get_applicant_status_label(string $internalstatus): string {
+        $simplifiedstatus = self::get_applicant_status($internalstatus);
+        return get_string('appstatus:' . $simplifiedstatus, 'local_jobboard');
+    }
+
+    /**
+     * Get applicant-friendly status badge class.
+     *
+     * @param string $internalstatus The internal status code.
+     * @return string Bootstrap badge class.
+     */
+    public static function get_applicant_status_class(string $internalstatus): string {
+        $simplifiedstatus = self::get_applicant_status($internalstatus);
+
+        $classes = [
+            'draft' => 'secondary',
+            'submitted' => 'info',
+            'in_progress' => 'warning',
+            'interview' => 'primary',
+            'selected' => 'success',
+            'rejected' => 'danger',
+            'withdrawn' => 'dark',
+        ];
+
+        return $classes[$simplifiedstatus] ?? 'secondary';
+    }
 }

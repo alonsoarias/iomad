@@ -96,12 +96,13 @@ class send_observations_email extends external_api {
                 }
             }
 
-            // Send notification.
-            review_notifier::notify($params['applicationid'], $obstext);
+            // Note: Review notifications to applicants are disabled.
+            // Applicants should not see intermediate review statuses.
+            // The observations are stored but not emailed to the applicant.
 
             return [
                 'success' => true,
-                'message' => get_string('emailsent', 'local_jobboard'),
+                'message' => get_string('observationssaved', 'local_jobboard'),
             ];
         } catch (\Exception $e) {
             return [

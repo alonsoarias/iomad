@@ -178,14 +178,9 @@ if ($action && confirm_sesskey()) {
                 // Update application status with observations as comments.
                 $app->change_status($newstatus, $observations, $USER->id);
 
-                // Send consolidated email notification.
-                try {
-                    review_notifier::notify($applicationid, $observations);
-                    \core\notification::success(get_string('reviewsubmitted_with_notification', 'local_jobboard'));
-                } catch (\Exception $e) {
-                    debugging('Failed to send review notification: ' . $e->getMessage(), DEBUG_DEVELOPER);
-                    \core\notification::success(get_string('reviewsubmitted', 'local_jobboard'));
-                }
+                // Note: Review notifications to applicants are disabled.
+                // Applicants should not see intermediate review statuses.
+                \core\notification::success(get_string('reviewsubmitted', 'local_jobboard'));
             }
             break;
 

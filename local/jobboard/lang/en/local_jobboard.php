@@ -254,21 +254,27 @@ $string['convocatoria_status_closed'] = 'Closed';
 $string['convocatoria_status_archived'] = 'Archived';
 
 // Application status
+$string['appstatus:draft'] = 'Draft';
 $string['appstatus:submitted'] = 'Submitted';
 $string['appstatus:under_review'] = 'Under review';
+$string['appstatus:in_progress'] = 'In progress';
 $string['appstatus:docs_validated'] = 'Documents validated';
 $string['appstatus:docs_rejected'] = 'Documents rejected';
 $string['appstatus:interview'] = 'Interview';
 $string['appstatus:selected'] = 'Selected';
-$string['appstatus:rejected'] = 'Rejected';
+$string['appstatus:rejected'] = 'Not selected';
 $string['appstatus:waitlist'] = 'Waitlist';
 $string['appstatus:withdrawn'] = 'Withdrawn';
+
+// Observations saved (notifications disabled)
+$string['observationssaved'] = 'Observations saved';
 
 // Document status
 $string['docstatus:pending'] = 'Pending';
 $string['docstatus:approved'] = 'Approved';
 $string['docstatus:rejected'] = 'Rejected';
 $string['docstatus:resubmitted'] = 'Resubmitted';
+$string['uploaded'] = 'Uploaded';
 
 // Dynamic status strings (used with get_string('status_' . $status))
 // Application statuses - New workflow v4.0

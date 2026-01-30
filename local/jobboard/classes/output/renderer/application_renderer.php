@@ -31,6 +31,7 @@ namespace local_jobboard\output\renderer;
 defined('MOODLE_INTERNAL') || die();
 
 use moodle_url;
+use local_jobboard\helper\status_helper;
 
 /**
  * Trait for application rendering functionality.
@@ -186,6 +187,9 @@ trait application_renderer {
                 }
             }
 
+            // Use simplified status for applicants (hide internal review workflow).
+            $simplifiedstatus = status_helper::get_applicant_status($app->status);
+
             $applicationdata[] = [
                 'id' => $app->id,
                 'vacancyid' => $app->vacancyid,
@@ -195,27 +199,31 @@ trait application_renderer {
                 'convocatorianame' => $convocatorianame,
                 'companyname' => $companyname,
                 'hascompany' => !empty($companyname),
-                'status' => $app->status,
-                'statuslabel' => get_string('appstatus:' . $app->status, 'local_jobboard'),
-                'statuscolor' => $this->get_application_status_class($app->status),
+                'status' => $simplifiedstatus,
+                'statuslabel' => status_helper::get_applicant_status_label($app->status),
+                'statuscolor' => status_helper::get_applicant_status_class($app->status),
                 'dateapplied' => userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')),
-                'progresssteps' => $steps,
-                'progresspercent' => round($progresspercent),
-                'progresscolor' => $progresscolor,
+                // Hide progress steps and document validation details from applicants.
+                'progresssteps' => [],
+                'progresspercent' => 0,
+                'progresscolor' => 'secondary',
                 'documentcount' => $doccount,
-                'docsapproved' => $docsapproved,
-                'docsrejected' => $docsrejected,
-                'docspending' => $docspending,
-                'haspendingdocs' => $docspending > 0 && in_array($app->status, ['submitted', 'under_review', 'docs_rejected']),
+                // Hide document validation status from applicants.
+                'docsapproved' => 0,
+                'docsrejected' => 0,
+                'docspending' => 0,
+                'haspendingdocs' => false,
                 'missingdocscount' => $missingdocs['count'],
                 'missingdocsnames' => $missingdocs['names'],
                 'missingdocslist' => $missingdocs['list'],
                 'hasmissingdocs' => $missingdocs['count'] > 0,
-                'rejecteddocscount' => $missingdocs['rejectedcount'] ?? 0,
-                'rejecteddocsnames' => $missingdocs['rejectednames'] ?? '',
-                'rejecteddocslist' => $missingdocs['rejectedlist'] ?? [],
-                'hasrejecteddocs' => ($missingdocs['rejectedcount'] ?? 0) > 0,
-                'statusnotes' => !empty($app->statusnotes) ? format_string($app->statusnotes) : null,
+                // Hide rejected docs details from applicants.
+                'rejecteddocscount' => 0,
+                'rejecteddocsnames' => '',
+                'rejecteddocslist' => [],
+                'hasrejecteddocs' => false,
+                // Hide status notes from applicants (contains internal review notes).
+                'statusnotes' => null,
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
                 'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw', 'confirm' => 1, 'sesskey' => sesskey()]))->out(false),
                 'canwithdraw' => $canwithdraw,
@@ -224,9 +232,10 @@ trait application_renderer {
             ];
         }
 
-        // Prepare filter form.
+        // Prepare filter form with simplified statuses for applicants.
         $statusoptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($status)]];
-        $statuses = ['draft', 'submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected', 'withdrawn'];
+        // Only show simplified statuses to applicants (hide internal review workflow).
+        $statuses = ['draft', 'submitted', 'in_progress', 'interview', 'selected', 'rejected', 'withdrawn'];
         foreach ($statuses as $s) {
             $statusoptions[] = [
                 'value' => $s,
@@ -287,7 +296,9 @@ trait application_renderer {
             $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
         }
 
-        // Stats cards.
+        // Stats cards - simplified for applicants (hide review workflow details).
+        // Count all "in progress" statuses together.
+        $inprogresscount = ($stats['submitted'] ?? 0) + ($stats['under_review'] ?? 0) + ($stats['docs_validated'] ?? 0);
         $statscards = [
             [
                 'value' => (string)($stats['total'] ?? 0),
@@ -296,16 +307,10 @@ trait application_renderer {
                 'color' => 'primary',
             ],
             [
-                'value' => (string)(($stats['submitted'] ?? 0) + ($stats['under_review'] ?? 0)),
-                'label' => get_string('inprogress', 'local_jobboard'),
+                'value' => (string)$inprogresscount,
+                'label' => get_string('appstatus:in_progress', 'local_jobboard'),
                 'icon' => 'spinner',
-                'color' => 'info',
-            ],
-            [
-                'value' => (string)($stats['docs_validated'] ?? 0),
-                'label' => get_string('validationapproved', 'local_jobboard'),
-                'icon' => 'check-circle',
-                'color' => 'success',
+                'color' => 'warning',
             ],
             [
                 'value' => (string)($stats['selected'] ?? 0),
@@ -654,17 +659,52 @@ trait application_renderer {
             $exemptionref = $exemption->documentref ?? '';
         }
 
+        // For applicants (owners), hide internal review workflow details.
+        if ($isowner) {
+            $simplifiedstatus = status_helper::get_applicant_status($application->status);
+            $statuslabel = status_helper::get_applicant_status_label($application->status);
+            $statuscolor = status_helper::get_applicant_status_class($application->status);
+            // Map simplified status to icons.
+            $statusicons = [
+                'draft' => 'pencil-alt',
+                'submitted' => 'paper-plane',
+                'in_progress' => 'clock',
+                'interview' => 'calendar-check',
+                'selected' => 'check-circle',
+                'rejected' => 'times-circle',
+                'withdrawn' => 'ban',
+            ];
+            $statusicon = $statusicons[$simplifiedstatus] ?? 'info-circle';
+
+            // Hide document validation details from applicants.
+            foreach ($documentsdata as &$doc) {
+                $doc['status'] = 'uploaded';
+                $doc['statuslabel'] = get_string('uploaded', 'local_jobboard');
+                $doc['statuscolor'] = 'secondary';
+                $doc['statusicon'] = 'check';
+                $doc['rejectreason'] = null;
+                $doc['canreupload'] = false;
+            }
+            unset($doc);
+
+            // Hide history from applicants (contains internal workflow).
+            $historydata = [];
+        } else {
+            $statuslabel = get_string('status_' . $application->status, 'local_jobboard');
+        }
+
         return [
             'pagetitle' => get_string('applicationdetails', 'local_jobboard'),
             'breadcrumbs' => $breadcrumbs,
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'application' => [
                 'id' => $application->id,
-                'status' => $application->status,
-                'statuslabel' => get_string('status_' . $application->status, 'local_jobboard'),
+                'status' => $isowner ? status_helper::get_applicant_status($application->status) : $application->status,
+                'statuslabel' => $statuslabel,
                 'statuscolor' => $statuscolor,
                 'statusicon' => $statusicon,
-                'statusnotes' => $application->statusnotes ?? null,
+                // Hide status notes from applicants (contains internal review notes).
+                'statusnotes' => $isowner ? null : ($application->statusnotes ?? null),
                 'dateapplied' => userdate($application->timecreated, get_string('strftimedate', 'langconfig')),
                 'digitalsignature' => $application->digitalsignature ?? null,
                 'consenttimestamp' => !empty($application->consenttimestamp) ?
@@ -685,13 +725,15 @@ trait application_renderer {
             'documents' => $documentsdata,
             'hasdocuments' => !empty($documentsdata),
             'documentcount' => $totaldocs,
-            'docsapproved' => $docsapproved,
-            'docsrejected' => $docsrejected,
-            'docspending' => $docspending,
-            'docsprogress' => $docsprogress,
-            'docsrejectedpercent' => $docsrejectedpercent,
+            // Hide document validation counts from applicants.
+            'docsapproved' => $isowner ? 0 : $docsapproved,
+            'docsrejected' => $isowner ? 0 : $docsrejected,
+            'docspending' => $isowner ? 0 : $docspending,
+            'docsprogress' => $isowner ? 0 : $docsprogress,
+            'docsrejectedpercent' => $isowner ? 0 : $docsrejectedpercent,
             'initialpreview' => $initialpreview,
             'hasinitialpreview' => $hasinitialpreview,
+            // Hide history from applicants.
             'history' => $historydata,
             'hashistory' => !empty($historydata),
             'isowner' => $isowner,

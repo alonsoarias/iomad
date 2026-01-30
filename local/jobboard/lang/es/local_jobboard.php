@@ -254,21 +254,27 @@ $string['convocatoria_status_closed'] = 'Cerrada';
 $string['convocatoria_status_archived'] = 'Archivada';
 
 // Estado de postulación
+$string['appstatus:draft'] = 'Borrador';
 $string['appstatus:submitted'] = 'Enviada';
 $string['appstatus:under_review'] = 'En revisión';
+$string['appstatus:in_progress'] = 'En proceso';
 $string['appstatus:docs_validated'] = 'Documentos validados';
 $string['appstatus:docs_rejected'] = 'Documentos rechazados';
 $string['appstatus:interview'] = 'Entrevista';
-$string['appstatus:selected'] = 'Seleccionado';
-$string['appstatus:rejected'] = 'Rechazado';
+$string['appstatus:selected'] = 'Seleccionado/a';
+$string['appstatus:rejected'] = 'No seleccionado/a';
 $string['appstatus:waitlist'] = 'Lista de espera';
 $string['appstatus:withdrawn'] = 'Retirada';
+
+// Cadena para observaciones guardadas (notificaciones deshabilitadas)
+$string['observationssaved'] = 'Observaciones guardadas';
 
 // Estado de documento
 $string['docstatus:pending'] = 'Pendiente';
 $string['docstatus:approved'] = 'Aprobado';
 $string['docstatus:rejected'] = 'Rechazado';
 $string['docstatus:resubmitted'] = 'Reenviado';
+$string['uploaded'] = 'Cargado';
 
 // Cadenas dinámicas de estado (usadas con get_string('status_' . $status))
 // Estados de postulación - Nuevo flujo de trabajo v4.0
