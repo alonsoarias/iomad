@@ -123,7 +123,12 @@ trait convocatoria_renderer {
                 ['convid' => $c->id]
             ) ?: 0;
 
-            // Status actions based on current status.
+            // Check if convocatoria is expired by date.
+            $now = time();
+            $isexpired = ($c->enddate < $now);
+            $isending = !$isexpired && ($c->enddate - $now) <= 7 * 86400;
+
+            // Status actions based on current status (considering expiration).
             $statusactions = [];
             if ($c->status === 'draft') {
                 $statusactions[] = [
@@ -139,12 +144,27 @@ trait convocatoria_renderer {
                     'confirm' => get_string('confirmdeletevconvocatoria', 'local_jobboard'),
                     'isdanger' => true,
                 ];
-            } elseif ($c->status === 'open') {
+            } elseif ($c->status === 'open' && !$isexpired) {
+                // Only show close action if not already expired by date.
                 $statusactions[] = [
                     'url' => (new moodle_url($baseurl, ['action' => 'close', 'id' => $c->id, 'sesskey' => $sesskey]))->out(false),
                     'icon' => 'lock',
                     'label' => get_string('closeconvocatoria', 'local_jobboard'),
                     'confirm' => get_string('confirmcloseconvocatoria', 'local_jobboard'),
+                ];
+            } elseif ($c->status === 'open' && $isexpired) {
+                // Expired by date but status still 'open' - show archive options.
+                $statusactions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'close', 'id' => $c->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 'lock',
+                    'label' => get_string('closeconvocatoria', 'local_jobboard'),
+                    'confirm' => get_string('confirmcloseconvocatoria', 'local_jobboard'),
+                ];
+                $statusactions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'archive', 'id' => $c->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 'archive',
+                    'label' => get_string('archiveconvocatoria', 'local_jobboard'),
+                    'confirm' => get_string('confirmarchiveconvocatoria', 'local_jobboard'),
                 ];
             } elseif ($c->status === 'closed') {
                 $statusactions[] = [
@@ -168,8 +188,14 @@ trait convocatoria_renderer {
                     'isdanger' => true,
                 ];
             }
+            // A convocatoria is truly open only if status is 'open' AND end date hasn't passed.
+            $isreallyopen = ($c->status === 'open' && !$isexpired);
 
-            $isending = ($c->enddate - time()) <= 7 * 86400;
+            // Determine display status (may differ from DB status if expired).
+            $displaystatus = $c->status;
+            if ($c->status === 'open' && $isexpired) {
+                $displaystatus = 'closed';
+            }
 
             $convocatoriadata[] = [
                 'id' => $c->id,
@@ -177,16 +203,17 @@ trait convocatoria_renderer {
                 'name' => format_string($c->name),
                 'description' => !empty($c->description) ? shorten_text(strip_tags($c->description), 100) : null,
                 'status' => $c->status,
-                'statuslabel' => get_string('convocatoria_status_' . $c->status, 'local_jobboard'),
-                'statuscolor' => $this->get_convocatoria_status_class($c->status),
+                'statuslabel' => get_string('convocatoria_status_' . $displaystatus, 'local_jobboard'),
+                'statuscolor' => $this->get_convocatoria_status_class($displaystatus),
                 'publicationtypelabel' => !empty($c->publicationtype) ? get_string('publicationtype:' . $c->publicationtype, 'local_jobboard') : null,
                 'publicationtypecolor' => $c->publicationtype === 'public' ? 'success' : 'info',
                 'publicationtypeicon' => $c->publicationtype === 'public' ? 'globe' : 'building',
                 'startdateformatted' => userdate($c->startdate, get_string('strftimedate', 'langconfig')),
                 'enddateformatted' => userdate($c->enddate, get_string('strftimedate', 'langconfig')),
                 'isending' => $isending,
+                'isexpired' => $isexpired,
                 'isdraft' => $c->status === 'draft',
-                'isopen' => $c->status === 'open',
+                'isopen' => $isreallyopen,
                 'vacancycount' => $vacancycount,
                 'applicationcount' => $applicationcount,
                 'selectedcount' => $selectedcount,

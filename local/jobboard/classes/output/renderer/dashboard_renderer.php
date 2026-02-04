@@ -399,7 +399,7 @@ trait dashboard_renderer {
                     'icon' => $this->get_activity_icon($rec->action),
                     'color' => $this->get_activity_color($rec->action),
                     'timecreated' => $this->format_time_ago((int)$rec->timecreated),
-                    'url' => $this->get_activity_url($rec->entitytype, $rec->entityid),
+                    'url' => $this->get_activity_url($rec->entitytype, (int)$rec->entityid),
                 ];
             }
         } else {
@@ -419,7 +419,7 @@ trait dashboard_renderer {
                     'icon' => $this->get_activity_icon($rec->action),
                     'color' => $this->get_activity_color($rec->action),
                     'timecreated' => $this->format_time_ago((int)$rec->timecreated),
-                    'url' => $this->get_activity_url($rec->entitytype, $rec->entityid),
+                    'url' => $this->get_activity_url($rec->entitytype, (int)$rec->entityid),
                 ];
             }
         }

@@ -1536,6 +1536,7 @@ $string['convocatoriareopened'] = 'Convocatoria reabierta exitosamente';
 $string['convocatorias_dashboard_desc'] = 'Gestione todas las convocatorias desde este panel';
 $string['openconvocatoria'] = 'Abrir convocatoria';
 $string['manageconvocatorias'] = 'Gestionar convocatorias';
+$string['manageconvocatorias_desc'] = 'Crear, editar y gestionar todas las convocatorias';
 $string['browseconvocatorias'] = 'Explorar convocatorias';
 $string['browseconvocatorias_desc'] = 'Ver todas las convocatorias disponibles';
 $string['backtoconvocatoria'] = 'Volver a la convocatoria';
